@@ -1,0 +1,12 @@
+#!/bin/bash
+echo 'Executing a command with Life After Hate Utility!'
+
+if [ "$1" == "reset" ]; then
+    docker-compose down -v 
+	docker-compose build
+
+elif [ "$1" == "up" ]; then
+	docker-compose up
+fi
+
+exit 0
