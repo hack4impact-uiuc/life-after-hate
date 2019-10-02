@@ -7,6 +7,17 @@ if [ "$1" == "reset" ]; then
 
 elif [ "$1" == "up" ]; then
 	docker-compose up
+
+elif [ "$1" == "down" ]; then
+	docker-compose down -v
+
+elif [ "$1" == "install" ]; then
+	if [ "$(basename "$PWD")" != "frontend" ]; then 
+		echo "You are not in the frontend directory"
+	else
+		echo "Attempting to install package $2"
+		npm install $2 && rm -rf node_modules && lahutil reset
+	fi
 fi
 
 exit 0
