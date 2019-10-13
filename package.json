@@ -1,0 +1,37 @@
+{
+  "name": "life-after-hate",
+  "version": "1.0.0",
+  "description": "Package with the development tools for LAH (such as Prettier and Husky). Please see the individual frontend and backend sub-packages for the actual dependencies.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.18.2"
+  },
+  "scripts": {
+    "prettier": "prettier --write {frontend/**/*.{js,css,json,md},backend/**/*.{js,css,json,md}}",
+    "prettier-check": "prettier --check {frontend/**/*.{js,css,json,md},backend/**/*.{js,css,json,md}}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hack4impact-uiuc/life-after-hate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hack4impact-uiuc/life-after-hate/issues"
+  },
+  "homepage": "https://github.com/hack4impact-uiuc/life-after-hate#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
