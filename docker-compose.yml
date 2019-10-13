@@ -19,6 +19,9 @@ services:
       - PORT=3000
     command:
       sh -c 'npm start'
+    depends_on:
+      - backend
+      - db
   backend:
     build: ./backend
     volumes:
@@ -35,6 +38,14 @@ services:
       - PORT=5000
     command:
       sh -c 'npm start'
+    depends_on:
+      - db
+  db:
+    image: 'mongo'
+    logging:
+       driver: none
+    ports:
+      - "27017:27017"
 
 # explicitly defines the volumes so that docker-compose down -v will destroy them
 volumes:
