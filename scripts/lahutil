@@ -12,8 +12,8 @@ elif [ "$1" == "down" ]; then
 	docker-compose down -v
 
 elif [ "$1" == "install" ]; then
-	if [ "$(basename "$PWD")" != "frontend" ]; then 
-		echo "You are not in the frontend directory"
+	if [ "$(basename "$PWD")" != "frontend" ] && [ "$(basename "$PWD")" != "backend" ]; then 
+		echo "You are not in the frontend or backend directory."
 	else
 		echo "Attempting to install package $2"
 		npm install $2 && rm -rf node_modules && lahutil reset
