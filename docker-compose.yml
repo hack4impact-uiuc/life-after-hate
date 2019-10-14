@@ -24,6 +24,8 @@ services:
       - db
   backend:
     build: ./backend
+    env_file: 
+      - ./.env
     volumes:
       - ./backend:/var/www/app
       # expose a named volume that works because installing
@@ -46,9 +48,11 @@ services:
        driver: none
     ports:
       - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
 # explicitly defines the volumes so that docker-compose down -v will destroy them
 volumes:
   fe_modules:
   be_modules:
-
+  mongo_data:
