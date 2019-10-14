@@ -5,9 +5,13 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
+    "@h4iuiuc/eslint-plugin": "^1.0.8",
+    "@typescript-eslint/parser": "^2.3.3",
+    "eslint": "^6.5.1",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "typescript": "^3.6.4"
   },
   "scripts": {
     "prettier": "prettier --write '{frontend/**/*.{js,css,json,md},backend/**/*.{js,css,json,md}}'",
