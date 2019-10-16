@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const port = process.env.PORT;
 const passport = require("passport");
-const passportSetup = require("./utils/passport-setup");
+require("./utils/passport-setup");
 
 app.use(passport.initialize());
 app.use(passport.session());
