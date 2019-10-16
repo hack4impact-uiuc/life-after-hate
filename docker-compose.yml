@@ -2,6 +2,8 @@
 version: "3"
 services:
   frontend:
+    env_file: 
+      - ./.env
     build: ./frontend
     volumes:
       - ./frontend:/var/www/app
