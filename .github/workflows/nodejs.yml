@@ -3,10 +3,8 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
-
+  format:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js 12.x 
@@ -19,3 +17,15 @@ jobs:
         npm run prettier-check
       env:
         CI: true
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - name: npm run lint
+        run: |
+          npm install
+          npm run lint

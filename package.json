@@ -15,7 +15,8 @@
   },
   "scripts": {
     "prettier": "prettier --write '{frontend/**/*.{js,css,json,md},backend/**/*.{js,css,json,md}}'",
-    "prettier-check": "prettier --check '{frontend/**/*.{js,css,json,md},backend/**/*.{js,css,json,md}}'"
+    "prettier-check": "prettier --check '{frontend/**/*.{js,css,json,md},backend/**/*.{js,css,json,md}}'",
+    "lint": "eslint '{frontend/**/*.{js,jsx},backend/**/*.{js,jsx}}'"
   },
   "repository": {
     "type": "git",
