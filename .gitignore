@@ -86,6 +86,10 @@ typings/
 .cache/
 public
 
+
+# frontend build
+frontend/build
+
 # vuepress build output
 .vuepress/dist
 
