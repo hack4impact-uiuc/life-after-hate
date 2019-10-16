@@ -4,23 +4,24 @@ on: [push]
 
 jobs:
 
-  build-fe:
+  test-fe:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Check successful frontend build and render without crash
-      run: |
-        bash scripts/setup_ci.sh
-        docker-compose run frontend npm run build
-        docker-compose run frontend npm test
+    - name: Setup CI Script 
+      run: bash scripts/setup_ci.sh
+    - name: Check successful frontend build 
+      run: docker-compose run frontend npm run build
+    - name: Check successful frontend render without crash
+      run: docker-compose run frontend npm test
     
 
-  build-be:
+  test-be:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Check successful backend test
-      run: |
-        bash scripts/setup_ci.sh
-        docker-compose run backend npm test
+    - name: Setup CI Script 
+      run: bash scripts/setup_ci.sh
+    - name: Run backend tests 
+      run: docker-compose run backend npm test
     
