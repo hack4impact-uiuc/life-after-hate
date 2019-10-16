@@ -13,7 +13,7 @@ jobs:
     - name: Check successful frontend build 
       run: docker-compose run frontend npm run build
     - name: Check successful frontend render without crash
-      run: docker-compose run frontend npm test
+      run: docker-compose run -e CI=true frontend npm test
     
 
   test-be:
