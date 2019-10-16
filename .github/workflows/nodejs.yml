@@ -18,14 +18,26 @@ jobs:
       env:
         CI: true
 
-  lint:
+  lint-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 10
-      - name: npm run lint
+          node-version: 12.x
+      - name: Lint frontend
         run: |
-          cd frontend
-          docker-compose run frontend npm run lint
+         npm install
+         npm run lint:fe
+
+  lint-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Lint backend
+        run: |
+         npm install
+         npm run lint:be
