@@ -12,6 +12,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "mongoose": "^5.7.4",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.3",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^2.0.0"
   }
 }
