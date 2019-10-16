@@ -1,0 +1,23 @@
+name: FE/BE Testing
+
+on: [push]
+
+jobs:
+
+  build-fe:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check successful frontend build and render without crash
+      run: |
+        docker-compose run frontend npm run build
+        docker-compose run frontend npm test
+    
+
+  build-be:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check successful backend test
+      run: docker-compose run backend npm test
+    
