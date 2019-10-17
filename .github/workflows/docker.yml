@@ -8,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Setup CI Script 
-      run: bash scripts/setup_ci.sh
     - name: Check successful frontend build 
       run: docker-compose run frontend npm run build
     - name: Check successful frontend render without crash
@@ -20,8 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Setup CI Script 
-      run: bash scripts/setup_ci.sh
     - name: Run backend tests 
+      env:
+        DB_URI: mongodb://db:27017/LAH_DB
       run: docker-compose run backend npm test
-    
