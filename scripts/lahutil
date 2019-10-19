@@ -1,23 +1,159 @@
-#!/bin/bash
-echo 'Executing a command with Life After Hate Utility!'
+#!/usr/bin/env node
 
-if [ "$1" == "reset" ]; then
-    docker-compose down -v 
-	docker-compose build
+/**
+ * Module dependencies.
+ */
 
-elif [ "$1" == "up" ]; then
-	docker-compose up
+const program = require("commander");
+const { spawn } = require("child_process");
+const colors = require("colors");
+const path = require("path");
 
-elif [ "$1" == "down" ]; then
-	docker-compose down -v
+const installPackage = async module => {
+  const curDir = path.basename(process.cwd());
+  if (curDir !== "frontend" && curDir !== "backend") {
+    console.log(
+      colors.red("Must be in the root of the frontend or backend directory")
+    );
+    return;
+  }
+  try {
+    await runCommand("npm", ["install", "--save", module]);
+    await runCommand("rm", ["-rf", "node_modules"]);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-elif [ "$1" == "install" ]; then
-	if [ "$(basename "$PWD")" != "frontend" ] && [ "$(basename "$PWD")" != "backend" ]; then 
-		echo "You are not in the frontend or backend directory."
-	else
-		echo "Attempting to install package $2"
-		npm install $2 && rm -rf node_modules && lahutil reset
-	fi
-fi
+const runSingleCommand = async (cmd, args, cb) => {
+  try {
+    await runCommand(cmd, args, cb);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-exit 0
+const runCommand = (cmd, args, cb) => {
+  return new Promise((res, rej) => {
+    // spawn a new process
+    const proc = spawn(cmd, args);
+
+    // pipe the output to the console
+    proc.stdout.on("data", data => {
+      process.stdout.write(data);
+      if (cb) {
+        cb(data.toString().split(/[\r\n]+/));
+      }
+    });
+
+    proc.stderr.on("data", data => {
+      process.stderr.write(data);
+      if (cb) {
+        cb(data.toString().split(/[\r\n]+/));
+      }
+    });
+
+    proc.on("close", code => {
+      const msg = `LAHUTIL: Command ${cmd} ${args.join(
+        " "
+      )} exited with code ${code}`;
+      if (code === 0) {
+        console.log(colors.green(msg));
+        res(code);
+      } else {
+        console.error(colors.red(msg));
+        rej(`Process error with exit code ${code}`);
+      }
+    });
+
+    proc.on("error", code => {
+      rej(code);
+    });
+  });
+};
+
+const removeAll = async () => {
+  await runSingleCommand("docker", ["ps", "-a", "-q"], idArr => {
+    // For every container running, stop it
+    Promise.all(idArr.map(id => runSingleCommand("docker", ["stop", id])));
+  });
+  await runSingleCommand("docker", ["container", "ls", "-a", "-q"], idArr => {
+    // For every container, remove it
+    Promise.all(
+      idArr.map(id => runSingleCommand("docker", ["container", "rm", "-f", id]))
+    );
+  });
+  await runSingleCommand("docker", ["image", "ls", "-a", "-q"], idArr => {
+    // For every image, remove it
+    Promise.all(
+      idArr.map(id => runSingleCommand("docker", ["image", "rm", "-f", id]))
+    );
+  });
+  await runSingleCommand("docker", ["volume", "ls", "-q"], idArr => {
+    // For every volume, remove it
+    Promise.all(
+      idArr.map(id => runSingleCommand("docker", ["volume", "rm", "-f", id]))
+    );
+  });
+};
+// error on unknown commands
+program.on("command:*", function() {
+  console.error(
+    "Invalid command: %s\nType lahutil -h for a list of available commands.",
+    program.args.join(" ")
+  );
+  process.exit(1);
+});
+
+program
+  .version("0.0.1")
+  .description(
+    "A simple application for Life After Hate developers to manager their Docker containers without dealing with the extra overhead."
+  );
+
+program
+  .command("up")
+  .description(
+    "Start up a new instance of the LAH frontend, backend, and database using Docker Compose."
+  )
+  .action(() => {
+    runSingleCommand("docker-compose", ["up"]);
+  });
+
+program
+  .command("down")
+  .description("Stops the LAH frontend, backend, and database")
+  .action(() => {
+    runSingleCommand("docker-compose", ["down", "-v"]);
+  });
+
+program
+  .command("reset")
+  .description(
+    "Rebuilds everything — use this if you just pulled new changes and need to update your installed packages."
+  )
+  .action(async () => {
+    await runSingleCommand("docker-compose", ["down", "-v"]);
+  });
+
+program
+  .command("clearall")
+  .description("Removes everything Docker-related. Only use as a last resort.")
+  .action(async () => {
+    await removeAll();
+    // Do second pass in case there were any dependencies that couldn't be removed the first time
+    await removeAll();
+    console.log(colors.bgMagenta("Cleared all Docker-related files."));
+  });
+
+program.command;
+program
+  .command("install <module>")
+  .description("Installs module in directory")
+  .action(installPackage);
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
+
+program.parse(process.argv);

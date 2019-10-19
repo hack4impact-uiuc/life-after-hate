@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec",
+    "start:dev": "nodemon app.js",
     "start": "nodemon app.js"
   },
   "author": "",
