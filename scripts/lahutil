@@ -8,9 +8,9 @@ const program = require("commander");
 const { spawn } = require("child_process");
 const colors = require("colors");
 const path = require("path");
-const findUp = require('find-up');
-const fs = require('fs');
-const fetch = require('node-fetch');
+const findUp = require("find-up");
+const fs = require("fs");
+const fetch = require("node-fetch");
 
 const installPackage = async module => {
   const curDir = path.basename(process.cwd());
@@ -102,17 +102,25 @@ const removeAll = async () => {
 
 const updateEnv = async () => {
   console.log(colors.blue("LAHUTIL: Attempting to sync up .env file..."));
-	const envURLLoc = await findUp('.env_url');	
-	if(typeof(envURLLoc) === 'undefined'){
-    console.error(colors.red("LAHUTIL: Cannot find .env_url - are you sure you have added it?"));
-	} else {
-    const url = fs.readFileSync(envURLLoc, 'utf8');
+  const envURLLoc = await findUp(".env_url");
+  if (typeof envURLLoc === "undefined") {
+    console.error(
+      colors.red(
+        "LAHUTIL: Cannot find .env_url - are you sure you have added it?"
+      )
+    );
+  } else {
+    const url = fs.readFileSync(envURLLoc, "utf8");
     const result = await (await fetch(url)).text();
-    const dest = path.join(path.dirname(envURLLoc),".env");
-    fs.writeFileSync(dest, result)
-    console.log(colors.green("LAHUTIL: Successfully pulled current .env file from web server."))
-	}
-}
+    const dest = path.join(path.dirname(envURLLoc), ".env");
+    fs.writeFileSync(dest, result);
+    console.log(
+      colors.green(
+        "LAHUTIL: Successfully pulled current .env file from web server."
+      )
+    );
+  }
+};
 
 // error on unknown commands
 program.on("command:*", function() {
@@ -173,9 +181,10 @@ program
 
 program
   .command("env")
-  .description("Pulls latest .env file. Requires that you have the URL set it in .env_url")
+  .description(
+    "Pulls latest .env file. Requires that you have the URL set it in .env_url"
+  )
   .action(updateEnv);
-
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
