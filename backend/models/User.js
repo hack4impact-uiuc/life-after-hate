@@ -23,11 +23,8 @@ const User = new mongoose.Schema({
 });
 
 User.statics.findUser = function(id) {
-  // console.log("running");
   let foundUser = this.findOne({ oauthId: id });
-
-  // console.log(foundUser);
   return foundUser;
 };
 
-module.exports = mongoose.model("User", User, "User");
+module.exports = mongoose.model("User", User);
