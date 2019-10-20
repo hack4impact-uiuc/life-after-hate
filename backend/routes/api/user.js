@@ -12,6 +12,53 @@ router.get("/", async (req, res) => {
   });
 });
 
+// set role
+router.put("/setRole/:user_id", async (req, res) => {
+  const data = req.body;
+  const userId = req.params.user_id;
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { role: data.role } },
+    { new: true }
+  );
+  const ret = user
+    ? {
+        code: 200,
+        message: "User Role Updated Successfully",
+        success: true
+      }
+    : {
+        code: 404,
+        message: "User Not Found",
+        success: false
+      };
+  res.json(ret);
+});
+
+// approve user
+router.put("/approve/:user_id", async (req, res) => {
+  const userId = req.params.user_id;
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { isApproved: true } },
+    { new: true }
+  );
+  const ret = user
+    ? {
+        code: 200,
+        message: "User Approved Successfully",
+        success: true
+      }
+    : {
+        code: 404,
+        message: "User Not Found",
+        success: false
+      };
+  res.json(ret);
+});
+
 // delete user
 router.delete("/:user_id", async (req, res) => {
   const userId = req.params.user_id;
