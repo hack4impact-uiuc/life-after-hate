@@ -5,7 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "colors": "^1.4.0",
-    "commander": "^3.0.2"
+    "commander": "^3.0.2",
+    "find-up": "^4.1.0",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "@h4iuiuc/eslint-plugin": "^1.0.8",
