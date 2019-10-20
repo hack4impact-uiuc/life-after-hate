@@ -76,3 +76,5 @@ router.delete("/:user_id", async (req, res) => {
       };
   res.json(ret);
 });
+
+module.exports = router;
