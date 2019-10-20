@@ -2,7 +2,8 @@
   "plugins": ["@h4iuiuc"],
   "extends": ["plugin:@h4iuiuc/recommended"],
   "rules": {
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+    "no-magic-numbers": "off"
   },
   "env": {
     "browser": true,

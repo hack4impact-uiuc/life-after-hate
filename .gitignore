@@ -71,6 +71,7 @@ typings/
 
 # dotenv environment variables file
 .env
+.env_url
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -85,6 +86,10 @@ typings/
 # gatsby files
 .cache/
 public
+
+
+# frontend build
+frontend/build
 
 # vuepress build output
 .vuepress/dist
