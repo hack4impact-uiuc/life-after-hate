@@ -8,8 +8,14 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect("/");
+    // console.log(req);
+    res.redirect("/api/auth/hello");
   }
 );
+
+router.get("/hello", function(req, res) {
+  res.send("pew pew");
+  // res.send(req.user.firstName);
+});
 
 module.exports = router;
