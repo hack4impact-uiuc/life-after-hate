@@ -1,6 +1,7 @@
 import React from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
-import "../styles/mapView.scss";
+
+import Pin from "../components/pin";
 
 class MapView extends React.Component {
   state = {
@@ -23,13 +24,12 @@ class MapView extends React.Component {
         >
           {this.props.markers.map(item => (
             <Marker
-              className="marker"
               key={item.id}
-              latitude={item.latitude}
               longitude={item.longitude}
-              offsetLeft={-20}
-              offsetTop={-10}
-            />
+              latitude={item.latitude}
+            >
+              <Pin size={25} />
+            </Marker>
           ))}
         </ReactMapGL>
       </div>
