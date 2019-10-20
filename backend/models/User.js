@@ -2,6 +2,7 @@
  * Role should be one of the following: [Admin, Volunteer]
  */
 const mongoose = require("mongoose");
+require("mongoose").set("debug", true);
 
 const User = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -21,4 +22,12 @@ const User = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("User", User);
+User.statics.findUser = function(id) {
+  // console.log("running");
+  let foundUser = this.findOne({ oauthId: id });
+
+  // console.log(foundUser);
+  return foundUser;
+};
+
+module.exports = mongoose.model("User", User, "User");

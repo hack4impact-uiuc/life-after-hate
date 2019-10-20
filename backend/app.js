@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
@@ -10,7 +11,7 @@ app.use(passport.session());
 
 app.use(require("./routes"));
 
-mongoose.connect("mongodb://db:27017/LAH_DB", {
+mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
