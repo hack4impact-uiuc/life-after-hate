@@ -134,6 +134,7 @@ program
   )
   .action(async () => {
     await runSingleCommand("docker-compose", ["down", "-v"]);
+    await runSingleCommand("docker-compose", ["build"]);
   });
 
 program

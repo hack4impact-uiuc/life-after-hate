@@ -2,6 +2,10 @@
   "name": "life-after-hate",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hack4impact-uiuc/life-after-hate"
+  },
   "dependencies": {
     "node-fetch": "^2.6.0",
     "node-sass": "^4.12.0",
