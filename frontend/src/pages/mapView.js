@@ -5,8 +5,8 @@ import "../styles/mapView.scss";
 class MapView extends React.Component {
   state = {
     viewport: {
-      width: 800,
-      height: 800,
+      width: "100%",
+      height: "100vh",
       latitude: 37.7577,
       longitude: -122.4376,
       zoom: 8
