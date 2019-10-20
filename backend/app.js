@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 const app = express();
 const port = process.env.PORT;
 const passport = require("passport");
+const bodyParser = require("body-parser");
 require("./utils/passport-setup");
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json());
 
 app.use(require("./routes"));
 
