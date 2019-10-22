@@ -15,4 +15,4 @@ mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true
 });
 
-module.exports.default = app;
+module.exports = app;
