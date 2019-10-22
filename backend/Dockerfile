@@ -1,4 +1,4 @@
-FROM node:12.10.0
+FROM node:12.12.0
 
 WORKDIR '/var/www/app'
 # Install app dependencies
@@ -6,7 +6,7 @@ WORKDIR '/var/www/app'
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --no-optional
 # If you are building your code for production
 # RUN npm ci --only=production
 # Bundle app source
