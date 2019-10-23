@@ -1,0 +1,31 @@
+name: FE/BE Testing
+
+on: [push]
+
+jobs:
+
+  test-fe:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup CI Script 
+      run: bash scripts/setup_ci.sh
+    - name: Build Docker Image
+      run: docker build -t lah-frontend ./frontend
+    - name: Check successful frontend NPM build 
+      run: docker run lah-frontend npm run build
+    - name: Check successful frontend render without crash
+      run: docker run -e CI=true lah-frontend npm test
+    
+
+  test-be:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup CI Script 
+      run: bash scripts/setup_ci.sh
+    - name: Build Docker Image 
+      run: docker build -t lah-backend ./backend
+    - name: Run backend tests 
+      run: docker run -e CI=true lah-backend npm test
+    
