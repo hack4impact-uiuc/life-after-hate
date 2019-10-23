@@ -11,6 +11,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   // Find in DB and return user
+  console.log("deserializing user");
   User.findById(id, function(err, user) {
     if (err) {
       console.log("err");
@@ -28,6 +29,7 @@ passport.use(
       callbackURL: `http://localhost:5000/api/auth/login/callback`
     },
     function(accessToken, refreshToken, profile, cb) {
+      console.log("Hi");
       // find the user in the database based on their facebook id
       User.findOne({ oauthId: profile.id }, async function(err, user) {
         if (err) {

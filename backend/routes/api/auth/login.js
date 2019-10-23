@@ -1,7 +1,10 @@
 const passport = require("passport");
 const router = require("express").Router();
 
-router.get("/login", passport.authenticate("google", { scope: ["profile"] }));
+router.get(
+  "/login",
+  passport.authenticate("google", { scope: ["openid", "profile"] })
+);
 
 router.get(
   "/login/callback",
