@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "celebrate": "^10.0.1",
     "express": "^4.17.1",
     "mocha": "^6.2.1",
     "mongoose": "^5.7.5",
