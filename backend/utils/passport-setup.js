@@ -26,7 +26,7 @@ passport.use(
     },
     function(accessToken, refreshToken, profile, cb) {
       // find the user in the database based on their facebook id
-      User.findOne({ oauthId: profile.id }, function(err, user) {
+      User.findOne({ oauthId: profile.id }, async function(err, user) {
         if (err) {
           return cb(err);
         }
@@ -35,7 +35,7 @@ passport.use(
           console.log("found");
           return cb(null, user);
         }
-        new User({
+        const newUser = await new User({
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           oauthId: profile.id,
@@ -43,12 +43,9 @@ passport.use(
           isApproved: false,
           role: "VOLUNTEER",
           location: "NORTH"
-        })
-          .save()
-          .then(user => {
-            console.log({ user });
-            cb(null, user); //callback to let passport know that we are done processing
-          });
+        }).save();
+
+        cb(null, newUser);
       });
     }
   )
