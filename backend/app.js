@@ -4,10 +4,20 @@ const mongoose = require("mongoose");
 const app = express();
 const port = process.env.PORT;
 const passport = require("passport");
+const session = require("express-session");
 require("./utils/passport-setup");
 
+app.use(session({ secret: "asdf" }));
+
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(
+  passport.session({
+    secret: "asdf",
+    cookie: {
+      secure: false
+    }
+  })
+);
 
 app.use(require("./routes"));
 

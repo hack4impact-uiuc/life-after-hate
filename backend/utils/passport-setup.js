@@ -3,16 +3,20 @@ const passport = require("passport");
 const User = require("../models/User");
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  console.log("serializing user: ");
+  done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
   // Find in DB and return user
+  console.log("deserializing user");
   User.findById(id, function(err, user) {
     if (err) {
+      console.log("err");
       done(err);
     }
-    done(null, user.oauthId);
+    console.log(user);
+    done(null, user);
   });
 });
 
@@ -24,6 +28,7 @@ passport.use(
       callbackURL: `http://localhost:5000/api/auth/login/callback`
     },
     function(accessToken, refreshToken, profile, cb) {
+      console.log("Hi");
       // find the user in the database based on their facebook id
       User.findOne({ oauthId: profile.id }, function(err, user) {
         if (err) {
