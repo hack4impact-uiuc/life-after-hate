@@ -10,10 +10,12 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup CI Script 
       run: bash scripts/setup_ci.sh
-    - name: Check successful frontend build 
-      run: docker-compose run frontend npm run build
+    - name: Build Docker Image
+      run: docker build -t lah-frontend ./frontend
+    - name: Check successful frontend NPM build 
+      run: docker run lah-frontend npm run build
     - name: Check successful frontend render without crash
-      run: docker-compose run -e CI=true frontend npm test
+      run: docker run -e CI=true lah-frontend npm test
     
 
   test-be:
@@ -22,6 +24,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup CI Script 
       run: bash scripts/setup_ci.sh
+    - name: Build Docker Image 
+      run: docker build -t lah-backend ./backend
     - name: Run backend tests 
-      run: docker-compose run backend npm test
+      run: docker run -e CI=true lah-backend npm test
     
