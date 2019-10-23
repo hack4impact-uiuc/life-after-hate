@@ -2,6 +2,9 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
 const User = require("../models/User");
 
+const DEFAULTROLE = "VOLUNTEER";
+const DEFAULTLOC = "NORTH";
+
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
@@ -41,8 +44,8 @@ passport.use(
           oauthId: profile.id,
           propicUrl: profile.photos[0].value,
           isApproved: false,
-          role: "VOLUNTEER",
-          location: "NORTH"
+          role: DEFAULTROLE,
+          location: DEFAULTLOC
         }).save();
 
         cb(null, newUser);

@@ -1,6 +1,5 @@
 const passport = require("passport");
 const router = require("express").Router();
-// const url = require("url");
 
 router.get("/login", passport.authenticate("google", { scope: ["profile"] }));
 
