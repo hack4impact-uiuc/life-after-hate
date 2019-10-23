@@ -2,7 +2,6 @@
  * Role should be one of the following: [Admin, Volunteer]
  */
 const mongoose = require("mongoose");
-require("mongoose").set("debug", true);
 
 const User = new mongoose.Schema({
   firstName: { type: String, required: true },

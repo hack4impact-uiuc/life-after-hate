@@ -3,16 +3,17 @@ const passport = require("passport");
 const User = require("../models/User");
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
   // Find in DB and return user
   User.findById(id, function(err, user) {
     if (err) {
+      console.log("err");
       done(err);
     }
-    done(null, user.oauthId);
+    done(null, user);
   });
 });
 
