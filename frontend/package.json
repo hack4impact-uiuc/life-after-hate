@@ -2,6 +2,10 @@
   "name": "life-after-hate",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hack4impact-uiuc/life-after-hate"
+  },
   "dependencies": {
     "bootstrap": "^3.4.1",
     "mapbox-gl": "^1.4.1",

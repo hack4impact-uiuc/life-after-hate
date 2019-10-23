@@ -1,17 +1,25 @@
 {
   "name": "lah-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for LAH systems.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hack4impact-uiuc/life-after-hate"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "test": "mocha --reporter spec",
+    "start:dev": "nodemon appListener.js",
+    "start": "nodemon appListener.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "celebrate": "^10.0.1",
     "express": "^4.17.1",
-    "mongoose": "^5.7.4",
+    "mocha": "^6.2.1",
+    "mongoose": "^5.7.5",
+    "morgan": "^1.9.1",
     "nodemon": "^1.19.3",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0"
