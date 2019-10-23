@@ -9,15 +9,17 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec",
-    "start:dev": "nodemon app.js",
-    "start": "nodemon app.js"
+    "start:dev": "nodemon appListener.js",
+    "start": "nodemon appListener.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "celebrate": "^10.0.1",
     "express": "^4.17.1",
     "mocha": "^6.2.1",
-    "mongoose": "^5.7.4",
+    "mongoose": "^5.7.5",
+    "morgan": "^1.9.1",
     "nodemon": "^1.19.3",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0"
