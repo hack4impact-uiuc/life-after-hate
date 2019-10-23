@@ -21,9 +21,10 @@ class Pin extends Component {
         viewBox="0 0 24 24"
         style={{
           ...pinStyle,
-          transform: `translate(${size /
+          transform: `translate(${-size /
             horizontalTranslationFactor}px,${-size}px)`
         }}
+        onClick={this.props.onClick}
       >
         <path d={ICON} />
       </svg>
