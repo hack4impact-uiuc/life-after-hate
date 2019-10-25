@@ -1,7 +1,9 @@
 import React from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import "./../styles/mapView.scss";
 
 import Pin from "../components/pin";
+import Search from "../components/search";
 
 const pin_size = 25;
 
@@ -39,6 +41,9 @@ class MapView extends React.Component {
         onViewportChange={viewport => this.setState({ viewport })}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       >
+        <div className="search">
+          <Search />
+        </div>
         {this.props.markers.map(this.renderMarkers)}
         {this.state.popup && (
           <Popup
