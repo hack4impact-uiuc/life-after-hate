@@ -1,14 +1,24 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
-const router = require("express").Router();
+const User = require("../models/User");
+
+const DEFAULTROLE = "VOLUNTEER";
+const DEFAULTLOC = "NORTH";
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
   // Find in DB and return user
-  done(null, id);
+  console.log("deserializing user");
+  User.findById(id, function(err, user) {
+    if (err) {
+      console.log("err");
+      done(err);
+    }
+    done(null, user);
+  });
 });
 
 passport.use(
@@ -19,20 +29,29 @@ passport.use(
       callbackURL: `http://localhost:5000/api/auth/login/callback`
     },
     function(accessToken, refreshToken, profile, cb) {
-      cb(null, "Hello");
+      console.log("Hi");
+      // find the user in the database based on their facebook id
+      User.findOne({ oauthId: profile.id }, async function(err, user) {
+        if (err) {
+          return cb(err);
+        }
+
+        if (user) {
+          console.log("found");
+          return cb(null, user);
+        }
+        const newUser = await new User({
+          firstName: profile.name.givenName,
+          lastName: profile.name.familyName,
+          oauthId: profile.id,
+          propicUrl: profile.photos[0].value,
+          isApproved: false,
+          role: DEFAULTROLE,
+          location: DEFAULTLOC
+        }).save();
+
+        cb(null, newUser);
+      });
     }
   )
 );
-
-router.get("/login", passport.authenticate("google", { scope: ["profile"] }));
-
-router.get(
-  "/login/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect("/");
-  }
-);
-
-module.exports = router;

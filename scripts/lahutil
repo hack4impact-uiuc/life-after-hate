@@ -23,6 +23,9 @@ const installPackage = async module => {
   try {
     await runCommand("npm", ["install", "--save", module]);
     await runCommand("rm", ["-rf", "node_modules"]);
+    await updateEnv();
+    await runSingleCommand("docker-compose", ["down", "-v"]);
+    await runSingleCommand("docker-compose", ["build"]);
   } catch (e) {
     console.log(e);
   }
@@ -100,7 +103,7 @@ const removeAll = async () => {
   });
 };
 
-const updateEnv = async () => {
+const updateEnv = async (isWindows) => {
   console.log(colors.blue("LAHUTIL: Attempting to sync up .env file..."));
   const envURLLoc = await findUp(".env_url");
   if (typeof envURLLoc === "undefined") {
@@ -114,6 +117,9 @@ const updateEnv = async () => {
     const result = await (await fetch(url)).text();
     const dest = path.join(path.dirname(envURLLoc), ".env");
     fs.writeFileSync(dest, result);
+    if(isWindows){
+      fs.appendFileSync(dest, "CHOKIDAR_USEPOLLING=true")
+    }
     console.log(
       colors.green(
         "LAHUTIL: Successfully pulled current .env file from web server."
@@ -181,10 +187,11 @@ program
 
 program
   .command("env")
+  .option('-w, --windows', 'Is running docker for windows')
   .description(
     "Pulls latest .env file. Requires that you have the URL set it in .env_url"
   )
-  .action(updateEnv);
+  .action((cmdObj) => {updateEnv(cmdObj.windows)});
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
