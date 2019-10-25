@@ -6,6 +6,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "commander": "^3.0.2",
+    "express-session": "^1.17.0",
     "find-up": "^4.1.0",
     "node-fetch": "^2.6.0"
   },
