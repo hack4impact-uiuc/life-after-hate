@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
+
 // get all users
 router.get(
   "/",
@@ -162,5 +163,32 @@ router.delete("/:user_id", async (req, res) => {
       };
   res.status(ret.code).json(ret);
 });
+
+// get current users (partial info only)
+router.get(
+  "/current/info",
+  celebrate({
+    body: Joi.object().keys({
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
+      oauthId: Joi.string().required(),
+      propicUrl: Joi.string().required(),
+      isApproved: Joi.boolean().default(false),
+      role: Joi.string().required(),
+      location: Joi.string().required()
+    })
+  }),
+  async (req, res) => {
+    const user_info = await User.find(
+      { isApproved: false },
+      { firstName: 1, lastName: 1, role: 1, location: 1 }
+    );
+    res.json({
+      code: 200,
+      result: user_info,
+      success: true
+    });
+  }
+);
 
 module.exports = router;
