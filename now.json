@@ -21,7 +21,7 @@
       "headers": { "cache-control": "s-maxage=31536000,immutable" },
       "dest": "frontend/static/$1"
     },
-    { "src": "favicon.ico", "dest": "/frontend/favicon.ico" },
+    { "src": "/favicon.ico", "dest": "/frontend/favicon.ico" },
     {
       "src": "/asset-manifest.json",
       "dest": "frontend/asset-manifest.json"
@@ -42,5 +42,10 @@
     "GOOGLE_CLIENT_ID": "@lah_google_client_id",
     "GOOGLE_CLIENT_SECRET": "@lah_google_client_secret",
     "DB_URI": "@lah_db_uri"
+  },
+  "build": {
+    "env": {
+      "REACT_APP_MAPBOX_ACCESS_TOKEN": "@lah_mapbox_token"
+    }
   }
 }
