@@ -2,13 +2,21 @@
   "name": "life-after-hate",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hack4impact-uiuc/life-after-hate"
+  },
   "dependencies": {
+    "bootstrap": "^3.4.1",
+    "mapbox-gl": "^1.4.1",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.12.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
+    "react-map-gl": "^5.0.12",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.1.2"
+    "react-scripts": "3.1.2",
+    "reactstrap": "^8.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
