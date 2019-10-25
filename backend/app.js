@@ -2,9 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const passport = require("passport");
+const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const { errors } = require("celebrate");
-const bodyParser = require("body-parser");
 
 require("./utils/passport-setup");
 
