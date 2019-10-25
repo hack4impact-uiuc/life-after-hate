@@ -72,7 +72,7 @@ router.post(
 
 // set role
 router.put(
-  "/setRole/:user_id",
+  "/:user_id/role",
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -104,13 +104,13 @@ router.put(
           message: "User Not Found",
           success: false
         };
-    res.json(ret);
+    res.status(ret.code).json(ret);
   }
 );
 
 // approve user
 router.put(
-  "/approve/:user_id",
+  "/:user_id/approve",
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -141,7 +141,7 @@ router.put(
           message: "User Not Found",
           success: false
         };
-    res.json(ret);
+    res.status(ret.code).json(ret);
   }
 );
 
@@ -160,7 +160,7 @@ router.delete("/:user_id", async (req, res) => {
         message: "User not found",
         success: false
       };
-  res.json(ret);
+  res.status(ret.code).json(ret);
 });
 
 module.exports = router;
