@@ -12,6 +12,6 @@ var router = require("express").Router();
 
 router.use("/sample", require("./sample"));
 router.use("/auth", require("./auth/login"));
-router.use("/user", require("./user"));
+router.use("/users", require("./users"));
 
 module.exports = router;

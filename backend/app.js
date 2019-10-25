@@ -12,6 +12,7 @@ app.use(morgan("dev"));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
+
 app.use(require("./routes"));
 
 mongoose.connect(process.env.DB_URI, {
