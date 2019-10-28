@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
-import "./../styles/search.scss";
+import "./styles.scss";
 
 class Search extends Component {
   constructor(props) {
@@ -13,12 +13,7 @@ class Search extends Component {
       <div className="searchBar">
         <form onSubmit={this.handleSubmit}>
           <label>
-            <input
-              className="searchInput"
-              type="text"
-              value={this.state.value}
-              onChange={this.handleChange}
-            />
+            <input className="searchInput" type="text" />
           </label>
           <Button className="submitSearch" color="info">
             Search

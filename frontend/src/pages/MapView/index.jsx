@@ -1,18 +1,17 @@
 import React from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import "./../styles/mapView.scss";
 
-import Pin from "../components/pin";
-import Search from "../components/search";
+import Pin from "../../components/Pin";
+import Search from "../../components/SearchBar";
 
 const pin_size = 25;
 
 class MapView extends React.Component {
   state = {
     viewport: {
-      latitude: 37.7577,
-      longitude: -122.4376,
-      zoom: 8
+      latitude: 37.785164,
+      longitude: -100,
+      zoom: 3.5
     },
     popup: null
   };
@@ -41,9 +40,7 @@ class MapView extends React.Component {
         onViewportChange={viewport => this.setState({ viewport })}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       >
-        <div className="search">
-          <Search />
-        </div>
+        <Search />
         {this.props.markers.map(this.renderMarkers)}
         {this.state.popup && (
           <Popup
