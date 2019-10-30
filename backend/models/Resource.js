@@ -3,14 +3,16 @@
 const mongoose = require("mongoose");
 
 const Resource = new mongoose.Schema({
-  company_name: { type: String, required: true },
-  contact_name: { type: String, required: true },
-  contact_phone: { type: String, required: true },
-  contact_email: { type: String, required: true },
+  companyName: { type: String, required: true },
+  contactName: { type: String, required: true },
+  contactPhone: { type: String, required: true },
+  contactEmail: { type: String, required: true },
   description: { type: String, required: true },
   address: { type: String, required: true },
-  latitude: { type: Number, required: true },
-  longitude: { type: Number, required: true },
+  location: {
+    type: { type: String, default: "Point" },
+    coordinates: { type: Array, default: [] }
+  },
   notes: { type: String },
   tags: { type: Array, default: [] }
 });
