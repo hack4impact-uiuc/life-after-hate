@@ -1,9 +1,11 @@
-workflow "on pull request merge, delete the branch" {
-  on = "pull_request"
-  resolves = ["branch cleanup"]
-}
-
-action "branch cleanup" {
-  uses = "jessfraz/branch-cleanup-action@master"
-  secrets = ["GITHUB_TOKEN"]
-}
+name: branch-cleanup
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  cleanup-branch:
+    name: on pull request merge, delete the branch
+    runs-on: ubuntu-latest
+    steps:
+    - uses: jessfraz/branch-cleanup-action@master
