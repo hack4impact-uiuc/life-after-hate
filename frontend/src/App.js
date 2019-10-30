@@ -1,7 +1,6 @@
 import React from "react";
-import "./styles/App.scss";
 
-import MapView from "./pages/mapView.js";
+import MapView from "./pages/MapView";
 
 const markers = [
   { latitude: 38.2, longitude: -122.4, name: "Tattoo Removal" },
