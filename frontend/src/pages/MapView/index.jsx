@@ -1,18 +1,32 @@
 import React from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
-import ResourceCard from "../components/resourceCard";
-import Pin from "../components/pin";
-import "./../styles/mapView.scss";
+import Pin from "../../components/Pin";
+import Search from "../../components/SearchBar";
+import "./styles.scss";
 
 const pin_size = 25;
+
+const searchResults = [
+  { title: "hello", text: "this is a message" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" }
+];
 
 class MapView extends React.Component {
   state = {
     viewport: {
-      latitude: 37.7577,
-      longitude: -122.4376,
-      zoom: 8
+      latitude: 37.785164,
+      longitude: -100,
+      zoom: 3.5
     },
     popup: null
   };
@@ -32,16 +46,10 @@ class MapView extends React.Component {
     </Marker>
   );
 
-  renderCards = card => <ResourceCard title={card.title} text={card.text} />;
-
   render() {
     return (
       <div>
-        <div className="FixedHeightContainer">
-          <div className="cardContent">
-            {this.props.searchResults.map(this.renderCards)}
-          </div>
-        </div>
+        <Search searchResults={searchResults} />
         <ReactMapGL
           {...this.state.viewport}
           width="100%"
