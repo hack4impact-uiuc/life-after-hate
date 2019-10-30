@@ -8,10 +8,24 @@ const markers = [
   { latitude: 38.9, longitude: -123.1, name: "Career Center" }
 ];
 
+const searchResults = [
+  { title: "hello", text: "this is a message" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" },
+  { title: "tattoo place", text: "this is a tattooooo place" }
+];
+
 function App() {
   return (
     <div className="App">
-      <MapView markers={markers} />
+      <MapView markers={markers} searchResults={searchResults} />
     </div>
   );
 }
