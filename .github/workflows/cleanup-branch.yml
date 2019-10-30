@@ -1,0 +1,13 @@
+name: PR Tasks
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  cleanup-branch:
+    name: Post-Merge Branch Cleanup
+    runs-on: ubuntu-latest
+    steps:
+    - uses: jessfraz/branch-cleanup-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
