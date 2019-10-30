@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import { Card, CardText, CardBody, CardTitle } from "reactstrap";
 import "./styles.scss";
 
 class ResourceCard extends Component {
@@ -8,6 +7,7 @@ class ResourceCard extends Component {
       <div>
         <div className="resourceCard">
           {this.props.title}
+          <br />
           {this.props.text}
         </div>
       </div>
