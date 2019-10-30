@@ -1,32 +1,43 @@
 const express = require("express");
 const router = express.Router();
-const Resource = require("../../models/Resource");
+const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
+// get all users
+router.get(
+  "/",
+  celebrate({
+    body: Joi.object().keys({
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
+      oauthId: Joi.string().required(),
+      propicUrl: Joi.string().required(),
+      isApproved: Joi.boolean().default(false),
+      role: Joi.string().required(),
+      location: Joi.string().required()
+    })
+  }),
+  async (req, res) => {
+    const users = await User.find({});
+    res.json({
+      code: 200,
+      result: users,
+      success: true
+    });
+  }
+);
 
-// get all resources
-router.get("/", async (req, res) => {
-  const resources = await Resource.find({});
+// get one user
+router.get("/:user_id", async (req, res) => {
+  const userId = req.params.user_id;
+  const user = await User.findById(userId);
   res.json({
     code: 200,
-    result: resources,
+    result: user,
     success: true
   });
 });
 
-// get list of resources filtered by location radius
-router.get("/", async (req, res) => {
-  const tags = req.query.query;
-  const resource = await Resource.find({
-    tags
-  });
-  res.json({
-    code: 200,
-    result: resource,
-    success: true
-  });
-});
-
-// create new resource
+// create new user
 router.post(
   "/",
   celebrate({
@@ -42,7 +53,7 @@ router.post(
   }),
   async (req, res) => {
     const data = req.body;
-    const newResource = new Resource({
+    const newUser = new User({
       firstName: data.firstName,
       lastName: data.lastName,
       oauthId: data.oauthId,
@@ -50,10 +61,10 @@ router.post(
       role: data.role,
       location: data.location
     });
-    await newResource.save();
+    await newUser.save();
     res.json({
       code: 200,
-      message: "Resource Successfully Created",
+      message: "User Successfully Created",
       success: true
     });
   }
@@ -61,7 +72,7 @@ router.post(
 
 // set role
 router.put(
-  "/:resource_id/role",
+  "/:user_id/role",
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -75,31 +86,31 @@ router.put(
   }),
   async (req, res) => {
     const data = req.body;
-    const resourceId = req.params.resource_id;
+    const userId = req.params.user_id;
 
-    const resource = await Resource.findByIdAndUpdate(
-      resourceId,
+    const user = await User.findByIdAndUpdate(
+      userId,
       { $set: { role: data.role } },
       { new: true }
     );
-    const ret = resource
+    const ret = user
       ? {
           code: 200,
-          message: "Resource Role Updated Successfully",
+          message: "User Role Updated Successfully",
           success: true
         }
       : {
           code: 404,
-          message: "Resource Not Found",
+          message: "User Not Found",
           success: false
         };
     res.status(ret.code).json(ret);
   }
 );
 
-// approve resource
+// approve user
 router.put(
-  "/:resource_id/approve",
+  "/:user_id/approve",
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -112,41 +123,41 @@ router.put(
     })
   }),
   async (req, res) => {
-    const resourceId = req.params.resource_id;
+    const userId = req.params.user_id;
 
-    const resource = await Resource.findByIdAndUpdate(
-      resourceId,
+    const user = await User.findByIdAndUpdate(
+      userId,
       { $set: { isApproved: true } },
       { new: true }
     );
-    const ret = resource
+    const ret = user
       ? {
           code: 200,
-          message: "Resource Approved Successfully",
+          message: "User Approved Successfully",
           success: true
         }
       : {
           code: 404,
-          message: "Resource Not Found",
+          message: "User Not Found",
           success: false
         };
     res.status(ret.code).json(ret);
   }
 );
 
-// delete resource
-router.delete("/:resource_id", async (req, res) => {
-  const resourceId = req.params.resource_id;
-  const resource = await Resource.findByIdAndRemove(resourceId);
-  const ret = resource
+// delete user
+router.delete("/:user_id", async (req, res) => {
+  const userId = req.params.user_id;
+  const user = await User.findByIdAndRemove(userId);
+  const ret = user
     ? {
         code: 200,
-        message: "Resource deleted successfully",
+        message: "User deleted successfully",
         success: true
       }
     : {
         code: 404,
-        message: "Resource not found",
+        message: "User not found",
         success: false
       };
   res.status(ret.code).json(ret);
