@@ -2,29 +2,32 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
+
 // get all users
-router.get(
-  "/",
-  celebrate({
-    body: Joi.object().keys({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      oauthId: Joi.string().required(),
-      propicUrl: Joi.string().required(),
-      isApproved: Joi.boolean().default(false),
-      role: Joi.string().required(),
-      location: Joi.string().required()
-    })
-  }),
-  async (req, res) => {
-    const users = await User.find({});
-    res.json({
-      code: 200,
-      result: users,
-      success: true
-    });
-  }
-);
+router.get("/", async (req, res) => {
+  const users = await User.find({});
+  res.json({
+    code: 200,
+    result: users,
+    success: true
+  });
+});
+
+// get current users (partial info only)
+router.get("/current", (req, res) => {
+  const user_info = req.user;
+  const info = {
+    firstName: user_info.firstName,
+    lastName: user_info.lastName,
+    role: user_info.role,
+    location: user_info.location
+  };
+  res.json({
+    code: 200,
+    result: info,
+    success: true
+  });
+});
 
 // get one user
 router.get("/:user_id", async (req, res) => {
@@ -45,7 +48,7 @@ router.post(
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
       oauthId: Joi.string().required(),
-      propicUrl: Joi.string().required(),
+      propicUrl: Joi.string(),
       isApproved: Joi.boolean().default(false),
       role: Joi.string().required(),
       location: Joi.string().required()
