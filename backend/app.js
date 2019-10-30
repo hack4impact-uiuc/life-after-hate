@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const { errors } = require("celebrate");
 
 require("./utils/passport-setup");
+require("./utils/auth-middleware");
 
 app.use(morgan("dev"));
 app.use(session({ secret: "keyboard cat" }));
