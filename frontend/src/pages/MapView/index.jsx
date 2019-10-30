@@ -1,9 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
 import Pin from "../../components/Pin";
 import Search from "../../components/SearchBar";
-import "./styles.scss";
 
 const pin_size = 25;
 
@@ -21,7 +20,7 @@ const searchResults = [
   { title: "tattoo place", text: "this is a tattooooo place" }
 ];
 
-class MapView extends React.Component {
+class MapView extends Component {
   state = {
     viewport: {
       latitude: 37.785164,

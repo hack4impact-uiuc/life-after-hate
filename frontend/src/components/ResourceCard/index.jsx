@@ -1,11 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import { Card, CardText, CardBody, CardTitle } from "reactstrap";
 import "./styles.scss";
 
-class ResourceCard extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+class ResourceCard extends Component {
   render() {
     return (
       <div>
@@ -13,7 +10,6 @@ class ResourceCard extends React.Component {
           <CardBody>
             <CardTitle>{this.props.title}</CardTitle>
             <CardText>{this.props.text}</CardText>
-            {/* <Button>Description</Button> */}
           </CardBody>
         </Card>
       </div>
