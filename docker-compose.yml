@@ -29,10 +29,7 @@ services:
     env_file: 
       - ./.env
     volumes:
-      - ./backend/routes:/var/www/app/routes
-      - ./backend/test:/var/www/app/test
-      - ./backend/utils:/var/www/app/utils
-      - ./backend/models:/var/www/app/models
+      - ./backend:/var/www/app
       # expose a named volume that works because installing
       # and then mounting will hide that folder, so we need to explicitly
       # show it again
