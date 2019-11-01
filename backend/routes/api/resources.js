@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Resource = require("../../models/Resource");
 const { celebrate, Joi } = require("celebrate");
+Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
 router.get("/", async (req, res) => {
@@ -13,31 +14,34 @@ router.get("/", async (req, res) => {
   });
 });
 
-// get one resource
-router.get("/:resource_id", async (req, res) => {
-  const resourceId = req.params.resource_id;
-  const resource = await Resource.findById(resourceId);
-  res.json({
-    code: 200,
-    result: resource,
-    success: true
-  });
-});
-
 // get list of resources filtered by location radius
-router.get("/filter", async (req, res) => {
-  const radius = req.query.radius;
-  const lat = parseInt(req.query.lat);
-  const long = parseInt(req.query.long);
-  const resource = await Resource.find({
-    location: { $geoWithin: { $centerSphere: [[long, lat], radius / 3963.2] } }
-  });
-  res.json({
-    code: 200,
-    result: resource,
-    success: true
-  });
-});
+router.get(
+  "/filter",
+  celebrate({
+    query: {
+      radius: Joi.number().required(),
+      lat: Joi.number().required(),
+      long: Joi.number().required()
+    }
+  }),
+  async (req, res) => {
+    const radius = req.query.radius;
+    const lat = req.query.lat;
+    const long = req.query.long;
+
+    // 3963.2 = radius of Earth in miles
+    const resource = await Resource.find({
+      location: {
+        $geoWithin: { $centerSphere: [[long, lat], radius / 3963.2] }
+      }
+    });
+    res.json({
+      code: 200,
+      result: resource,
+      success: true
+    });
+  }
+);
 
 // create new resource
 router.post(
@@ -77,8 +81,27 @@ router.post(
     });
     await newResource.save();
     res.json({
-      code: 200,
+      code: 201,
       message: "Resource Successfully Created",
+      success: true
+    });
+  }
+);
+
+// get one resource
+router.get(
+  "/:resource_id",
+  celebrate({
+    params: {
+      resource_id: Joi.objectId().required()
+    }
+  }),
+  async (req, res) => {
+    const resourceId = req.params.resource_id;
+    const resource = await Resource.findById(resourceId);
+    res.json({
+      code: 200,
+      result: resource,
       success: true
     });
   }
@@ -103,7 +126,10 @@ router.put(
       }),
       notes: Joi.string(),
       tags: Joi.array().items(Joi.string())
-    })
+    }),
+    params: {
+      resource_id: Joi.objectId().required()
+    }
   }),
   async (req, res) => {
     const data = req.body;
@@ -131,21 +157,29 @@ router.put(
 );
 
 // delete resource
-router.delete("/:resource_id", async (req, res) => {
-  const resourceId = req.params.resource_id;
-  const resource = await Resource.findByIdAndRemove(resourceId);
-  const ret = resource
-    ? {
-        code: 200,
-        message: "Resource deleted successfully",
-        success: true
-      }
-    : {
-        code: 404,
-        message: "Resource not found",
-        success: false
-      };
-  res.status(ret.code).json(ret);
-});
+router.delete(
+  "/:resource_id",
+  celebrate({
+    params: {
+      resource_id: Joi.objectId().required()
+    }
+  }),
+  async (req, res) => {
+    const resourceId = req.params.resource_id;
+    const resource = await Resource.findByIdAndRemove(resourceId);
+    const ret = resource
+      ? {
+          code: 200,
+          message: "Resource deleted successfully",
+          success: true
+        }
+      : {
+          code: 404,
+          message: "Resource not found",
+          success: false
+        };
+    res.status(ret.code).json(ret);
+  }
+);
 
 module.exports = router;
