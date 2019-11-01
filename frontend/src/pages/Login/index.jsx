@@ -14,7 +14,11 @@ class Login extends Component {
         <img id="lah-logo" src={Logo} alt="LAH Logo" />
         <img id="google-logo" src={GoogleLogo} alt="Google Logo" />
         <p>Sign in to Life After Hate with Google</p>
-        <Button className="login-button" color="link">
+        <Button
+          className="login-button"
+          color="link"
+          href="http://localhost:5000/api/auth/login"
+        >
           <img id="sign-in" src={Signin} alt="signin" />
         </Button>
       </div>
