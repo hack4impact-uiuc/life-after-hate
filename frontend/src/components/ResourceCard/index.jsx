@@ -6,9 +6,9 @@ class ResourceCard extends Component {
     return (
       <div>
         <div className="resourceCard">
-          {this.props.title}
+          {this.props.name}
           <br />
-          {this.props.text}
+          {this.props.description}
         </div>
       </div>
     );

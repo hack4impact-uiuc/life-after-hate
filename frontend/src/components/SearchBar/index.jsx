@@ -1,42 +1,33 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
 
-import ResourceCard from "../../components/ResourceCard";
 import "./styles.scss";
 
 class Search extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: "", showResults: false };
-  }
-
-  renderCards = card => <ResourceCard title={card.title} text={card.text} />;
+  handleChange = e => {
+    this.props.changeHandler(e.target.value);
+  };
 
   handleSubmit = e => {
-    this.setState({ showResults: true });
+    this.props.searchHandler();
     e.preventDefault();
   };
 
   render() {
     return (
-      <div className="FixedHeightContainer">
-        <div className="searchContent">
-          <div className="searchBar">
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                <input className="searchInput" type="text" />
-              </label>
-              <Button className="submitSearch" color="info">
-                Search
-              </Button>{" "}
-            </form>
-          </div>
-        </div>
-        <div className="cardContent">
-          {this.state.showResults &&
-            this.props.searchResults.map(this.renderCards)}
-        </div>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          <input
+            className="searchInput"
+            type="text"
+            value={this.props.input_value}
+            onChange={this.handleChange}
+          />
+        </label>
+        <Button className="submitSearch" color="info">
+          Search
+        </Button>{" "}
+      </form>
     );
   }
 }
