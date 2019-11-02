@@ -13,13 +13,9 @@ router.get(
     failureRedirect: "/login"
   }),
   function(req, res) {
-    res.redirect("/api/auth/hello");
+    res.redirect("/");
   }
 );
-
-router.get("/hello", auth.isAuthenticated, function(req, res) {
-  res.json(req.user);
-});
 
 router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
   res.json("you are a volunteer boo yah");
