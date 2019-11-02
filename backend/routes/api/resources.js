@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Resource = require("../../models/Resource");
 const { celebrate, Joi } = require("celebrate");
+const geolib = require("geolib");
 Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
@@ -30,14 +31,38 @@ router.get(
     const long = req.query.long;
 
     // 3963.2 = radius of Earth in miles
-    const resource = await Resource.find({
+    const resources = await Resource.find({
       location: {
         $geoWithin: { $centerSphere: [[long, lat], radius / 3963.2] }
       }
     });
+
+    // sort by closest distance first
+    resources.sort(function(a, b) {
+      const distanceA = geolib.getDistance(
+        {
+          latitude: a.location.coordinates[0],
+          longitude: a.location.coordinates[1]
+        },
+        { latitude: lat, longitude: long }
+      );
+      const distanceB = geolib.getDistance(
+        {
+          latitude: b.location.coordinates[0],
+          longitude: b.location.coordinates[1]
+        },
+        { latitude: lat, longitude: long }
+      );
+
+      if (distanceA < distanceB) {
+        return -1;
+      }
+      return 1;
+    });
+
     res.json({
       code: 200,
-      result: resource,
+      result: resources,
       success: true
     });
   }
