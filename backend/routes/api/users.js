@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
+const auth = require("../../utils/auth-middleware");
 
 // get all users
 router.get("/", async (req, res) => {
@@ -76,6 +77,7 @@ router.post(
 // set role
 router.put(
   "/:user_id/role",
+  auth.isAdmin,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -114,6 +116,7 @@ router.put(
 // approve user
 router.put(
   "/:user_id/approve",
+  auth.isAdmin,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -149,7 +152,7 @@ router.put(
 );
 
 // delete user
-router.delete("/:user_id", async (req, res) => {
+router.delete("/:user_id", auth.isAdmin, async (req, res) => {
   const userId = req.params.user_id;
   const user = await User.findByIdAndRemove(userId);
   const ret = user

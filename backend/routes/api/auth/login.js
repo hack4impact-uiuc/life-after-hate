@@ -18,15 +18,27 @@ router.get(
 );
 
 router.get("/hello", auth.isAuthenticated, function(req, res) {
-  res.json(req.user);
+  res.json({
+    code: 200,
+    result: req.user,
+    success: true
+  });
 });
 
 router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
-  res.json("you are a volunteer boo yah");
+  res.json({
+    code: 200,
+    result: "you are a volunteer boo yah",
+    success: true
+  });
 });
 
 router.get("/testAdmin", auth.isAdmin, function(req, res) {
-  res.json("you are an admin boo yah");
+  res.json({
+    code: 200,
+    result: "you are an admin boo yah",
+    success: true
+  });
 });
 
 module.exports = router;
