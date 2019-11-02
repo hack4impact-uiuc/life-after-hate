@@ -11,7 +11,12 @@
   background-repeat: no-repeat;
   padding: 3% 5% 4% 13%;
   text-indent: 8px;
+  &:focus {
+    border-color: #6265e4;
+    box-shadow: 0 0 5px rgba(98, 101, 228, 1);
+  }
 }
+
 
 .submitSearch {
   margin-left: 5px;

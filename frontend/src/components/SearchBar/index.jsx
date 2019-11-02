@@ -26,7 +26,7 @@ class Search extends Component {
         </label>
         <Button className="submitSearch" color="info">
           Search
-        </Button>{" "}
+        </Button>
       </form>
     );
   }

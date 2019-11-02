@@ -1,0 +1,26 @@
+.login {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #F9F9F9;
+
+    #lah-logo {
+        height: 10vmin;
+    }
+    #google-logo {
+        height: 15vmin;
+        
+    }
+    #sign-in {
+        height: 8vmin;
+    }
+    
+    p {
+        font-family: 'Roboto';
+        font-weight: 700;
+        font-size: 18px;
+    }
+}
