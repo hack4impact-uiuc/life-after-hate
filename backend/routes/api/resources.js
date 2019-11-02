@@ -3,6 +3,7 @@ const router = express.Router();
 const Resource = require("../../models/Resource");
 const { celebrate, Joi } = require("celebrate");
 const geolib = require("geolib");
+const Fuse = require("fuse.js");
 Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
@@ -20,45 +21,82 @@ router.get(
   "/filter",
   celebrate({
     query: {
-      radius: Joi.number().required(),
-      lat: Joi.number().required(),
-      long: Joi.number().required()
+      radius: Joi.number(),
+      lat: Joi.number(),
+      long: Joi.number(),
+      keyword: Joi.string()
     }
   }),
   async (req, res) => {
     const radius = req.query.radius;
     const lat = req.query.lat;
     const long = req.query.long;
+    const keyword = req.query.keyword;
+
+    let resources = await Resource.find({});
 
     // 3963.2 = radius of Earth in miles
-    const resources = await Resource.find({
-      location: {
-        $geoWithin: { $centerSphere: [[long, lat], radius / 3963.2] }
-      }
-    });
+    if (radius && lat && long) {
+      resources = await Resource.find({
+        location: {
+          $geoWithin: { $centerSphere: [[long, lat], radius / 3963.2] }
+        }
+      });
 
-    // sort by closest distance first
-    resources.sort(function(a, b) {
-      const distanceA = geolib.getDistance(
-        {
-          latitude: a.location.coordinates[0],
-          longitude: a.location.coordinates[1]
-        },
-        { latitude: lat, longitude: long }
-      );
-      const distanceB = geolib.getDistance(
-        {
-          latitude: b.location.coordinates[0],
-          longitude: b.location.coordinates[1]
-        },
-        { latitude: lat, longitude: long }
-      );
+      // sort by closest distance first
+      resources.sort(function(a, b) {
+        const distanceA = geolib.getDistance(
+          {
+            latitude: a.location.coordinates[0],
+            longitude: a.location.coordinates[1]
+          },
+          { latitude: lat, longitude: long }
+        );
+        const distanceB = geolib.getDistance(
+          {
+            latitude: b.location.coordinates[0],
+            longitude: b.location.coordinates[1]
+          },
+          { latitude: lat, longitude: long }
+        );
 
-      if (distanceA < distanceB) {
-        return -1;
-      }
-      return 1;
-    });
+        if (distanceA < distanceB) {
+          return -1;
+        }
+        return 1;
+      });
+    }
+    if (keyword) {
+      // fuzzy search
+      var options = {
+        shouldSort: true,
+        threshold: 0.5,
+        location: 0,
+        distance: 100,
+        maxPatternLength: 32,
+        minMatchCharLength: 1,
+        keys: [
+          {
+            name: "tags",
+            weight: 0.5
+          },
+          {
+            name: "companyName",
+            weight: 0.3
+          },
+          {
+            name: "description",
+            weight: 0.1
+          },
+          {
+            name: "address",
+            weight: 0.1
+          }
+        ]
+      };
+      const fuse = new Fuse(resources, options);
+      resources = fuse.search(keyword);
+    }
 
     res.json({
       code: 200,
