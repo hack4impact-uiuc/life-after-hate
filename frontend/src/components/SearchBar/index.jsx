@@ -13,6 +13,15 @@ class Search extends Component {
     e.preventDefault();
   };
 
+  handleSuggestionClick = suggestion => {
+    this.props.changeHandler(suggestion);
+    this.props.searchHandler();
+  };
+
+  renderSuggestions = suggestion => (
+    <tr onClick={() => this.handleSuggestionClick(suggestion)}>{suggestion}</tr>
+  );
+
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
@@ -20,9 +29,14 @@ class Search extends Component {
           <input
             className="searchInput"
             type="text"
-            value={this.props.input_value}
+            value={this.props.inputValue}
             onChange={this.handleChange}
+            list="suggestionsList"
           />
+          <table className="dropdownStyle">
+            {this.props.searchSuggestions &&
+              this.props.searchSuggestions.map(this.renderSuggestions)}
+          </table>
         </label>
         <Button className="submitSearch" color="info">
           Search

@@ -6,7 +6,7 @@ import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
 import "./styles.scss";
 
-const pin_size = 25;
+const pinSize = 25;
 const searchResults = [
   {
     latitude: 38.2,
@@ -76,6 +76,8 @@ const searchResults = [
   }
 ];
 
+const searchSuggestions = [];
+
 class MapView extends Component {
   constructor(props) {
     super(props);
@@ -86,9 +88,10 @@ class MapView extends Component {
         zoom: 3.5
       },
       popup: null,
-      input_value: "",
+      inputValue: "",
       searchResults: null,
-      showResults: false
+      showResults: false,
+      searchSuggestions: []
     };
   }
 
@@ -103,7 +106,7 @@ class MapView extends Component {
       latitude={marker.latitude}
     >
       <Pin
-        size={pin_size}
+        size={pinSize}
         onClick={() => {
           this.setState({ popup: marker });
         }}
@@ -116,7 +119,8 @@ class MapView extends Component {
   };
 
   changeHandler = input => {
-    this.setState({ input_value: input });
+    this.state.searchSuggestions.push(input);
+    this.setState({ inputValue: input, searchSuggestions: searchSuggestions });
   };
 
   render() {
@@ -128,7 +132,8 @@ class MapView extends Component {
               <Search
                 searchHandler={this.searchHandler}
                 changeHandler={this.changeHandler}
-                input_value={this.state.input_value}
+                searchSuggestions={this.state.searchSuggestions}
+                inputValue={this.state.inputValue}
               />
             </div>
           </div>

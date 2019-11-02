@@ -17,7 +17,13 @@
   }
 }
 
-
 .submitSearch {
   margin-left: 5px;
+}
+
+.dropdownStyle {
+  z-index: 2;
+  position: absolute;
+  background-color: white;
+  width: 100%;
 }
