@@ -1,25 +1,33 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
+
 import "./styles.scss";
 
 class Search extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: "" };
-  }
+  handleChange = e => {
+    this.props.changeHandler(e.target.value);
+  };
+
+  handleSubmit = e => {
+    this.props.searchHandler();
+    e.preventDefault();
+  };
 
   render() {
     return (
-      <div className="searchBar">
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            <input className="searchInput" type="text" />
-          </label>
-          <Button className="submitSearch" color="info">
-            Search
-          </Button>{" "}
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          <input
+            className="searchInput"
+            type="text"
+            value={this.props.input_value}
+            onChange={this.handleChange}
+          />
+        </label>
+        <Button className="submitSearch" color="info">
+          Search
+        </Button>
+      </form>
     );
   }
 }
