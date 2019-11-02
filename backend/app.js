@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(require("./routes"));
 
 mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: true,
+  useUnifiedTopology: false,
   useNewUrlParser: true
 });
 
