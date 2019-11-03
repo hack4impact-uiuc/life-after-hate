@@ -12,11 +12,11 @@ Not all sections apply, feel free to delete as appropriate.
 -->
 
 ## Description
-
+<!--
 A few sentences describing the overall goals of the pull request's commits.
+-->
 
-Related issues: #<number>
-Related PRs: #<number>
+Fixes #<number>
 
 ## Todos
 
