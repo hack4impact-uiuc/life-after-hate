@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
-
+const auth = require("../../utils/auth-middleware");
 // get all users
 router.get("/", async (req, res) => {
   const users = await User.find({});
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 // get current users (partial info only)
-router.get("/current", (req, res) => {
+router.get("/current", auth.isAuthenticated, (req, res) => {
   const user_info = req.user;
   const info = {
     firstName: user_info.firstName,
