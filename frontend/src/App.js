@@ -1,52 +1,36 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Auth from "./components/Auth";
+import Router from "./components/Router";
 
-// import MapView from "./pages/MapView";
-import Login from "./pages/Login";
-import MapView from "./pages/MapView";
+const API_URI = process.env.REACT_APP_API_URI
+  ? process.env.REACT_APP_API_URI
+  : "";
 
-const markers = [
-  { latitude: 38.2, longitude: -122.4, name: "Tattoo Removal" },
-  { latitude: 38.9, longitude: -123.1, name: "Career Center" }
-];
+// const markers = [
+//   { latitude: 38.2, longitude: -122.4, name: "Tattoo Removal" },
+//   { latitude: 38.9, longitude: -123.1, name: "career Center" }
+// ];
 
 class App extends Component {
-  state = {
-    authenticated: false
-  };
-
   componentDidMount() {
     this.checkAuthenticated();
   }
 
   checkAuthenticated = async () => {
-    let res = await fetch("api/users/current");
+    const res = await fetch(`${API_URI}/api/users/current`);
     if (res.status === 200) {
-      this.setState({
-        authenticated: true
-      });
+      Auth.authenticate();
     } else {
-      this.setState({
-        authenticated: false
-      });
+      Auth.signout();
     }
   };
 
   render() {
-    console.log(this.state.authenticated);
+    console.log(Auth.getAuth());
     return (
-      <Router>
-        <div className="App">
-          <Switch>
-            <Route path="/login" component={Login} />
-            {this.state.authenticated && (
-              <Route path="/map">
-                <MapView markers={markers} />
-              </Route>
-            )}
-          </Switch>
-        </div>
-      </Router>
+      <div className="App">
+        <Router />
+      </div>
     );
   }
 }
