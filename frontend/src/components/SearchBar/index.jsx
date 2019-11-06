@@ -34,7 +34,8 @@ class Search extends Component {
             list="suggestionsList"
           />
           <table className="dropdownStyle">
-            {this.props.searchSuggestions &&
+            {this.props.showSearchSuggestions &&
+              this.props.searchSuggestions &&
               this.props.searchSuggestions.map(this.renderSuggestions)}
           </table>
         </label>
