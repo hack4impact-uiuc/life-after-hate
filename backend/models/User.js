@@ -3,22 +3,33 @@
  */
 const mongoose = require("mongoose");
 
+let roleEnum = {
+  ADMIN: "ADMIN",
+  VOLUNTEER: "VOLUNTEER"
+};
+
+let locationEnum = {
+  NORTH: "NORTH",
+  SOUTH: "SOUTH"
+};
+
 const User = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   oauthId: { type: String, required: true, unique: true },
-  propicUrl: { type: String, required: true },
+  propicUrl: { type: String, required: false },
   isApproved: { type: Boolean, default: false, required: true },
   role: {
     type: String,
-    enum: ["ADMIN", "VOLUNTEER"],
+    enum: [roleEnum.ADMIN, roleEnum.VOLUNTEER],
     required: true
   },
   location: {
     type: String,
-    enum: ["NORTH", "SOUTH"],
+    enum: [locationEnum.NORTH, locationEnum.SOUTH],
     required: true
   }
 });
 
 module.exports = mongoose.model("User", User);
+module.exports.roleEnum = roleEnum;

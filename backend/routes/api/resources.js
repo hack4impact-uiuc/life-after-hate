@@ -4,8 +4,6 @@ const Resource = require("../../models/Resource");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const { sortByDistance, options } = require("../../utils/resource-utils");
-// require("./utils/passport-setup");
-
 Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
@@ -85,7 +83,6 @@ router.post(
   }),
   async (req, res) => {
     const data = req.body;
-    console.log(data);
     const newResource = new Resource(data);
     await newResource.save();
     res.json({

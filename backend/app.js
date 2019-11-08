@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const { errors } = require("celebrate");
 
 require("./utils/passport-setup");
+require("./utils/auth-middleware");
 
 app.use(morgan("dev"));
 app.use(session({ secret: "keyboard cat" }));
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 app.use(require("./routes"));
 
 mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: true,
+  useUnifiedTopology: false,
   useNewUrlParser: true
 });
 
