@@ -1,3 +1,5 @@
+// import errorHandler from "./errorHandler";
+
 require("node-fetch");
 
 const API_URI = process.env.REACT_APP_API_URI

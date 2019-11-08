@@ -78,11 +78,12 @@ class MapView extends Component {
               />
             </div>
           </div>
-          <div className="cardContent">
-            {this.state.showResults &&
-              this.state.searchResults &&
-              this.state.searchResults.map(this.renderCards)}
-          </div>
+          {this.state.showResults && (
+            <div className="cardContent">
+              {this.state.searchResults &&
+                this.state.searchResults.map(this.renderCards)}
+            </div>
+          )}
         </div>
         <ReactMapGL
           {...this.state.viewport}

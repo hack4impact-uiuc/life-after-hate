@@ -1,5 +1,5 @@
 # docker-compose.yml
-version: "3.7"
+version: "2.2"
 services:
   frontend:
     env_file: 

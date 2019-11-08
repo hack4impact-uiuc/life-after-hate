@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Button } from "reactstrap";
 
 import "./styles.scss";
 
@@ -25,13 +24,14 @@ class Search extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <label>
+        <label className="search">
           <input
             className="searchInput"
             type="text"
             value={this.props.inputValue}
             onChange={this.handleChange}
             list="suggestionsList"
+            placeholder="Search"
           />
           <table className="dropdownStyle">
             {this.props.showSearchSuggestions &&
@@ -39,9 +39,9 @@ class Search extends Component {
               this.props.searchSuggestions.map(this.renderSuggestions)}
           </table>
         </label>
-        <Button className="submitSearch" color="info">
-          Search
-        </Button>
+        <button className="submitSearch" type="submit">
+          Go
+        </button>
       </form>
     );
   }
