@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("Yo");
     this.checkAuthenticated();
   }
 
@@ -36,8 +35,9 @@ class App extends Component {
         <Router>
           <Route path="/login" component={Login} />
           <PrivateRoute
+            exact
             authed={this.state.authenticated}
-            path="/map"
+            path="/"
             component={MapView}
           />
         </Router>
