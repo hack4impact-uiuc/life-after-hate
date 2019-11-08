@@ -16,7 +16,7 @@ const sortByDistance = (a, b, lat, long) => {
     { latitude: lat, longitude: long }
   );
 
-  return distanceA < distanceB ? -1 : 1;
+  return distanceA - distanceB;
 };
 
 const options = {
