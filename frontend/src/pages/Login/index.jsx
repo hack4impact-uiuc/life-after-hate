@@ -4,6 +4,7 @@ import { Button } from "reactstrap";
 import Logo from "./images/lah-logo.png";
 import GoogleLogo from "./images/google-logo.png";
 import Signin from "./images/google-signin.png";
+import { API_URI } from "../../utils/api";
 
 import "./styles.scss";
 
@@ -17,7 +18,7 @@ class Login extends Component {
         <Button
           className="login-button"
           color="link"
-          href="http://localhost:5000/api/auth/login"
+          href={`${API_URI}/api/auth/login`}
         >
           <img id="sign-in" src={Signin} alt="signin" />
         </Button>
