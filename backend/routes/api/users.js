@@ -4,7 +4,7 @@ const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
 const auth = require("../../utils/auth-middleware");
 // get all users
-router.get("/", auth.isAuthenticated, async (req, res) => {
+router.get("/", auth.isAdmin, async (req, res) => {
   const users = await User.find({});
   res.json({
     code: 200,

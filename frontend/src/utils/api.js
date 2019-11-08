@@ -1,24 +1,24 @@
-//TODO: Add API calls here!
 require("node-fetch");
-const host = "http://localhost:5000/api";
 
-async function getEndpoint(endPoint, dataKey, additonal_headers = null) {
+const API_URI = process.env.REACT_APP_API_URI
+  ? process.env.REACT_APP_API_URI
+  : "";
+
+const host = `${API_URI}/api`;
+
+async function getEndPoint(endPoint) {
   try {
-    let headers = { ...additonal_headers, "Content-Type": "application/json" };
     let response = await fetch(`${host}/${endPoint}`, {
-      method: "GET",
-      headers
+      method: "GET"
     });
     let responseJson = await response.json();
-    return dataKey === "" || responseJson.success === false
-      ? responseJson.result
-      : responseJson.result[dataKey];
+    return responseJson.result;
   } catch (error) {
     console.error(error);
   }
 }
 /**
-async function postEndpoint(endPoint, data, additonal_headers = null) {
+async function postEndPoint(endPoint, data, additonal_headers = null) {
   try {
     let headers = { ...additonal_headers, "Content-Type": "application/json" };
     let response = await fetch(`${host }/${ endPoint}`, {
@@ -33,7 +33,7 @@ async function postEndpoint(endPoint, data, additonal_headers = null) {
   }
 }
 
-async function putEndpoint(endPoint, data, additonal_headers = null) {
+async function putEndPoint(endPoint, data, additonal_headers = null) {
   try {
     let headers = { ...additonal_headers, "Content-Type": "application/json" };
     let response = await fetch(`${host }/${ endPoint}`, {
@@ -48,7 +48,7 @@ async function putEndpoint(endPoint, data, additonal_headers = null) {
   }
 }
 
-async function deleteEndpoint(endPoint) {
+async function deleteEndPoint(endPoint) {
   try {
     let response = await fetch(`${host }/${ endPoint}`, {
       method: "DELETE",
@@ -65,7 +65,7 @@ async function deleteEndpoint(endPoint) {
 */
 
 async function getSearchResults(keyword) {
-  return await getEndpoint(`resources/filter?keyword=${keyword}`, "");
+  return await getEndPoint(`resources/filter?keyword=${keyword}`, "");
 }
 
 export default {

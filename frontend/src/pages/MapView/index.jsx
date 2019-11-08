@@ -51,7 +51,7 @@ class MapView extends Component {
   searchHandler = async () => {
     const searchResults = await api.getSearchResults(this.state.inputValue);
     this.setState({
-      searchResults: searchResults,
+      searchResults,
       showResults: true,
       showSearchSuggestions: false
     });
@@ -60,7 +60,7 @@ class MapView extends Component {
 
   changeHandler = input => {
     this.state.searchSuggestions.push(input);
-    this.setState({ inputValue: input, searchSuggestions: searchSuggestions });
+    this.setState({ inputValue: input, searchSuggestions });
   };
 
   render() {
@@ -80,7 +80,7 @@ class MapView extends Component {
           </div>
           <div className="cardContent">
             {this.state.showResults &&
-              this.state.searchResults.length > 0 &&
+              this.state.searchResults &&
               this.state.searchResults.map(this.renderCards)}
           </div>
         </div>
@@ -92,7 +92,7 @@ class MapView extends Component {
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         >
           {this.state.showResults &&
-            this.state.searchResults.length > 0 &&
+            this.state.searchResults &&
             this.state.searchResults.map(this.renderMarkers)}
           {this.state.popup && (
             <Popup
