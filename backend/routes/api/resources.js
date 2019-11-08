@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Resource = require("../../models/Resource");
 const { celebrate, Joi } = require("celebrate");
-const geolib = require("geolib");
 const Fuse = require("fuse.js");
+const { sortByDistance, options } = require("../../utils/resource-utils");
+// require("./utils/passport-setup");
+
 Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
@@ -28,11 +30,7 @@ router.get(
     }
   }),
   async (req, res) => {
-    const radius = req.query.radius;
-    const lat = req.query.lat;
-    const long = req.query.long;
-    const keyword = req.query.keyword;
-
+    const { radius, lat, long, keyword } = req.query;
     let resources = await Resource.find({});
 
     // 3963.2 = radius of Earth in miles
@@ -44,56 +42,12 @@ router.get(
       });
 
       // sort by closest distance first
-      resources.sort(function(a, b) {
-        const distanceA = geolib.getDistance(
-          {
-            latitude: a.location.coordinates[0],
-            longitude: a.location.coordinates[1]
-          },
-          { latitude: lat, longitude: long }
-        );
-        const distanceB = geolib.getDistance(
-          {
-            latitude: b.location.coordinates[0],
-            longitude: b.location.coordinates[1]
-          },
-          { latitude: lat, longitude: long }
-        );
-
-        if (distanceA < distanceB) {
-          return -1;
-        }
-        return 1;
+      resources.sort((a, b) => {
+        sortByDistance(a, b, lat, long);
       });
     }
     if (keyword) {
       // fuzzy search
-      var options = {
-        shouldSort: true,
-        threshold: 0.5,
-        location: 0,
-        distance: 100,
-        maxPatternLength: 32,
-        minMatchCharLength: 1,
-        keys: [
-          {
-            name: "tags",
-            weight: 0.5
-          },
-          {
-            name: "companyName",
-            weight: 0.3
-          },
-          {
-            name: "description",
-            weight: 0.1
-          },
-          {
-            name: "address",
-            weight: 0.1
-          }
-        ]
-      };
       const fuse = new Fuse(resources, options);
       resources = fuse.search(keyword);
     }
@@ -131,17 +85,8 @@ router.post(
   }),
   async (req, res) => {
     const data = req.body;
-    const newResource = new Resource({
-      companyName: data.companyName,
-      contactName: data.contactName,
-      contactPhone: data.contactPhone,
-      contactEmail: data.contactEmail,
-      description: data.description,
-      address: data.address,
-      location: data.location,
-      notes: data.notes,
-      tags: data.tags
-    });
+    console.log(data);
+    const newResource = new Resource(data);
     await newResource.save();
     res.json({
       code: 201,
