@@ -68,6 +68,4 @@ async function getSearchResults(keyword) {
   return await getEndPoint(`resources/filter?keyword=${keyword}`, "");
 }
 
-export default {
-  getSearchResults
-};
+export { getSearchResults };

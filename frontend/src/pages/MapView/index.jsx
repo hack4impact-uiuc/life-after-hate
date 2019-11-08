@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
-import api from "../../utils/api";
+import { getSearchResults } from "../../utils/api";
 import Pin from "../../components/Pin";
 import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
@@ -49,7 +49,7 @@ class MapView extends Component {
   );
 
   searchHandler = async () => {
-    const searchResults = await api.getSearchResults(this.state.inputValue);
+    const searchResults = await getSearchResults(this.state.inputValue);
     this.setState({
       searchResults,
       showResults: true,
