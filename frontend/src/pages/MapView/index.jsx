@@ -49,7 +49,14 @@ class MapView extends Component {
   );
 
   searchHandler = async () => {
-    const searchResults = await getSearchResults(this.state.inputValue);
+    let searchResults;
+    try {
+      searchResults = await getSearchResults(this.state.inputValue);
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+
     this.setState({
       searchResults,
       showResults: true,
