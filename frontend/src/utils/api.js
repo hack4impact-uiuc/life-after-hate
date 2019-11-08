@@ -12,14 +12,11 @@ async function fetchWithError(
   data = null,
   additional_headers = null
 ) {
-  let headers = {};
-  if (!(method === "GET" || method === "DELETE")) {
-    headers = { ...additional_headers, "Content-Type": "application/json" };
-  }
+  let isGetOrDelete = (method == "GET" || method == "DELETE")
   let response = await fetch(`${host}/${endPoint}`, {
     method,
-    headers,
-    body: !method === "GET" || (method === "DELETE" && JSON.stringify(data))
+    headers: isGetOrDelete ? {} : { ...additional_headers, "Content-Type": "application/json" },
+    body: isGetOrDelete ? null : JSON.stringify(data)
   });
   if (!response.ok) {
     throw new Error(response.statusText);
