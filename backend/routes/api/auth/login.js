@@ -18,7 +18,7 @@ router.get("/login", (req, res, next) => {
     ? Buffer.from(JSON.stringify({ callbackUrl })).toString("base64")
     : undefined;
   const auth = passport.authenticate("google", {
-    scope: ["openid", "profile"],
+    scope: ["openid", "profile", "email"],
     state
   });
   auth(req, res, next);
