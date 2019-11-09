@@ -11,4 +11,4 @@ const isAuthenticated = async () => {
   return res.status === 200;
 };
 
-module.exports = { isAuthenticated, API_URI };
+export { isAuthenticated, API_URI };
