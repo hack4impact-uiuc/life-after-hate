@@ -1,0 +1,14 @@
+.loading-spinner {
+    position: absolute;
+    img {
+        position:absolute;
+        margin:auto;
+        margin:50px;
+        width:100px;
+        height:100px;
+    }
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}

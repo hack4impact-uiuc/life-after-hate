@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import Loader from "../Loader";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
-  console.log(authed);
   return (
     <Route
       {...rest}
@@ -17,7 +17,7 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
             />
           );
         }
-        return <h3>hi</h3>;
+        return <Loader></Loader>;
       }}
     />
   );

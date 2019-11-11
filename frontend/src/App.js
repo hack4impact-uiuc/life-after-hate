@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import MapView from "./pages/MapView";
-import { API_URI } from "./utils/api";
+import { isAuthenticated } from "./utils/api";
 
 // const markers = [
 //   { latitude: 38.2, longitude: -122.4, name: "Tattoo Removal" },
@@ -19,15 +19,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("Yo");
     this.checkAuthenticated();
   }
 
   checkAuthenticated = async () => {
-    const res = await fetch(`${API_URI}/api/users/current`, {
-      credentials: "include"
+    this.setState({
+      authenticated: await isAuthenticated()
     });
-    this.setState({ authenticated: res.status === 200 });
   };
 
   render() {
@@ -36,8 +34,9 @@ class App extends Component {
         <Router>
           <Route path="/login" component={Login} />
           <PrivateRoute
+            exact
             authed={this.state.authenticated}
-            path="/map"
+            path="/"
             component={MapView}
           />
         </Router>

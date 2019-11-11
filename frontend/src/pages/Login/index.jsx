@@ -4,7 +4,7 @@ import { Button } from "reactstrap";
 import Logo from "./images/lah-logo.png";
 import GoogleLogo from "./images/google-logo.png";
 import Signin from "./images/google-signin.png";
-import { API_URI } from "../../utils/api";
+import { API_URI } from "../../utils/api.js";
 
 import "./styles.scss";
 
