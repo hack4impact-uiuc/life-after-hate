@@ -1,0 +1,53 @@
+.lah_navbar {
+    width: 100%;
+    background-color: white;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    height: 60px;
+    padding: 16px 30px 20px 30px;
+    position: fixed;
+    box-shadow: 0 4px 8px -7px rgb(46, 45, 45);
+    z-index: 1000;
+    font-family: 'Roboto';
+
+    #logo {
+        height: 30px;
+    }
+}
+.nav-links {
+    a {
+        color: #8B8B8B;
+        text-decoration: none;
+        margin-left: 30px;
+        font-weight: 350;
+        font-size: 15px;
+
+        &:hover {
+            color: #F79537;
+            text-decoration: none;
+        }
+    }
+    
+}
+
+div.dropdown {
+    width: 50px;
+    margin-left: 12px;
+    #dropdown-button {
+        background-color: transparent;
+    }
+    #user {
+        height: 30px;
+        padding-right: 3px;
+    }
+    .caret {
+        color: #8B8B8B;
+    }
+}
+
+.spacing {
+    flex-grow: 1;
+}
