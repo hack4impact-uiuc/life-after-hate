@@ -1,6 +1,5 @@
 const passport = require("passport");
 const router = require("express").Router();
-const auth = require("../../../utils/auth-middleware");
 const Boom = require("@hapi/boom");
 
 // Defines the endpoint which will be serializecd in state
@@ -8,7 +7,7 @@ const CALLBACK_ENDPOINT = "/api/auth/login/callback";
 // Where to go affter a succ
 const LOGIN_SUCCESS_REDIRECT = process.env.FE_URI ? process.env.FE_URI : "/";
 
-router.get("/login", (req, res, next) => {
+router.get("/", (req, res, next) => {
   // Construct the "callback" url by concatenating the current base URL (host) with the callback URL
   // Anything we put into Passport's state can be accessed after the login is successful, as it gets encoded in the URL
   const callbackUrl = `${req.protocol}://${req.get(
@@ -18,7 +17,7 @@ router.get("/login", (req, res, next) => {
     ? Buffer.from(JSON.stringify({ callbackUrl })).toString("base64")
     : undefined;
   const auth = passport.authenticate("google", {
-    scope: ["openid", "profile"],
+    scope: ["openid", "profile", "email"],
     state
   });
   auth(req, res, next);
@@ -33,7 +32,7 @@ router.get("/login", (req, res, next) => {
  * And will redirect to lah-branch-deploy.hack4impact.now.sh/CALLBACK_ENDPOINT
  * TLDR: will take PROD_URL/api/auth/login/redirectURI?queryparams -> ORIGINAL_URL/api/auth/login/callback?queryparams
  */
-router.get("/login/redirectURI", (req, res) => {
+router.get("/redirectURI", (req, res) => {
   try {
     // If we are here, this endpoint is likely being run on the MAIN deployment
     const { state } = req.query;
@@ -52,7 +51,7 @@ router.get("/login/redirectURI", (req, res) => {
 });
 
 router.get(
-  "/login/callback",
+  "/callback",
   passport.authenticate("google", {
     failureRedirect: "/login"
   }),
@@ -60,13 +59,5 @@ router.get(
     res.redirect(LOGIN_SUCCESS_REDIRECT);
   }
 );
-
-router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
-  res.json("you are a volunteer boo yah");
-});
-
-router.get("/testAdmin", auth.isAdmin, function(req, res) {
-  res.json("you are an admin boo yah");
-});
 
 module.exports = router;

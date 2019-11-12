@@ -37,6 +37,7 @@ passport.use(
         if (user) {
           return cb(null, user);
         }
+        console.log(profile);
         const newUser = await new User({
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
