@@ -20,7 +20,8 @@ router.get("/current", auth.isAuthenticated, (req, res) => {
     firstName: user_info.firstName,
     lastName: user_info.lastName,
     role: user_info.role,
-    location: user_info.location
+    location: user_info.location,
+    propicUrl: user_info.propicUrl
   };
   res.json({
     code: 200,
