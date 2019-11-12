@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec",
+    "test": "mocha --reporter spec --exit",
     "start:dev": "nodemon appListener.js",
     "start": "nodemon appListener.js"
   },
