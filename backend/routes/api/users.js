@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 });
 
 // get current users (partial info only)
-router.get("/current", auth.isAdmin, (req, res) => {
+router.get("/current", auth.isAuthenticated, (req, res) => {
   const user_info = req.user;
   res.json({
     code: 200,
@@ -44,6 +44,7 @@ router.get("/:user_id", auth.isAdmin, async (req, res) => {
 // create new user
 router.post(
   "/",
+  auth.isAdmin,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string().required(),
