@@ -4,16 +4,36 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Button
 } from "reactstrap";
 
 import Logo from "../../assets/images/lah-logo-2.png";
-import User from "../../assets/images/user.svg";
+import { getProPic, getFullName } from "../../utils/api";
 import "./styles.scss";
 
 class Navbar extends Component {
   state = {
-    dropdownOpen: false
+    dropdownOpen: false,
+    proPic: "",
+    fullName: ""
+  };
+
+  componentDidMount() {
+    this.getProPic();
+    this.getFullName();
+  }
+
+  getProPic = async () => {
+    this.setState({
+      proPic: await getProPic()
+    });
+  };
+
+  getFullName = async () => {
+    this.setState({
+      fullName: await getFullName()
+    });
   };
 
   toggleUserDropdown() {
@@ -23,6 +43,7 @@ class Navbar extends Component {
   }
 
   render() {
+    console.log(this.state.firstName);
     return (
       <div className="lah_navbar">
         <Link to="/">
@@ -39,11 +60,14 @@ class Navbar extends Component {
           toggle={this.toggleUserDropdown.bind(this)}
         >
           <DropdownToggle id="dropdown-button">
-            <img src={User} alt="User icon" id="user" />
+            <img src={this.state.proPic} alt="User icon" id="user" />
             <span className="caret"></span>
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem header>Account Settings</DropdownItem>
+            <DropdownItem header>
+              <p>{this.state.fullName}</p>
+              <Button className="signout-button">Sign Out</Button>
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>

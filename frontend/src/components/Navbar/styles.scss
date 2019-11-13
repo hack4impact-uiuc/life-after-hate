@@ -30,21 +30,28 @@
             text-decoration: none;
         }
     }
-    
 }
 
 div.dropdown {
     width: 50px;
     margin-left: 12px;
+    
     #dropdown-button {
         background-color: transparent;
     }
     #user {
-        height: 30px;
+        height: 33px;
         padding-right: 3px;
+        border-radius: 50%;
     }
     .caret {
         color: #8B8B8B;
+    }
+    .signout-button {
+        background-color: #F7922F;
+    }
+    p {
+        font-size: 15px;
     }
 }
 
