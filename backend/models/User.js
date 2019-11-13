@@ -28,7 +28,8 @@ const User = new mongoose.Schema({
     type: String,
     enum: [locationEnum.NORTH, locationEnum.SOUTH],
     required: true
-  }
+  },
+  email: { type: String, required: true, unique: true }
 });
 
 module.exports = mongoose.model("User", User);
