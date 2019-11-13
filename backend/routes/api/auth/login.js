@@ -1,7 +1,7 @@
 const passport = require("passport");
 const router = require("express").Router();
 const Boom = require("@hapi/boom");
-const auth = require("../auth");
+const auth = require("../../../utils/auth-middleware");
 // Defines the endpoint which will be serializecd in state
 const CALLBACK_ENDPOINT = "/api/auth/login/callback";
 // Where to go affter a succ
