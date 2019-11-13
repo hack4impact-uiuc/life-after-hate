@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Docker: Attach to Node",
+      "localRoot": "${workspaceRoot}/backend",
+      "remoteRoot": "/var/www/app"
+    },
+    {
+      "name": "FE Debugging",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceRoot}/frontend",
+      "sourceMapPathOverrides": {
+        "/var/www/app/*": "${webRoot}/*"
+      },
+      "runtimeArgs": ["--remote-debugging-port=9222"]
+    }
+  ]
+}
