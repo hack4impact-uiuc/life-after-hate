@@ -14,6 +14,7 @@ services:
       - fe_modules:/var/www/app/node_modules
     ports:
       - 3000:3000
+      # Debugger port
       - 9222:9222
     environment:
       # The port hooked up to the API 
@@ -38,11 +39,13 @@ services:
       - be_modules:/var/www/app/node_modules
     ports:
       - 5000:5000
+      # Debugger port
+      - 9229:9229
     environment:
       # Defines what port to use for development, i.e. localhost:$PORT for the frontend
       - PORT=5000
     command:
-      'npm start'
+      'npm run start:dev'
     depends_on:
       - db
   db:
