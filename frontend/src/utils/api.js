@@ -50,4 +50,11 @@ async function getSearchResults(keyword) {
   return await getEndPoint(`resources/filter?keyword=${keyword}`, "");
 }
 
-export { getSearchResults };
+const isAuthenticated = async () => {
+  const res = await fetch(`${API_URI}/api/users/current`, {
+    credentials: "include"
+  });
+  return res.status === 200;
+};
+
+export { isAuthenticated, API_URI, getSearchResults };

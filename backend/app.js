@@ -12,13 +12,12 @@ const { errors } = require("celebrate");
 require("./utils/passport-setup");
 require("./utils/auth-middleware");
 
-app.use(cors());
+app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 app.use(morgan("dev"));
 app.use(session({ secret: "keyboard cat" }));
 app.use(passport.initialize());
-app.use(passport.session({ secret: "keyboard cat" }));
+app.use(passport.session());
 app.use(bodyParser.json());
-
 app.use(require("./routes"));
 
 mongoose.connect(process.env.DB_URI, {
