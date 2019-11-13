@@ -17,14 +17,6 @@ router.get(
   }
 );
 
-router.get("/hello", auth.isAuthenticated, function(req, res) {
-  res.json({
-    code: 200,
-    result: req.user,
-    success: true
-  });
-});
-
 router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
   res.json({
     code: 200,
