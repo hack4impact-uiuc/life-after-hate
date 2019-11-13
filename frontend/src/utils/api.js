@@ -27,4 +27,10 @@ const getFullName = async () => {
   return `${res_json.result.firstName} ${res_json.result.lastName}`;
 };
 
-export { isAuthenticated, getProPic, getFullName, API_URI };
+const logout = async () => {
+  const res = await fetch(`${API_URI}/api/auth/logout`, {
+    credentials: "include"
+  });
+  return res.status === 200;
+};
+export { isAuthenticated, getProPic, getFullName, logout, API_URI };
