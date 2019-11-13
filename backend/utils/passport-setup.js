@@ -45,7 +45,8 @@ passport.use(
           propicUrl: profile.photos[0].value,
           isApproved: false,
           role: DEFAULTROLE,
-          location: DEFAULTLOC
+          location: DEFAULTLOC,
+          email: profile.email
         }).save();
 
         cb(null, newUser);

@@ -57,4 +57,20 @@ const isAuthenticated = async () => {
   return res.status === 200;
 };
 
-export { isAuthenticated, API_URI, getSearchResults };
+const getProPic = async () => {
+  const res = await fetch(`${API_URI}/api/users/current`, {
+    credentials: "include"
+  });
+  const res_json = await res.json();
+  return res_json.result.propicUrl;
+};
+
+const getFullName = async () => {
+  const res = await fetch(`${API_URI}/api/users/current`, {
+    credentials: "include"
+  });
+  const res_json = await res.json();
+  return `${res_json.result.firstName} ${res_json.result.lastName}`;
+};
+
+export { isAuthenticated, getProPic, getFullName, API_URI, getSearchResults };

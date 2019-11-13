@@ -6,8 +6,16 @@ const auth = require("../../utils/auth-middleware");
 
 // Filters down the user information into just what's needed
 const filterSensitiveInfo = userInfo => {
-  const { _id, firstName, lastName, role, location, propicUrl } = userInfo;
-  return { id: _id, firstName, lastName, role, location, propicUrl };
+  const {
+    _id,
+    firstName,
+    lastName,
+    role,
+    location,
+    propicUrl,
+    email
+  } = userInfo;
+  return { id: _id, firstName, lastName, role, location, propicUrl, email };
 };
 
 // get all users
@@ -53,7 +61,8 @@ router.post(
       propicUrl: Joi.string(),
       isApproved: Joi.boolean().default(false),
       role: Joi.string().required(),
-      location: Joi.string().required()
+      location: Joi.string().required(),
+      email: Joi.string().required()
     })
   }),
   async (req, res) => {
@@ -64,7 +73,8 @@ router.post(
       oauthId: data.oauthId,
       propicUrl: data.propicUrl,
       role: data.role,
-      location: data.location
+      location: data.location,
+      email: data.email
     });
     await newUser.save();
     res.json({
@@ -87,7 +97,8 @@ router.put(
       propicUrl: Joi.string(),
       isApproved: Joi.boolean(),
       role: Joi.string().required(),
-      location: Joi.string()
+      location: Joi.string(),
+      email: Joi.string()
     })
   }),
   async (req, res) => {
@@ -126,7 +137,8 @@ router.put(
       propicUrl: Joi.string(),
       isApproved: Joi.boolean(),
       role: Joi.string(),
-      location: Joi.string()
+      location: Joi.string(),
+      email: Joi.string()
     })
   }),
   async (req, res) => {
