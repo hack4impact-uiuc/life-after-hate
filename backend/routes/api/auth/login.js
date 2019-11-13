@@ -1,7 +1,7 @@
 const passport = require("passport");
 const router = require("express").Router();
 const Boom = require("@hapi/boom");
-
+const auth = require("../../../utils/auth-middleware");
 // Defines the endpoint which will be serializecd in state
 const CALLBACK_ENDPOINT = "/api/auth/login/callback";
 // Where to go affter a succ
@@ -59,5 +59,21 @@ router.get(
     res.redirect(LOGIN_SUCCESS_REDIRECT);
   }
 );
+
+router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
+  res.json({
+    code: 200,
+    result: "you are a volunteer boo yah",
+    success: true
+  });
+});
+
+router.get("/testAdmin", auth.isAdmin, function(req, res) {
+  res.json({
+    code: 200,
+    result: "you are an admin boo yah",
+    success: true
+  });
+});
 
 module.exports = router;

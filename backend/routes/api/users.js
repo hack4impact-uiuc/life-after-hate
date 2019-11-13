@@ -3,12 +3,19 @@ const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
 const auth = require("../../utils/auth-middleware");
+
+// Filters down the user information into just what's needed
+const filterSensitiveInfo = userInfo => {
+  const { _id, firstName, lastName, role, location, propicUrl } = userInfo;
+  return { id: _id, firstName, lastName, role, location, propicUrl };
+};
+
 // get all users
 router.get("/", async (req, res) => {
   const users = await User.find({});
   res.json({
     code: 200,
-    result: users,
+    result: users.map(filterSensitiveInfo),
     success: true
   });
 });
@@ -16,27 +23,20 @@ router.get("/", async (req, res) => {
 // get current users (partial info only)
 router.get("/current", auth.isAuthenticated, (req, res) => {
   const user_info = req.user;
-  const info = {
-    firstName: user_info.firstName,
-    lastName: user_info.lastName,
-    role: user_info.role,
-    location: user_info.location,
-    propicUrl: user_info.propicUrl
-  };
   res.json({
     code: 200,
-    result: info,
+    result: filterSensitiveInfo(user_info),
     success: true
   });
 });
 
 // get one user
-router.get("/:user_id", async (req, res) => {
+router.get("/:user_id", auth.isAdmin, async (req, res) => {
   const userId = req.params.user_id;
   const user = await User.findById(userId);
   res.json({
     code: 200,
-    result: user,
+    result: filterSensitiveInfo(user),
     success: true
   });
 });
@@ -44,6 +44,7 @@ router.get("/:user_id", async (req, res) => {
 // create new user
 router.post(
   "/",
+  auth.isAdmin,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string().required(),
@@ -77,6 +78,7 @@ router.post(
 // set role
 router.put(
   "/:user_id/role",
+  auth.isAdmin,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -115,6 +117,7 @@ router.put(
 // approve user
 router.put(
   "/:user_id/approve",
+  auth.isAdmin,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -150,7 +153,7 @@ router.put(
 );
 
 // delete user
-router.delete("/:user_id", async (req, res) => {
+router.delete("/:user_id", auth.isAdmin, async (req, res) => {
   const userId = req.params.user_id;
   const user = await User.findByIdAndRemove(userId);
   const ret = user
