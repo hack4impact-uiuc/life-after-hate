@@ -1,5 +1,12 @@
 const request = require("supertest");
 const { expect } = require("chai");
+const sinon = require("sinon");
+const auth = require("../utils/auth-middleware");
+// Stub out auth methods
+sinon.stub(auth, "isAdmin").callsFake((req, res, next) => {
+  console.log("YOOOO");
+  next();
+});
 const app = require("../app.js");
 const User = require("../models/User");
 
