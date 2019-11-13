@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "My Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceRoot}/frontend",
+      "sourceMapPathOverrides": {
+        "/var/www/app/*": "${webRoot}/*"
+      },
+      "runtimeArgs": ["--remote-debugging-port=9222"]
+    }
+  ]
+}
