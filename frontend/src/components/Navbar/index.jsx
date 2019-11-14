@@ -58,8 +58,8 @@ class Navbar extends Component {
         <div className="spacing" />
         <div className="nav-links">
           <Link to="/">Map Search</Link>
-          <Link to="/">Dictionary Search</Link>
-          <Link to="/">Resource Management</Link>
+          <Link to="/">Directory Search</Link>
+          <Link to="/resource-manager">Resource Management</Link>
         </div>
         <Dropdown
           isOpen={this.state.dropdownOpen}

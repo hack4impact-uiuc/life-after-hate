@@ -1,0 +1,56 @@
+.display-modal {
+    display: block;
+}
+
+.hide-modal {
+    display: none;
+}
+
+.lahmodal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+  
+    .modal-main {
+      position:fixed;
+      background: white;
+      width: 80%;
+      height: auto;
+      top:50%;
+      left:50%;
+      transform: translate(-50%,-50%);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+#close-button {
+    height: 25px;
+}
+
+#save-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.add-edit-resource-form {
+    display: flex;
+    flex-direction: column;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+input, label {
+    display: block;
+    width: 100%;
+}
+label {
+    margin-top: 20px;
+}
