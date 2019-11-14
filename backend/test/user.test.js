@@ -1,12 +1,6 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const sinon = require("sinon");
-const auth = require("../utils/auth-middleware");
-// Stub out auth methods
-sinon.stub(auth, "isAdmin").callsFake((req, res, next) => {
-  console.log("YOOOO");
-  next();
-});
+const stubs = require("./auth_stubs").stubAllAuth();
 const app = require("../app.js");
 const User = require("../models/User");
 
@@ -51,6 +45,7 @@ describe("POST /users/", () => {
 
 describe.only("PUT /user/:user_id/role", () => {
   it("should update user to have new role", async () => {
+    console.log(stubs);
     await createSampleUser();
     const reqBody = {
       role: "VOLUNTEER"
@@ -61,7 +56,6 @@ describe.only("PUT /user/:user_id/role", () => {
     });
     console.log(foundUser._id);
     const id = foundUser._id;
-
     await request(app)
       .put(`/api/users/${id}/role`)
       .send(reqBody)
