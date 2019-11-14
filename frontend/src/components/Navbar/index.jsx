@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {
   Dropdown,
   DropdownToggle,
@@ -9,7 +9,7 @@ import {
 } from "reactstrap";
 
 import Logo from "../../assets/images/lah-logo-2.png";
-import { getProPic, getFullName } from "../../utils/api";
+import { getProPic, getFullName, logout } from "../../utils/api";
 import "./styles.scss";
 
 class Navbar extends Component {
@@ -42,8 +42,14 @@ class Navbar extends Component {
     });
   }
 
+  logoutHandler = async () => {
+    const success = await logout();
+    if (success) {
+      this.props.history.push("/login");
+    }
+  };
+
   render() {
-    console.log(this.state.firstName);
     return (
       <div className="lah_navbar">
         <Link to="/">
@@ -66,7 +72,9 @@ class Navbar extends Component {
           <DropdownMenu>
             <DropdownItem header>
               <p>{this.state.fullName}</p>
-              <Button className="signout-button">Sign Out</Button>
+              <Button className="signout-button" onClick={this.logoutHandler}>
+                Sign Out
+              </Button>
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -75,4 +83,5 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+// Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
+export default withRouter(Navbar);
