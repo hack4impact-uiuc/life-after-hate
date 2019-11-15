@@ -1,20 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const Resource = require("../../models/Resource");
+const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const { sortByDistance, options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
-router.get("/", async (req, res) => {
-  const resources = await Resource.find({});
-  res.json({
-    code: 200,
-    result: resources,
-    success: true
-  });
-});
+router.get(
+  "/",
+  errorWrap(async (req, res) => {
+    const resources = await Resource.find({});
+    res.json({
+      code: 200,
+      result: resources,
+      success: true
+    });
+  })
+);
 
 // get list of resources filtered by location radius
 router.get(
@@ -27,7 +31,7 @@ router.get(
       keyword: Joi.string()
     }
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const { radius, lat, long, keyword } = req.query;
     let resources = await Resource.find({});
 
@@ -55,7 +59,7 @@ router.get(
       result: resources,
       success: true
     });
-  }
+  })
 );
 
 // create new resource
@@ -81,7 +85,7 @@ router.post(
         .required()
     })
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const data = req.body;
     const newResource = new Resource(data);
     await newResource.save();
@@ -90,7 +94,7 @@ router.post(
       message: "Resource Successfully Created",
       success: true
     });
-  }
+  })
 );
 
 // get one resource
@@ -101,7 +105,7 @@ router.get(
       resource_id: Joi.objectId().required()
     }
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
     const resource = await Resource.findById(resourceId);
     res.json({
@@ -109,7 +113,7 @@ router.get(
       result: resource,
       success: true
     });
-  }
+  })
 );
 
 // edit resource
@@ -136,7 +140,7 @@ router.put(
       resource_id: Joi.objectId().required()
     }
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const data = req.body;
     const resourceId = req.params.resource_id;
 
@@ -158,7 +162,7 @@ router.put(
           success: false
         };
     res.status(ret.code).json(ret);
-  }
+  })
 );
 
 // delete resource
@@ -169,7 +173,7 @@ router.delete(
       resource_id: Joi.objectId().required()
     }
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
     const resource = await Resource.findByIdAndRemove(resourceId);
     const ret = resource
@@ -184,7 +188,7 @@ router.delete(
           success: false
         };
     res.status(ret.code).json(ret);
-  }
+  })
 );
 
 module.exports = router;

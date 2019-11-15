@@ -6,7 +6,7 @@ import Navbar from "../Navbar";
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
     <div>
-      <Navbar />
+      {authed && <Navbar />}
       <Route
         {...rest}
         render={props => {

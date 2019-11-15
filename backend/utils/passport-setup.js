@@ -37,7 +37,6 @@ passport.use(
         if (user) {
           return cb(null, user);
         }
-        console.log(profile);
         const newUser = await new User({
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
@@ -46,7 +45,7 @@ passport.use(
           isApproved: false,
           role: DEFAULTROLE,
           location: DEFAULTLOC,
-          email: profile.email
+          email: profile.emails[0].value
         }).save();
 
         cb(null, newUser);

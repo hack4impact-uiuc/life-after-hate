@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
+const errorWrap = require("../../utils/error-wrap");
 const auth = require("../../utils/auth-middleware");
 
 // Filters down the user information into just what's needed
@@ -19,14 +20,17 @@ const filterSensitiveInfo = userInfo => {
 };
 
 // get all users
-router.get("/", auth.isAdmin, async (req, res) => {
-  const users = await User.find({});
-  res.json({
-    code: 200,
-    result: users.map(filterSensitiveInfo),
-    success: true
-  });
-});
+router.get(
+  "/",
+  errorWrap(async (req, res) => {
+    const users = await User.find({});
+    res.json({
+      code: 200,
+      result: users.map(filterSensitiveInfo),
+      success: true
+    });
+  })
+);
 
 // get current users (partial info only)
 router.get("/current", auth.isAuthenticated, (req, res) => {
@@ -39,15 +43,19 @@ router.get("/current", auth.isAuthenticated, (req, res) => {
 });
 
 // get one user
-router.get("/:user_id", auth.isAdmin, async (req, res) => {
-  const userId = req.params.user_id;
-  const user = await User.findById(userId);
-  res.json({
-    code: 200,
-    result: filterSensitiveInfo(user),
-    success: true
-  });
-});
+router.get(
+  "/:user_id",
+  auth.isAdmin,
+  errorWrap(async (req, res) => {
+    const userId = req.params.user_id;
+    const user = await User.findById(userId);
+    res.json({
+      code: 200,
+      result: filterSensitiveInfo(user),
+      success: true
+    });
+  })
+);
 
 // create new user
 router.post(
@@ -65,7 +73,7 @@ router.post(
       email: Joi.string().required()
     })
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const data = req.body;
     const newUser = new User({
       firstName: data.firstName,
@@ -82,7 +90,7 @@ router.post(
       message: "User Successfully Created",
       success: true
     });
-  }
+  })
 );
 
 // set role
@@ -101,7 +109,7 @@ router.put(
       email: Joi.string()
     })
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const data = req.body;
     const userId = req.params.user_id;
 
@@ -122,7 +130,7 @@ router.put(
           success: false
         };
     res.status(ret.code).json(ret);
-  }
+  })
 );
 
 // approve user
@@ -141,7 +149,7 @@ router.put(
       email: Joi.string()
     })
   }),
-  async (req, res) => {
+  errorWrap(async (req, res) => {
     const userId = req.params.user_id;
 
     const user = await User.findByIdAndUpdate(
@@ -161,25 +169,29 @@ router.put(
           success: false
         };
     res.status(ret.code).json(ret);
-  }
+  })
 );
 
 // delete user
-router.delete("/:user_id", auth.isAdmin, async (req, res) => {
-  const userId = req.params.user_id;
-  const user = await User.findByIdAndRemove(userId);
-  const ret = user
-    ? {
-        code: 200,
-        message: "User deleted successfully",
-        success: true
-      }
-    : {
-        code: 404,
-        message: "User not found",
-        success: false
-      };
-  res.status(ret.code).json(ret);
-});
+router.delete(
+  "/:user_id",
+  auth.isAdmin,
+  errorWrap(async (req, res) => {
+    const userId = req.params.user_id;
+    const user = await User.findByIdAndRemove(userId);
+    const ret = user
+      ? {
+          code: 200,
+          message: "User deleted successfully",
+          success: true
+        }
+      : {
+          code: 404,
+          message: "User not found",
+          success: false
+        };
+    res.status(ret.code).json(ret);
+  })
+);
 
 module.exports = router;
