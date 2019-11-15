@@ -30,6 +30,23 @@ describe("GET /user/", () => {
   });
 });
 
+describe("GET /user/:user_id", () => {
+  it("should get a single user", async () => {
+    await createSampleUser();
+
+    const foundUser = await User.findOne({
+      firstName: sampleUserInfo.firstName
+    });
+
+    const id = await foundUser._id;
+    const res = await request(app)
+      .get(`/api/users/${id}`)
+      .expect(200);
+
+    expect(res.body.result.firstName).to.eq("alan");
+  });
+});
+
 describe("POST /users/", () => {
   it("should create a new user", async () => {
     await request(app)
