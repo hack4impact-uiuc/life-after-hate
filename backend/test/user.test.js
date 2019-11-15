@@ -12,7 +12,7 @@ const sampleUserInfo = {
   email: "analfang@illinois.edu",
   role: "ADMIN",
   location: "SOUTH",
-  oauthId: 1234567
+  oauthId: "1234567"
 };
 
 const createSampleUser = async (userInfo = sampleUserInfo) => {
@@ -43,10 +43,11 @@ describe("POST /users/", () => {
   });
 });
 
-describe.only("PUT /user/:user_id/role", () => {
+describe("PUT /user/:user_id/role", () => {
   it("should update user to have new role", async () => {
     console.log(stubs);
     await createSampleUser();
+
     const reqBody = {
       role: "VOLUNTEER"
     };
@@ -54,6 +55,7 @@ describe.only("PUT /user/:user_id/role", () => {
     const foundUser = await User.findOne({
       firstName: sampleUserInfo.firstName
     });
+
     console.log(foundUser._id);
     const id = foundUser._id;
     await request(app)
@@ -74,33 +76,38 @@ describe("PUT /user/:user_id/approve", () => {
       isApproved: true
     };
 
-    const foundUser = await User.findOne({ firstName: "josh" });
+    await createSampleUser();
+
+    const foundUser = await User.findOne({
+      firstName: sampleUserInfo.firstName
+    });
     const id = foundUser._id;
 
     await request(app)
-      .put(`/user/${id}/approve`)
+      .put(`/api/users/${id}/approve`)
       .send(reqBody)
       .expect(200);
 
-    const afterUpdate = await User.findOne({ firstName: "josh" });
+    const afterUpdate = await User.findOne({
+      firstName: sampleUserInfo.firstName
+    });
     expect(afterUpdate.isApproved).to.eq(true);
   });
 });
 
 describe("DELETE /user/:user_id", () => {
   it("should delete specified user", async () => {
-    const newUser = new User({
-      firstName: "albert",
-      lastName: "cao",
-      email: "albert@illinois.edu",
-      role: "VOLUNTEER",
-      location: "SOUTH"
+    await createSampleUser();
+
+    const foundUser = await User.findOne({
+      firstName: sampleUserInfo.firstName
     });
-    await newUser.save();
-    const id = newUser._id;
+    const id = foundUser._id;
+
     const res = await request(app)
-      .delete(`/user/${id}`)
+      .delete(`/api/users/${id}`)
       .expect(200);
+
     expect(res.body.message).to.eq("User deleted successfully");
   });
 });
