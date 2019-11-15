@@ -4,13 +4,15 @@
   "description": "Package with the development tools for LAH (such as Prettier and Husky). Please see the individual frontend and backend sub-packages for the actual dependencies.",
   "main": "index.js",
   "dependencies": {
+    "chai": "^4.2.0",
     "colors": "^1.4.0",
     "commander": "^3.0.2",
     "express-session": "^1.17.0",
     "find-up": "^4.1.0",
     "joi-objectid": "^3.0.1",
     "mocha": "^6.2.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "sinon": "^7.5.0"
   },
   "devDependencies": {
     "@h4iuiuc/eslint-plugin": "^1.0.8",
