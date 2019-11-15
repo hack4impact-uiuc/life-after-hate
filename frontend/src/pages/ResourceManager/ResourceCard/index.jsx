@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button } from "reactstrap";
 import Modal from "../../../components/Modal";
 
+import Edit from "../../../assets/images/edit.svg";
 import "../styles.scss";
 
 class ResourceCard extends Component {
@@ -17,13 +18,27 @@ class ResourceCard extends Component {
 
   render() {
     return (
-      <div className="card-wrapper">
-        <p>Resource Name</p>
-        <p>Resource Location</p>
-        <p>Resource Tags</p>
-        <Button color="info" onClick={this.toggleModal}>
-          Edit
-        </Button>
+      <div>
+        <div className="card-wrapper">
+          <div>
+            <p>Resource Name</p>
+          </div>
+          <div>
+            <p>Resource Location</p>
+          </div>
+          <div>
+            <p>Contact</p>
+          </div>
+          <div>
+            <p>Description</p>
+          </div>
+          <div>
+            <Button onClick={this.toggleModal} className="edit-button">
+              <img id="edit-icon" src={Edit} alt="edit icon" />
+              Edit
+            </Button>
+          </div>
+        </div>
         <Modal
           toggleModal={this.toggleModal}
           showModal={this.state.showModal}
