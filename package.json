@@ -9,6 +9,7 @@
     "express-session": "^1.17.0",
     "find-up": "^4.1.0",
     "joi-objectid": "^3.0.1",
+    "mocha": "^6.2.2",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
