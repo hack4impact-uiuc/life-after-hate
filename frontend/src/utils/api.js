@@ -79,4 +79,11 @@ const logout = async () => {
   });
   return res.status === 200;
 };
-export { isAuthenticated, getProPic, getFullName, logout, API_URI, getSearchResults };
+export {
+  isAuthenticated,
+  getProPic,
+  getFullName,
+  logout,
+  API_URI,
+  getSearchResults
+};
