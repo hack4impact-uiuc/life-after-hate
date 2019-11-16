@@ -85,7 +85,6 @@ typings/
 
 # gatsby files
 .cache/
-public
 
 
 # frontend build
