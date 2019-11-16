@@ -104,8 +104,8 @@ class MapView extends Component {
             this.state.searchResults.map(this.renderMarkers)}
           {this.state.popup && (
             <Popup
-              latitude={this.state.popup.location.coordinates[0]}
-              longitude={this.state.popup.location.coordinates[1]}
+              latitude={this.state.popup.location.coordinates[1]}
+              longitude={this.state.popup.location.coordinates[0]}
               tipSize={5}
               anchor="top"
               closeOnClick={false}
