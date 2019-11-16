@@ -1,10 +1,10 @@
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
 
-const Resource = require("../backend/models/Resource");
+const Resource = require("./models/Resource");
 
 const JSON_LINK =
-  "http://www.json-generator.com/api/json/get/cecKjNYROW?indent=2";
+  "http://www.json-generator.com/api/json/get/cfakcpbucy?indent=2";
 
 const createConnection = async () => {
   await mongoose.connect(process.env.DB_URI, {
