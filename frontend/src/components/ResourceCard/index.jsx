@@ -6,7 +6,7 @@ class ResourceCard extends Component {
     return (
       <div>
         <div className="resourceCard">
-          {this.props.name}
+          <b>{this.props.name}</b>
           <br />
           {this.props.description}
         </div>
