@@ -9,7 +9,7 @@ const JSON_LINK =
 const createConnection = async () => {
   console.log(colors.green("Attempting to connect to Mongo..."));
   await mongoose.connect(process.env.DB_URI, {
-    useUnifiedTopology: false,
+    useUnifiedTopology: true,
     useNewUrlParser: true
   });
 };

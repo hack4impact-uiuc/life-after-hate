@@ -17,17 +17,6 @@ jobs:
     - name: Check successful frontend render without crash
       run: docker run -e CI=true lah-frontend npm test
     
-  seed-db:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup CI Script 
-      run: bash scripts/setup_ci.sh
-      env: 
-        DB_URI: ${{ secrets.DB_URI }}
-    - name: Seed MongoDB Instance
-      run: docker-compose run backend node utils/generate_mock_data.js --color
-
   test-be:
     runs-on: ubuntu-latest
     steps:
