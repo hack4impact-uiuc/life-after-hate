@@ -1,2 +1,2 @@
 #!/bin/bash
-echo DB_URI=mongodb://db:27017/LAH_DB > .env
+echo DB_URI=${DB_URI} > .env
