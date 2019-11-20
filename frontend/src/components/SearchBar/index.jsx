@@ -1,10 +1,15 @@
 import React, { Component } from "react";
 
+import SearchIcon from "../../assets/images/search.svg";
 import "./styles.scss";
 
 class Search extends Component {
   handleChange = e => {
     this.props.changeHandler(e.target.value);
+  };
+
+  handleLocationChange = e => {
+    this.props.locationChangeHandler(e.target.value);
   };
 
   handleSubmit = e => {
@@ -23,26 +28,38 @@ class Search extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label className="search">
-          <input
-            className="searchInput"
-            type="text"
-            value={this.props.inputValue}
-            onChange={this.handleChange}
-            list="suggestionsList"
-            placeholder="Search"
-          />
-          <table className="dropdownStyle">
-            {this.props.showSearchSuggestions &&
-              this.props.searchSuggestions &&
-              this.props.searchSuggestions.map(this.renderSuggestions)}
-          </table>
-        </label>
-        <button className="submitSearch" type="submit">
-          Go
-        </button>
-      </form>
+      <div className="search">
+        <form onSubmit={this.handleSubmit}>
+          <div className="searchLocation">
+            <input
+              className="locationInput"
+              type="text"
+              value={this.props.locationValue}
+              onChange={this.handleLocationChange}
+              placeholder="Location"
+            />
+          </div>
+          <div className="searchKeyword">
+            <img className="searchIcon" src={SearchIcon} alt="Search" />
+            <input
+              className="searchInput"
+              type="text"
+              value={this.props.inputValue}
+              onChange={this.handleChange}
+              list="suggestionsList"
+              placeholder="Search"
+            />
+            <table className="dropdownStyle">
+              {this.props.showSearchSuggestions &&
+                this.props.searchSuggestions &&
+                this.props.searchSuggestions.map(this.renderSuggestions)}
+            </table>
+            <button className="submitSearch" type="submit">
+              Go
+            </button>
+          </div>
+        </form>
+      </div>
     );
   }
 }
