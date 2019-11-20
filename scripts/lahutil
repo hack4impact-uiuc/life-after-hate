@@ -103,7 +103,7 @@ const removeAll = async () => {
   });
 };
 
-const updateEnv = async (isWindows) => {
+const updateEnv = async isWindows => {
   console.log(colors.blue("LAHUTIL: Attempting to sync up .env file..."));
   const envURLLoc = await findUp(".env_url");
   if (typeof envURLLoc === "undefined") {
@@ -117,8 +117,8 @@ const updateEnv = async (isWindows) => {
     const result = await (await fetch(url)).text();
     const dest = path.join(path.dirname(envURLLoc), ".env");
     fs.writeFileSync(dest, result);
-    if(isWindows){
-      fs.appendFileSync(dest, "CHOKIDAR_USEPOLLING=true")
+    if (isWindows) {
+      fs.appendFileSync(dest, "CHOKIDAR_USEPOLLING=true");
     }
     console.log(
       colors.green(
@@ -126,6 +126,11 @@ const updateEnv = async (isWindows) => {
       )
     );
   }
+};
+
+const seedDB = async () => {
+  console.log(colors.blue("LAHUTIL: Attempting to seed DB with sample data..."));
+  await runSingleCommand("docker-compose",["run", "backend", "node", "utils/generate_mock_data.js", "--colors"])
 };
 
 // error on unknown commands
@@ -154,7 +159,7 @@ program
 
 program
   .command("down")
-  .description("Stops the LAH frontend, backend, and database")
+  .description("Stops the LAH frontend, backend, and database, and removes all DB information.")
   .action(() => {
     runSingleCommand("docker-compose", ["down", "-v"]);
   });
@@ -187,11 +192,18 @@ program
 
 program
   .command("env")
-  .option('-w, --windows', 'Is running docker for windows')
+  .option("-w, --windows", "Is running docker for windows")
   .description(
     "Pulls latest .env file. Requires that you have the URL set it in .env_url"
   )
-  .action((cmdObj) => {updateEnv(cmdObj.windows)});
+  .action(cmdObj => {
+    updateEnv(cmdObj.windows);
+  });
+
+program
+  .command("seed")
+  .description("Seeds the database with the mock data")
+  .action(seedDB);
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
