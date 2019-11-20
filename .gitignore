@@ -1,6 +1,8 @@
-
+# General
 .DS_Store
-  
+.AppleDouble
+.LSOverride  
+
 # Logs
 logs
 *.log
@@ -87,7 +89,6 @@ typings/
 
 # gatsby files
 .cache/
-public
 
 
 # frontend build

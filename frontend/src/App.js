@@ -5,11 +5,6 @@ import Login from "./pages/Login";
 import MapView from "./pages/MapView";
 import { isAuthenticated } from "./utils/api";
 
-// const markers = [
-//   { latitude: 38.2, longitude: -122.4, name: "Tattoo Removal" },
-//   { latitude: 38.9, longitude: -123.1, name: "career Center" }
-// ];
-
 class App extends Component {
   constructor(props) {
     super(props);

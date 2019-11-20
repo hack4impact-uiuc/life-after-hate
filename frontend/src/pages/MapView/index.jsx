@@ -1,80 +1,13 @@
 import React, { Component } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
+import { getSearchResults } from "../../utils/api";
 import Pin from "../../components/Pin";
 import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
 import "./styles.scss";
 
 const pinSize = 25;
-const searchResults = [
-  {
-    latitude: 38.2,
-    longitude: -122.4,
-    name: "Tattoo Removal",
-    description: "Remove tattoos here"
-  },
-  {
-    latitude: 38.9,
-    longitude: -123.1,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 38.9,
-    longitude: -123.2,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 38.9,
-    longitude: -123.3,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 38.9,
-    longitude: -123.4,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 38.9,
-    longitude: -123.5,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 38.9,
-    longitude: -123.6,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 40,
-    longitude: -123.1,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 43,
-    longitude: -123.2,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 41,
-    longitude: -126,
-    name: "Career Center",
-    description: "Get career advice here"
-  },
-  {
-    latitude: 44,
-    longitude: -123.4,
-    name: "Career Center",
-    description: "Get career advice here"
-  }
-];
 
 const searchSuggestions = [];
 
@@ -89,21 +22,22 @@ class MapView extends Component {
       },
       popup: null,
       inputValue: "",
-      searchResults: null,
+      searchResults: [],
       showResults: false,
-      searchSuggestions: []
+      searchSuggestions: [],
+      showSearchSuggestions: true
     };
   }
 
   renderCards = card => (
-    <ResourceCard name={card.name} description={card.description} />
+    <ResourceCard name={card.companyName} description={card.description} />
   );
 
   renderMarkers = marker => (
     <Marker
       key={marker.id}
-      longitude={marker.longitude}
-      latitude={marker.latitude}
+      longitude={marker.location.coordinates[0]}
+      latitude={marker.location.coordinates[1]}
     >
       <Pin
         size={pinSize}
@@ -114,13 +48,26 @@ class MapView extends Component {
     </Marker>
   );
 
-  searchHandler = () => {
-    this.setState({ searchResults: searchResults, showResults: true });
+  searchHandler = async () => {
+    let searchResults;
+    try {
+      searchResults = await getSearchResults(this.state.inputValue);
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+
+    this.setState({
+      searchResults,
+      showResults: true,
+      showSearchSuggestions: false
+    });
+    console.log(this.state.searchResults);
   };
 
   changeHandler = input => {
     this.state.searchSuggestions.push(input);
-    this.setState({ inputValue: input, searchSuggestions: searchSuggestions });
+    this.setState({ inputValue: input, searchSuggestions });
   };
 
   render() {
@@ -133,13 +80,17 @@ class MapView extends Component {
                 searchHandler={this.searchHandler}
                 changeHandler={this.changeHandler}
                 searchSuggestions={this.state.searchSuggestions}
+                showSearchSuggestions={this.state.showSearchSuggestions}
                 inputValue={this.state.inputValue}
               />
             </div>
           </div>
-          <div className="cardContent">
-            {this.state.showResults && searchResults.map(this.renderCards)}
-          </div>
+          {this.state.showResults && (
+            <div className="cardContent">
+              {this.state.searchResults &&
+                this.state.searchResults.map(this.renderCards)}
+            </div>
+          )}
         </div>
         <ReactMapGL
           {...this.state.viewport}
@@ -149,17 +100,18 @@ class MapView extends Component {
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         >
           {this.state.showResults &&
+            this.state.searchResults &&
             this.state.searchResults.map(this.renderMarkers)}
           {this.state.popup && (
             <Popup
-              latitude={this.state.popup.latitude}
-              longitude={this.state.popup.longitude}
+              latitude={this.state.popup.location.coordinates[1]}
+              longitude={this.state.popup.location.coordinates[0]}
               tipSize={5}
               anchor="top"
               closeOnClick={false}
               onClose={() => this.setState({ popup: null })}
             >
-              <p>{this.state.popup.name}</p>
+              <p>{this.state.popup.companyName}</p>
             </Popup>
           )}
         </ReactMapGL>

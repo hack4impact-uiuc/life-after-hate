@@ -17,7 +17,6 @@ jobs:
     - name: Check successful frontend render without crash
       run: docker run -e CI=true lah-frontend npm test
     
-
   test-be:
     runs-on: ubuntu-latest
     steps:
