@@ -1,3 +1,8 @@
+.search {
+  padding-top: 1px;
+  width: 60%;
+}
+
 .searchInput {
   width: 100%;
   height: 100%;
@@ -6,10 +11,10 @@
   border-radius: 4px;
   font-size: 16px;
   background-image: url('../../assets/images/search.svg');
-  background-position: 10px 11px; 
+  background-position: 8px 6px; 
   background-size: 15px 15px;
   background-repeat: no-repeat;
-  padding: 3% 5% 4% 13%;
+  padding: 1% 5% 1% 13%;
   text-indent: 8px;
   margin-top: 70px;
   &:focus {
@@ -19,7 +24,12 @@
 }
 
 .submitSearch {
-  margin-left: 5px;
+  margin: 5px;
+  background-color: rgb(255, 153, 51);
+  color: white;
+  border: solid rgb(201, 194, 194) 2.5px;
+  border-radius: 4px;
+  width: 18%;
 }
 
 .dropdownStyle {
