@@ -24,8 +24,12 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup CI Script 
       run: bash scripts/setup_ci.sh
+      env:
+        DB_URI: ${{ secrets.DB_URI }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
     - name: Build Docker Image 
       run: docker build -t lah-backend ./backend
     - name: Run backend tests 
-      run: docker run -e CI=true lah-backend npm test
+      run: docker run -e CI=true --env-file .env lah-backend npm test
     
