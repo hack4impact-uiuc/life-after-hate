@@ -15,7 +15,7 @@
     "sinon": "^7.5.0"
   },
   "devDependencies": {
-    "@h4iuiuc/eslint-plugin": "^1.0.8",
+    "@h4iuiuc/eslint-plugin": "^1.0.10",
     "@typescript-eslint/parser": "^2.3.3",
     "eslint": "^6.5.1",
     "husky": "^3.0.9",
