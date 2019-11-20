@@ -1,8 +1,9 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const stubs = require("./auth_stubs").stubAllAuth();
+require("./auth_stubs").stubAllAuth();
 const app = require("../app.js");
 const User = require("../models/User");
+const mongoose = require("mongoose");
 
 beforeEach(() => User.remove({}));
 
@@ -10,6 +11,13 @@ const sampleUserInfo = {
   firstName: "alan",
   lastName: "fang",
   email: "analfang@illinois.edu",
+  role: "ADMIN",
+  location: "SOUTH",
+  oauthId: "1234567"
+};
+
+const incompleteUserInfo = {
+  email: "joshb@illinois.edu",
   role: "ADMIN",
   location: "SOUTH",
   oauthId: "1234567"
@@ -60,9 +68,17 @@ describe("POST /users/", () => {
   });
 });
 
+describe("POST /users/", () => {
+  it("should fail to create user with incomplete fields", async () => {
+    await request(app)
+      .post(`/api/users/`)
+      .send(incompleteUserInfo)
+      .expect(400);
+  });
+});
+
 describe("PUT /user/:user_id/role", () => {
   it("should update user to have new role", async () => {
-    console.log(stubs);
     await createSampleUser();
 
     const reqBody = {
@@ -73,7 +89,6 @@ describe("PUT /user/:user_id/role", () => {
       firstName: sampleUserInfo.firstName
     });
 
-    console.log(foundUser._id);
     const id = foundUser._id;
     await request(app)
       .put(`/api/users/${id}/role`)
@@ -84,6 +99,23 @@ describe("PUT /user/:user_id/role", () => {
       firstName: sampleUserInfo.firstName
     });
     expect(afterUpdate.role).to.eq("VOLUNTEER");
+  });
+});
+
+describe("PUT /user/:user_id/role", () => {
+  it("should fail to update role of nonexistent user", async () => {
+    const reqBody = {
+      role: "VOLUNTEER"
+    };
+
+    const id = mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .put(`/api/users/${id}/role`)
+      .send(reqBody)
+      .expect(404);
+
+    expect(res.body.message).to.eq("User Not Found");
   });
 });
 
@@ -112,6 +144,23 @@ describe("PUT /user/:user_id/approve", () => {
   });
 });
 
+describe("PUT /user/:user_id/approve", () => {
+  it("should fail to approve nonexistent user", async () => {
+    const reqBody = {
+      isApproved: true
+    };
+
+    const id = mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .put(`/api/users/${id}/approve`)
+      .send(reqBody)
+      .expect(404);
+
+    expect(res.body.message).to.eq("User Not Found");
+  });
+});
+
 describe("DELETE /user/:user_id", () => {
   it("should delete specified user", async () => {
     await createSampleUser();
@@ -126,5 +175,17 @@ describe("DELETE /user/:user_id", () => {
       .expect(200);
 
     expect(res.body.message).to.eq("User deleted successfully");
+  });
+});
+
+describe("DELETE /user/:user_id", () => {
+  it("should fail to delete user that doesn't exist", async () => {
+    const id = mongoose.Types.ObjectId();
+
+    const res = await request(app)
+      .delete(`/api/users/${id}`)
+      .expect(404);
+
+    expect(res.body.message).to.eq("User not found");
   });
 });
