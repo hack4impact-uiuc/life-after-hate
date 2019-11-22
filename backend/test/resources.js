@@ -1,8 +1,8 @@
 const request = require("supertest");
 const { expect } = require("chai");
+require("./auth_stubs").stubAllAuth();
 const app = require("../app.js");
 const Resource = require("../models/Resource");
-require("./auth_stubs").stubAllAuth();
 
 const sampleResourceInfo = {
   companyName: "Google",
@@ -92,6 +92,7 @@ describe("GET /resources/filter", () => {
     const res = await request(app)
       .get(`/api/resources/filter?keyword=${query}`)
       .expect(200);
+    console.log(res.body.result);
     expect(res.body.result).to.have.lengthOf(2);
     expect(res.body.result[0].companyName).equals("Facebook");
     expect(res.body.result[1].companyName).equals("Google");

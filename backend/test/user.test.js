@@ -4,7 +4,6 @@ require("./auth_stubs").stubAllAuth();
 const app = require("../app.js");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-
 beforeEach(() => User.remove({}));
 
 const sampleUserInfo = {
