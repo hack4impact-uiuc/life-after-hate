@@ -58,7 +58,7 @@ class Navbar extends Component {
         <div className="spacing" />
         <div className="nav-links">
           <Link to="/">Map</Link>
-          <Link to="/resource-manager">Directory</Link>
+          <Link to="/directory">Directory</Link>
         </div>
         <Dropdown
           isOpen={this.state.dropdownOpen}

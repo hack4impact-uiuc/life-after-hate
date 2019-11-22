@@ -1,97 +1,32 @@
-// import React, { Component } from "react";
-// import { Button } from "reactstrap";
-// import Exit from "../../assets/images/close.svg";
-
-// import "./styles.scss";
-
-// class Modal extends Component {
-//   render() {
-//     const name = this.props.showModal
-//       ? "lahmodal display-modal"
-//       : "lahmodal hide-modal";
-
-//     return (
-//       <div className={name}>
-//         <section className="modal-main">
-//           <div className="lah-modal-header">
-//             <h2>{this.props.modalName}</h2>
-//             <Button color="link" onClick={this.props.toggleModal}>
-//               <img src={Exit} alt="close" id="close-button" />
-//             </Button>
-//           </div>
-//           <form onSubmit={this.handleSubmit} className="add-edit-resource-form">
-//             <label>
-//               Resource Name
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Resource Location
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Resource Tags
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//             <label>
-//               Description
-//               <input type="text" onChange={this.handleChange} />
-//             </label>
-//           </form>
-//           <div className="lah-modal-footer">
-//             <Button
-//               color="info"
-//               onClick={this.props.toggleModal}
-//               id="save-button"
-//             >
-//               Save
-//             </Button>
-//           </div>
-//         </section>
-//       </div>
-//     );
-//   }
-// }
-
-// export default Modal;
-
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
+import Close from "../../assets/images/close.svg";
 import "./styles.scss";
 
 class LAHModal extends Component {
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.handleSubmit(e);
+  };
+
+  handleChange = e => {
+    console.log(e.target.value);
+  };
+
   render() {
     return (
       <div>
         <Modal fade={false} isOpen={this.props.showModal}>
-          <ModalHeader>{this.props.modalName}</ModalHeader>
+          <ModalHeader>
+            {this.props.modalName}
+            <Button
+              color="link"
+              className="close-button"
+              onClick={this.props.toggleModal}
+            >
+              <img id="close-image" src={Close} alt="close" />
+            </Button>
+          </ModalHeader>
           <ModalBody
             style={{
               "max-height": "calc(100vh - 210px)",
@@ -107,24 +42,34 @@ class LAHModal extends Component {
                 <input type="text" onChange={this.handleChange} />
               </label>
               <label>
-                Resource Location
+                Contact Name
                 <input type="text" onChange={this.handleChange} />
               </label>
               <label>
-                Resource Tags
+                Contact Phone
+                <input type="text" onChange={this.handleChange} />
+              </label>
+              <label>
+                Contact Email
                 <input type="text" onChange={this.handleChange} />
               </label>
               <label>
                 Description
                 <input type="text" onChange={this.handleChange} />
               </label>
+              <label>
+                Address
+                <input type="text" onChange={this.handleChange} />
+              </label>
+              <Button
+                id="submit-form-button"
+                type="submit"
+                onClick={this.props.toggleModal}
+              >
+                SAVE
+              </Button>
             </form>
           </ModalBody>
-          <ModalFooter>
-            <Button color="info" onClick={this.props.toggleModal}>
-              Save
-            </Button>
-          </ModalFooter>
         </Modal>
       </div>
     );
