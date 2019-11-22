@@ -4,7 +4,8 @@ const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
-const { sortByDistance, options } = require("../../utils/resource-utils");
+const { sortByDistance } = require("../../utils/resource-utils");
+let { options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 
 // get all resources
@@ -28,11 +29,12 @@ router.get(
       radius: Joi.number(),
       lat: Joi.number(),
       long: Joi.number(),
-      keyword: Joi.string()
+      keyword: Joi.string(),
+      optionalParams: Joi.array()
     }
   }),
   errorWrap(async (req, res) => {
-    const { radius, lat, long, keyword } = req.query;
+    const { radius, lat, long, keyword, optionalParams } = req.query;
     let resources = await Resource.find({});
 
     // 3963.2 = radius of Earth in miles
@@ -49,6 +51,9 @@ router.get(
       });
     }
     if (keyword) {
+      if (optionalParams) {
+        options.keys = optionalParams;
+      }
       // fuzzy search
       const fuse = new Fuse(resources, options);
       resources = fuse.search(keyword);
