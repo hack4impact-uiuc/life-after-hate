@@ -2,6 +2,12 @@
     border: solid rgb(201, 194, 194) 2.5px;
     border-radius: 7px;
     background-color: white;
-    padding: 5%;
-    margin:10px;
+    display: block;
+    padding: 2%;
+    margin: 2px;
+    max-height: 80px;
+    width: 100%;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 } 
