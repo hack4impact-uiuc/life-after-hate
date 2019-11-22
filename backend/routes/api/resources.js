@@ -80,9 +80,7 @@ router.post(
           .items(Joi.number())
       }).required(),
       notes: Joi.string(),
-      tags: Joi.array()
-        .items(Joi.string())
-        .required()
+      tags: Joi.array().items(Joi.string())
     })
   }),
   errorWrap(async (req, res) => {
