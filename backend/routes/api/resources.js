@@ -34,7 +34,7 @@ router.get(
     }
   }),
   errorWrap(async (req, res) => {
-    const { radius, lat, long, keyword, optionalParams } = req.query;
+    const { radius, lat, long, keyword, customWeights } = req.query;
     let resources = await Resource.find({});
 
     // 3963.2 = radius of Earth in miles
@@ -50,11 +50,15 @@ router.get(
         sortByDistance(a, b, lat, long);
       });
     }
+
+    // fuzzy search
     if (keyword) {
-      if (optionalParams) {
-        options.keys = optionalParams;
+      // if custom weights provided, will set custom field rankings
+      if (customWeights) {
+        options.keys = customWeights;
       }
-      // fuzzy search
+
+      // else uses default weights contained in resource-utils.js
       const fuse = new Fuse(resources, options);
       resources = fuse.search(keyword);
     }
