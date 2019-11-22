@@ -8,6 +8,65 @@ const fetch = require("node-fetch");
 const { sortByDistance, options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 
+const stateToFederalRegion = [
+  { State: "AL", Region: 4 },
+  { State: "AK", Region: 10 },
+  { State: "AZ", Region: 9 },
+  { State: "AR", Region: 6 },
+  { State: "CA", Region: 9 },
+  { State: "CO", Region: 8 },
+  { State: "CT", Region: 1 },
+  { State: "DE", Region: 3 },
+  { State: "FL", Region: 4 },
+  { State: "GA", Region: 4 },
+  { State: "HI", Region: 9 },
+  { State: "ID", Region: 10 },
+  { State: "IL", Region: 5 },
+  { State: "IN", Region: 5 },
+  { State: "IA", Region: 7 },
+  { State: "KS", Region: 7 },
+  { State: "KY", Region: 4 },
+  { State: "LA", Region: 6 },
+  { State: "ME", Region: 1 },
+  { State: "MD", Region: 3 },
+  { State: "MA", Region: 1 },
+  { State: "MI", Region: 5 },
+  { State: "MN", Region: 5 },
+  { State: "MS", Region: 4 },
+  { State: "MO", Region: 7 },
+  { State: "MT", Region: 8 },
+  { State: "NE", Region: 7 },
+  { State: "NV", Region: 9 },
+  { State: "NH", Region: 1 },
+  { State: "NJ", Region: 2 },
+  { State: "NM", Region: 6 },
+  { State: "NY", Region: 2 },
+  { State: "NC", Region: 4 },
+  { State: "ND", Region: 8 },
+  { State: "OH", Region: 5 },
+  { State: "OK", Region: 6 },
+  { State: "OR", Region: 10 },
+  { State: "PA", Region: 3 },
+  { State: "RI", Region: 1 },
+  { State: "SC", Region: 4 },
+  { State: "SD", Region: 8 },
+  { State: "TN", Region: 4 },
+  { State: "TX", Region: 6 },
+  { State: "UT", Region: 8 },
+  { State: "VT", Region: 1 },
+  { State: "VA", Region: 3 },
+  { State: "WA", Region: 10 },
+  { State: "WV", Region: 3 },
+  { State: "WI", Region: 5 },
+  { State: "WY", Region: 8 }
+  // { State: "Puerto Rico", Region: 2 },
+  // { State: "US Virgin Islands", Region: 2 },
+  // { State: "District of Columbia", Region: 3 },
+  // { State: "American Samoa", Region: 9 },
+  // { State: "Guam", Region: 9 },
+  // { State: "Northern Mariana Islands", Region: 9 }
+];
+
 async function addressToLatLong(address) {
   let api_latlong = `http://www.mapquestapi.com/geocoding/v1/address?key=AAAppgYd4dZiZKW2sAtBtgEUAYejofok&maxResults=5&outFormat=json&location=${address}`;
   // "&boundingBox=40.121581,-88.253981,40.098315,-88.205082";
@@ -17,7 +76,13 @@ async function addressToLatLong(address) {
 
   let lat = responseJson["results"][0]["locations"][0]["latLng"]["lat"];
   let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
-  return [lat, lng];
+
+  let state = responseJson["results"][0]["locations"][0]["adminArea3"];
+  console.log(state);
+  let region = stateToFederalRegion.find(obj => obj.State === state).Region;
+  console.log(region);
+
+  return [lat, lng, region];
 }
 
 // async function latlongToAddress(lat, long) {
@@ -112,6 +177,7 @@ router.post(
           .length(2)
           .items(Joi.number())
       }).required(),
+      federalRegion: Joi.number().integer(),
       notes: Joi.string(),
       tags: Joi.array()
         .items(Joi.string())
@@ -125,6 +191,7 @@ router.post(
 
     data.location.coordinates[0] = latlng[0];
     data.location.coordinates[1] = latlng[1];
+    data.federalRegion = latlng[2];
 
     // const goodAddress = latlongToAddress(data.location.coordinates[0], data.location.coordinates[1]);
     // goodAddress.then(function(result) {
@@ -134,6 +201,8 @@ router.post(
 
     const newResource = new Resource(data);
     await newResource.save();
+
+    console.log(newResource);
 
     res.json({
       code: 201,
@@ -179,6 +248,7 @@ router.put(
           .length(2)
           .items(Joi.number())
       }),
+      federalRegion: Joi.number().integer(),
       notes: Joi.string(),
       tags: Joi.array().items(Joi.string())
     }),
