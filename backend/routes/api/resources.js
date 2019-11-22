@@ -6,6 +6,7 @@ const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const { sortByDistance, options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
+const extractor = require("keyword-extractor");
 
 // get all resources
 router.get(
@@ -87,6 +88,12 @@ router.post(
   }),
   errorWrap(async (req, res) => {
     const data = req.body;
+    data.tags = extractor.extract(data.notes, {
+      language: "english",
+      remove_digits: true,
+      return_changed_case: true,
+      remove_duplicates: false
+    });
     const newResource = new Resource(data);
     await newResource.save();
     res.json({

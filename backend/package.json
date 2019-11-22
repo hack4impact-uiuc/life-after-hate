@@ -27,6 +27,7 @@
     "fuse.js": "^3.4.5",
     "geolib": "^3.0.4",
     "joi-objectid": "^3.0.1",
+    "keyword-extractor": "0.0.18",
     "mocha": "^6.2.1",
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
