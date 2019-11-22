@@ -177,7 +177,6 @@ router.post(
           .length(2)
           .items(Joi.number())
       }).required(),
-      federalRegion: Joi.number().integer(),
       notes: Joi.string(),
       tags: Joi.array()
         .items(Joi.string())
@@ -248,7 +247,6 @@ router.put(
           .length(2)
           .items(Joi.number())
       }),
-      federalRegion: Joi.number().integer(),
       notes: Joi.string(),
       tags: Joi.array().items(Joi.string())
     }),
