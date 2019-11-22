@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import SearchIcon from "../../assets/images/search.svg";
+import LocationIcon from "../../assets/images/location-icon.png";
 import "./styles.scss";
 
 class Search extends Component {
@@ -31,6 +32,7 @@ class Search extends Component {
       <div className="search">
         <form onSubmit={this.handleSubmit}>
           <div className="searchLocation">
+            <img className="locationIcon" src={LocationIcon} alt="Location" />
             <input
               className="locationInput"
               type="text"

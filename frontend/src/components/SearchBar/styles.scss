@@ -5,23 +5,39 @@
   border-radius: 4px;
 }
 
+.locationIcon {
+  width: 5%;
+  margin-left: 5px;
+}
+
 .searchIcon {
   width: 5%;
   margin-left: 5px;
 }
 
 .locationInput {
-  width: 100%;
+  width: 70%;
+  height: 80%;
+  box-sizing: border-box;
+  font-size: 14px;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: rgb(201, 194, 194);
+  margin-left: 5px;
+  margin-top: 5px;
+  &:focus {
+    border-color: orange;
+  }
 }
 
 .searchInput {
   width: 70%;
   height: 80%;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 14px;
   outline: 0;
   border-width: 0 0 2px;
-  border-color: grey;
+  border-color: rgb(201, 194, 194);
   margin-left: 5px;
   margin-top: 1px;
   &:focus {
