@@ -3,7 +3,8 @@
   "extends": ["plugin:@h4iuiuc/recommended"],
   "rules": {
     "import/no-unresolved": "off",
-    "no-magic-numbers": "off"
+    "no-magic-numbers": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
   },
   "env": {
     "browser": true,

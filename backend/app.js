@@ -8,6 +8,7 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const { errors } = require("celebrate");
+const errorHandler = require("./utils/error-handler");
 
 require("./utils/passport-setup");
 require("./utils/auth-middleware");
@@ -26,5 +27,6 @@ mongoose.connect(process.env.DB_URI, {
 });
 
 app.use(errors());
+app.use(errorHandler);
 
 module.exports = app;
