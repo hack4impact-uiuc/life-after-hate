@@ -2,6 +2,7 @@ const request = require("supertest");
 const { expect } = require("chai");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
+require("./auth_stubs").stubAllAuth();
 
 const sampleResourceInfo = {
   companyName: "Google",
@@ -128,10 +129,9 @@ describe("DELETE /resource", () => {
     const resource = await Resource.findOne({ companyName: "Google" });
     const resourceId = resource._id;
     await request(app)
-      .put(`/api/resources/${resourceId}`)
+      .delete(`/api/resources/${resourceId}`)
       .expect(200);
-
-    const newResource = await Resource.findById(resourceId);
-    expect(newResource.description).to.eq("new description");
+    const resources = await Resource.find();
+    expect(resources).to.be.an("array").that.is.empty;
   });
 });
