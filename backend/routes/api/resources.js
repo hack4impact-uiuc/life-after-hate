@@ -7,6 +7,8 @@ const Fuse = require("fuse.js");
 const fetch = require("node-fetch");
 const { sortByDistance, options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
+const mapquestKey = process.env.MAPQUEST_KEY;
+const mapquestURI = process.env.MAPQUEST_URI;
 
 const stateToFederalRegion = [
   { State: "AL", Region: 4 },
@@ -67,8 +69,10 @@ const stateToFederalRegion = [
   // { State: "Northern Mariana Islands", Region: 9 }
 ];
 
+// const api_url =
+
 async function addressToLatLong(address) {
-  let api_latlong = `http://www.mapquestapi.com/geocoding/v1/address?key=AAAppgYd4dZiZKW2sAtBtgEUAYejofok&maxResults=5&outFormat=json&location=${address}`;
+  const api_latlong = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
   // "&boundingBox=40.121581,-88.253981,40.098315,-88.205082";
 
   const response = await fetch(api_latlong, {});
@@ -78,15 +82,13 @@ async function addressToLatLong(address) {
   let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
 
   let state = responseJson["results"][0]["locations"][0]["adminArea3"];
-  console.log(state);
   let region = stateToFederalRegion.find(obj => obj.State === state).Region;
-  console.log(region);
 
-  return [lat, lng, region];
+  return { lat: lat, lng: lng, region: region };
 }
 
 // async function latlongToAddress(lat, long) {
-//   let api_address = `http://www.mapquestapi.com/geocoding/v1/reverse?key=AAAppgYd4dZiZKW2sAtBtgEUAYejofok&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
+//   let api_address = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
 //   // "&boundingBox=40.121581,-88.253981,40.098315,-88.205082";
 
 //   const response = await fetch(api_address, {});
@@ -188,9 +190,9 @@ router.post(
     const data = req.body;
     const latlng = await addressToLatLong(data.address);
 
-    data.location.coordinates[0] = latlng[0];
-    data.location.coordinates[1] = latlng[1];
-    data.federalRegion = latlng[2];
+    data.location.coordinates[0] = latlng.lat;
+    data.location.coordinates[1] = latlng.lng;
+    data.federalRegion = latlng.region;
 
     // const goodAddress = latlongToAddress(data.location.coordinates[0], data.location.coordinates[1]);
     // goodAddress.then(function(result) {
@@ -200,8 +202,6 @@ router.post(
 
     const newResource = new Resource(data);
     await newResource.save();
-
-    console.log(newResource);
 
     res.json({
       code: 201,
