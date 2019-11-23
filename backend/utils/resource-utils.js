@@ -19,7 +19,7 @@ const sortByDistance = (a, b, lat, long) => {
   return distanceA - distanceB;
 };
 
-let options = {
+const options = {
   shouldSort: true,
   threshold: 0.2,
   location: 0,
@@ -28,24 +28,19 @@ let options = {
   minMatchCharLength: 1,
   keys: [
     {
-      name: "contactName",
-      weight: 0.35
+      name: "tags",
+      weight: 0.5
     },
     {
       name: "companyName",
       weight: 0.3
     },
     {
-      name: "tags",
-      weight: 0.15
-    },
-
-    {
       name: "description",
       weight: 0.1
     },
     {
-      name: "notes",
+      name: "address",
       weight: 0.1
     }
   ]

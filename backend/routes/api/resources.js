@@ -4,9 +4,8 @@ const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
-const { sortByDistance } = require("../../utils/resource-utils");
-let { options } = require("../../utils/resource-utils");
 const fetch = require("node-fetch");
+const { sortByDistance, options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 const mapquestKey = process.env.MAPQUEST_KEY;
 const mapquestURI = process.env.MAPQUEST_URI;
@@ -129,12 +128,11 @@ router.get(
       radius: Joi.number(),
       lat: Joi.number(),
       long: Joi.number(),
-      keyword: Joi.string(),
-      customWeights: Joi.array()
+      keyword: Joi.string()
     }
   }),
   errorWrap(async (req, res) => {
-    const { radius, lat, long, keyword, customWeights } = req.query;
+    const { radius, lat, long, keyword } = req.query;
     let resources = await Resource.find({});
 
     // 3963.2 = radius of Earth in miles
@@ -150,15 +148,8 @@ router.get(
         sortByDistance(a, b, lat, long);
       });
     }
-
-    // fuzzy search
     if (keyword) {
-      // if custom weights provided, will set custom field rankings
-      if (customWeights) {
-        options.keys = customWeights;
-      }
-
-      // else uses default weights contained in resource-utils.js
+      // fuzzy search
       const fuse = new Fuse(resources, options);
       resources = fuse.search(keyword);
     }
