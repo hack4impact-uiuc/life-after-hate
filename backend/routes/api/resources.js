@@ -30,7 +30,7 @@ router.get(
       lat: Joi.number(),
       long: Joi.number(),
       keyword: Joi.string(),
-      optionalParams: Joi.array()
+      customWeights: Joi.array()
     }
   }),
   errorWrap(async (req, res) => {
