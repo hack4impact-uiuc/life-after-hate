@@ -58,7 +58,7 @@ describe("GET /resources", () => {
       .get(`/api/resources`)
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
-    expect(Object.keys(res.body.result[0])).to.have.lengthOf(10);
+    expect(Object.keys(res.body.result[0])).to.have.lengthOf(11);
   });
 });
 
@@ -76,7 +76,7 @@ describe("GET /resources/:resource_id", () => {
 describe("GET /resources/filter", () => {
   it("should sort existing Resources by closest lat/long", async () => {
     await createSampleResource2();
-    const radius = 100000;
+    const radius = 1000;
     const lat = 36;
     const long = 40;
     const res = await request(app)
@@ -92,10 +92,8 @@ describe("GET /resources/filter", () => {
     const res = await request(app)
       .get(`/api/resources/filter?keyword=${query}`)
       .expect(200);
-    console.log(res.body.result);
-    expect(res.body.result).to.have.lengthOf(2);
+    expect(res.body.result).to.have.lengthOf(1);
     expect(res.body.result[0].companyName).equals("Facebook");
-    expect(res.body.result[1].companyName).equals("Google");
   });
 });
 
