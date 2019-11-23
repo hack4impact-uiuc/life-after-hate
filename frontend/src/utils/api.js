@@ -18,7 +18,7 @@ async function fetchWithError(
     headers: isGetOrDelete
       ? {}
       : { ...additional_headers, "Content-Type": "application/json" },
-    body: !isGetOrDelete && data
+    body: isGetOrDelete ? null : data
   });
   if (!response.ok) {
     throw new Error(response.statusText);
