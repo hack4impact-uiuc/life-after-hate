@@ -18,7 +18,7 @@ async function fetchWithError(
     headers: isGetOrDelete
       ? {}
       : { ...additional_headers, "Content-Type": "application/json" },
-    body: isGetOrDelete ? null : JSON.stringify(data)
+    body: !isGetOrDelete && data
   });
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -31,20 +31,18 @@ async function getEndPoint(endPoint) {
   let responseJsonResult = await fetchWithError(endPoint, "GET");
   return responseJsonResult;
 }
-
-/**
-async function postEndPoint(endPoint, data, additonal_headers = null) {
-  return await fetchWithError(endPoint, "POST", data, additional_headers = additional_headers);
+// add endpoint: resources
+async function postEndPoint(endPoint, data, additional_headers = null) {
+  return await fetchWithError(endPoint, "POST", data, additional_headers);
 }
-
-async function putEndPoint(endPoint, data, additonal_headers = null) {
-  return await fetchWithError(endPoint, "PUT", data, additional_headers = additional_headers);
+// edit endpoint: resources/:resource_id
+async function putEndPoint(endPoint, data, additional_headers = null) {
+  return await fetchWithError(endPoint, "PUT", data, additional_headers);
 }
-
-async function deleteEndPoint(endPoint) {
-    return await fetchWithError(endPoint, "DELETE");
-}
-*/
+// delete endpoint: resources
+// async function deleteEndPoint(endPoint) {
+//     return await fetchWithError(endPoint, "DELETE");
+// }
 
 async function getSearchResults(keyword) {
   return await getEndPoint(`resources/filter?keyword=${keyword}`, "");
@@ -79,11 +77,27 @@ const logout = async () => {
   });
   return res.status === 200;
 };
+
+async function addResource(data) {
+  await postEndPoint("resources/", data);
+}
+
+async function editResource(data, id) {
+  await putEndPoint(`resources/${id}`, data);
+}
+
+async function getAllResources() {
+  return await getEndPoint("resources/", "");
+}
+
 export {
   isAuthenticated,
   getProPic,
   getFullName,
   logout,
   API_URI,
-  getSearchResults
+  getSearchResults,
+  addResource,
+  editResource,
+  getAllResources
 };

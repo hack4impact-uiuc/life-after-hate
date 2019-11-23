@@ -13,6 +13,7 @@ const Resource = new mongoose.Schema({
     type: { type: String, default: "Point" },
     coordinates: { type: Array, default: [] }
   },
+  federalRegion: { type: Number, default: 0 },
   notes: { type: String },
   tags: { type: Array, default: [] }
 });
