@@ -23,6 +23,7 @@ app.use(bodyParser.json());
 
 // If we're running in a mode that should bypass auth, set up a mock user
 if (process.env.BYPASS_AUTH === "true") {
+  console.warn("Auth is being bypassed!");
   app.use(setMockUser);
 }
 
