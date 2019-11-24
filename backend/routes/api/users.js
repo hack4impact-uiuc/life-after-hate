@@ -25,6 +25,7 @@ const filterSensitiveInfo = userInfo => {
 // get all users
 router.get(
   "/",
+  requireAdminStatus,
   errorWrap(async (req, res) => {
     const users = await User.find({});
     res.json({
