@@ -1,37 +1,29 @@
 const sinon = require("sinon");
-const auth = require("../utils/auth-middleware");
+const authValidator = require("../utils/auth/auth_validators");
+const { roleEnum } = require("../models/User");
 
-// The default method that will run if no fn is specified
-// Essentially just bypassing the middleware by calling next()
-const defaultStub = (req, res, next) => {
-  next();
-};
-
-// Take the name of the auth method along with the function
-// and stub the result with fn
-const stubMiddleware = (name, fn = defaultStub) => {
-  const stub = sinon.stub(auth, name);
+// Use sinon to stub the validator to (by default, unless another function is specified)
+// return true in all instances
+const stubOutAuth = (fn = () => true) => {
+  const stub = sinon.stub(authValidator, "validateRequestForRole");
   stub.callsFake(fn);
   return stub;
 };
 
-const stubIsAdmin = fn => stubMiddleware("isAdmin", fn);
+const unstubAuth = () => {
+  authValidator.validateRequestForRole.restore();
+};
 
-const stubIsAuthenticated = fn => stubMiddleware("isAuthenticated", fn);
+// Assrets that the validator was called on a specific type of user
+const authValidatorCalled = type =>
+  authValidator.validateRequestForRole.calledWith(sinon.match.any, type);
 
-const stubIsVolunteer = fn => stubMiddleware("isVolunteer", fn);
-
-// Stub all the auth middleware functions
-// Return an object with all the stubbed function references
-const stubAllAuth = fn => ({
-  isAdminStub: stubIsAdmin(fn),
-  isAuthenticatedStub: stubIsAuthenticated(fn),
-  isVolunteerStub: stubIsVolunteer(fn)
-});
+const didCheckIsVolunteer = () => authValidatorCalled(roleEnum.VOLUNTEER);
+const didCheckIsAdmin = () => authValidatorCalled(roleEnum.ADMIN);
 
 module.exports = {
-  stubIsAdmin,
-  stubIsAuthenticated,
-  stubIsVolunteer,
-  stubAllAuth
+  stubOutAuth,
+  unstubAuth,
+  didCheckIsAdmin,
+  didCheckIsVolunteer
 };

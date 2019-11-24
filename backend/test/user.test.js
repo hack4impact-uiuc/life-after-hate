@@ -3,10 +3,15 @@ const { expect } = require("chai");
 const app = require("../app.js");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-const authValidator = require("../utils/auth/auth_validators");
-const sinon = require("sinon");
+const { stubOutAuth, unstubAuth, didCheckIsAdmin } = require("./auth_stubs");
+
 beforeEach(async () => {
   await User.remove({});
+  stubOutAuth();
+});
+
+afterEach(() => {
+  unstubAuth();
 });
 
 const sampleUserInfo = {
@@ -32,15 +37,14 @@ const createSampleUser = async (userInfo = sampleUserInfo) => {
 
 describe("GET /user/", () => {
   it("should get all users", async () => {
-    sinon.stub(authValidator, "validateRequestForRole").callsFake(() => {
-      console.log("Hello!");
-      return true;
-    });
     await createSampleUser();
+
     const res = await request(app)
       .get(`/api/users/`)
       .expect(200);
+
     expect(res.body.result[0].firstName).to.eq("alan");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -50,13 +54,14 @@ describe("GET /user/:user_id", () => {
     const foundUser = await User.findOne({
       firstName: sampleUserInfo.firstName
     });
+    const id = foundUser._id;
 
-    const id = await foundUser._id;
     const res = await request(app)
       .get(`/api/users/${id}`)
       .expect(200);
 
     expect(res.body.result.firstName).to.eq("alan");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -70,6 +75,7 @@ describe("POST /users/", () => {
       firstName: sampleUserInfo.firstName
     });
     expect(foundUser.oauthId).to.eq(sampleUserInfo.oauthId);
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -79,6 +85,7 @@ describe("POST /users/", () => {
       .post(`/api/users/`)
       .send(incompleteUserInfo)
       .expect(400);
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -104,6 +111,7 @@ describe("PUT /user/:user_id/role", () => {
       firstName: sampleUserInfo.firstName
     });
     expect(afterUpdate.role).to.eq("VOLUNTEER");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -121,6 +129,7 @@ describe("PUT /user/:user_id/role", () => {
       .expect(404);
 
     expect(res.body.message).to.eq("User Not Found");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -146,6 +155,7 @@ describe("PUT /user/:user_id/approve", () => {
       firstName: sampleUserInfo.firstName
     });
     expect(afterUpdate.isApproved).to.eq(true);
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -163,6 +173,7 @@ describe("PUT /user/:user_id/approve", () => {
       .expect(404);
 
     expect(res.body.message).to.eq("User Not Found");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -180,6 +191,7 @@ describe("DELETE /user/:user_id", () => {
       .expect(200);
 
     expect(res.body.message).to.eq("User deleted successfully");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -192,5 +204,6 @@ describe("DELETE /user/:user_id", () => {
       .expect(404);
 
     expect(res.body.message).to.eq("User not found");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
