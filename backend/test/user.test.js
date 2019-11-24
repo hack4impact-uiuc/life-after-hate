@@ -1,11 +1,13 @@
 const request = require("supertest");
 const { expect } = require("chai");
-require("./auth_stubs").stubAllAuth();
 const app = require("../app.js");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-
-beforeEach(() => User.remove({}));
+const authValidator = require("../utils/auth/auth_validators");
+const sinon = require("sinon");
+beforeEach(async () => {
+  await User.remove({});
+});
 
 const sampleUserInfo = {
   firstName: "alan",
@@ -30,6 +32,10 @@ const createSampleUser = async (userInfo = sampleUserInfo) => {
 
 describe("GET /user/", () => {
   it("should get all users", async () => {
+    sinon.stub(authValidator, "validateRequestForRole").callsFake(() => {
+      console.log("Hello!");
+      return true;
+    });
     await createSampleUser();
     const res = await request(app)
       .get(`/api/users/`)
@@ -41,7 +47,6 @@ describe("GET /user/", () => {
 describe("GET /user/:user_id", () => {
   it("should get a single user", async () => {
     await createSampleUser();
-
     const foundUser = await User.findOne({
       firstName: sampleUserInfo.firstName
     });

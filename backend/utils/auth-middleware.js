@@ -1,33 +1,25 @@
-// const GoogleStrategy = require("passport-google-oauth20").Strategy;
-// const passport = require("passport");
 const Boom = require("@hapi/boom");
 const roleEnum = require("../models/User.js").roleEnum;
+const authValidators = require("./auth/auth_validators");
 
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
+const requireVolunteerStatus = (req, res, next) => {
+  if (authValidators.validateRequestForRole(req, roleEnum.VOLUNTEER)) {
     return next();
   }
-  res.status(401).send(Boom.unauthorized("You have not logged in!"));
-}
+  res
+    .status(401)
+    .send(
+      Boom.unauthorized("You are not authorized (requires volunteer status).")
+    );
+};
 
-function isVolunteer(req, res, next) {
-  if (!req.isAuthenticated()) {
-    res.status(401).send(Boom.unauthorized("You are not logged in!"));
-  } else if (req.user.role === roleEnum.VOLUNTEER) {
+const requireAdminStatus = (req, res, next) => {
+  if (authValidators.validateRequestForRole(req, roleEnum.ADMIN)) {
     return next();
-  } else {
-    res.status(401).send(Boom.unauthorized("You are not a volunteer."));
   }
-}
+  res
+    .status(401)
+    .send(Boom.unauthorized("You are not authorized (requires admin status)."));
+};
 
-function isAdmin(req, res, next) {
-  if (!req.isAuthenticated()) {
-    res.status(401).send(Boom.unauthorized("You are not logged in!"));
-  } else if (req.user.role === roleEnum.ADMIN) {
-    return next();
-  } else {
-    res.status(401).send(Boom.unauthorized("You are not an admin."));
-  }
-}
-
-module.exports = { isAuthenticated, isVolunteer, isAdmin };
+module.exports = { requireVolunteerStatus, requireAdminStatus };

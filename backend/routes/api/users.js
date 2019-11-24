@@ -3,7 +3,10 @@ const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
 const errorWrap = require("../../utils/error-wrap");
-const auth = require("../../utils/auth-middleware");
+const {
+  requireAdminStatus,
+  requireVolunteerStatus
+} = require("../../utils/auth-middleware");
 
 // Filters down the user information into just what's needed
 const filterSensitiveInfo = userInfo => {
@@ -33,7 +36,7 @@ router.get(
 );
 
 // get current users (partial info only)
-router.get("/current", auth.isAuthenticated, (req, res) => {
+router.get("/current", requireVolunteerStatus, (req, res) => {
   const user_info = req.user;
   res.json({
     code: 200,
@@ -45,7 +48,7 @@ router.get("/current", auth.isAuthenticated, (req, res) => {
 // get one user
 router.get(
   "/:user_id",
-  auth.isAdmin,
+  requireAdminStatus,
   errorWrap(async (req, res) => {
     const userId = req.params.user_id;
     const user = await User.findById(userId);
@@ -60,7 +63,7 @@ router.get(
 // create new user
 router.post(
   "/",
-  auth.isAdmin,
+  requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string().required(),
@@ -96,7 +99,7 @@ router.post(
 // set role
 router.put(
   "/:user_id/role",
-  auth.isAdmin,
+  requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -136,7 +139,7 @@ router.put(
 // approve user
 router.put(
   "/:user_id/approve",
-  auth.isAdmin,
+  requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
       firstName: Joi.string(),
@@ -175,7 +178,7 @@ router.put(
 // delete user
 router.delete(
   "/:user_id",
-  auth.isAdmin,
+  requireAdminStatus,
   errorWrap(async (req, res) => {
     const userId = req.params.user_id;
     const user = await User.findByIdAndRemove(userId);
