@@ -88,14 +88,17 @@ router.post(
   }),
   errorWrap(async (req, res) => {
     const data = req.body;
-    data.tags = extractor.extract(data.notes, {
+    const created_tags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
       return_changed_case: true,
       remove_duplicates: true
     });
+
     const newResource = new Resource(data);
+    newResource.tags = created_tags;
     await newResource.save();
+
     res.json({
       code: 201,
       message: "Resource Successfully Created",
