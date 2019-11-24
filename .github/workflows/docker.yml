@@ -27,8 +27,6 @@ jobs:
         DB_URI: ${{ secrets.DB_URI }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-    - name: Build Docker Image 
-      run: docker build -t lah-backend ./backend
-    - name: Run backend tests 
-      run: docker run -e CI=true --env-file .env lah-backend npm test
+    - name: Build Backend & Run Tests 
+      run: docker-compose run -e CI=true backend npm test
     
