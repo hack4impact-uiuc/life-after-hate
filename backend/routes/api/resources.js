@@ -8,6 +8,7 @@ const { sortByDistance } = require("../../utils/resource-utils");
 let { options } = require("../../utils/resource-utils");
 const fetch = require("node-fetch");
 Joi.objectId = require("joi-objectid")(Joi);
+const extractor = require("keyword-extractor");
 const mapquestKey = process.env.MAPQUEST_KEY;
 const mapquestURI = process.env.MAPQUEST_URI;
 
@@ -195,6 +196,13 @@ router.post(
   errorWrap(async (req, res) => {
     // const newResource;
     const data = req.body;
+    const created_tags = extractor.extract(data.notes, {
+      language: "english",
+      remove_digits: true,
+      return_changed_case: true,
+      remove_duplicates: true
+    });
+
     const latlng = await addressToLatLong(data.address);
 
     data.location.coordinates[0] = latlng.lat;
@@ -206,8 +214,8 @@ router.post(
     //   data.address = result;
     //   console.log("result is " + result);
     // })
-
     const newResource = new Resource(data);
+    newResource.tags = created_tags;
     await newResource.save();
 
     res.json({
