@@ -16,7 +16,9 @@ require("./utils/auth-middleware");
 
 app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 app.use(morgan("dev"));
-app.use(session({ secret: "keyboard cat" }));
+app.use(
+  session({ secret: "keyboard cat", saveUninitialized: false, resave: false })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
@@ -33,6 +35,8 @@ mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
+// Silence deprecation warnings
+mongoose.set("useCreateIndex", true);
 
 app.use(errors());
 app.use(errorHandler);
