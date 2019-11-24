@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import MapView from "./pages/MapView";
+import DirectoryView from "./pages/DirectoryView";
 import { isAuthenticated } from "./utils/api";
 
 class App extends Component {
@@ -33,6 +34,12 @@ class App extends Component {
             authed={this.state.authenticated}
             path="/"
             component={MapView}
+          />
+          <PrivateRoute
+            exact
+            authed={this.state.authenticated}
+            path="/directory"
+            component={DirectoryView}
           />
         </Router>
       </div>

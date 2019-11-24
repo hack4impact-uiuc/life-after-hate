@@ -1,0 +1,50 @@
+.add-edit-resource-form {
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    
+}
+
+input, label {
+    display: block;
+    width: 100%;
+}
+label {
+    margin-top: 20px;
+}
+input {
+    height: 33px;
+    border: none;
+    background-color: rgb(243, 243, 243);
+    border-radius: 4px;
+}
+
+.modal-backdrop {
+    opacity: 0.6;
+}
+
+.modal {
+    padding-top: 50px;
+}
+
+#submit-form-button {
+    margin-top: 20px;
+    width: 60px;
+    background-color: #F7922F;
+    color: white;
+}
+
+.modal-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 17px;
+}
+
+#close-image {
+    height: 20px;
+}
