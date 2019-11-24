@@ -24,7 +24,7 @@ jobs:
     - name: Setup CI Script 
       run: bash scripts/setup_ci.sh
       env:
-        DB_URI: ${{ secrets.DB_URI }}
+        DB_URI: ${{ secrets.TEST_DB_URI }}
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
     - name: Build Backend & Run Tests 
