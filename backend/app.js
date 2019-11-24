@@ -29,7 +29,7 @@ if (process.env.BYPASS_AUTH === "true") {
 app.use(require("./routes"));
 
 mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: false,
+  useUnifiedTopology: true,
   useNewUrlParser: true
 });
 
