@@ -30,25 +30,7 @@ export const accessDenied = url => ({
   url
 });
 
-export const apiAction = ({
-  url = "",
-  method = "GET",
-  data = null,
-  onSuccess = () => {
-    /* don't do anything by default */
-  },
-  onFailure = () => {
-    /* don't do anything by default */
-  },
-  label = ""
-}) => ({
-    type: API_REQUEST,
-    payload: {
-      url,
-      method,
-      data,
-      onSuccess,
-      onFailure,
-      label
-    }
-  });
+export const apiAction = payload => ({
+  type: API_REQUEST,
+  payload
+});

@@ -40,15 +40,16 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       url,
       method,
       headers,
-      [dataOrParams]: data
+      [dataOrParams]: data,
+      withCredentials: true
     })
     .then(({ data }) => {
       dispatch(apiSuccess(data));
       onSuccess(data);
     })
     .catch(error => {
-      dispatch(apiError(error));
-      onFailure(error);
+      dispatch(apiError(error.response));
+      onFailure(error.response);
       if (error.response && error.response.status === 401) {
         dispatch(accessDenied(window.location.pathname));
       }
