@@ -1,24 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
-import logger from "redux-logger";
-
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import MapView from "./pages/MapView";
 import DirectoryView from "./pages/DirectoryView";
 import MiniLoader from "./components/Loader/mini-loader";
-
+import store from "./redux/store";
 import { isAuthenticated } from "./utils/api";
-import rootReducer from "./redux/reducers";
-
-// Add Redux DevTools support
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(logger))
-);
 
 class App extends Component {
   constructor(props) {
@@ -26,8 +15,6 @@ class App extends Component {
     this.state = {
       authenticated: null
     };
-    store.dispatch({ type: "LOADER_START" });
-    setTimeout(() => store.dispatch({ type: "LOADER_END" }), 1000);
   }
 
   componentDidMount() {

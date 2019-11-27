@@ -1,5 +1,5 @@
-require("node-fetch");
-
+import store from "../redux/store";
+import { apiAction } from "../redux/actions/api";
 const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
   : "";
@@ -49,6 +49,13 @@ async function getSearchResults(keyword) {
 }
 
 const isAuthenticated = async () => {
+  store.dispatch(
+    apiAction({
+      url: `${API_URI}/api/users/current`,
+      onSuccess: console.log,
+      onFailure: console.error
+    })
+  );
   const res = await fetch(`${API_URI}/api/users/current`, {
     credentials: "include"
   });
