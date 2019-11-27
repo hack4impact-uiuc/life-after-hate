@@ -3,7 +3,7 @@ import { apiAction } from "../redux/actions/api";
 
 export const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
-  : "";
+  : "/api/";
 
 export const apiRequest = ({
   endpoint = "",
