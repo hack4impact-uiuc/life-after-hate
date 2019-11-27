@@ -5,14 +5,14 @@ export const API_SUCCESS = "API_SUCCESS";
 export const API_END = "API_END";
 export const API_ACCESS_DENIED = "API_ACCESS_DENIED";
 
-export const apiStart = label => ({
+export const apiStart = url => ({
   type: API_START,
-  payload: label
+  url
 });
 
-export const apiEnd = label => ({
+export const apiEnd = url => ({
   type: API_END,
-  payload: label
+  url
 });
 
 export const apiError = error => ({

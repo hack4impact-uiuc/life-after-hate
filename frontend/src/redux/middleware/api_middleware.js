@@ -7,7 +7,7 @@ import {
   API_REQUEST,
   apiSuccess
 } from "../actions/api";
-
+import { startLoader, endLoader } from "../actions/loader";
 const apiMiddleware = ({ dispatch }) => next => action => {
   next(action);
 
@@ -21,8 +21,8 @@ const apiMiddleware = ({ dispatch }) => next => action => {
     data,
     onSuccess,
     onFailure,
-    label,
-    headers
+    headers,
+    withLoader
   } = action.payload;
 
   const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
@@ -31,8 +31,9 @@ const apiMiddleware = ({ dispatch }) => next => action => {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";
   axios.defaults.headers.common["Content-Type"] = "application/json";
 
-  if (label) {
-    dispatch(apiStart(label));
+  dispatch(apiStart(url));
+  if (withLoader) {
+    dispatch(startLoader());
   }
 
   axios
@@ -55,9 +56,8 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       }
     })
     .finally(() => {
-      if (label) {
-        dispatch(apiEnd(label));
-      }
+      dispatch(apiEnd(url));
+      dispatch(endLoader());
     });
 };
 

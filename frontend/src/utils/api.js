@@ -9,7 +9,7 @@ async function getSearchResults(keyword) {
 const isAuthenticated = async () => {
   try {
     // TODO: Handle this more gracefully than a try/catch
-    await apiRequest({ endpoint: `users/current` });
+    await apiRequest({ endpoint: `users/current`, withLoader: false });
     return true;
   } catch (e) {
     return false;
@@ -17,12 +17,18 @@ const isAuthenticated = async () => {
 };
 
 const getProPic = async () => {
-  const res = await apiRequest({ endpoint: `users/current` });
+  const res = await apiRequest({
+    endpoint: `users/current`,
+    withLoader: false
+  });
   return res.result.propicUrl;
 };
 
 const getFullName = async () => {
-  const res = await apiRequest({ endpoint: `users/current` });
+  const res = await apiRequest({
+    endpoint: `users/current`,
+    withLoader: false
+  });
   return `${res.result.firstName} ${res.result.lastName}`;
 };
 
