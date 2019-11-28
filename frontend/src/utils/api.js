@@ -12,10 +12,10 @@ async function getSearchResults(keyword) {
 
 const refreshGlobalAuth = async () => {
   try {
-    // TODO: Handle this more gracefully than a try/catch
     const res = await apiRequest({
       endpoint: `users/current`,
-      withLoader: false
+      withLoader: false,
+      expectUnauthorizedResponse: true
     });
     const payload = res.result;
     updateGlobalAuthState(payload);
