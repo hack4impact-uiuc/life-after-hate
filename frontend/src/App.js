@@ -7,27 +7,14 @@ import MapView from "./pages/MapView";
 import DirectoryView from "./pages/DirectoryView";
 import MiniLoader from "./components/Loader/mini-loader";
 import store from "./redux/store";
-import { isAuthenticated } from "./utils/api";
+import { refreshGlobalAuth } from "./utils/api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      authenticated: null
-    };
-  }
-
   componentDidMount() {
-    this.checkAuthenticated();
+    refreshGlobalAuth();
   }
-
-  checkAuthenticated = async () => {
-    this.setState({
-      authenticated: await isAuthenticated()
-    });
-  };
 
   render() {
     return (
@@ -37,18 +24,8 @@ class App extends Component {
           <ToastContainer />
           <Router>
             <Route path="/login" component={Login} />
-            <PrivateRoute
-              exact
-              authed={this.state.authenticated}
-              path="/"
-              component={MapView}
-            />
-            <PrivateRoute
-              exact
-              authed={this.state.authenticated}
-              path="/directory"
-              component={DirectoryView}
-            />
+            <PrivateRoute exact path="/" component={MapView} />
+            <PrivateRoute exact path="/directory" component={DirectoryView} />
           </Router>
         </div>
       </Provider>

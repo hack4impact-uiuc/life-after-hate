@@ -1,4 +1,8 @@
-import { apiRequest } from "./apiHelpers";
+import {
+  apiRequest,
+  updateGlobalAuthState,
+  purgeGlobalAuthState
+} from "./apiHelpers";
 
 async function getSearchResults(keyword) {
   return (await apiRequest({
@@ -6,35 +10,23 @@ async function getSearchResults(keyword) {
   })).result;
 }
 
-const isAuthenticated = async () => {
+const refreshGlobalAuth = async () => {
   try {
     // TODO: Handle this more gracefully than a try/catch
-    await apiRequest({ endpoint: `users/current`, withLoader: false });
-    return true;
+    const res = await apiRequest({
+      endpoint: `users/current`,
+      withLoader: false
+    });
+    const payload = res.result;
+    updateGlobalAuthState(payload);
   } catch (e) {
-    return false;
+    purgeGlobalAuthState();
   }
 };
 
-const getProPic = async () => {
-  const res = await apiRequest({
-    endpoint: `users/current`,
-    withLoader: false
-  });
-  return res.result.propicUrl;
-};
-
-const getFullName = async () => {
-  const res = await apiRequest({
-    endpoint: `users/current`,
-    withLoader: false
-  });
-  return `${res.result.firstName} ${res.result.lastName}`;
-};
-
 const logout = async () => {
-  const res = await apiRequest({ endpoint: `auth/logout` });
-  return res.status === 200;
+  await apiRequest({ endpoint: `auth/logout` });
+  purgeGlobalAuthState();
 };
 
 async function addResource(data) {
@@ -65,9 +57,7 @@ async function getAllResources() {
 }
 
 export {
-  isAuthenticated,
-  getProPic,
-  getFullName,
+  refreshGlobalAuth,
   logout,
   getSearchResults,
   addResource,

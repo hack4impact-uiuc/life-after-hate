@@ -1,5 +1,6 @@
 import store from "../redux/store";
 import { apiAction } from "../redux/actions/api";
+import { authUpdateAction, authPurgeAction } from "../redux/actions/auth";
 
 export const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
@@ -25,3 +26,11 @@ export const apiRequest = ({
       })
     );
   });
+
+export const updateGlobalAuthState = payload => {
+  store.dispatch(authUpdateAction(payload));
+};
+
+export const purgeGlobalAuthState = () => {
+  store.dispatch(authPurgeAction());
+};
