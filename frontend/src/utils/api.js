@@ -38,15 +38,25 @@ const logout = async () => {
 };
 
 async function addResource(data) {
-  return (await apiRequest({ endpoint: `resources/`, method: "POST", data }))
-    .result;
+  return (await apiRequest({
+    endpoint: `resources/`,
+    method: "POST",
+    data,
+    notification: {
+      successMessage: "Successfully added resource!",
+      failureMessage: "Failed to add resource."
+    }
+  })).result;
 }
 
 async function editResource(data, id) {
   return (await apiRequest({
     endpoint: `resources/${id}`,
     method: "PUT",
-    data
+    data,
+    notification: {
+      successMessage: "Successfully edited resource!"
+    }
   })).result;
 }
 

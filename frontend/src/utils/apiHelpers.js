@@ -9,7 +9,8 @@ export const apiRequest = ({
   endpoint = "",
   method = "GET",
   data = null,
-  withLoader = true
+  withLoader = true,
+  notification
 }) =>
   new Promise((resolve, reject) => {
     store.dispatch(
@@ -19,7 +20,8 @@ export const apiRequest = ({
         onFailure: reject,
         method,
         withLoader,
-        data
+        data,
+        notification
       })
     );
   });

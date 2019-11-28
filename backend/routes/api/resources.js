@@ -203,7 +203,9 @@ router.post(
       remove_duplicates: true
     });
 
-    const latlng = await addressToLatLong(data.address);
+    let latlng = await addressToLatLong(data.address);
+    // For now until API key integrated
+    latlng = { lat: -88, lng: 22, region: 2 };
 
     data.location.coordinates[0] = latlng.lat;
     data.location.coordinates[1] = latlng.lng;
@@ -279,6 +281,8 @@ router.put(
       { new: true }
     );
 
+    console.log(resource);
+    console.log(data);
     const ret = resource
       ? {
           code: 200,

@@ -8,6 +8,7 @@ import {
   apiSuccess
 } from "../actions/api";
 import { startLoader, endLoader } from "../actions/loader";
+import { toast } from "react-toastify";
 const apiMiddleware = ({ dispatch }) => next => action => {
   next(action);
 
@@ -22,7 +23,8 @@ const apiMiddleware = ({ dispatch }) => next => action => {
     onSuccess,
     onFailure,
     headers,
-    withLoader
+    withLoader,
+    notification
   } = action.payload;
 
   const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
@@ -47,17 +49,25 @@ const apiMiddleware = ({ dispatch }) => next => action => {
     .then(({ data }) => {
       dispatch(apiSuccess(data));
       onSuccess(data);
+      if (notification) {
+        toast.success(notification.successMessage);
+      }
     })
     .catch(error => {
       dispatch(apiError(error.response));
       onFailure(error.response);
+      if (notification) {
+        toast.error(notification.failureMessage);
+      }
       if (error.response && error.response.status === 401) {
         dispatch(accessDenied(window.location.pathname));
       }
     })
     .finally(() => {
       dispatch(apiEnd(url));
-      dispatch(endLoader());
+      if (withLoader) {
+        dispatch(endLoader());
+      }
     });
 };
 

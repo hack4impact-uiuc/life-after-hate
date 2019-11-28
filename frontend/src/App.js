@@ -8,6 +8,8 @@ import DirectoryView from "./pages/DirectoryView";
 import MiniLoader from "./components/Loader/mini-loader";
 import store from "./redux/store";
 import { isAuthenticated } from "./utils/api";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends Component {
   constructor(props) {
@@ -32,6 +34,7 @@ class App extends Component {
       <Provider store={store}>
         <div className="App">
           <MiniLoader />
+          <ToastContainer />
           <Router>
             <Route path="/login" component={Login} />
             <PrivateRoute

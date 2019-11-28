@@ -62,7 +62,6 @@ class MapView extends Component {
       showResults: true,
       showSearchSuggestions: false
     });
-    console.log(this.state.searchResults);
   };
 
   changeHandler = input => {

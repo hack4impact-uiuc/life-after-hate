@@ -38,10 +38,8 @@ class ResourceManager extends Component {
         coordinates: [-88.2434, 40.1164]
       }
     };
-    let jsonData = JSON.stringify(formData);
-
     try {
-      await addResource(jsonData);
+      await addResource(formData);
     } catch (error) {
       console.error(error);
     }
