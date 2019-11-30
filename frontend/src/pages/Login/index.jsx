@@ -4,7 +4,7 @@ import { Button } from "reactstrap";
 import Logo from "./images/lah-logo.png";
 import GoogleLogo from "./images/google-logo.png";
 import Signin from "./images/google-signin.png";
-import { API_URI } from "../../utils/apiHelpers.js";
+import { getURLForEndpoint } from "../../utils/apiHelpers.js";
 
 import "./styles.scss";
 
@@ -18,7 +18,7 @@ class Login extends Component {
         <Button
           className="login-button"
           color="link"
-          href={`${API_URI}auth/login`}
+          href={getURLForEndpoint("auth/login")}
         >
           <img id="sign-in" src={Signin} alt="signin" />
         </Button>

@@ -43,7 +43,7 @@ async function addResource(data) {
 
 async function editResource(data, id) {
   return (await apiRequest({
-    endpoint: `resources/${id}`,
+    endpoint: `/resources/${id}`,
     method: "PUT",
     data,
     notification: {

@@ -1,11 +1,13 @@
 import store from "../redux/store";
 import { apiAction } from "../redux/actions/api";
 import { authUpdateAction, authPurgeAction } from "../redux/actions/auth";
+import urljoin from "url-join";
 
-export const API_URI = process.env.REACT_APP_API_URI
+const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
-  : "/api/";
+  : "/api";
 
+export const getURLForEndpoint = endpoint => urljoin(API_URI, endpoint);
 /**
  *
  * @param {String} endpoint - A string representing the URI of the endpoint (just the end part)
@@ -27,7 +29,7 @@ export const apiRequest = ({
   new Promise((resolve, reject) => {
     store.dispatch(
       apiAction({
-        url: API_URI.concat(endpoint),
+        url: getURLForEndpoint(endpoint),
         onSuccess: resolve,
         onFailure: reject,
         method,
