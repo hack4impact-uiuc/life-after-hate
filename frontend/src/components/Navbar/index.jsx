@@ -7,33 +7,15 @@ import {
   DropdownItem,
   Button
 } from "reactstrap";
+import { connect } from "react-redux";
 
 import Logo from "../../assets/images/lah-logo-2.png";
-import { getProPic, getFullName, logout } from "../../utils/api";
+import { logout } from "../../utils/api";
 import "./styles.scss";
 
 class Navbar extends Component {
   state = {
-    dropdownOpen: false,
-    proPic: "",
-    fullName: ""
-  };
-
-  componentDidMount() {
-    this.getProPic();
-    this.getFullName();
-  }
-
-  getProPic = async () => {
-    this.setState({
-      proPic: await getProPic()
-    });
-  };
-
-  getFullName = async () => {
-    this.setState({
-      fullName: await getFullName()
-    });
+    dropdownOpen: false
   };
 
   toggleUserDropdown() {
@@ -65,12 +47,12 @@ class Navbar extends Component {
           toggle={this.toggleUserDropdown.bind(this)}
         >
           <DropdownToggle id="dropdown-button">
-            <img src={this.state.proPic} alt="User icon" id="user" />
+            <img src={this.props.profilePic} alt="User icon" id="user" />
             <span className="caret"></span>
           </DropdownToggle>
           <DropdownMenu>
             <DropdownItem header>
-              <p>{this.state.fullName}</p>
+              <p>{`${this.props.firstName} ${this.props.lastName}`}</p>
               <Button className="signout-button" onClick={this.logoutHandler}>
                 Sign Out
               </Button>
@@ -81,6 +63,10 @@ class Navbar extends Component {
     );
   }
 }
-
+const mapStateToProps = state => ({
+  profilePic: state.auth.propicUrl,
+  firstName: state.auth.firstName,
+  lastName: state.auth.lastName
+});
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
-export default withRouter(Navbar);
+export default connect(mapStateToProps)(withRouter(Navbar));
