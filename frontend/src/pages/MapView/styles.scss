@@ -4,19 +4,20 @@
 
 .FixedHeightContainer {
     position: absolute;
-    left: 25px;
-    top: 25px;
-    width: 300px;
-    height: 400px;
+    left: 12px;
+    top: 72px;
+    width: 342px;
+    height: 70%;
     z-index: 1;
 }
 
 .cardContent {
+    margin-top: 2px;
     overflow: auto;
     height: 100%;
     width: 100%;
-    background-color: white;
-    border: solid rgb(201, 194, 194) 2.5px;
-    border-radius: 7px;
+    background-color: whitesmoke;
+    border: solid rgb(201, 194, 194) 0.5px;
+    border-radius: 4px;
     padding: 2px 2px 2px 2px;
 }
