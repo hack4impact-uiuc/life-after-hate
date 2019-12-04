@@ -84,7 +84,7 @@ async function addressToLatLong(address) {
   let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
 
   let state = responseJson["results"][0]["locations"][0]["adminArea3"];
-  console.log(`state: ${ state}`);
+  console.log(`state: ${state}`);
   let region = stateToFederalRegion.find(obj => obj.State === state).Region;
   console.log(region);
 
