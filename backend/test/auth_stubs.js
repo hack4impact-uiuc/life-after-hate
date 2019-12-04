@@ -10,6 +10,10 @@ const defaultStub = (req, res, next) => {
 // Take the name of the auth method along with the function
 // and stub the result with fn
 const stubMiddleware = (name, fn = defaultStub) => {
+  if (auth[name].wrappedMethod) {
+    // Already wrapped! No op
+    return;
+  }
   const stub = sinon.stub(auth, name);
   stub.callsFake(fn);
   return stub;
@@ -29,9 +33,12 @@ const stubAllAuth = fn => ({
   isVolunteerStub: stubIsVolunteer(fn)
 });
 
+const unstubAllAuth = () => auth.isAdmin.restore();
+
 module.exports = {
   stubIsAdmin,
   stubIsAuthenticated,
   stubIsVolunteer,
-  stubAllAuth
+  stubAllAuth,
+  unstubAllAuth
 };
