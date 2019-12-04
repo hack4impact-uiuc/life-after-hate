@@ -52,8 +52,6 @@ class MapView extends Component {
   searchHandler = async () => {
     let searchResults;
     try {
-      // search only passes in keyword
-      // Pass in location too
       searchResults = await getSearchResults(this.state.inputValue);
     } catch (error) {
       console.error(error);
