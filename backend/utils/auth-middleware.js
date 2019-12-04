@@ -1,33 +1,45 @@
-// const GoogleStrategy = require("passport-google-oauth20").Strategy;
-// const passport = require("passport");
 const Boom = require("@hapi/boom");
 const roleEnum = require("../models/User.js").roleEnum;
+const authValidators = require("./auth/auth_validators");
 
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
+const requireVolunteerStatus = (req, res, next) => {
+  // Anything that a volunteer is authorized to do, an admin can do as well
+  if (
+    authValidators.validateRequestForRole(req, roleEnum.VOLUNTEER) ||
+    authValidators.validateRequestForRole(req, roleEnum.ADMIN)
+  ) {
     return next();
   }
-  res.status(401).send(Boom.unauthorized("You have not logged in!"));
-}
+  res
+    .status(401)
+    .send(
+      Boom.unauthorized("You are not authorized (requires volunteer status).")
+    );
+};
 
-function isVolunteer(req, res, next) {
-  if (!req.isAuthenticated()) {
-    res.status(401).send(Boom.unauthorized("You are not logged in!"));
-  } else if (req.user.role === roleEnum.VOLUNTEER) {
+const requireAdminStatus = (req, res, next) => {
+  if (authValidators.validateRequestForRole(req, roleEnum.ADMIN)) {
     return next();
-  } else {
-    res.status(401).send(Boom.unauthorized("You are not a volunteer."));
   }
-}
+  res
+    .status(401)
+    .send(Boom.unauthorized("You are not authorized (requires admin status)."));
+};
 
-function isAdmin(req, res, next) {
-  if (!req.isAuthenticated()) {
-    res.status(401).send(Boom.unauthorized("You are not logged in!"));
-  } else if (req.user.role === roleEnum.ADMIN) {
-    return next();
-  } else {
-    res.status(401).send(Boom.unauthorized("You are not an admin."));
-  }
-}
-
-module.exports = { isAuthenticated, isVolunteer, isAdmin };
+// Middleware that'll set a mock user if the bypass authorization environment variable gets set
+const setMockUser = (req, _, next) => {
+  req.user = {
+    firstName: "John",
+    lastName: "Doe",
+    oauthId: "12345678",
+    propicUrl:
+      "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
+    isApproved: true,
+    role: roleEnum.ADMIN,
+    location: "SOUTH",
+    email: "abc@def.xyz"
+  };
+  req.isAuthenticated = () => true;
+  next();
+};
+module.exports = { requireVolunteerStatus, requireAdminStatus, setMockUser };
