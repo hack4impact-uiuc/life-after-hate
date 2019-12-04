@@ -84,9 +84,7 @@ async function addressToLatLong(address) {
   let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
 
   let state = responseJson["results"][0]["locations"][0]["adminArea3"];
-  console.log(`state: ${state}`);
   let region = stateToFederalRegion.find(obj => obj.State === state).Region;
-  console.log(region);
 
   return { lat: lat, lng: lng, region: region };
 }
@@ -209,7 +207,6 @@ router.post(
     });
 
     let latlng = await addressToLatLong(data.address);
-    console.log(latlng);
     // For now until API key integrated
     // latlng = { lat: -88, lng: 22, region: 2 };
 
@@ -287,8 +284,6 @@ router.put(
       { new: true }
     );
 
-    console.log(resource);
-    console.log(data);
     const ret = resource
       ? {
           code: 200,
