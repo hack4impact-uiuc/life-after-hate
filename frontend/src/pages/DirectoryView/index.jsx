@@ -17,12 +17,12 @@ class ResourceManager extends Component {
     await this.updateResources();
   };
 
-  async updateResources() {
+  updateResources = async () => {
     const resources = await getAllResources();
     this.setState({
       resources: resources
     });
-  }
+  };
 
   toggleModal = () => {
     this.setState(prevState => ({
@@ -51,14 +51,7 @@ class ResourceManager extends Component {
   };
 
   renderCards = resource => (
-    <ResourceCard
-      id={resource._id}
-      name={resource.companyName}
-      location={resource.address}
-      contact={resource.contactEmail}
-      description={resource.description}
-      updateResources={this.updateResources}
-    />
+    <ResourceCard resource={resource} updateResources={this.updateResources} />
   );
 
   render() {
