@@ -43,7 +43,7 @@ class MapView extends Component {
     />
   );
 
-  renderMarkers = marker => (
+  renderMarkers = (marker, _) => (
     <Marker
       key={marker.id}
       longitude={marker.location.coordinates[0]}
