@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import SearchIcon from "../../assets/images/search.svg";
-import LocationIcon from "../../assets/images/location-icon.png";
+import LocationIcon from "../../assets/images/location-icon.svg";
 import "./styles.scss";
 
 class Search extends Component {
