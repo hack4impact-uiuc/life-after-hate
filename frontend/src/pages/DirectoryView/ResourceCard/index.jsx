@@ -29,10 +29,17 @@ class ResourceCard extends Component {
         coordinates: [-88.2434, 40.1164]
       }
     };
-    let jsonData = JSON.stringify(formData);
+
+    // Remove non-empty string fields from the object
+    const filteredData = Object.keys(formData).reduce((accum, key) => {
+      if (formData[key] !== "") {
+        accum[key] = formData[key];
+      }
+      return accum;
+    }, {});
 
     try {
-      await editResource(jsonData, this.props.id);
+      await editResource(filteredData, this.props.id);
     } catch (error) {
       console.error(error);
     }

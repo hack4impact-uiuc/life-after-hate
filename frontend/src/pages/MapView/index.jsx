@@ -22,6 +22,7 @@ class MapView extends Component {
       },
       popup: null,
       inputValue: "",
+      locationValue: "",
       searchResults: [],
       showResults: false,
       searchSuggestions: [],
@@ -62,12 +63,18 @@ class MapView extends Component {
       showResults: true,
       showSearchSuggestions: false
     });
-    console.log(this.state.searchResults);
   };
 
   changeHandler = input => {
-    this.state.searchSuggestions.push(input);
-    this.setState({ inputValue: input, searchSuggestions });
+    this.setState({
+      inputValue: input,
+      searchSuggestions,
+      showSearchSuggestions: true
+    });
+  };
+
+  locationChangeHandler = input => {
+    this.setState({ locationValue: input });
   };
 
   render() {
@@ -79,6 +86,7 @@ class MapView extends Component {
               <Search
                 searchHandler={this.searchHandler}
                 changeHandler={this.changeHandler}
+                locationChangeHandler={this.locationChangeHandler}
                 searchSuggestions={this.state.searchSuggestions}
                 showSearchSuggestions={this.state.showSearchSuggestions}
                 inputValue={this.state.inputValue}
