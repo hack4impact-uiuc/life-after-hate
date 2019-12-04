@@ -57,7 +57,7 @@ class ResourceManager extends Component {
       location={resource.address}
       contact={resource.contactEmail}
       description={resource.description}
-      updateResources={this.updateResources()}
+      updateResources={this.updateResources}
     />
   );
 
