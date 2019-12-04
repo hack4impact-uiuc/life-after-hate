@@ -40,6 +40,7 @@ class ResourceCard extends Component {
 
     try {
       await editResource(filteredData, this.props.id);
+      await this.props.updateResource();
     } catch (error) {
       console.error(error);
     }

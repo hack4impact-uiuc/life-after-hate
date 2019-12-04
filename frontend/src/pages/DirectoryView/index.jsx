@@ -13,7 +13,11 @@ class ResourceManager extends Component {
     resources: null
   };
 
-  async componentDidMount() {
+  componentDidMount = async () => {
+    await this.updateResources();
+  };
+
+  async updateResources() {
     const resources = await getAllResources();
     this.setState({
       resources: resources
@@ -40,6 +44,7 @@ class ResourceManager extends Component {
     };
     try {
       await addResource(formData);
+      await this.updateResources();
     } catch (error) {
       console.error(error);
     }
@@ -52,6 +57,7 @@ class ResourceManager extends Component {
       location={resource.address}
       contact={resource.contactEmail}
       description={resource.description}
+      updateResources={this.updateResources()}
     />
   );
 
