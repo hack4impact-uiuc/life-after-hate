@@ -62,8 +62,8 @@ const stateToFederalRegion = [
   { State: "WA", Region: 10 },
   { State: "WV", Region: 3 },
   { State: "WI", Region: 5 },
-  { State: "WY", Region: 8 }
-  // { State: "Puerto Rico", Region: 2 },
+  { State: "WY", Region: 8 },
+  { State: "PR", Region: 2 }
   // { State: "US Virgin Islands", Region: 2 },
   // { State: "District of Columbia", Region: 3 },
   // { State: "American Samoa", Region: 9 },
@@ -84,7 +84,9 @@ async function addressToLatLong(address) {
   let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
 
   let state = responseJson["results"][0]["locations"][0]["adminArea3"];
+  console.log(`state: ${ state}`);
   let region = stateToFederalRegion.find(obj => obj.State === state).Region;
+  console.log(region);
 
   return { lat: lat, lng: lng, region: region };
 }
@@ -128,15 +130,18 @@ router.get(
   celebrate({
     query: {
       radius: Joi.number(),
-      lat: Joi.number(),
-      long: Joi.number(),
+      address: Joi.string(),
       keyword: Joi.string(),
       customWeights: Joi.array()
     }
   }),
   errorWrap(async (req, res) => {
-    const { radius, lat, long, keyword, customWeights } = req.query;
+    const { radius, address, keyword, customWeights } = req.query;
     let resources = await Resource.find({});
+
+    let latlng = await addressToLatLong(address);
+    let lat = latlng.lat;
+    let long = latlng.lng;
 
     // 3963.2 = radius of Earth in miles
     if (radius && lat && long) {
@@ -204,8 +209,9 @@ router.post(
     });
 
     let latlng = await addressToLatLong(data.address);
+    console.log(latlng);
     // For now until API key integrated
-    latlng = { lat: -88, lng: 22, region: 2 };
+    // latlng = { lat: -88, lng: 22, region: 2 };
 
     data.location.coordinates[0] = latlng.lat;
     data.location.coordinates[1] = latlng.lng;
