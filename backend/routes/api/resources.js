@@ -9,6 +9,7 @@ let { options } = require("../../utils/resource-utils");
 const fetch = require("node-fetch");
 Joi.objectId = require("joi-objectid")(Joi);
 const extractor = require("keyword-extractor");
+const geolib = require("geolib");
 const mapquestKey = process.env.MAPQUEST_KEY;
 const mapquestURI = process.env.MAPQUEST_URI;
 
@@ -137,7 +138,7 @@ router.get(
   errorWrap(async (req, res) => {
     const { radius, lat, long, keyword, customWeights } = req.query;
     let resources = await Resource.find({});
-
+    
     // 3963.2 = radius of Earth in miles
     if (radius && lat && long) {
       resources = await Resource.find({
@@ -146,10 +147,20 @@ router.get(
         }
       });
 
+      resources = resources.map(({ resource }) => (resource, geolib.getDistance(
+        {
+          latitude: resource.location.coordinates[0],
+          longitude: resource.location.coordinates[1]
+        },
+        { latitude: lat, longitude: long }
+      )));
+
       // sort by closest distance first
       resources.sort((a, b) => {
-        sortByDistance(a, b, lat, long);
+        a[1] - b[1]
       });
+
+      console.log(resources)
     }
 
     // fuzzy search

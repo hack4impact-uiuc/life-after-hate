@@ -30,11 +30,11 @@ class MapView extends Component {
     };
   }
 
-  renderCards = card => (
+  renderCards = (card, _) => (
     <ResourceCard name={card.companyName} description={card.description} />
   );
 
-  renderMarkers = marker => (
+  renderMarkers = (marker, _) => (
     <Marker
       key={marker.id}
       longitude={marker.location.coordinates[0]}
