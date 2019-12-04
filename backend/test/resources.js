@@ -2,6 +2,16 @@ const request = require("supertest");
 const { expect } = require("chai");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
+const { stubOutAuth, unstubAuth, didCheckIsAdmin } = require("./auth_stubs");
+
+beforeEach(async () => {
+  await Resource.remove({});
+  stubOutAuth();
+});
+
+afterEach(() => {
+  unstubAuth();
+});
 
 const sampleResourceInfo = {
   companyName: "Google",
@@ -49,6 +59,7 @@ describe("GET /resources", () => {
       .get(`/api/resources`)
       .expect(200);
     expect(res.body.result).to.be.an("array").that.is.empty;
+    expect(didCheckIsAdmin()).to.be.true;
   });
 
   it("should get one Resource and verify properties", async () => {
@@ -58,6 +69,7 @@ describe("GET /resources", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(Object.keys(res.body.result[0])).to.have.lengthOf(11);
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -69,6 +81,7 @@ describe("GET /resources/:resource_id", () => {
       .get(`/api/resources/${resourceId}`)
       .expect(200);
     expect(res.body.result.contactName).equals("Alice");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -84,6 +97,7 @@ describe("GET /resources/filter", () => {
     expect(res.body.result).to.have.lengthOf(2);
     expect(res.body.result[0].companyName).equals("Google");
     expect(res.body.result[1].companyName).equals("Facebook");
+    expect(didCheckIsAdmin()).to.be.true;
   });
   it("should fuzzy search on tags", async () => {
     await createSampleResource2();
@@ -93,6 +107,7 @@ describe("GET /resources/filter", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(res.body.result[0].companyName).equals("Facebook");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -100,6 +115,7 @@ describe("POST /resources", () => {
   it("should create a new Resource", async () => {
     const resource = await Resource.findOne({ companyName: "Google" });
     expect(resource.contactName).equals("Alice");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -119,6 +135,7 @@ describe("PUT /resources", () => {
 
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -131,5 +148,6 @@ describe("DELETE /resource", () => {
       .expect(200);
     const resources = await Resource.find();
     expect(resources).to.be.an("array").that.is.empty;
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
