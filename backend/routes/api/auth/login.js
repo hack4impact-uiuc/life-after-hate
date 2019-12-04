@@ -1,7 +1,10 @@
 const passport = require("passport");
 const router = require("express").Router();
 const Boom = require("@hapi/boom");
-const auth = require("../../../utils/auth-middleware");
+const {
+  requireAdminStatus,
+  requireVolunteerStatus
+} = require("../../../utils/auth-middleware");
 // Defines the endpoint which will be serializecd in state
 const CALLBACK_ENDPOINT = "/api/auth/login/callback";
 // Where to go affter a succ
@@ -60,7 +63,7 @@ router.get(
   }
 );
 
-router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
+router.get("/testVolunteer", requireVolunteerStatus, function(req, res) {
   res.json({
     code: 200,
     result: "you are a volunteer boo yah",
@@ -68,7 +71,7 @@ router.get("/testVolunteer", auth.isVolunteer, function(req, res) {
   });
 });
 
-router.get("/testAdmin", auth.isAdmin, function(req, res) {
+router.get("/testAdmin", requireAdminStatus, function(req, res) {
   res.json({
     code: 200,
     result: "you are an admin boo yah",
