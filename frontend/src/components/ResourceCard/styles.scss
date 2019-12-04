@@ -1,13 +1,22 @@
-.resourceCard {
+.collapsed {
     border: solid rgb(201, 194, 194) 2.5px;
     border-radius: 7px;
     background-color: white;
     display: block;
     padding: 2%;
     margin: 2px;
-    max-height: 80px;
-    width: 100%;
-    white-space: normal;
+    max-height: 100px;
     overflow: hidden;
-    text-overflow: ellipsis;
-} 
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.expanded {
+    border: solid rgb(201, 194, 194) 2.5px;
+    border-radius: 7px;
+    background-color: white;
+    display: block;
+    padding: 2%;
+    margin: 2px;
+}

@@ -4,6 +4,7 @@
   "rules": {
     "import/no-unresolved": "off",
     "no-magic-numbers": "off",
+    "@h4iuiuc/no-null-ternary": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
   },
   "env": {
