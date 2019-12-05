@@ -69,6 +69,10 @@ class MapView extends Component {
     this.setState({ inputValue: input, searchSuggestions });
   };
 
+  scrollToPin = ref => {
+    window.scrollTo(0, ref.current.offsetTop);
+  };
+
   render() {
     return (
       <div>
@@ -103,14 +107,18 @@ class MapView extends Component {
             this.state.searchResults.map(this.renderMarkers)}
           {this.state.popup && (
             <Popup
+              style={{ minWidth: "200px", maxWidth: "400px" }}
               latitude={this.state.popup.location.coordinates[1]}
               longitude={this.state.popup.location.coordinates[0]}
               tipSize={5}
               anchor="top"
               closeOnClick={false}
+              dynamicPosition={true}
               onClose={() => this.setState({ popup: null })}
             >
+              <h5>{this.state.popup.companyName}</h5>
               <p>{this.state.popup.companyName}</p>
+              <div className="popupDesc">{this.state.popup.description}</div>
             </Popup>
           )}
         </ReactMapGL>
