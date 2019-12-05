@@ -39,27 +39,51 @@ class LAHModal extends Component {
             >
               <label>
                 Resource Name
-                <input type="text" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceName}
+                />
               </label>
               <label>
                 Contact Name
-                <input type="text" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceContact}
+                />
               </label>
               <label>
                 Contact Phone
-                <input type="text" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourcePhone}
+                />
               </label>
               <label>
                 Contact Email
-                <input type="text" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceEmail}
+                />
               </label>
               <label>
                 Description
-                <input type="text" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceDescription}
+                />
               </label>
               <label>
                 Address
-                <input type="text" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceAddress}
+                />
               </label>
               <Button
                 id="submit-form-button"
