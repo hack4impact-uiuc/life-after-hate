@@ -89,9 +89,9 @@ class MapView extends Component {
   render() {
     return (
       <div>
-        <div className="FixedHeightContainer">
-          <div className="searchContent">
-            <div className="searchBar">
+        <div className="fixed-height-container">
+          <div className="search-content">
+            <div className="search-bar">
               <Search
                 searchHandler={this.searchHandler}
                 changeHandler={this.changeHandler}
@@ -103,7 +103,7 @@ class MapView extends Component {
             </div>
           </div>
           {this.state.showResults && (
-            <div className="cardContent">
+            <div className="card-content">
               {this.state.searchResults &&
                 this.state.searchResults.map(this.renderCards)}
             </div>
