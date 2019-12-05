@@ -59,10 +59,10 @@ class ResourceCard extends Component {
           <div className="col">
             <p>{this.props.resource.contactEmail}</p>
           </div>
-          <div className="col">
+          <div className="col col-desc col-desc-collapsed">
             <p>{this.props.resource.description}</p>
           </div>
-          <div className="col">
+          <div className="col col-edit">
             <Button onClick={this.toggleModal} className="edit-button">
               <img id="edit-icon" src={Edit} alt="edit icon" />
               Edit
