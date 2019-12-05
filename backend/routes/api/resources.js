@@ -4,7 +4,6 @@ const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
-const { sortByDistance } = require("../../utils/resource-utils");
 let { options } = require("../../utils/resource-utils");
 const fetch = require("node-fetch");
 Joi.objectId = require("joi-objectid")(Joi);
@@ -138,7 +137,7 @@ router.get(
   errorWrap(async (req, res) => {
     const { radius, lat, long, keyword, customWeights } = req.query;
     let resources = await Resource.find({});
-    
+
     // 3963.2 = radius of Earth in miles
     if (radius && lat && long) {
       resources = await Resource.find({
@@ -147,20 +146,26 @@ router.get(
         }
       });
 
-      resources = resources.map(({ resource }) => (resource, geolib.getDistance(
-        {
-          latitude: resource.location.coordinates[0],
-          longitude: resource.location.coordinates[1]
-        },
-        { latitude: lat, longitude: long }
-      )));
+      const resourcesWithDistance = resources.map(resource => ({
+        ...resource._doc,
+        distanceFromSearchLoc:
+          (geolib.getDistance(
+            {
+              latitude: resource.location.coordinates[0],
+              longitude: resource.location.coordinates[1]
+            },
+            { latitude: lat, longitude: long }
+          ) /
+            1000) *
+          0.621371
+      }));
 
       // sort by closest distance first
-      resources.sort((a, b) => {
-        a[1] - b[1]
+      resourcesWithDistance.sort((a, b) => {
+        a.distanceFromSearchLoc < b.distanceFromSearchLoc ? -1 : 1;
       });
 
-      console.log(resources)
+      console.log(resourcesWithDistance);
     }
 
     // fuzzy search
