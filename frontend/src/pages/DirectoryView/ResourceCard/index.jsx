@@ -39,7 +39,8 @@ class ResourceCard extends Component {
     }, {});
 
     try {
-      await editResource(filteredData, this.props.id);
+      await editResource(filteredData, this.props.resource._id);
+      await this.props.updateResources();
     } catch (error) {
       console.error(error);
     }
@@ -50,16 +51,16 @@ class ResourceCard extends Component {
       <div>
         <div className="card-wrapper">
           <div className="col">
-            <p>{this.props.name}</p>
+            <p>{this.props.resource.companyName}</p>
           </div>
           <div className="col">
-            <p>{this.props.location}</p>
+            <p>{this.props.resource.address}</p>
           </div>
           <div className="col">
-            <p>{this.props.contact}</p>
+            <p>{this.props.resource.contactEmail}</p>
           </div>
           <div className="col">
-            <p>{this.props.description}</p>
+            <p>{this.props.resource.description}</p>
           </div>
           <div className="col">
             <Button onClick={this.toggleModal} className="edit-button">
@@ -73,6 +74,12 @@ class ResourceCard extends Component {
           showModal={this.state.showModal}
           modalName="Edit Resource"
           handleSubmit={this.handleEditResource}
+          resourceName={this.props.resource.companyName}
+          resourceContact={this.props.resource.contactName}
+          resourcePhone={this.props.resource.contactPhone}
+          resourceEmail={this.props.resource.contactEmail}
+          resourceDescription={this.props.resource.description}
+          resourceAddress={this.props.resource.address}
         />
       </div>
     );

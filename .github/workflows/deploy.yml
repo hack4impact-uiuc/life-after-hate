@@ -11,7 +11,7 @@ jobs:
     - name: Setup CI Script 
       run: bash scripts/setup_ci.sh
       env: 
-        DB_URI: ${{ secrets.DB_URI }}
+        DB_URI: ${{ secrets.PROD_DB_URI }}
     - name: Seed MongoDB Instance
       run: docker-compose run backend node utils/generate_mock_data.js --color
    
