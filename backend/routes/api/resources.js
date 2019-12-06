@@ -5,109 +5,10 @@ const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const { sortByDistance } = require("../../utils/resource-utils");
+const resourceUtils = require("../../utils/resource-utils");
 let { options } = require("../../utils/resource-utils");
-const fetch = require("node-fetch");
 Joi.objectId = require("joi-objectid")(Joi);
 const extractor = require("keyword-extractor");
-const mapquestKey = process.env.MAPQUEST_KEY;
-const mapquestURI = process.env.MAPQUEST_URI;
-
-const stateToFederalRegion = [
-  { State: "AL", Region: 4 },
-  { State: "AK", Region: 10 },
-  { State: "AZ", Region: 9 },
-  { State: "AR", Region: 6 },
-  { State: "CA", Region: 9 },
-  { State: "CO", Region: 8 },
-  { State: "CT", Region: 1 },
-  { State: "DE", Region: 3 },
-  { State: "FL", Region: 4 },
-  { State: "GA", Region: 4 },
-  { State: "HI", Region: 9 },
-  { State: "ID", Region: 10 },
-  { State: "IL", Region: 5 },
-  { State: "IN", Region: 5 },
-  { State: "IA", Region: 7 },
-  { State: "KS", Region: 7 },
-  { State: "KY", Region: 4 },
-  { State: "LA", Region: 6 },
-  { State: "ME", Region: 1 },
-  { State: "MD", Region: 3 },
-  { State: "MA", Region: 1 },
-  { State: "MI", Region: 5 },
-  { State: "MN", Region: 5 },
-  { State: "MS", Region: 4 },
-  { State: "MO", Region: 7 },
-  { State: "MT", Region: 8 },
-  { State: "NE", Region: 7 },
-  { State: "NV", Region: 9 },
-  { State: "NH", Region: 1 },
-  { State: "NJ", Region: 2 },
-  { State: "NM", Region: 6 },
-  { State: "NY", Region: 2 },
-  { State: "NC", Region: 4 },
-  { State: "ND", Region: 8 },
-  { State: "OH", Region: 5 },
-  { State: "OK", Region: 6 },
-  { State: "OR", Region: 10 },
-  { State: "PA", Region: 3 },
-  { State: "RI", Region: 1 },
-  { State: "SC", Region: 4 },
-  { State: "SD", Region: 8 },
-  { State: "TN", Region: 4 },
-  { State: "TX", Region: 6 },
-  { State: "UT", Region: 8 },
-  { State: "VT", Region: 1 },
-  { State: "VA", Region: 3 },
-  { State: "WA", Region: 10 },
-  { State: "WV", Region: 3 },
-  { State: "WI", Region: 5 },
-  { State: "WY", Region: 8 }
-  // { State: "Puerto Rico", Region: 2 },
-  // { State: "US Virgin Islands", Region: 2 },
-  // { State: "District of Columbia", Region: 3 },
-  // { State: "American Samoa", Region: 9 },
-  // { State: "Guam", Region: 9 },
-  // { State: "Northern Mariana Islands", Region: 9 }
-];
-
-// const api_url =
-
-async function addressToLatLong(address) {
-  const api_latlong = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
-  // "&boundingBox=40.121581,-88.253981,40.098315,-88.205082";
-
-  const response = await fetch(api_latlong, {});
-  const responseJson = await response.json();
-
-  let lat = responseJson["results"][0]["locations"][0]["latLng"]["lat"];
-  let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
-
-  let state = responseJson["results"][0]["locations"][0]["adminArea3"];
-  let region = stateToFederalRegion.find(obj => obj.State === state).Region;
-
-  return { lat: lat, lng: lng, region: region };
-}
-
-// async function latlongToAddress(lat, long) {
-//   let api_address = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
-//   // "&boundingBox=40.121581,-88.253981,40.098315,-88.205082";
-
-//   const response = await fetch(api_address, {});
-//   const responseJson = await response.json();
-
-//   console.log(responseJson["results"][0]["locations"]);
-
-//   let street_address = responseJson["results"][0]["locations"][0]["street"];
-//   let city = responseJson["results"][0]["locations"][0]["adminArea5"];
-//   let state = responseJson["results"][0]["locations"][0]["adminArea3"];
-//   // country = responseJson["results"][0]["locations"][0]["adminArea1"];
-//   let postal_code = responseJson["results"][0]["locations"][0][
-//     "postalCode"
-//   ].substring(0, 5);
-//   let full_address = `${street_address} ${city} ${state} ${postal_code}`;
-//   return full_address;
-// }
 
 // get all resources
 router.get(
@@ -128,15 +29,18 @@ router.get(
   celebrate({
     query: {
       radius: Joi.number(),
-      lat: Joi.number(),
-      long: Joi.number(),
+      address: Joi.string(),
       keyword: Joi.string(),
       customWeights: Joi.array()
     }
   }),
   errorWrap(async (req, res) => {
-    const { radius, lat, long, keyword, customWeights } = req.query;
+    const { radius, address, keyword, customWeights } = req.query;
     let resources = await Resource.find({});
+
+    let latlng = await resourceUtils.addressToLatLong(address);
+    let lat = latlng.lat;
+    let long = latlng.lng;
 
     // 3963.2 = radius of Earth in miles
     if (radius && lat && long) {
@@ -194,7 +98,6 @@ router.post(
     })
   }),
   errorWrap(async (req, res) => {
-    // const newResource;
     const data = req.body;
     const created_tags = extractor.extract(data.notes, {
       language: "english",
@@ -203,19 +106,15 @@ router.post(
       remove_duplicates: true
     });
 
-    let latlng = await addressToLatLong(data.address);
+    let latlng = await resourceUtils.addressToLatLong(data.address);
+    console.log(latlng);
     // For now until API key integrated
-    latlng = { lat: -88, lng: 22, region: 2 };
+    // latlng = { lat: -88, lng: 22, region: 2 };
 
     data.location.coordinates[0] = latlng.lat;
     data.location.coordinates[1] = latlng.lng;
     data.federalRegion = latlng.region;
 
-    // const goodAddress = latlongToAddress(data.location.coordinates[0], data.location.coordinates[1]);
-    // goodAddress.then(function(result) {
-    //   data.address = result;
-    //   console.log("result is " + result);
-    // })
     const newResource = new Resource(data);
     newResource.tags = created_tags;
     await newResource.save();
@@ -281,8 +180,6 @@ router.put(
       { new: true }
     );
 
-    console.log(resource);
-    console.log(data);
     const ret = resource
       ? {
           code: 200,
