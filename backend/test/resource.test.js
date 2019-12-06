@@ -65,7 +65,6 @@ describe("GET /resources", () => {
       .get(`/api/resources`)
       .expect(200);
     expect(res.body.result).to.be.an("array").that.is.empty;
-    expect(didCheckIsAdmin()).to.be.true;
   });
 
   it("should get one Resource and verify properties", async () => {
@@ -75,7 +74,6 @@ describe("GET /resources", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(Object.keys(res.body.result[0])).to.have.lengthOf(11);
-    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
