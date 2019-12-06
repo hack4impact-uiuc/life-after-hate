@@ -38,7 +38,7 @@ class LAHModal extends Component {
               className="add-edit-resource-form"
             >
               <label>
-                Resource Name
+                <p>Resource Name</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
@@ -46,7 +46,7 @@ class LAHModal extends Component {
                 />
               </label>
               <label>
-                Contact Name
+                <p>Contact Name</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
@@ -54,7 +54,7 @@ class LAHModal extends Component {
                 />
               </label>
               <label>
-                Contact Phone
+                <p>Contact Phone</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
@@ -62,7 +62,7 @@ class LAHModal extends Component {
                 />
               </label>
               <label>
-                Contact Email
+                <p>Contact Email</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
@@ -70,7 +70,7 @@ class LAHModal extends Component {
                 />
               </label>
               <label>
-                Description
+                <p>Description</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
@@ -78,7 +78,7 @@ class LAHModal extends Component {
                 />
               </label>
               <label>
-                Address
+                <p>Address</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
@@ -90,7 +90,7 @@ class LAHModal extends Component {
                 type="submit"
                 onClick={this.props.toggleModal}
               >
-                SAVE
+                Save
               </Button>
             </form>
           </ModalBody>

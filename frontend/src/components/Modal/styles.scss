@@ -4,26 +4,43 @@
     padding-left: 30px;
     padding-right: 30px;
     padding-bottom: 20px;
-    
+
 }
 
 input, label {
     display: block;
     width: 100%;
+    outline: none;
 }
 label {
     margin-top: 20px;
 }
+
+label p {
+  font-size: 12px;
+  margin: 0;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
 input {
     height: 33px;
-    border: none;
+    border: solid #F6F6F6 1.5px;
     background-color: rgb(243, 243, 243);
-    border-radius: 4px;
-    text-indent: 8px;
+    border-radius: 3px;
+    padding: 15px 12px 15px 12px;
+    font-weight: 400 !important;
+    transition: all 0.3s;
+    font-size: 15px;
+}
+
+input:focus {
+    border: solid #F7922F 1.5px;
 }
 
 .modal-backdrop {
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 .modal {
@@ -46,6 +63,34 @@ input {
     font-size: 17px;
 }
 
+.close-button {
+    outline: none !important;
+    transition: all 0.2s;
+    border-radius: 4px !important;
+}
+
+.close-button:hover {
+    background-color: #f9f9f9 !important;
+}
+
 #close-image {
     height: 20px;
+}
+
+#submit-form-button {
+            background-color: #F7922F;
+            color: white;
+            width: 90px !important;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: none;
+            outline: none;
+            padding: 12px 0 12px 0;
+            box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+            border-radius: 4px;
+            &:hover, &:focus {
+                background-color: #f9ac61;
+            }
 }
