@@ -1,26 +1,6 @@
-const geolib = require("geolib");
 const fetch = require("node-fetch");
 const mapquestKey = process.env.MAPQUEST_KEY;
 const mapquestURI = process.env.MAPQUEST_URI;
-
-const sortByDistance = (a, b, lat, long) => {
-  const distanceA = geolib.getDistance(
-    {
-      latitude: a.location.coordinates[0],
-      longitude: a.location.coordinates[1]
-    },
-    { latitude: lat, longitude: long }
-  );
-  const distanceB = geolib.getDistance(
-    {
-      latitude: b.location.coordinates[0],
-      longitude: b.location.coordinates[1]
-    },
-    { latitude: lat, longitude: long }
-  );
-
-  return distanceA - distanceB;
-};
 
 let options = {
   shouldSort: true,
@@ -148,7 +128,6 @@ let latlongToAddress = async function(lat, long) {
 };
 
 module.exports = {
-  sortByDistance,
   options,
   addressToLatLong,
   latlongToAddress
