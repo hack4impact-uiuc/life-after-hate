@@ -8,10 +8,12 @@ import "../styles.scss";
 
 class ResourceCard extends Component {
   state = {
-    showModal: false
+    showModal: false,
+    cardClicked: false
   };
 
-  toggleModal = () => {
+  toggleModal = event => {
+    event.stopPropagation();
     this.setState(prevState => ({
       showModal: !prevState.showModal
     }));
@@ -46,9 +48,22 @@ class ResourceCard extends Component {
     }
   };
 
+  toggleCardModal = () => {
+    this.setState(prevState => ({
+      showModal: !prevState.showModal,
+      cardClicked: !prevState.cardClicked
+    }));
+  };
+
   render() {
     return (
-      <div>
+      <div
+        className="card-click"
+        role="button"
+        tabIndex="0"
+        onClick={this.toggleCardModal}
+        onKeyPress={this.onKeyPress}
+      >
         <div className="card-wrapper">
           <div className="col">
             <p>{this.props.resource.companyName}</p>
@@ -70,9 +85,16 @@ class ResourceCard extends Component {
           </div>
         </div>
         <Modal
-          toggleModal={this.toggleModal}
+          toggleModal={
+            this.state.cardClicked ? this.toggleCardModal : this.toggleModal
+          }
+          cardClicked={this.state.cardClicked}
           showModal={this.state.showModal}
-          modalName="Edit Resource"
+          modalName={
+            this.state.cardClicked
+              ? this.props.resource.companyName
+              : "Edit Resource"
+          }
           handleSubmit={this.handleEditResource}
           resourceName={this.props.resource.companyName}
           resourceContact={this.props.resource.contactName}
@@ -80,6 +102,7 @@ class ResourceCard extends Component {
           resourceEmail={this.props.resource.contactEmail}
           resourceDescription={this.props.resource.description}
           resourceAddress={this.props.resource.address}
+          resourceNotes={this.props.resource.notes}
         />
       </div>
     );

@@ -11,6 +11,11 @@
     width: 100%;
     outline: none;
 }
+.modal-input-textarea {
+    resize: vertical;
+    min-height: 170px;
+    padding: 5px 12px 5px 12px !important;
+}
 .modal-lab {
     margin-top: 20px;
 }
@@ -36,6 +41,10 @@
 
 .modal-input-field:focus {
     border: solid #F7922F 1.5px;
+}
+
+.modal-input-field:disabled {
+    color: #2A2A2A;
 }
 
 .modal-backdrop {
