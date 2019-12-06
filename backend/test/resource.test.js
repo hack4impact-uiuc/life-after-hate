@@ -2,7 +2,7 @@ const request = require("supertest");
 const { expect } = require("chai");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
-const { didCheckIsAdmin } = require("./auth_stubs");
+const { didCheckIsAdmin, didCheckIsVolunteer } = require("./auth_stubs");
 const sinon = require("sinon");
 const resourceUtils = require("../utils/resource-utils");
 
@@ -65,7 +65,7 @@ describe("GET /resources", () => {
       .get(`/api/resources`)
       .expect(200);
     expect(res.body.result).to.be.an("array").that.is.empty;
-    expect(didCheckIsAdmin()).to.be.true;
+    expect(didCheckIsVolunteer()).to.be.true;
   });
 
   it("should get one Resource and verify properties", async () => {
@@ -75,7 +75,7 @@ describe("GET /resources", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(Object.keys(res.body.result[0])).to.have.lengthOf(11);
-    expect(didCheckIsAdmin()).to.be.true;
+    expect(didCheckIsVolunteer()).to.be.true;
   });
 });
 
@@ -87,6 +87,7 @@ describe("GET /resources/:resource_id", () => {
       .get(`/api/resources/${resourceId}`)
       .expect(200);
     expect(res.body.result.contactName).equals("Alice");
+    expect(didCheckIsVolunteer()).to.be.true;
   });
 });
 
@@ -105,7 +106,7 @@ describe("GET /resources/filter", () => {
     expect(res.body.result).to.have.lengthOf(2);
     expect(res.body.result[0].companyName).equals("Google");
     expect(res.body.result[1].companyName).equals("Facebook");
-
+    expect(didCheckIsVolunteer()).to.be.true;
     stub.restore();
   });
   it("should fuzzy search on tags", async () => {
@@ -120,7 +121,7 @@ describe("GET /resources/filter", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(res.body.result[0].companyName).equals("Facebook");
-
+    expect(didCheckIsVolunteer()).to.be.true;
     stub.restore();
   });
 });
