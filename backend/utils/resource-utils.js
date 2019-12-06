@@ -54,6 +54,22 @@ let options = {
   ]
 };
 
+let tag_only = {
+  shouldSort: true,
+  threshold: 0.0,
+  findAllMatches: true,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: [
+    {
+      name: "tags",
+      weight: 1.0
+    }
+  ]
+};
+
 const stateToFederalRegion = [
   { State: "AL", Region: 4 },
   { State: "AK", Region: 10 },
@@ -151,5 +167,6 @@ module.exports = {
   sortByDistance,
   options,
   addressToLatLong,
-  latlongToAddress
+  latlongToAddress,
+  tag_only
 };
