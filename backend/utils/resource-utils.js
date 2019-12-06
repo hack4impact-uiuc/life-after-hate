@@ -54,7 +54,7 @@ let options = {
   ]
 };
 
-let tag_only = {
+let tagOnly = {
   shouldSort: true,
   threshold: 0.0,
   findAllMatches: true,
@@ -168,5 +168,5 @@ module.exports = {
   options,
   addressToLatLong,
   latlongToAddress,
-  tag_only
+  tagOnly
 };
