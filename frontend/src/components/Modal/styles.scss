@@ -4,19 +4,18 @@
     padding-left: 30px;
     padding-right: 30px;
     padding-bottom: 20px;
-
 }
 
-input, label {
+.modal-input-field, .modal-lab {
     display: block;
     width: 100%;
     outline: none;
 }
-label {
+.modal-lab {
     margin-top: 20px;
 }
 
-label p {
+.modal-lab p {
   font-size: 12px;
   margin: 0;
   margin-left: 5px;
@@ -24,7 +23,7 @@ label p {
   text-transform: uppercase;
 }
 
-input {
+.modal-input-field {
     height: 33px;
     border: solid #F6F6F6 1.5px;
     background-color: rgb(243, 243, 243);
@@ -35,7 +34,7 @@ input {
     font-size: 15px;
 }
 
-input:focus {
+.modal-input-field:focus {
     border: solid #F7922F 1.5px;
 }
 

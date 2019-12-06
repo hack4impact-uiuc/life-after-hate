@@ -124,11 +124,18 @@ class MapView extends Component {
               latitude={this.state.popup.location.coordinates[1]}
               longitude={this.state.popup.location.coordinates[0]}
               tipSize={5}
-              anchor="top"
               closeOnClick={false}
+              dynamicPosition={true}
+              offsetTop={-27}
               onClose={() => this.setState({ popup: null })}
             >
-              <p>{this.state.popup.companyName}</p>
+              <div className="popup">
+                <div className="popup-title">
+                  {this.state.popup.companyName}
+                </div>
+                <div className="popup-distance">0.5 miles away</div>
+                <div className="popup-desc">{this.state.popup.description}</div>
+              </div>
             </Popup>
           )}
         </ReactMapGL>
