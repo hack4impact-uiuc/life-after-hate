@@ -4,7 +4,6 @@ const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
-const { sortByDistance } = require("../../utils/resource-utils");
 const resourceUtils = require("../../utils/resource-utils");
 let { options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
@@ -13,6 +12,7 @@ const {
   requireAdminStatus,
   requireVolunteerStatus
 } = require("../../utils/auth-middleware");
+const geolib = require("geolib");
 
 // get all resources
 router.get(
@@ -56,9 +56,23 @@ router.get(
         }
       });
 
+      resources = resources.map(resource => ({
+        ...resource._doc,
+        distanceFromSearchLoc:
+          (geolib.getDistance(
+            {
+              latitude: resource.location.coordinates[0],
+              longitude: resource.location.coordinates[1]
+            },
+            { latitude: lat, longitude: long }
+          ) /
+            1000) *
+          0.621371
+      }));
+
       // sort by closest distance first
       resources.sort((a, b) => {
-        sortByDistance(a, b, lat, long);
+        a.distanceFromSearchLoc - b.distanceFromSearchLoc;
       });
     }
 
