@@ -7,7 +7,7 @@ import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
 import "./styles.scss";
 
-const pinSize = 25;
+const pinSize = 35;
 
 const searchSuggestions = [];
 
