@@ -49,10 +49,9 @@ class ResourceCard extends Component {
   };
 
   toggleCardModal = () => {
-    console.log(this.state.cardClicked);
     this.setState(prevState => ({
-      cardClicked: !prevState.cardClicked,
-      showModal: !prevState.showModal
+      showModal: !prevState.showModal,
+      cardClicked: !prevState.cardClicked
     }));
   };
 
@@ -85,36 +84,26 @@ class ResourceCard extends Component {
             </Button>
           </div>
         </div>
-        {this.state.cardClicked ? (
-          <Modal
-            toggleModal={this.toggleCardModal}
-            cardClicked={this.state.cardClicked}
-            showModal={this.state.showModal}
-            modalName={this.props.resource.companyName}
-            resourceName={this.props.resource.companyName}
-            resourceContact={this.props.resource.contactName}
-            resourcePhone={this.props.resource.contactPhone}
-            resourceEmail={this.props.resource.contactEmail}
-            resourceDescription={this.props.resource.description}
-            resourceAddress={this.props.resource.address}
-            resourceNotes={this.props.resource.notes}
-          />
-        ) : (
-          <Modal
-            toggleModal={this.toggleModal}
-            cardClicked={this.state.cardClicked}
-            showModal={this.state.showModal}
-            modalName="Edit Resource"
-            handleSubmit={this.handleEditResource}
-            resourceName={this.props.resource.companyName}
-            resourceContact={this.props.resource.contactName}
-            resourcePhone={this.props.resource.contactPhone}
-            resourceEmail={this.props.resource.contactEmail}
-            resourceDescription={this.props.resource.description}
-            resourceAddress={this.props.resource.address}
-            resourceNotes={this.props.resource.notes}
-          />
-        )}
+        <Modal
+          toggleModal={
+            this.state.cardClicked ? this.toggleCardModal : this.toggleModal
+          }
+          cardClicked={this.state.cardClicked}
+          showModal={this.state.showModal}
+          modalName={
+            this.state.cardClicked
+              ? this.props.resource.companyName
+              : "Edit Resource"
+          }
+          handleSubmit={this.handleEditResource}
+          resourceName={this.props.resource.companyName}
+          resourceContact={this.props.resource.contactName}
+          resourcePhone={this.props.resource.contactPhone}
+          resourceEmail={this.props.resource.contactEmail}
+          resourceDescription={this.props.resource.description}
+          resourceAddress={this.props.resource.address}
+          resourceNotes={this.props.resource.notes}
+        />
       </div>
     );
   }
