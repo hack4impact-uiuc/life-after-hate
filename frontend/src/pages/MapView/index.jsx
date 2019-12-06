@@ -40,6 +40,7 @@ class MapView extends Component {
       contactEmail={card.contactEmail}
       address={card.address}
       notes={card.notes}
+      distanceFromSearchLoc={card.distanceFromSearchLoc}
     />
   );
 
@@ -61,7 +62,10 @@ class MapView extends Component {
   searchHandler = async () => {
     let searchResults;
     try {
-      searchResults = await getSearchResults(this.state.inputValue);
+      searchResults = await getSearchResults(
+        this.state.inputValue,
+        this.state.locationValue
+      );
     } catch (error) {
       console.error(error);
       alert(error);
@@ -133,7 +137,10 @@ class MapView extends Component {
                 <div className="popup-title">
                   {this.state.popup.companyName}
                 </div>
-                <div className="popup-distance">0.5 miles away</div>
+                <div className="popup-distance">
+                  {Math.round(this.state.popup.distanceFromSearchLoc * 10) / 10}{" "}
+                  miles away
+                </div>
                 <div className="popup-desc">{this.state.popup.description}</div>
               </div>
             </Popup>
