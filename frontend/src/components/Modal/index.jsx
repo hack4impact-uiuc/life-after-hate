@@ -15,7 +15,7 @@ class LAHModal extends Component {
 
   render() {
     return (
-      <div>
+      <div className="modal-wrap-ee">
         <Modal fade={false} isOpen={this.props.showModal}>
           <ModalHeader>
             {this.props.modalName}
@@ -37,52 +37,58 @@ class LAHModal extends Component {
               onSubmit={this.handleSubmit}
               className="add-edit-resource-form"
             >
-              <label>
+              <label className="modal-lab">
                 <p>Resource Name</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   defaultValue={this.props.resourceName}
+                  className="modal-input-field"
                 />
               </label>
-              <label>
+              <label className="modal-lab">
                 <p>Contact Name</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   defaultValue={this.props.resourceContact}
+                  className="modal-input-field"
                 />
               </label>
-              <label>
+              <label className="modal-lab">
                 <p>Contact Phone</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   defaultValue={this.props.resourcePhone}
+                  className="modal-input-field"
                 />
               </label>
-              <label>
+              <label className="modal-lab">
                 <p>Contact Email</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   defaultValue={this.props.resourceEmail}
+                  className="modal-input-field"
                 />
               </label>
-              <label>
+              <label className="modal-lab">
                 <p>Description</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   defaultValue={this.props.resourceDescription}
+                  className="modal-input-field"
                 />
               </label>
-              <label>
+              <label className="modal-lab">
                 <p>Address</p>
                 <input
                   type="text"
                   onChange={this.handleChange}
                   defaultValue={this.props.resourceAddress}
+                  className="modal-input-field"
                 />
               </label>
               <Button
