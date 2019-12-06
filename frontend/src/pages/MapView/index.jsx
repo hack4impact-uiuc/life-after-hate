@@ -86,10 +86,6 @@ class MapView extends Component {
     this.setState({ locationValue: input });
   };
 
-  scrollToPin = ref => {
-    window.scrollTo(0, ref.current.offsetTop);
-  };
-
   render() {
     return (
       <div>
