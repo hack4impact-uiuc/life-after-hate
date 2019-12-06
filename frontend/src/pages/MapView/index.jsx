@@ -1,18 +1,16 @@
 import React, { Component } from "react";
-import StaticMap, { Marker, Popup } from "react-map-gl";
+import StaticMap, { Popup } from "react-map-gl";
 
 import { getSearchResults } from "../../utils/api";
-import Pin from "../../components/Pin";
 import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../assets/images/marker.png";
-const pinSize = 35;
 
+const pinSize = 45;
 const searchSuggestions = [];
-const URI = MarkerImg;
 const mapping = {
   marker: {
     x: 0,
@@ -22,6 +20,7 @@ const mapping = {
     anchorY: 512
   }
 };
+
 const INITIAL_VIEW_STATE = {
   longitude: -35,
   latitude: 36.7,
@@ -57,7 +56,7 @@ class MapView extends Component {
       pickable: true,
       wrapLongitude: true,
       getPosition: d => d.location.coordinates,
-      iconAtlas: URI,
+      iconAtlas: MarkerImg,
       iconMapping: mapping
     };
 
@@ -66,7 +65,7 @@ class MapView extends Component {
       id: "icon",
       getIcon: () => "marker",
       sizeUnits: "meters",
-      sizeMinPixels: 45
+      sizeMinPixels: pinSize
     });
 
     return [layer];
@@ -82,21 +81,6 @@ class MapView extends Component {
       address={card.address}
       notes={card.notes}
     />
-  );
-
-  renderMarkers = marker => (
-    <Marker
-      key={marker.id}
-      longitude={marker.location.coordinates[0]}
-      latitude={marker.location.coordinates[1]}
-    >
-      <Pin
-        size={pinSize}
-        onClick={() => {
-          this.setState({ popup: marker });
-        }}
-      />
-    </Marker>
   );
 
   searchHandler = async () => {
@@ -173,6 +157,7 @@ class MapView extends Component {
                 closeOnClick={false}
                 dynamicPosition={true}
                 offsetTop={-27}
+                captureScroll={false}
                 onClose={() => this.setState({ popup: null })}
               >
                 <div className="popup">
