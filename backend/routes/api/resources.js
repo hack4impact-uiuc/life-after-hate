@@ -5,7 +5,7 @@ const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const { sortByDistance } = require("../../utils/resource-utils");
-const { addressToLatLong } = require("../../utils/resource-utils");
+const resourceUtils = require("../../utils/resource-utils");
 let { options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 const extractor = require("keyword-extractor");
@@ -38,11 +38,9 @@ router.get(
     const { radius, address, keyword, customWeights } = req.query;
     let resources = await Resource.find({});
 
-    let latlng = await addressToLatLong(address);
+    let latlng = await resourceUtils.addressToLatLong(address);
     let lat = latlng.lat;
     let long = latlng.lng;
-
-    console.log(latlng);
 
     // 3963.2 = radius of Earth in miles
     if (radius && lat && long) {
@@ -108,7 +106,7 @@ router.post(
       remove_duplicates: true
     });
 
-    let latlng = await addressToLatLong(data.address);
+    let latlng = await resourceUtils.addressToLatLong(data.address);
     console.log(latlng);
     // For now until API key integrated
     // latlng = { lat: -88, lng: 22, region: 2 };
