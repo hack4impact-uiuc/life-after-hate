@@ -1,15 +1,35 @@
 import React, { Component } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import StaticMap, { Marker, Popup } from "react-map-gl";
 
 import { getSearchResults } from "../../utils/api";
 import Pin from "../../components/Pin";
 import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
 import "./styles.scss";
+import DeckGL from "@deck.gl/react";
+import { IconLayer } from "@deck.gl/layers";
 
 const pinSize = 35;
 
 const searchSuggestions = [];
+const URI = "https://i.imgur.com/039uNXi.png";
+const mapping = {
+  marker: {
+    x: 384,
+    y: 512,
+    width: 128,
+    height: 128,
+    anchorY: 128
+  }
+};
+const INITIAL_VIEW_STATE = {
+  longitude: -35,
+  latitude: 36.7,
+  zoom: 1.8,
+  maxZoom: 20,
+  pitch: 0,
+  bearing: 0
+};
 
 class MapView extends Component {
   constructor(props) {
@@ -30,6 +50,29 @@ class MapView extends Component {
     };
   }
 
+  getLayers = () => {
+    const data = this.state.searchResults;
+    console.log(data);
+    const layerProps = {
+      data,
+      pickable: true,
+      wrapLongitude: true,
+      getPosition: d => d.location.coordinates,
+      iconAtlas: URI,
+      iconMapping: mapping
+    };
+
+    const layer = new IconLayer({
+      ...layerProps,
+      id: "icon",
+      getIcon: () => "marker",
+      sizeUnits: "meters",
+      sizeScale: 2000,
+      sizeMinPixels: 35
+    });
+
+    return [layer];
+  };
   renderCards = card => (
     <ResourceCard
       name={card.companyName}
@@ -109,36 +152,44 @@ class MapView extends Component {
             </div>
           )}
         </div>
-        <ReactMapGL
-          {...this.state.viewport}
-          width="100%"
-          height="100vh"
-          onViewportChange={viewport => this.setState({ viewport })}
-          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+        <DeckGL
+          layers={this.getLayers()}
+          initialViewState={INITIAL_VIEW_STATE}
+          controller={{ dragRotate: false }}
+          onClick={e => {
+            this.setState({ popup: e.object });
+          }}
         >
-          {this.state.showResults &&
-            this.state.searchResults &&
-            this.state.searchResults.map(this.renderMarkers)}
-          {this.state.popup && (
-            <Popup
-              latitude={this.state.popup.location.coordinates[1]}
-              longitude={this.state.popup.location.coordinates[0]}
-              tipSize={5}
-              closeOnClick={false}
-              dynamicPosition={true}
-              offsetTop={-27}
-              onClose={() => this.setState({ popup: null })}
-            >
-              <div className="popup">
-                <div className="popup-title">
-                  {this.state.popup.companyName}
+          <StaticMap
+            {...this.state.viewport}
+            width="100%"
+            height="100vh"
+            onViewportChange={viewport => this.setState({ viewport })}
+            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+          >
+            {this.state.popup && (
+              <Popup
+                latitude={this.state.popup.location.coordinates[1]}
+                longitude={this.state.popup.location.coordinates[0]}
+                tipSize={5}
+                closeOnClick={false}
+                dynamicPosition={true}
+                offsetTop={-27}
+                onClose={() => this.setState({ popup: null })}
+              >
+                <div className="popup">
+                  <div className="popup-title">
+                    {this.state.popup.companyName}
+                  </div>
+                  <div className="popup-distance">0.5 miles away</div>
+                  <div className="popup-desc">
+                    {this.state.popup.description}
+                  </div>
                 </div>
-                <div className="popup-distance">0.5 miles away</div>
-                <div className="popup-desc">{this.state.popup.description}</div>
-              </div>
-            </Popup>
-          )}
-        </ReactMapGL>
+              </Popup>
+            )}
+          </StaticMap>
+        </DeckGL>
       </div>
     );
   }
