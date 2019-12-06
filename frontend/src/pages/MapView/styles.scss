@@ -1,22 +1,24 @@
-.searchBar {
+.search-bar {
     width: 100%;
 }
 
-.FixedHeightContainer {
+.fixed-height-container {
     position: absolute;
-    left: 25px;
-    top: 25px;
-    width: 300px;
-    height: 400px;
+    left: 12px;
+    top: 72px;
+    width: 342px;
+    height: auto;
     z-index: 1;
 }
 
-.cardContent {
+.card-content {
+    margin-top: 4px;
     overflow: auto;
-    height: 100%;
+    height: calc(100vh - 210px);
     width: 100%;
-    background-color: white;
-    border: solid rgb(201, 194, 194) 2.5px;
-    border-radius: 7px;
-    padding: 2px 2px 2px 2px;
+    background-color: #F9F9F9;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    padding: 7px;
+    padding-bottom: 2px;
 }

@@ -31,18 +31,19 @@ const installPackage = async module => {
   }
 };
 
-const runSingleCommand = async (cmd, args, cb) => {
+const runSingleCommand = async (cmd, args, cb, env) => {
   try {
-    await runCommand(cmd, args, cb);
+    await runCommand(cmd, args, cb, env);
   } catch (e) {
     console.log(e);
   }
 };
 
-const runCommand = (cmd, args, cb) => {
+const runCommand = (cmd, args, cb, env) => {
   return new Promise((res, rej) => {
     // spawn a new process
-    const proc = spawn(cmd, args);
+    const merged_env = { ...process.env, ...env };
+    const proc = spawn(cmd, args, { env: merged_env });
 
     // pipe the output to the console
     proc.stdout.on("data", data => {
@@ -129,8 +130,16 @@ const updateEnv = async isWindows => {
 };
 
 const seedDB = async () => {
-  console.log(colors.blue("LAHUTIL: Attempting to seed DB with sample data..."));
-  await runSingleCommand("docker-compose",["run", "backend", "node", "utils/generate_mock_data.js", "--colors"])
+  console.log(
+    colors.blue("LAHUTIL: Attempting to seed DB with sample data...")
+  );
+  await runSingleCommand("docker-compose", [
+    "run",
+    "backend",
+    "node",
+    "utils/generate_mock_data.js",
+    "--colors"
+  ]);
 };
 
 // error on unknown commands
@@ -153,13 +162,18 @@ program
   .description(
     "Start up a new instance of the LAH frontend, backend, and database using Docker Compose."
   )
-  .action(() => {
-    runSingleCommand("docker-compose", ["up"]);
-  });
+  .option("-n, --no-auth", "Running without auth enabled")
+  .action(cmdObj =>
+    runSingleCommand("docker-compose", ["up"], null, {
+      BYPASS_AUTH: !cmdObj.auth
+    })
+  );
 
 program
   .command("down")
-  .description("Stops the LAH frontend, backend, and database, and removes all DB information.")
+  .description(
+    "Stops the LAH frontend, backend, and database, and removes all DB information."
+  )
   .action(() => {
     runSingleCommand("docker-compose", ["down", "-v"]);
   });

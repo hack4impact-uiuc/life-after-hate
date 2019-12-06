@@ -1,6 +1,5 @@
 const request = require("supertest");
 const { expect } = require("chai");
-require("./auth_stubs").stubAllAuth();
 const app = require("../app.js");
 const Resource = require("../models/Resource");
 
