@@ -146,7 +146,7 @@ router.get(
         }
       });
 
-      const resourcesWithDistance = resources.map(resource => ({
+      resources = resources.map(resource => ({
         ...resource._doc,
         distanceFromSearchLoc:
           (geolib.getDistance(
@@ -161,11 +161,9 @@ router.get(
       }));
 
       // sort by closest distance first
-      resourcesWithDistance.sort((a, b) => {
-        a.distanceFromSearchLoc < b.distanceFromSearchLoc ? -1 : 1;
+      resources.sort((a, b) => {
+        a.distanceFromSearchLoc - b.distanceFromSearchLoc;
       });
-
-      console.log(resourcesWithDistance);
     }
 
     // fuzzy search
