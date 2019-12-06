@@ -2,16 +2,7 @@ const request = require("supertest");
 const { expect } = require("chai");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
-const { stubOutAuth, unstubAuth, didCheckIsAdmin } = require("./auth_stubs");
-
-beforeEach(async () => {
-  await Resource.remove({});
-  stubOutAuth();
-});
-
-afterEach(() => {
-  unstubAuth();
-});
+const { didCheckIsAdmin } = require("./auth_stubs");
 
 const sampleResourceInfo = {
   companyName: "Google",
