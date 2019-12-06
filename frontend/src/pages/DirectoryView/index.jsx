@@ -40,7 +40,8 @@ class ResourceManager extends Component {
       address: event.target[5].value,
       location: {
         coordinates: [-88.2434, 40.1164]
-      }
+      },
+      notes: event.target[6].value
     };
     try {
       await addResource(formData);
