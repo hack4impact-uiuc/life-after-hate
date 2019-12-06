@@ -9,7 +9,7 @@
     "address": "{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}, {{integer(100, 10000)}}",
     "location": {
       "type": "Point",
-      "coordinates": ["{{floating(-180, 180)}}", "{{floating(-90, 90)}}"]
+      "coordinates": ["{{floating(-120, -80)}}", "{{floating(30, 50)}}"]
     },
     "notes": "{{lorem(2, \"sentences\")}}",
     "tags": ["{{repeat(0,7)}}", "{{lorem(1, \"words\")}}"]

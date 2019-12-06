@@ -4,7 +4,7 @@ const colors = require("colors");
 const Resource = require("../models/Resource");
 
 const JSON_LINK =
-  "http://www.json-generator.com/api/json/get/cfakcpbucy?indent=2";
+  "http://www.json-generator.com/api/json/get/bUvEqZDKPS?indent=2";
 
 const createConnection = async () => {
   console.log(colors.green("Attempting to connect to Mongo..."));

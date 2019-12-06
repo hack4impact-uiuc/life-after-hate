@@ -31,7 +31,16 @@ class MapView extends Component {
   }
 
   renderCards = card => (
-    <ResourceCard name={card.companyName} description={card.description} />
+    <ResourceCard
+      name={card.companyName}
+      description={card.description}
+      tags={card.tags}
+      contactName={card.contactName}
+      contactPhone={card.contactPhone}
+      contactEmail={card.contactEmail}
+      address={card.address}
+      notes={card.notes}
+    />
   );
 
   renderMarkers = marker => (
@@ -80,9 +89,9 @@ class MapView extends Component {
   render() {
     return (
       <div>
-        <div className="FixedHeightContainer">
-          <div className="searchContent">
-            <div className="searchBar">
+        <div className="fixed-height-container">
+          <div className="search-content">
+            <div className="search-bar">
               <Search
                 searchHandler={this.searchHandler}
                 changeHandler={this.changeHandler}
@@ -94,7 +103,7 @@ class MapView extends Component {
             </div>
           </div>
           {this.state.showResults && (
-            <div className="cardContent">
+            <div className="card-content">
               {this.state.searchResults &&
                 this.state.searchResults.map(this.renderCards)}
             </div>

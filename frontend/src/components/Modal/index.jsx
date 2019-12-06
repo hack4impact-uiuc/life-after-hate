@@ -38,35 +38,59 @@ class LAHModal extends Component {
               className="add-edit-resource-form"
             >
               <label>
-                Resource Name
-                <input type="text" onChange={this.handleChange} />
+                <p>Resource Name</p>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceName}
+                />
               </label>
               <label>
-                Contact Name
-                <input type="text" onChange={this.handleChange} />
+                <p>Contact Name</p>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceContact}
+                />
               </label>
               <label>
-                Contact Phone
-                <input type="text" onChange={this.handleChange} />
+                <p>Contact Phone</p>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourcePhone}
+                />
               </label>
               <label>
-                Contact Email
-                <input type="text" onChange={this.handleChange} />
+                <p>Contact Email</p>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceEmail}
+                />
               </label>
               <label>
-                Description
-                <input type="text" onChange={this.handleChange} />
+                <p>Description</p>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceDescription}
+                />
               </label>
               <label>
-                Address
-                <input type="text" onChange={this.handleChange} />
+                <p>Address</p>
+                <input
+                  type="text"
+                  onChange={this.handleChange}
+                  defaultValue={this.props.resourceAddress}
+                />
               </label>
               <Button
                 id="submit-form-button"
                 type="submit"
                 onClick={this.props.toggleModal}
               >
-                SAVE
+                Save
               </Button>
             </form>
           </ModalBody>

@@ -3,6 +3,8 @@ const { expect } = require("chai");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
 const { didCheckIsAdmin } = require("./auth_stubs");
+const sinon = require("sinon");
+const resourceUtils = require("../utils/resource-utils");
 
 const sampleResourceInfo = {
   companyName: "Google",
@@ -20,6 +22,19 @@ const sampleResourceInfo = {
 const sampleResourceInfo2 = {
   companyName: "Facebook",
   contactName: "Bob",
+  contactPhone: "123456789",
+  contactEmail: "123@gmail.com",
+  description: "Let me dream",
+  address: "Silicon Valley",
+  location: {
+    coordinates: [40, 40]
+  },
+  tags: ["social"]
+};
+
+const sampleResourceInfo3 = {
+  companyName: "Facebook",
+  contactName: "Evan",
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
@@ -78,32 +93,53 @@ describe("GET /resources/:resource_id", () => {
 describe("GET /resources/filter", () => {
   it("should sort existing Resources by closest lat/long", async () => {
     await createSampleResource2();
-    const radius = 1000;
-    const lat = 36;
-    const long = 40;
+    const radius = 100000;
+    const address = "Chicago, IL";
+    let stub = sinon
+      .stub(resourceUtils, "addressToLatLong")
+      .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
+
     const res = await request(app)
-      .get(`/api/resources/filter?radius=${radius}&lat=${lat}&long=${long}`)
+      .get(`/api/resources/filter?radius=${radius}&address=${address}`)
       .expect(200);
     expect(res.body.result).to.have.lengthOf(2);
     expect(res.body.result[0].companyName).equals("Google");
     expect(res.body.result[1].companyName).equals("Facebook");
+
+    stub.restore();
   });
   it("should fuzzy search on tags", async () => {
     await createSampleResource2();
     const query = "social";
+    let stub = sinon
+      .stub(resourceUtils, "addressToLatLong")
+      .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
+
     const res = await request(app)
       .get(`/api/resources/filter?keyword=${query}`)
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(res.body.result[0].companyName).equals("Facebook");
+
+    stub.restore();
   });
 });
 
 describe("POST /resources", () => {
   it("should create a new Resource", async () => {
-    const resource = await Resource.findOne({ companyName: "Google" });
-    expect(resource.contactName).equals("Alice");
+    let stub = sinon
+      .stub(resourceUtils, "addressToLatLong")
+      .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
+
+    const res = await request(app)
+      .post(`/api/resources/`)
+      .send(sampleResourceInfo3)
+      .expect(201);
+    console.log(res);
+    const resource = await Resource.findOne({ companyName: "Facebook" });
+    expect(resource.contactName).equals("Evan");
     expect(didCheckIsAdmin()).to.be.true;
+    stub.restore();
   });
 });
 

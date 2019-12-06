@@ -21,6 +21,7 @@
   margin-left: 4px;
   color: #2a2a2a;
   border: none;
+  border-radius: 0;
   border-bottom: solid rgba(0, 0, 0, 0.2) 1px;
   padding-bottom: 4px;
   outline: none;
@@ -52,6 +53,11 @@
   box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
   margin-bottom: 0px;
   width: 42px;
+  transition: all 0.2s;
+}
+
+.submitSearch:hover {
+  background-color: #f9ac61;
 }
 
 .dropdownStyle {
