@@ -81,7 +81,6 @@ describe("GET /resources/:resource_id", () => {
       .get(`/api/resources/${resourceId}`)
       .expect(200);
     expect(res.body.result.contactName).equals("Alice");
-    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -97,7 +96,6 @@ describe("GET /resources/filter", () => {
     expect(res.body.result).to.have.lengthOf(2);
     expect(res.body.result[0].companyName).equals("Google");
     expect(res.body.result[1].companyName).equals("Facebook");
-    expect(didCheckIsAdmin()).to.be.true;
   });
   it("should fuzzy search on tags", async () => {
     await createSampleResource2();
@@ -107,7 +105,6 @@ describe("GET /resources/filter", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(res.body.result[0].companyName).equals("Facebook");
-    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
