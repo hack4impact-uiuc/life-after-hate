@@ -8,18 +8,18 @@ import Search from "../../components/SearchBar";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
-
+import MarkerImg from "../../assets/images/marker.png";
 const pinSize = 35;
 
 const searchSuggestions = [];
-const URI = "https://i.imgur.com/039uNXi.png";
+const URI = MarkerImg;
 const mapping = {
   marker: {
-    x: 384,
-    y: 512,
-    width: 128,
-    height: 128,
-    anchorY: 128
+    x: 0,
+    y: 0,
+    width: 360,
+    height: 512,
+    anchorY: 512
   }
 };
 const INITIAL_VIEW_STATE = {
@@ -52,7 +52,6 @@ class MapView extends Component {
 
   getLayers = () => {
     const data = this.state.searchResults;
-    console.log(data);
     const layerProps = {
       data,
       pickable: true,
@@ -67,8 +66,7 @@ class MapView extends Component {
       id: "icon",
       getIcon: () => "marker",
       sizeUnits: "meters",
-      sizeScale: 2000,
-      sizeMinPixels: 35
+      sizeMinPixels: 45
     });
 
     return [layer];
@@ -156,7 +154,7 @@ class MapView extends Component {
           layers={this.getLayers()}
           initialViewState={INITIAL_VIEW_STATE}
           controller={{ dragRotate: false }}
-          onClick={e => {
+          onHover={e => {
             this.setState({ popup: e.object });
           }}
         >
