@@ -114,7 +114,7 @@ Instructions coming soon!
   </tr>
 </table>
 
-## Credits
+## &#x2102;redits
 
 This software uses the following open source packages:
 
