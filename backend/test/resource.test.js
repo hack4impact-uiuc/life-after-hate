@@ -1,9 +1,10 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const sinon = require("sinon");
-const resourceUtils = require("../utils/resource-utils");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
+const { didCheckIsAdmin } = require("./auth_stubs");
+const sinon = require("sinon");
+const resourceUtils = require("../utils/resource-utils");
 
 const sampleResourceInfo = {
   companyName: "Google",
@@ -21,6 +22,19 @@ const sampleResourceInfo = {
 const sampleResourceInfo2 = {
   companyName: "Facebook",
   contactName: "Bob",
+  contactPhone: "123456789",
+  contactEmail: "123@gmail.com",
+  description: "Let me dream",
+  address: "Silicon Valley",
+  location: {
+    coordinates: [40, 40]
+  },
+  tags: ["social"]
+};
+
+const sampleResourceInfo3 = {
+  companyName: "Facebook",
+  contactName: "Evan",
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
@@ -51,6 +65,7 @@ describe("GET /resources", () => {
       .get(`/api/resources`)
       .expect(200);
     expect(res.body.result).to.be.an("array").that.is.empty;
+    expect(didCheckIsAdmin()).to.be.true;
   });
 
   it("should get one Resource and verify properties", async () => {
@@ -60,6 +75,7 @@ describe("GET /resources", () => {
       .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(Object.keys(res.body.result[0])).to.have.lengthOf(11);
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -111,8 +127,19 @@ describe("GET /resources/filter", () => {
 
 describe("POST /resources", () => {
   it("should create a new Resource", async () => {
-    const resource = await Resource.findOne({ companyName: "Google" });
-    expect(resource.contactName).equals("Alice");
+    let stub = sinon
+      .stub(resourceUtils, "addressToLatLong")
+      .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
+
+    const res = await request(app)
+      .post(`/api/resources/`)
+      .send(sampleResourceInfo3)
+      .expect(201);
+    console.log(res);
+    const resource = await Resource.findOne({ companyName: "Facebook" });
+    expect(resource.contactName).equals("Evan");
+    expect(didCheckIsAdmin()).to.be.true;
+    stub.restore();
   });
 });
 
@@ -132,6 +159,7 @@ describe("PUT /resources", () => {
 
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
@@ -144,5 +172,6 @@ describe("DELETE /resource", () => {
       .expect(200);
     const resources = await Resource.find();
     expect(resources).to.be.an("array").that.is.empty;
+    expect(didCheckIsAdmin()).to.be.true;
   });
 });

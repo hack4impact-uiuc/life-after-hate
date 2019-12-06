@@ -9,10 +9,15 @@ const resourceUtils = require("../../utils/resource-utils");
 let { options } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 const extractor = require("keyword-extractor");
+const {
+  requireAdminStatus,
+  requireVolunteerStatus
+} = require("../../utils/auth-middleware");
 
 // get all resources
 router.get(
   "/",
+  requireAdminStatus,
   errorWrap(async (req, res) => {
     const resources = await Resource.find({});
     res.json({
@@ -26,6 +31,7 @@ router.get(
 // get list of resources filtered by location radius
 router.get(
   "/filter",
+  requireVolunteerStatus,
   celebrate({
     query: {
       radius: Joi.number(),
@@ -79,6 +85,7 @@ router.get(
 // create new resource
 router.post(
   "/",
+  requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
       companyName: Joi.string().required(),
@@ -119,7 +126,7 @@ router.post(
     newResource.tags = created_tags;
     await newResource.save();
 
-    res.json({
+    res.status(201).json({
       code: 201,
       message: "Resource Successfully Created",
       success: true
@@ -130,6 +137,7 @@ router.post(
 // get one resource
 router.get(
   "/:resource_id",
+  requireVolunteerStatus,
   celebrate({
     params: {
       resource_id: Joi.objectId().required()
@@ -149,6 +157,7 @@ router.get(
 // edit resource
 router.put(
   "/:resource_id",
+  requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
       companyName: Joi.string(),
@@ -198,6 +207,7 @@ router.put(
 // delete resource
 router.delete(
   "/:resource_id",
+  requireAdminStatus,
   celebrate({
     params: {
       resource_id: Joi.objectId().required()
