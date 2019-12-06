@@ -43,7 +43,9 @@
     "GOOGLE_CLIENT_ID": "@lah_google_client_id",
     "GOOGLE_CLIENT_SECRET": "@lah_google_client_secret",
     "OAUTH_CALLBACK_URI": "@lah_oauth_callback_uri",
-    "DB_URI": "@lah_db_uri"
+    "DB_URI": "@lah_db_uri",
+    "MAPQUEST_KEY": "@lah_mapquest_key",
+    "MAPQUEST_URI": "@lah_mapquest_uri"
   },
   "build": {
     "env": {
