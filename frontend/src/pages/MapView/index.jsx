@@ -30,11 +30,20 @@ class MapView extends Component {
     };
   }
 
-  renderCards = (card, _) => (
-    <ResourceCard name={card.companyName} description={card.description} />
+  renderCards = card => (
+    <ResourceCard
+      name={card.companyName}
+      description={card.description}
+      tags={card.tags}
+      contactName={card.contactName}
+      contactPhone={card.contactPhone}
+      contactEmail={card.contactEmail}
+      address={card.address}
+      notes={card.notes}
+    />
   );
 
-  renderMarkers = (marker, _) => (
+  renderMarkers = marker => (
     <Marker
       key={marker.id}
       longitude={marker.location.coordinates[0]}
@@ -80,9 +89,9 @@ class MapView extends Component {
   render() {
     return (
       <div>
-        <div className="FixedHeightContainer">
-          <div className="searchContent">
-            <div className="searchBar">
+        <div className="fixed-height-container">
+          <div className="search-content">
+            <div className="search-bar">
               <Search
                 searchHandler={this.searchHandler}
                 changeHandler={this.changeHandler}
@@ -94,7 +103,7 @@ class MapView extends Component {
             </div>
           </div>
           {this.state.showResults && (
-            <div className="cardContent">
+            <div className="card-content">
               {this.state.searchResults &&
                 this.state.searchResults.map(this.renderCards)}
             </div>
@@ -115,11 +124,18 @@ class MapView extends Component {
               latitude={this.state.popup.location.coordinates[1]}
               longitude={this.state.popup.location.coordinates[0]}
               tipSize={5}
-              anchor="top"
               closeOnClick={false}
+              dynamicPosition={true}
+              offsetTop={-27}
               onClose={() => this.setState({ popup: null })}
             >
-              <p>{this.state.popup.companyName}</p>
+              <div className="popup">
+                <div className="popup-title">
+                  {this.state.popup.companyName}
+                </div>
+                <div className="popup-distance">0.5 miles away</div>
+                <div className="popup-desc">{this.state.popup.description}</div>
+              </div>
             </Popup>
           )}
         </ReactMapGL>

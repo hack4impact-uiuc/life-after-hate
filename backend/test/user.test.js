@@ -3,16 +3,7 @@ const { expect } = require("chai");
 const app = require("../app.js");
 const User = require("../models/User");
 const mongoose = require("mongoose");
-const { stubOutAuth, unstubAuth, didCheckIsAdmin } = require("./auth_stubs");
-
-beforeEach(async () => {
-  await User.remove({});
-  stubOutAuth();
-});
-
-afterEach(() => {
-  unstubAuth();
-});
+const { didCheckIsAdmin } = require("./auth_stubs");
 
 const sampleUserInfo = {
   firstName: "alan",

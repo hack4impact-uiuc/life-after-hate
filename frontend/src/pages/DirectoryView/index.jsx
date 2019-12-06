@@ -13,12 +13,16 @@ class ResourceManager extends Component {
     resources: null
   };
 
-  async componentDidMount() {
+  componentDidMount = async () => {
+    await this.updateResources();
+  };
+
+  updateResources = async () => {
     const resources = await getAllResources();
     this.setState({
       resources: resources
     });
-  }
+  };
 
   toggleModal = () => {
     this.setState(prevState => ({
@@ -40,19 +44,14 @@ class ResourceManager extends Component {
     };
     try {
       await addResource(formData);
+      await this.updateResources();
     } catch (error) {
       console.error(error);
     }
   };
 
   renderCards = resource => (
-    <ResourceCard
-      id={resource._id}
-      name={resource.companyName}
-      location={resource.address}
-      contact={resource.contactEmail}
-      description={resource.description}
-    />
+    <ResourceCard resource={resource} updateResources={this.updateResources} />
   );
 
   render() {
@@ -61,7 +60,7 @@ class ResourceManager extends Component {
         <div className="manager-header">
           <h1>Resource Directory</h1>
           <Button onClick={this.toggleModal} id="add-button">
-            ADD RESOURCE
+            Add Resource
           </Button>
         </div>
 
@@ -69,16 +68,16 @@ class ResourceManager extends Component {
           <SearchBar />
           <div className="resource-labels clearfix">
             <div className="col">
-              <h3>RESOURCE NAME</h3>
+              <h3>Resource Name</h3>
             </div>
             <div className="col">
-              <h3>LOCATION</h3>
+              <h3>Location</h3>
             </div>
             <div className="col">
-              <h3>POINT OF CONTACT</h3>
+              <h3>Point of Contact</h3>
             </div>
             <div className="col">
-              <h3>DESCRIPTION</h3>
+              <h3>Description</h3>
             </div>
             <div />
           </div>

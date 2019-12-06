@@ -1,23 +1,51 @@
-.searchBar {
+.search-bar {
     width: 100%;
 }
 
-.FixedHeightContainer {
+.fixed-height-container {
     position: absolute;
     left: 12px;
     top: 72px;
     width: 342px;
-    height: 70%;
+    height: auto;
     z-index: 1;
 }
 
-.cardContent {
-    margin-top: 2px;
+.card-content {
+    margin-top: 4px;
     overflow: auto;
-    height: 100%;
+    height: calc(100vh - 210px);
     width: 100%;
-    background-color: whitesmoke;
-    border: solid rgb(201, 194, 194) 0.5px;
-    border-radius: 4px;
-    padding: 2px 2px 2px 2px;
+    background-color: #F9F9F9;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    padding: 7px;
+    padding-bottom: 2px;
+}
+
+.popup {
+    max-width: 250px;
+    max-height: 95px;
+    overflow: hidden;
+}
+
+.popup-title {
+    font-weight: bold;
+    color: #2a2a2a;
+    font-size: 15px;
+    margin: 0;
+}
+
+.popup-distance {
+    opacity: 0.6;
+    font-size: 12px;
+    margin: 0;
+}
+
+.popup-desc {
+    font-size: 13.5px;
+    line-height: 125%;
+    opacity: 0.7;
+    margin-top: 4px;
+    margin-bottom: 15px;
 }
