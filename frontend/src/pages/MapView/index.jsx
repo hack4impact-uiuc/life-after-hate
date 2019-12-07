@@ -7,15 +7,29 @@ import Search from "../../components/SearchBar";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
-import MarkerImg from "../../assets/images/marker.png";
+import MarkerImg from "../../assets/images/marker-atlas.png";
 
 const pinSize = 45;
 const searchSuggestions = [];
 // Mapping used for IconAtlas, which is not really being used fully currently,
-// As we're only rendering one type of custom icon for all points of interest
+// As we're only rendering two types of icons: searched location and regular marker
 const mapping = {
   marker: {
     x: 0,
+    y: 0,
+    width: 360,
+    height: 512,
+    anchorY: 512
+  },
+  markerSelect: {
+    x: 360,
+    y: 0,
+    width: 360,
+    height: 512,
+    anchorY: 512
+  },
+  currentLocation: {
+    x: 720,
     y: 0,
     width: 360,
     height: 512,
@@ -52,7 +66,7 @@ class MapView extends Component {
   }
 
   getLayers = () => {
-    const data = this.state.searchResults;
+    const data = this.state.markers;
     const layerProps = {
       data,
       pickable: true,
@@ -65,7 +79,10 @@ class MapView extends Component {
     const layer = new IconLayer({
       ...layerProps,
       id: "icon",
-      getIcon: () => "marker",
+      getIcon: d => {
+        console.log(d);
+        return d.location.type === "Center" ? "currentLocation" : "marker";
+      },
       sizeUnits: "meters",
       sizeMinPixels: pinSize
     });
@@ -74,6 +91,7 @@ class MapView extends Component {
   };
   renderCards = card => (
     <ResourceCard
+      key={card._id}
       name={card.companyName}
       description={card.description}
       tags={card.tags}
@@ -87,19 +105,26 @@ class MapView extends Component {
   );
 
   searchHandler = async () => {
-    let searchResults;
+    let resources, center;
     try {
-      searchResults = await getSearchResults(
+      ({ resources, center } = await getSearchResults(
         this.state.inputValue,
         this.state.locationValue
-      );
+      ));
     } catch (error) {
       console.error(error);
       alert(error);
     }
 
     this.setState({
-      searchResults,
+      searchResults: resources,
+      markers: [
+        ...resources,
+        {
+          location: { type: "Center", coordinates: center }
+        }
+      ],
+      searchCenter: center,
       showResults: true,
       showSearchSuggestions: false
     });
@@ -145,7 +170,12 @@ class MapView extends Component {
           initialViewState={INITIAL_VIEW_STATE}
           controller={{ dragRotate: false }}
           onHover={e => {
-            this.setState({ popup: e.object });
+            if (e.object && e.object.location.type !== "Center") {
+              // Don't show a popup if hovering over the current (searched) location
+              this.setState({ popup: e.object });
+            } else {
+              this.setState({ popup: null });
+            }
           }}
         >
           <StaticMap

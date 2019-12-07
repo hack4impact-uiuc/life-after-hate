@@ -25,6 +25,7 @@ class ResourceCard extends PureComponent {
   renderTags = tag => <div className="card-tag">{tag}</div>;
 
   render() {
+    console.log("Render called!");
     return (
       <div className="resource-card">
         <div className={this.state.cardStyle}>
