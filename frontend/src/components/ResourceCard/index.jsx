@@ -24,7 +24,15 @@ const ResourceCard = ({
     <div className="resource-card">
       <div className={expanded ? "expanded" : "collapsed"}>
         <div className="clearfix">
-          <div className="card-title">{name}</div>
+          <div
+            className="card-title"
+            role="button"
+            tabIndex="0"
+            onClick={() => selectCard(indexInList)}
+            onKeyPress=""
+          >
+            {name}
+          </div>
           <div className="card-maximize">
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
           </div>

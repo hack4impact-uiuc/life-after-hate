@@ -251,6 +251,9 @@ class MapView extends Component {
                   <div className="popup-desc">
                     {this.state.popup.description}
                   </div>
+                  <button tabIndex="0" className="popup-max" onClick="">
+                    See More
+                  </button>
                 </div>
               </Popup>
             )}
