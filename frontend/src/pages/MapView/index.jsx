@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import StaticMap, { Popup } from "react-map-gl";
+import StaticMap, { Popup, FlyToInterpolator } from "react-map-gl";
 
 import { getSearchResults } from "../../utils/api";
 import ResourceCard from "../../components/ResourceCard";
@@ -7,15 +7,29 @@ import Search from "../../components/SearchBar";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
-import MarkerImg from "../../assets/images/marker.png";
+import MarkerImg from "../../assets/images/marker-atlas.png";
 
 const pinSize = 45;
 const searchSuggestions = [];
 // Mapping used for IconAtlas, which is not really being used fully currently,
-// As we're only rendering one type of custom icon for all points of interest
+// As we're only rendering two types of icons: searched location and regular marker
 const mapping = {
   marker: {
     x: 0,
+    y: 0,
+    width: 360,
+    height: 512,
+    anchorY: 512
+  },
+  markerSelect: {
+    x: 360,
+    y: 0,
+    width: 360,
+    height: 512,
+    anchorY: 512
+  },
+  currentLocation: {
+    x: 720,
     y: 0,
     width: 360,
     height: 512,
@@ -45,14 +59,45 @@ class MapView extends Component {
       inputValue: "",
       locationValue: "",
       searchResults: [],
+      selectedIdx: -1,
       showResults: false,
       searchSuggestions: [],
+      cardCache: [],
       showSearchSuggestions: true
     };
   }
 
+  _onViewportChange = ({ viewState }) => {
+    this.setState({
+      viewport: viewState
+    });
+  };
+
+  _goToViewport = ({ longitude, latitude }) => {
+    this._onViewportChange({
+      viewState: {
+        longitude,
+        latitude,
+        zoom: 8,
+        transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+        transitionDuration: 2000
+      }
+    });
+  };
+
+  selectCard = selectedIdx => {
+    this.setState(state => ({
+      selectedIdx,
+      cardCache: state.searchResults.map(this.renderCards(selectedIdx))
+    }));
+    this._goToViewport({
+      latitude: this.state.searchResults[selectedIdx].location.coordinates[1],
+      longitude: this.state.searchResults[selectedIdx].location.coordinates[0]
+    });
+  };
+
   getLayers = () => {
-    const data = this.state.searchResults;
+    const data = this.state.markers;
     const layerProps = {
       data,
       pickable: true,
@@ -65,15 +110,25 @@ class MapView extends Component {
     const layer = new IconLayer({
       ...layerProps,
       id: "icon",
-      getIcon: () => "marker",
+      getIcon: d => {
+        console.log(d);
+        return d.location.type === "Center" ? "currentLocation" : "marker";
+      },
       sizeUnits: "meters",
       sizeMinPixels: pinSize
     });
 
     return [layer];
   };
-  renderCards = card => (
+  closeCard = () => {
+    this.setState(state => ({
+      selectedIdx: -1,
+      cardCache: state.searchResults.map(this.renderCards(-1))
+    }));
+  };
+  renderCards = selectedIdx => (card, idx) => (
     <ResourceCard
+      key={card._id}
       name={card.companyName}
       description={card.description}
       tags={card.tags}
@@ -83,25 +138,37 @@ class MapView extends Component {
       address={card.address}
       notes={card.notes}
       distanceFromSearchLoc={card.distanceFromSearchLoc}
+      indexInList={idx}
+      selectCard={this.selectCard}
+      expanded={idx === selectedIdx}
+      closeCard={this.closeCard}
     />
   );
 
   searchHandler = async () => {
-    let searchResults;
+    let resources, center;
     try {
-      searchResults = await getSearchResults(
+      ({ resources, center } = await getSearchResults(
         this.state.inputValue,
         this.state.locationValue
-      );
+      ));
     } catch (error) {
       console.error(error);
       alert(error);
     }
 
     this.setState({
-      searchResults,
+      searchResults: resources,
+      markers: [
+        ...resources,
+        {
+          location: { type: "Center", coordinates: center }
+        }
+      ],
+      searchCenter: center,
       showResults: true,
-      showSearchSuggestions: false
+      showSearchSuggestions: false,
+      cardCache: resources.map(this.renderCards(-1))
     });
   };
 
@@ -135,24 +202,28 @@ class MapView extends Component {
           </div>
           {this.state.showResults && (
             <div className="card-content">
-              {this.state.searchResults &&
-                this.state.searchResults.map(this.renderCards)}
+              {this.state.searchResults && this.state.cardCache}
             </div>
           )}
         </div>
         <DeckGL
           layers={this.getLayers()}
           initialViewState={INITIAL_VIEW_STATE}
+          onViewStateChange={this._onViewportChange}
+          viewState={this.state.viewport}
           controller={{ dragRotate: false }}
           onHover={e => {
-            this.setState({ popup: e.object });
+            if (e.object && e.object.location.type !== "Center") {
+              // Don't show a popup if hovering over the current (searched) location
+              this.setState({ popup: e.object });
+            } else {
+              this.setState({ popup: null });
+            }
           }}
         >
           <StaticMap
-            {...this.state.viewport}
             width="100%"
             height="100vh"
-            onViewportChange={viewport => this.setState({ viewport })}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
           >
             {this.state.popup && (

@@ -96,7 +96,7 @@ router.get(
 
     res.json({
       code: 200,
-      result: resources,
+      result: { center: [long, lat], resources },
       success: true
     });
   })
