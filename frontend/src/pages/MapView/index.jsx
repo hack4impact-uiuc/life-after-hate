@@ -62,6 +62,7 @@ class MapView extends Component {
       selectedIdx: -1,
       showResults: false,
       searchSuggestions: [],
+      cardCache: [],
       showSearchSuggestions: true
     };
   }
@@ -119,6 +120,12 @@ class MapView extends Component {
 
     return [layer];
   };
+  closeCard = () => {
+    this.setState(state => ({
+      selectedIdx: -1,
+      cardCache: state.searchResults.map(this.renderCards(-1))
+    }));
+  };
   renderCards = selectedIdx => (card, idx) => (
     <ResourceCard
       key={card._id}
@@ -134,7 +141,7 @@ class MapView extends Component {
       indexInList={idx}
       selectCard={this.selectCard}
       expanded={idx === selectedIdx}
-      closeCard={() => this.setState({ selectedIdx: -1 })}
+      closeCard={this.closeCard}
     />
   );
 
@@ -160,7 +167,8 @@ class MapView extends Component {
       ],
       searchCenter: center,
       showResults: true,
-      showSearchSuggestions: false
+      showSearchSuggestions: false,
+      cardCache: resources.map(this.renderCards(-1))
     });
   };
 
@@ -194,10 +202,7 @@ class MapView extends Component {
           </div>
           {this.state.showResults && (
             <div className="card-content">
-              {this.state.searchResults &&
-                this.state.searchResults.map(
-                  this.renderCards(this.state.selectedIdx)
-                )}
+              {this.state.searchResults && this.state.cardCache}
             </div>
           )}
         </div>
