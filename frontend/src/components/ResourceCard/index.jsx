@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import "./styles.scss";
 
-class ResourceCard extends Component {
+// Using PureComponent to reduce re-rendering since this is a pure function
+class ResourceCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

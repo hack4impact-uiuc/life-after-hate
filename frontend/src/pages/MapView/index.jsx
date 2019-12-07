@@ -11,6 +11,8 @@ import MarkerImg from "../../assets/images/marker.png";
 
 const pinSize = 45;
 const searchSuggestions = [];
+// Mapping used for IconAtlas, which is not really being used fully currently,
+// As we're only rendering one type of custom icon for all points of interest
 const mapping = {
   marker: {
     x: 0,
@@ -71,17 +73,18 @@ class MapView extends Component {
     return [layer];
   };
   renderCards = card => (
-    <ResourceCard
-      name={card.companyName}
-      description={card.description}
-      tags={card.tags}
-      contactName={card.contactName}
-      contactPhone={card.contactPhone}
-      contactEmail={card.contactEmail}
-      address={card.address}
-      notes={card.notes}
-    />
-  );
+      <ResourceCard
+        key={card._id}
+        name={card.companyName}
+        description={card.description}
+        tags={card.tags}
+        contactName={card.contactName}
+        contactPhone={card.contactPhone}
+        contactEmail={card.contactEmail}
+        address={card.address}
+        notes={card.notes}
+      />
+    );
 
   searchHandler = async () => {
     let searchResults;
