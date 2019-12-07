@@ -61,8 +61,8 @@ router.get(
         distanceFromSearchLoc:
           (geolib.getDistance(
             {
-              latitude: resource.location.coordinates[0],
-              longitude: resource.location.coordinates[1]
+              latitude: resource.location.coordinates[1],
+              longitude: resource.location.coordinates[0]
             },
             { latitude: lat, longitude: long }
           ) /

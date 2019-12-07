@@ -5,7 +5,7 @@ import {
 } from "./apiHelpers";
 
 async function getSearchResults(keyword, address) {
-  const defaultRadius = 2000;
+  const defaultRadius = 500;
   let endptStr = `resources/filter?radius=${defaultRadius}`;
   if (keyword) {
     endptStr += `&keyword=${keyword}`;
