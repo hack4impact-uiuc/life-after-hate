@@ -10,6 +10,13 @@
     transition: all 0.3s;
   }
 
+  .clearfix:after {
+      content: " ";
+      display: block;
+      height: 0;
+      clear: both;
+  }
+
   .card-wrap {
     outline: none !important;
   }
@@ -27,7 +34,31 @@
     color: #2a2a2a;
     font-size: 15px;
     margin: 0;
+    width: 92%;
+    float: left;
+    margin-right: 2%;
+    outline: none;
   }
+
+.card-maximize {
+  float: left;
+  width: 6%;
+}
+
+.card-maximize .maximize-icon {
+  height: 14px;
+  width: auto;
+  cursor: pointer;
+  opacity: 0.2;
+  transition: all 0.2s;
+  margin: 0;
+  position: relative;
+  top: -2px;
+}
+
+.card-maximize .maximize-icon:hover {
+  opacity: 0.5;
+}
 
   .card-distance {
     opacity: 0.6;

@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import "./styles.scss";
+import Maximize from "../../assets/images/maximize.svg";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 class ResourceCard extends PureComponent {
@@ -28,6 +29,20 @@ class ResourceCard extends PureComponent {
     return (
       <div className="resource-card">
         <div className={this.state.cardStyle}>
+          <div className="clearfix">
+            <div
+              className="card-title"
+              role="button"
+              tabIndex="0"
+              onClick={this.handleOnClickCard}
+              onKeyPress=""
+            >
+              {this.props.name}
+            </div>
+            <div className="card-maximize">
+              <img src={Maximize} alt="Maximize" className="maximize-icon" />
+            </div>
+          </div>
           <div
             role="button"
             tabIndex="0"
@@ -35,7 +50,6 @@ class ResourceCard extends PureComponent {
             onKeyPress=""
             className="card-wrap"
           >
-            <div className="card-title">{this.props.name}</div>
             {this.props.distanceFromSearchLoc && (
               <div className="card-distance">
                 {Math.round(this.props.distanceFromSearchLoc * 10) / 10} miles
