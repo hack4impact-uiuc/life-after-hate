@@ -138,8 +138,8 @@ router.post(
     // For now until API key integrated
     // latlng = { lat: -88, lng: 22, region: 2 };
 
-    data.location.coordinates[0] = latlng.lat;
-    data.location.coordinates[1] = latlng.lng;
+    data.location.coordinates[0] = latlng.lng;
+    data.location.coordinates[1] = latlng.lat;
     data.federalRegion = latlng.region;
 
     const newResource = new Resource(data);

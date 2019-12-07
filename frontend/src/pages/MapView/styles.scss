@@ -8,7 +8,7 @@
     top: 72px;
     width: 342px;
     height: auto;
-    z-index: 1;
+    z-index: 2;
 }
 
 .card-content {
@@ -28,7 +28,9 @@
     max-height: 90px;
     overflow: hidden;
 }
-
+.mapboxgl-popup{
+    z-index:1;
+}
 .popup-title {
     font-weight: bold;
     color: #2a2a2a;
