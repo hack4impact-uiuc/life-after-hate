@@ -22,7 +22,6 @@ let options = {
       name: "tags",
       weight: 0.15
     },
-
     {
       name: "description",
       weight: 0.1
@@ -30,6 +29,22 @@ let options = {
     {
       name: "notes",
       weight: 0.1
+    }
+  ]
+};
+
+let tagOnly = {
+  shouldSort: true,
+  threshold: 0.0,
+  findAllMatches: true,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: [
+    {
+      name: "tags",
+      weight: 1.0
     }
   ]
 };
@@ -130,5 +145,6 @@ let latlongToAddress = async function(lat, long) {
 module.exports = {
   options,
   addressToLatLong,
-  latlongToAddress
+  latlongToAddress,
+  tagOnly
 };

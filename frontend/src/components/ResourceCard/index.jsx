@@ -35,10 +35,13 @@ class ResourceCard extends Component {
             className="card-wrap"
           >
             <div className="card-title">{this.props.name}</div>
-            <div className="card-distance">
-              {Math.round(this.props.distanceFromSearchLoc * 10) / 10} miles
-              away
-            </div>
+            {this.props.distanceFromSearchLoc && (
+              <div className="card-distance">
+                {Math.round(this.props.distanceFromSearchLoc * 10) / 10} miles
+                away
+              </div>
+            )}
+
             <div className="card-desc">{this.props.description}</div>
 
             <div className="card-details">

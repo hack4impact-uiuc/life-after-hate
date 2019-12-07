@@ -5,7 +5,7 @@ const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const resourceUtils = require("../../utils/resource-utils");
-let { options } = require("../../utils/resource-utils");
+let { options, tagOnly } = require("../../utils/resource-utils");
 Joi.objectId = require("joi-objectid")(Joi);
 const extractor = require("keyword-extractor");
 const {
@@ -37,11 +37,12 @@ router.get(
       radius: Joi.number(),
       address: Joi.string(),
       keyword: Joi.string(),
-      customWeights: Joi.array()
+      customWeights: Joi.array(),
+      tag: Joi.string()
     }
   }),
   errorWrap(async (req, res) => {
-    const { radius, address, keyword, customWeights } = req.query;
+    const { radius, address, keyword, customWeights, tag } = req.query;
     let resources = await Resource.find({});
 
     let latlng = await resourceUtils.addressToLatLong(address);
@@ -69,6 +70,11 @@ router.get(
             1000) *
           0.621371
       }));
+
+      // sort by closest distance
+      resources = resources.sort(
+        (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
+      );
     }
 
     // fuzzy search
@@ -83,10 +89,10 @@ router.get(
       resources = fuse.search(keyword);
     }
 
-    // sort by closest distance
-    resources = resources.sort(
-      (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
-    );
+    if (tag) {
+      const fuse = new Fuse(resources, tagOnly);
+      resources = fuse.search(tag);
+    }
 
     res.json({
       code: 200,

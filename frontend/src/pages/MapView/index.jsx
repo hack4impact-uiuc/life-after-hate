@@ -137,10 +137,14 @@ class MapView extends Component {
                 <div className="popup-title">
                   {this.state.popup.companyName}
                 </div>
-                <div className="popup-distance">
-                  {Math.round(this.state.popup.distanceFromSearchLoc * 10) / 10}{" "}
-                  miles away
-                </div>
+                {this.state.popup.distanceFromSearchLoc && (
+                  <div className="popup-distance">
+                    {Math.round(this.state.popup.distanceFromSearchLoc * 10) /
+                      10}{" "}
+                    miles away
+                  </div>
+                )}
+
                 <div className="popup-desc">{this.state.popup.description}</div>
               </div>
             </Popup>

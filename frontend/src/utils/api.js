@@ -6,13 +6,16 @@ import {
 
 async function getSearchResults(keyword, address) {
   const defaultRadius = 500;
-  let endptStr = `resources/filter?radius=${defaultRadius}`;
-  if (keyword) {
-    endptStr += `&keyword=${keyword}`;
+  let endptStr = `resources/filter?`;
+
+  if (address && keyword) {
+    endptStr += `radius=${defaultRadius}&address=${address}&keyword=${keyword}`;
+  } else if (address) {
+    endptStr += `radius=${defaultRadius}&address=${address}`;
+  } else {
+    endptStr += `keyword=${keyword}`;
   }
-  if (address) {
-    endptStr += `&address=${address}`;
-  }
+
   return (await apiRequest({
     endpoint: endptStr
   })).result;
