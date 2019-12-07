@@ -43,20 +43,21 @@
 .card-maximize {
   float: left;
   width: 6%;
+  transition: all 0.2s;
+  cursor: pointer;
+  outline: none !important;
+  opacity: 0.2;
 }
 
 .card-maximize .maximize-icon {
   height: 14px;
   width: auto;
-  cursor: pointer;
-  opacity: 0.2;
-  transition: all 0.2s;
   margin: 0;
   position: relative;
   top: -2px;
 }
 
-.card-maximize .maximize-icon:hover {
+.card-maximize:hover, .card-maximize:focus {
   opacity: 0.5;
 }
 
