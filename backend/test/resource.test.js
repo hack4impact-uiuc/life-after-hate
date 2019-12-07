@@ -103,9 +103,9 @@ describe("GET /resources/filter", () => {
     const res = await request(app)
       .get(`/api/resources/filter?radius=${radius}&address=${address}`)
       .expect(200);
-    expect(res.body.result).to.have.lengthOf(2);
-    expect(res.body.result[0].companyName).equals("Google");
-    expect(res.body.result[1].companyName).equals("Facebook");
+    expect(res.body.result.resources).to.have.lengthOf(2);
+    expect(res.body.result.resources[0].companyName).equals("Google");
+    expect(res.body.result.resources[1].companyName).equals("Facebook");
     expect(didCheckIsVolunteer()).to.be.true;
     stub.restore();
   });
@@ -119,8 +119,8 @@ describe("GET /resources/filter", () => {
     const res = await request(app)
       .get(`/api/resources/filter?keyword=${query}`)
       .expect(200);
-    expect(res.body.result).to.have.lengthOf(1);
-    expect(res.body.result[0].companyName).equals("Facebook");
+    expect(res.body.result.resources).to.have.lengthOf(1);
+    expect(res.body.result.resources[0].companyName).equals("Facebook");
     expect(didCheckIsVolunteer()).to.be.true;
     stub.restore();
   });
