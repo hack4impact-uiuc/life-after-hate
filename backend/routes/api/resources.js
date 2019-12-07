@@ -17,7 +17,7 @@ const geolib = require("geolib");
 // get all resources
 router.get(
   "/",
-  requireAdminStatus,
+  requireVolunteerStatus,
   errorWrap(async (req, res) => {
     const resources = await Resource.find({});
     res.json({
