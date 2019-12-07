@@ -212,7 +212,7 @@ class MapView extends Component {
           onViewStateChange={this._onViewportChange}
           viewState={this.state.viewport}
           controller={{ dragRotate: false }}
-          onHover={e => {
+          onClick={e => {
             if (e.object && e.object.location.type !== "Center") {
               // Don't show a popup if hovering over the current (searched) location
               this.setState({ popup: e.object });
