@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import StaticMap, { Popup } from "react-map-gl";
+import StaticMap, { Popup, FlyToInterpolator } from "react-map-gl";
 
 import { getSearchResults } from "../../utils/api";
 import ResourceCard from "../../components/ResourceCard";
@@ -59,11 +59,41 @@ class MapView extends Component {
       inputValue: "",
       locationValue: "",
       searchResults: [],
+      selectedIdx: -1,
       showResults: false,
       searchSuggestions: [],
       showSearchSuggestions: true
     };
   }
+
+  _onViewportChange = ({ viewState }) => {
+    this.setState({
+      viewport: viewState
+    });
+  };
+
+  _goToViewport = ({ longitude, latitude }) => {
+    this._onViewportChange({
+      viewState: {
+        longitude,
+        latitude,
+        zoom: 8,
+        transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+        transitionDuration: 2000
+      }
+    });
+  };
+
+  selectCard = selectedIdx => {
+    this.setState(state => ({
+      selectedIdx,
+      cardCache: state.searchResults.map(this.renderCards(selectedIdx))
+    }));
+    this._goToViewport({
+      latitude: this.state.searchResults[selectedIdx].location.coordinates[1],
+      longitude: this.state.searchResults[selectedIdx].location.coordinates[0]
+    });
+  };
 
   getLayers = () => {
     const data = this.state.markers;
@@ -89,7 +119,7 @@ class MapView extends Component {
 
     return [layer];
   };
-  renderCards = card => (
+  renderCards = selectedIdx => (card, idx) => (
     <ResourceCard
       key={card._id}
       name={card.companyName}
@@ -101,6 +131,10 @@ class MapView extends Component {
       address={card.address}
       notes={card.notes}
       distanceFromSearchLoc={card.distanceFromSearchLoc}
+      indexInList={idx}
+      selectCard={this.selectCard}
+      expanded={idx === selectedIdx}
+      closeCard={() => this.setState({ selectedIdx: -1 })}
     />
   );
 
@@ -161,13 +195,17 @@ class MapView extends Component {
           {this.state.showResults && (
             <div className="card-content">
               {this.state.searchResults &&
-                this.state.searchResults.map(this.renderCards)}
+                this.state.searchResults.map(
+                  this.renderCards(this.state.selectedIdx)
+                )}
             </div>
           )}
         </div>
         <DeckGL
           layers={this.getLayers()}
           initialViewState={INITIAL_VIEW_STATE}
+          onViewStateChange={this._onViewportChange}
+          viewState={this.state.viewport}
           controller={{ dragRotate: false }}
           onHover={e => {
             if (e.object && e.object.location.type !== "Center") {
@@ -179,10 +217,8 @@ class MapView extends Component {
           }}
         >
           <StaticMap
-            {...this.state.viewport}
             width="100%"
             height="100vh"
-            onViewportChange={viewport => this.setState({ viewport })}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
           >
             {this.state.popup && (
