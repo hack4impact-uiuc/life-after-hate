@@ -83,6 +83,11 @@ router.get(
       resources = fuse.search(keyword);
     }
 
+    // sort by closest distance
+    resources = resources.sort(
+      (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
+    );
+
     res.json({
       code: 200,
       result: resources,
