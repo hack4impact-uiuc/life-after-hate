@@ -22,7 +22,6 @@ let options = {
       name: "tags",
       weight: 0.15
     },
-
     {
       name: "description",
       weight: 0.1

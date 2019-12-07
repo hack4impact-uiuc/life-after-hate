@@ -49,11 +49,11 @@ router.get(
     let lat = latlng.lat;
     let long = latlng.lng;
 
-    // 3963.2 = radius of Earth in miles
     if (radius && lat && long) {
+      const radiusOfEarth = 3963.2; // in miles
       resources = await Resource.find({
         location: {
-          $geoWithin: { $centerSphere: [[long, lat], radius / 3963.2] }
+          $geoWithin: { $centerSphere: [[long, lat], radius / radiusOfEarth] }
         }
       });
 
@@ -62,8 +62,8 @@ router.get(
         distanceFromSearchLoc:
           (geolib.getDistance(
             {
-              latitude: resource.location.coordinates[0],
-              longitude: resource.location.coordinates[1]
+              latitude: resource.location.coordinates[1],
+              longitude: resource.location.coordinates[0]
             },
             { latitude: lat, longitude: long }
           ) /
@@ -71,10 +71,10 @@ router.get(
           0.621371
       }));
 
-      // sort by closest distance first
-      resources.sort((a, b) => {
-        a.distanceFromSearchLoc - b.distanceFromSearchLoc;
-      });
+      // sort by closest distance
+      resources = resources.sort(
+        (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
+      );
     }
 
     // fuzzy search
@@ -90,7 +90,6 @@ router.get(
     }
 
     if (tag) {
-      console.log(tag);
       const fuse = new Fuse(resources, tagOnly);
       resources = fuse.search(tag);
     }

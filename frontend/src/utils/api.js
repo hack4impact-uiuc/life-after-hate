@@ -4,9 +4,20 @@ import {
   purgeGlobalAuthState
 } from "./apiHelpers";
 
-async function getSearchResults(keyword) {
+async function getSearchResults(keyword, address) {
+  const defaultRadius = 500;
+  let endptStr = `resources/filter?`;
+
+  if (address && keyword) {
+    endptStr += `radius=${defaultRadius}&address=${address}&keyword=${keyword}`;
+  } else if (address) {
+    endptStr += `radius=${defaultRadius}&address=${address}`;
+  } else {
+    endptStr += `keyword=${keyword}`;
+  }
+
   return (await apiRequest({
-    endpoint: `resources/filter?keyword=${keyword}`
+    endpoint: endptStr
   })).result;
 }
 
