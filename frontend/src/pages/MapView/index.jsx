@@ -8,6 +8,7 @@ import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../assets/images/marker-atlas.png";
+import MaximizeImg from "../../assets/images/maximize-white.svg";
 
 const pinSize = 45;
 const searchSuggestions = [];
@@ -252,7 +253,12 @@ class MapView extends Component {
                     {this.state.popup.description}
                   </div>
                   <button tabIndex="0" className="popup-max" onClick="">
-                    See More
+                    See More{" "}
+                    <img
+                      src={MaximizeImg}
+                      alt="icon"
+                      className="popup-button-icon"
+                    />
                   </button>
                 </div>
               </Popup>

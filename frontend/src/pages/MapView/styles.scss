@@ -25,7 +25,7 @@
 
 .popup {
     max-width: 260px;
-    max-height: 120px;
+    max-height: 140px;
     overflow: hidden;
 }
 .mapboxgl-popup{
@@ -75,3 +75,9 @@
   .popup-max:hover {
     background-color: #f9ac61;
   }
+
+.popup-button-icon {
+  height: 12px;
+  margin-left: 3px;
+  margin-top: -3px;
+}
