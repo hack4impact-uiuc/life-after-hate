@@ -192,9 +192,7 @@ class MapView extends Component {
   toggleModal = idx => {
     this.setState(prevState => ({
       showModal: !prevState.showModal,
-      modalResource: this.state.popup
-        ? this.state.popup
-        : this.state.searchResults[idx]
+      modalResource: this.state.searchResults[idx]
     }));
   };
 
@@ -229,7 +227,7 @@ class MapView extends Component {
           onClick={e => {
             if (e.object && e.object.location.type !== "Center") {
               // Don't show a popup if hovering over the current (searched) location
-              this.setState({ popup: e.object });
+              this.setState({ popup: { ...e.object, idxInResults: e.index } });
             } else {
               this.setState({ popup: null });
             }
@@ -268,7 +266,9 @@ class MapView extends Component {
                   <button
                     tabIndex="0"
                     className="popup-max"
-                    onClick={this.toggleModal}
+                    onClick={() =>
+                      this.toggleModal(this.state.popup.idxInResults)
+                    }
                   >
                     See More{" "}
                     <img
