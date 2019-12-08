@@ -106,7 +106,11 @@ class ResourceManager extends Component {
   };
 
   renderCards = resource => (
-    <ResourceCard resource={resource} updateResources={this.updateResources} />
+    <ResourceCard
+      key={resource._id}
+      resource={resource}
+      updateResources={this.updateResources}
+    />
   );
 
   render() {
