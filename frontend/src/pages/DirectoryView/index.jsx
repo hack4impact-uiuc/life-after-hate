@@ -30,7 +30,7 @@ class ResourceManager extends Component {
     if (this.state.showSearchResults) {
       this.setState({
         resources: this.state.searchResults,
-        showsearchResults: false
+        showSearchResults: false
       });
     } else {
       const resources = await getAllResources();

@@ -26,10 +26,7 @@ class ResourceCard extends Component {
       contactPhone: event.target[2].value,
       contactEmail: event.target[3].value,
       description: event.target[4].value,
-      address: event.target[5].value,
-      location: {
-        coordinates: [-88.2434, 40.1164]
-      }
+      address: event.target[5].value
     };
 
     // Remove non-empty string fields from the object
