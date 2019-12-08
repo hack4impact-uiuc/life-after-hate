@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles.scss";
+import Maximize from "../../assets/images/maximize.svg";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
@@ -15,13 +16,34 @@ const ResourceCard = ({
   address,
   notes,
   distanceFromSearchLoc,
-  indexInList
+  indexInList,
+  toggleModal
 }) => {
   const renderTags = tag => <div className="card-tag">{tag}</div>;
 
   return (
     <div className="resource-card">
       <div className={expanded ? "expanded" : "collapsed"}>
+        <div className="clearfix">
+          <div
+            className="card-title"
+            role="button"
+            tabIndex="0"
+            onClick={() => selectCard(indexInList)}
+            onKeyPress=""
+          >
+            {name}
+          </div>
+          <div
+            className="card-maximize"
+            role="button"
+            tabIndex="0"
+            onKeyPress=""
+            onClick={() => toggleModal(indexInList)}
+          >
+            <img src={Maximize} alt="Maximize" className="maximize-icon" />
+          </div>
+        </div>
         <div
           role="button"
           tabIndex="0"
@@ -29,7 +51,6 @@ const ResourceCard = ({
           onKeyPress=""
           className="card-wrap"
         >
-          <div className="card-title">{name}</div>
           {distanceFromSearchLoc && (
             <div className="card-distance">
               {Math.round(distanceFromSearchLoc * 10) / 10} miles away

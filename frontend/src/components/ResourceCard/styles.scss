@@ -10,6 +10,13 @@
     transition: all 0.3s;
   }
 
+  .clearfix:after {
+      content: " ";
+      display: block;
+      height: 0;
+      clear: both;
+  }
+
   .card-wrap {
     outline: none !important;
   }
@@ -27,7 +34,32 @@
     color: #2a2a2a;
     font-size: 15px;
     margin: 0;
+    width: 92%;
+    float: left;
+    margin-right: 2%;
+    outline: none;
   }
+
+.card-maximize {
+  float: left;
+  width: 6%;
+  transition: all 0.2s;
+  cursor: pointer;
+  outline: none !important;
+  opacity: 0.2;
+}
+
+.card-maximize .maximize-icon {
+  height: 14px;
+  width: auto;
+  margin: 0;
+  position: relative;
+  top: -2px;
+}
+
+.card-maximize:hover, .card-maximize:focus {
+  opacity: 0.5;
+}
 
   .card-distance {
     opacity: 0.6;
@@ -46,7 +78,7 @@
   .collapsed .card-desc {
       overflow: hidden;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       margin-bottom: 0;
   }

@@ -4,10 +4,12 @@ import StaticMap, { Popup, FlyToInterpolator } from "react-map-gl";
 import { getSearchResults } from "../../utils/api";
 import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
+import Modal from "../../components/Modal";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../assets/images/marker-atlas.png";
+import MaximizeImg from "../../assets/images/maximize-white.svg";
 
 const pinSize = 45;
 const searchSuggestions = [];
@@ -63,7 +65,9 @@ class MapView extends Component {
       showResults: false,
       searchSuggestions: [],
       cardCache: [],
-      showSearchSuggestions: true
+      showSearchSuggestions: true,
+      showModal: false,
+      modalResource: null
     };
   }
 
@@ -142,6 +146,7 @@ class MapView extends Component {
       selectCard={this.selectCard}
       expanded={idx === selectedIdx}
       closeCard={this.closeCard}
+      toggleModal={this.toggleModal}
     />
   );
 
@@ -184,6 +189,14 @@ class MapView extends Component {
     this.setState({ locationValue: input });
   };
 
+  toggleModal = idx => {
+    this.setState(prevState => ({
+      showModal: !prevState.showModal,
+      modalResource:
+        prevState.showModal === false ? prevState.searchResults[idx] : null
+    }));
+  };
+
   render() {
     return (
       <div>
@@ -212,10 +225,10 @@ class MapView extends Component {
           onViewStateChange={this._onViewportChange}
           viewState={this.state.viewport}
           controller={{ dragRotate: false }}
-          onHover={e => {
+          onClick={e => {
             if (e.object && e.object.location.type !== "Center") {
               // Don't show a popup if hovering over the current (searched) location
-              this.setState({ popup: e.object });
+              this.setState({ popup: { ...e.object, idxInResults: e.index } });
             } else {
               this.setState({ popup: null });
             }
@@ -251,11 +264,40 @@ class MapView extends Component {
                   <div className="popup-desc">
                     {this.state.popup.description}
                   </div>
+                  <button
+                    tabIndex="0"
+                    className="popup-max"
+                    onClick={() =>
+                      this.toggleModal(this.state.popup.idxInResults)
+                    }
+                  >
+                    See More{" "}
+                    <img
+                      src={MaximizeImg}
+                      alt="icon"
+                      className="popup-button-icon"
+                    />
+                  </button>
                 </div>
               </Popup>
             )}
           </StaticMap>
         </DeckGL>
+        {this.state.showModal && (
+          <Modal
+            toggleModal={this.toggleModal}
+            cardClicked={true}
+            showModal={this.state.showModal}
+            modalName={this.state.modalResource.companyName}
+            resourceName={this.state.modalResource.companyName}
+            resourceContact={this.state.modalResource.contactName}
+            resourcePhone={this.state.modalResource.contactPhone}
+            resourceEmail={this.state.modalResource.contactEmail}
+            resourceDescription={this.state.modalResource.description}
+            resourceAddress={this.state.modalResource.address}
+            resourceNotes={this.state.modalResource.notes}
+          />
+        )}
       </div>
     );
   }
