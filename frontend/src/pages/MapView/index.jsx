@@ -4,6 +4,7 @@ import StaticMap, { Popup, FlyToInterpolator } from "react-map-gl";
 import { getSearchResults } from "../../utils/api";
 import ResourceCard from "../../components/ResourceCard";
 import Search from "../../components/SearchBar";
+import Modal from "../../components/Modal";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
 import { IconLayer } from "@deck.gl/layers";
@@ -64,7 +65,9 @@ class MapView extends Component {
       showResults: false,
       searchSuggestions: [],
       cardCache: [],
-      showSearchSuggestions: true
+      showSearchSuggestions: true,
+      showModal: false,
+      modalResource: null
     };
   }
 
@@ -143,6 +146,7 @@ class MapView extends Component {
       selectCard={this.selectCard}
       expanded={idx === selectedIdx}
       closeCard={this.closeCard}
+      toggleModal={this.toggleModal}
     />
   );
 
@@ -183,6 +187,15 @@ class MapView extends Component {
 
   locationChangeHandler = input => {
     this.setState({ locationValue: input });
+  };
+
+  toggleModal = idx => {
+    this.setState(prevState => ({
+      showModal: !prevState.showModal,
+      modalResource: this.state.popup
+        ? this.state.popup
+        : this.state.searchResults[idx]
+    }));
   };
 
   render() {
@@ -252,7 +265,11 @@ class MapView extends Component {
                   <div className="popup-desc">
                     {this.state.popup.description}
                   </div>
-                  <button tabIndex="0" className="popup-max" onClick="">
+                  <button
+                    tabIndex="0"
+                    className="popup-max"
+                    onClick={this.toggleModal}
+                  >
                     See More{" "}
                     <img
                       src={MaximizeImg}
@@ -265,6 +282,21 @@ class MapView extends Component {
             )}
           </StaticMap>
         </DeckGL>
+        {this.state.showModal && (
+          <Modal
+            toggleModal={this.toggleModal}
+            cardClicked={true}
+            showModal={this.state.showModal}
+            modalName={this.state.modalResource.companyName}
+            resourceName={this.state.modalResource.companyName}
+            resourceContact={this.state.modalResource.contactName}
+            resourcePhone={this.state.modalResource.contactPhone}
+            resourceEmail={this.state.modalResource.contactEmail}
+            resourceDescription={this.state.modalResource.description}
+            resourceAddress={this.state.modalResource.address}
+            resourceNotes={this.state.modalResource.notes}
+          />
+        )}
       </div>
     );
   }

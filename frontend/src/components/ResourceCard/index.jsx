@@ -16,7 +16,8 @@ const ResourceCard = ({
   address,
   notes,
   distanceFromSearchLoc,
-  indexInList
+  indexInList,
+  toggleModal
 }) => {
   const renderTags = tag => <div className="card-tag">{tag}</div>;
 
@@ -33,7 +34,13 @@ const ResourceCard = ({
           >
             {name}
           </div>
-          <div className="card-maximize">
+          <div
+            className="card-maximize"
+            role="button"
+            tabIndex="0"
+            onKeyPress=""
+            onClick={() => toggleModal(indexInList)}
+          >
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
           </div>
         </div>
