@@ -8,8 +8,10 @@ async function getSearchResults(keyword, address, tag, radius) {
   const defaultRadius = 500;
   let endptStr = `resources/filter?`;
 
-  if (radius) {
+  if (!radius) {
     endptStr += `radius=${defaultRadius}`;
+  } else {
+    endptStr += `radius=${radius}`;
   }
   if (address) {
     endptStr += `&address=${address}`;

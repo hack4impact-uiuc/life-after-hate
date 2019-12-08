@@ -70,11 +70,11 @@ class ResourceManager extends Component {
   handleSearch = async () => {
     let searchResults;
     try {
-      searchResults = await getSearchResults(
+      ({ resources: searchResults } = await getSearchResults(
         this.state.keywordInput,
         this.state.locationInput,
         this.state.tagInput
-      );
+      ));
     } catch (error) {
       console.error(error);
       alert(error);
