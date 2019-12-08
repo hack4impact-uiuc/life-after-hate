@@ -5,12 +5,21 @@ import SearchBar from "./SearchBar";
 import Modal from "../../components/Modal";
 
 import "./styles.scss";
-import { addResource, getAllResources } from "../../utils/api";
+import {
+  addResource,
+  getAllResources,
+  getSearchResults
+} from "../../utils/api";
 
 class ResourceManager extends Component {
   state = {
     showModal: false,
-    resources: null
+    resources: null,
+    keywordInput: "",
+    locationInput: "",
+    tagInput: "",
+    searchResults: [],
+    showSearchResults: false
   };
 
   componentDidMount = async () => {
@@ -18,10 +27,17 @@ class ResourceManager extends Component {
   };
 
   updateResources = async () => {
-    const resources = await getAllResources();
-    this.setState({
-      resources: resources
-    });
+    if (this.state.showSearchResults) {
+      this.setState({
+        resources: this.state.searchResults,
+        showSearchResults: false
+      });
+    } else {
+      const resources = await getAllResources();
+      this.setState({
+        resources: resources
+      });
+    }
   };
 
   toggleModal = () => {
@@ -51,8 +67,50 @@ class ResourceManager extends Component {
     }
   };
 
+  handleSearch = async () => {
+    let searchResults;
+    try {
+      ({ resources: searchResults } = await getSearchResults(
+        this.state.keywordInput,
+        this.state.locationInput,
+        this.state.tagInput
+      ));
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+
+    this.setState({
+      searchResults: searchResults,
+      showSearchResults: true
+    });
+    await this.updateResources();
+  };
+
+  onChangeKeyword = input => {
+    this.setState({
+      keywordInput: input
+    });
+  };
+
+  onChangeLocation = input => {
+    this.setState({
+      locationInput: input
+    });
+  };
+
+  onChangeTag = input => {
+    this.setState({
+      tagInput: input
+    });
+  };
+
   renderCards = resource => (
-    <ResourceCard resource={resource} updateResources={this.updateResources} />
+    <ResourceCard
+      key={resource._id}
+      resource={resource}
+      updateResources={this.updateResources}
+    />
   );
 
   render() {
@@ -66,7 +124,12 @@ class ResourceManager extends Component {
         </div>
 
         <div className="resources">
-          <SearchBar />
+          <SearchBar
+            handleSearch={this.handleSearch}
+            onChangeKeyword={this.onChangeKeyword}
+            onChangeLocation={this.onChangeLocation}
+            onChangeTag={this.onChangeTag}
+          />
           <div className="resource-labels clearfix">
             <div className="col">
               <h3>Resource Name</h3>

@@ -25,8 +25,8 @@ class LAHModal extends Component {
           </ModalHeader>
           <ModalBody
             style={{
-              "max-height": "calc(100vh - 210px)",
-              "overflow-y": "auto"
+              maxHeight: "calc(100vh - 210px)",
+              overflowY: "auto"
             }}
           >
             <form
