@@ -192,7 +192,8 @@ class MapView extends Component {
   toggleModal = idx => {
     this.setState(prevState => ({
       showModal: !prevState.showModal,
-      modalResource: this.state.searchResults[idx]
+      modalResource:
+        prevState.showModal === false ? prevState.searchResults[idx] : null
     }));
   };
 
