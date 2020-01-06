@@ -114,10 +114,8 @@ class MapView extends Component {
     const layer = new IconLayer({
       ...layerProps,
       id: "icon",
-      getIcon: d => {
-        console.log(d);
-        return d.location.type === "Center" ? "currentLocation" : "marker";
-      },
+      getIcon: d =>
+        d.location.type === "Center" ? "currentLocation" : "marker",
       sizeUnits: "meters",
       sizeMinPixels: pinSize
     });

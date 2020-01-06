@@ -96,7 +96,7 @@ describe("GET /resources/filter", () => {
     await createSampleResource2();
     const radius = 100000;
     const address = "Chicago, IL";
-    let stub = sinon
+    const stub = sinon
       .stub(resourceUtils, "addressToLatLong")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
@@ -112,7 +112,7 @@ describe("GET /resources/filter", () => {
   it("should fuzzy search on tags", async () => {
     await createSampleResource2();
     const query = "social";
-    let stub = sinon
+    const stub = sinon
       .stub(resourceUtils, "addressToLatLong")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
@@ -128,15 +128,14 @@ describe("GET /resources/filter", () => {
 
 describe("POST /resources", () => {
   it("should create a new Resource", async () => {
-    let stub = sinon
+    const stub = sinon
       .stub(resourceUtils, "addressToLatLong")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
-    const res = await request(app)
+    await request(app)
       .post(`/api/resources/`)
       .send(sampleResourceInfo3)
       .expect(201);
-    console.log(res);
     const resource = await Resource.findOne({ companyName: "Facebook" });
     expect(resource.contactName).equals("Evan");
     expect(didCheckIsAdmin()).to.be.true;
