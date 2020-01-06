@@ -5,7 +5,8 @@
     "import/no-unresolved": "off",
     "no-magic-numbers": "off",
     "@h4iuiuc/no-null-ternary": "off",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
+    "prefer-const": "warn"
   },
   "env": {
     "browser": true,

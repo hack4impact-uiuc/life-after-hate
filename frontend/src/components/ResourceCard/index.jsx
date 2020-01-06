@@ -21,6 +21,7 @@ const ResourceCard = ({
 }) => {
   const renderTags = tag => <div className="card-tag">{tag}</div>;
 
+  console.log("Rerender!");
   return (
     <div className="resource-card">
       <div className={expanded ? "expanded" : "collapsed"}>

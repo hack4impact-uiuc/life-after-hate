@@ -5,7 +5,10 @@ const errorWrap = require("../../utils/error-wrap");
 const { celebrate, Joi } = require("celebrate");
 const Fuse = require("fuse.js");
 const resourceUtils = require("../../utils/resource-utils");
-let { options, tagOnly } = require("../../utils/resource-utils");
+const {
+  DEFAULT_FILTER_OPTIONS,
+  TAG_ONLY_OPTIONS
+} = require("../../utils/constants");
 Joi.objectId = require("joi-objectid")(Joi);
 const extractor = require("keyword-extractor");
 const {
@@ -45,9 +48,9 @@ router.get(
     const { radius, address, keyword, customWeights, tag } = req.query;
     let resources = await Resource.find({});
 
-    let latlng = await resourceUtils.addressToLatLong(address);
-    let lat = latlng.lat;
-    let long = latlng.lng;
+    const latlng = await resourceUtils.addressToLatLong(address);
+    const lat = latlng.lat;
+    const long = latlng.lng;
 
     if (radius && lat && long) {
       const radiusOfEarth = 3963.2; // in miles
@@ -76,21 +79,21 @@ router.get(
         (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
       );
     }
-
+    let filterOptions = DEFAULT_FILTER_OPTIONS;
     // fuzzy search
     if (keyword) {
       // if custom weights provided, will set custom field rankings
       if (customWeights) {
-        options.keys = customWeights;
+        filterOptions = { ...filterOptions, keys: customWeights };
       }
 
       // else uses default weights contained in resource-utils.js
-      const fuse = new Fuse(resources, options);
+      const fuse = new Fuse(resources, filterOptions);
       resources = fuse.search(keyword);
     }
 
     if (tag) {
-      const fuse = new Fuse(resources, tagOnly);
+      const fuse = new Fuse(resources, TAG_ONLY_OPTIONS);
       resources = fuse.search(tag);
     }
 
@@ -135,7 +138,7 @@ router.post(
       remove_duplicates: true
     });
 
-    let latlng = await resourceUtils.addressToLatLong(data.address);
+    const latlng = await resourceUtils.addressToLatLong(data.address);
 
     data.location.coordinates[0] = latlng.lng;
     data.location.coordinates[1] = latlng.lat;
