@@ -120,7 +120,9 @@ router.post(
           .length(2)
           .items(Joi.number())
       }).required(),
-      notes: Joi.string(),
+      notes: Joi.string()
+        .required()
+        .allow(""),
       tags: Joi.array().items(Joi.string())
     })
   }),
