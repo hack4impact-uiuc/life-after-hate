@@ -123,9 +123,7 @@ router.post(
           .length(2)
           .items(Joi.number())
       }).required(),
-      notes: Joi.string()
-        .required()
-        .allow(""),
+      notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string())
     })
   }),
