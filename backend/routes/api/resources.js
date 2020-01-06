@@ -134,9 +134,6 @@ router.post(
     });
 
     let latlng = await resourceUtils.addressToLatLong(data.address);
-    console.log(latlng);
-    // For now until API key integrated
-    // latlng = { lat: -88, lng: 22, region: 2 };
 
     data.location.coordinates[0] = latlng.lng;
     data.location.coordinates[1] = latlng.lat;

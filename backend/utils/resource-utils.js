@@ -1,4 +1,5 @@
-const fetch = require("node-fetch");
+const axios = require("axios");
+const R = require("ramda");
 const mapquestKey = process.env.MAPQUEST_KEY;
 const mapquestURI = process.env.MAPQUEST_URI;
 
@@ -108,19 +109,48 @@ const stateToFederalRegion = [
   // { State: "Northern Mariana Islands", Region: 9 }
 ];
 
-let addressToLatLong = async function(address) {
-  const api_latlong = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
+const parseLatLongResponse = resp => {
+  // Grab the lat/lng object within the result JSON
+  const getLatLngFromResults = R.path(["results", 0, "locations", 0, "latLng"]);
+  // Grab the 2 letter state code within the result JSON
+  const getStateFromResults = R.path([
+    "results",
+    0,
+    "locations",
+    0,
+    "adminArea3"
+  ]);
 
-  const response = await fetch(api_latlong, {});
-  const responseJson = await response.json();
+  // Take the state and find the federal region that maps to it
+  const findFederalRegion = state =>
+    R.find(obj => obj.State === state)(stateToFederalRegion);
 
-  let lat = responseJson["results"][0]["locations"][0]["latLng"]["lat"];
-  let lng = responseJson["results"][0]["locations"][0]["latLng"]["lng"];
+  // Execute and get only the region component
+  const region = R.compose(
+    R.path(["Region"]),
+    findFederalRegion,
+    getStateFromResults
+  )(resp);
 
-  let state = responseJson["results"][0]["locations"][0]["adminArea3"];
-  let region = stateToFederalRegion.find(obj => obj.State === state).Region;
+  // Execute the function and get only the latitude component from the object
+  const lat = R.compose(
+    R.path(["lat"]),
+    getLatLngFromResults
+  )(resp);
 
-  return { lat: lat, lng: lng, region: region };
+  const lng = R.compose(
+    R.path(["lng"]),
+    getLatLngFromResults
+  )(resp);
+
+  // Note that this will now return an empty object if the response is not valid
+  return { region, lat, lng };
+};
+
+const addressToLatLong = async address => {
+  const addressQuery = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
+  const response = await axios.get(addressQuery);
+  return parseLatLongResponse(response.data);
 };
 
 let latlongToAddress = async function(lat, long) {
