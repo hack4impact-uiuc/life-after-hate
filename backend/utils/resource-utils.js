@@ -5,7 +5,14 @@ const mapquestURI = process.env.MAPQUEST_URI;
 const { STATE_REGION_MAP } = require("./constants");
 const parseLatLongResponse = resp => {
   // Grab the lat/lng object within the result JSON
-  const getLatLngFromResults = R.path(["results", 0, "locations", 0, "latLng"]);
+  const getLocationFromResults = R.path([
+    "results",
+    0,
+    "locations",
+    0,
+    "latLng"
+  ]);
+
   // Grab the 2 letter state code within the result JSON
   const getStateFromResults = R.path([
     "results",
@@ -16,29 +23,25 @@ const parseLatLongResponse = resp => {
   ]);
 
   // Take the state and find the federal region that maps to it
-  const findFederalRegion = state =>
-    R.find(obj => obj.State === state)(STATE_REGION_MAP);
+  const findFederalRegion = R.pipe(
+    R.propEq("State"),
+    R.flip(R.find)(STATE_REGION_MAP)
+  );
 
   // Execute and get only the region component
-  const region = R.compose(
-    R.path(["Region"]),
+  const region = R.pipe(
+    getStateFromResults,
     findFederalRegion,
-    getStateFromResults
+    R.prop("Region")
   )(resp);
 
   // Execute the function and get only the latitude component from the object
-  const lat = R.compose(
-    R.path(["lat"]),
-    getLatLngFromResults
+  const getCoord = R.pipe(
+    getLocationFromResults,
+    R.flip(R.prop)
   )(resp);
 
-  const lng = R.compose(
-    R.path(["lng"]),
-    getLatLngFromResults
-  )(resp);
-
-  // Note that this will now return an empty object if the response is not valid
-  return { region, lat, lng };
+  return { region, lat: getCoord("lat"), lng: getCoord("lng") };
 };
 
 const addressToLatLong = async address => {

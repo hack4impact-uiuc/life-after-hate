@@ -6,7 +6,8 @@
     "no-magic-numbers": "off",
     "@h4iuiuc/no-null-ternary": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
-    "prefer-const": "warn"
+    "prefer-const": "warn",
+    "camelcase": "warn"
   },
   "env": {
     "browser": true,
