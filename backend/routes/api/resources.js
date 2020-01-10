@@ -1,22 +1,22 @@
 const express = require("express");
-const router = express.Router();
+const R = require("ramda");
+const { celebrate, Joi } = require("celebrate");
+const extractor = require("keyword-extractor");
+Joi.objectId = require("joi-objectid")(Joi);
+
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
-const { celebrate, Joi } = require("celebrate");
-const Fuse = require("fuse.js");
 const resourceUtils = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
   TAG_ONLY_OPTIONS
 } = require("../../utils/constants");
-Joi.objectId = require("joi-objectid")(Joi);
-const extractor = require("keyword-extractor");
 const {
   requireAdminStatus,
   requireVolunteerStatus
 } = require("../../utils/auth-middleware");
-const geolib = require("geolib");
-const R = require("ramda");
+
+const router = express.Router();
 
 // get all resources
 router.get(
@@ -32,64 +32,6 @@ router.get(
     });
   })
 );
-
-const addDistanceField = (lat, long) => resource => ({
-  ...resource.toJSON(),
-  distanceFromSearchLoc: computeDistance(
-    resource.location.coordinates[1],
-    resource.location.coordinates[0],
-    lat,
-    long
-  )
-});
-
-const computeDistance = R.curry(
-  (sourceLat, sourceLong, destLat, destLong) =>
-    (geolib.getDistance(
-      {
-        latitude: sourceLat,
-        longitude: sourceLong
-      },
-      { latitude: destLat, longitude: destLong }
-    ) /
-      1000) *
-    0.621371
-);
-
-const filterByOptions = R.curry((filterOptions, query, resources) => {
-  const fuse = new Fuse(resources, filterOptions);
-  if (!query) {
-    // Do no filtering if no query is passed in
-    return resources;
-  }
-  return fuse.search(query);
-});
-
-const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
-const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
-
-const distanceFilter = R.curry((lat, long, radius) =>
-  R.filter(
-    resource =>
-      computeDistance(
-        R.view(resourceLatLens, resource),
-        R.view(resourceLongLens, resource),
-        lat,
-        long
-      ) < radius
-  )
-);
-
-const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
-  if (!lat || !long || !radius) {
-    return resources;
-  }
-  return R.pipe(
-    distanceFilter(lat, long, radius),
-    R.map(addDistanceField(lat, long)),
-    R.sortBy(R.prop("distanceFromSearchLoc"))
-  )(resources);
-});
 
 // get list of resources filtered by location radius
 router.get(
@@ -110,16 +52,19 @@ router.get(
 
     const { lat, lng } = await resourceUtils.addressToLatLong(address);
 
-    let filterOptions = DEFAULT_FILTER_OPTIONS;
     // if custom weights provided, will set custom field rankings
-    if (customWeights) {
-      filterOptions = { ...filterOptions, keys: customWeights };
-    }
+    const filterOptions = customWeights
+      ? { ...DEFAULT_FILTER_OPTIONS, keys: customWeights }
+      : DEFAULT_FILTER_OPTIONS;
 
     resources = R.pipe(
-      filterResourcesWithinRadius(lat, lng, radius),
-      filterByOptions(filterOptions)(keyword),
-      filterByOptions(TAG_ONLY_OPTIONS)(tag)
+      lat && lng && radius
+        ? resourceUtils.filterResourcesWithinRadius(lat, lng, radius)
+        : R.identity,
+      keyword
+        ? resourceUtils.filterByOptions(filterOptions)(keyword)
+        : R.identity,
+      tag ? resourceUtils.filterByOptions(TAG_ONLY_OPTIONS)(tag) : R.identity
     )(resources);
 
     res.json({

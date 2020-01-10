@@ -3,6 +3,8 @@ const R = require("ramda");
 const mapquestKey = process.env.MAPQUEST_KEY;
 const mapquestURI = process.env.MAPQUEST_URI;
 const { STATE_REGION_MAP } = require("./constants");
+const Fuse = require("fuse.js");
+const geolib = require("geolib");
 const parseLatLongResponse = resp => {
   // Grab the lat/lng object within the result JSON
   const getLocationFromResults = R.path([
@@ -67,7 +69,62 @@ const latlongToAddress = async function(lat, long) {
   return fullAddress;
 };
 
+const addDistanceField = (lat, long) => resource => ({
+  ...resource.toJSON(),
+  distanceFromSearchLoc: computeDistance(
+    resource.location.coordinates[1],
+    resource.location.coordinates[0],
+    lat,
+    long
+  )
+});
+
+const computeDistance = R.curry(
+  (sourceLat, sourceLong, destLat, destLong) =>
+    (geolib.getDistance(
+      {
+        latitude: sourceLat,
+        longitude: sourceLong
+      },
+      { latitude: destLat, longitude: destLong }
+    ) /
+      1000) *
+    0.621371
+);
+
+const filterByOptions = R.curry((filterOptions, query, resources) => {
+  const fuse = new Fuse(resources, filterOptions);
+  return fuse.search(query);
+});
+
+const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
+const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
+
+const distanceFilter = R.curry((lat, long, radius) =>
+  R.filter(
+    resource =>
+      computeDistance(
+        R.view(resourceLatLens, resource),
+        R.view(resourceLongLens, resource),
+        lat,
+        long
+      ) < radius
+  )
+);
+
+const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) =>
+  R.pipe(
+    distanceFilter(lat, long, radius),
+    R.map(addDistanceField(lat, long)),
+    R.sortBy(R.prop("distanceFromSearchLoc"))
+  )(resources)
+);
+
 module.exports = {
   addressToLatLong,
-  latlongToAddress
+  latlongToAddress,
+  filterResourcesWithinRadius,
+  filterByOptions,
+  resourceLatLens,
+  resourceLongLens
 };
