@@ -28,14 +28,12 @@ const parseLatLongResponse = resp => {
     R.flip(R.find)(STATE_REGION_MAP)
   );
 
-  // Execute and get only the region component
   const region = R.pipe(
     getStateFromResults,
     findFederalRegion,
     R.prop("Region")
   )(resp);
 
-  // Execute the function and get only the latitude component from the object
   const getCoord = R.pipe(
     getLocationFromResults,
     R.flip(R.prop)
@@ -51,22 +49,22 @@ const addressToLatLong = async address => {
 };
 
 const latlongToAddress = async function(lat, long) {
-  const api_address = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
+  const apiAddress = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
 
-  const response = await fetch(api_address, {});
+  const response = await fetch(apiAddress, {});
   const responseJson = await response.json();
 
   console.log(responseJson["results"][0]["locations"]);
 
-  const street_address = responseJson["results"][0]["locations"][0]["street"];
+  const streetAddress = responseJson["results"][0]["locations"][0]["street"];
   const city = responseJson["results"][0]["locations"][0]["adminArea5"];
   const state = responseJson["results"][0]["locations"][0]["adminArea3"];
   // country = responseJson["results"][0]["locations"][0]["adminArea1"];
-  const postal_code = responseJson["results"][0]["locations"][0][
+  const postalCode = responseJson["results"][0]["locations"][0][
     "postalCode"
   ].substring(0, 5);
-  const full_address = `${street_address} ${city} ${state} ${postal_code}`;
-  return full_address;
+  const fullAddress = `${streetAddress} ${city} ${state} ${postalCode}`;
+  return fullAddress;
 };
 
 module.exports = {

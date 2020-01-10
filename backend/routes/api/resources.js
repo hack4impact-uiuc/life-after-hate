@@ -16,6 +16,7 @@ const {
   requireVolunteerStatus
 } = require("../../utils/auth-middleware");
 const geolib = require("geolib");
+const R = require("ramda");
 
 // get all resources
 router.get(
@@ -23,6 +24,7 @@ router.get(
   requireVolunteerStatus,
   errorWrap(async (req, res) => {
     const resources = await Resource.find({});
+
     res.json({
       code: 200,
       result: resources,
@@ -30,6 +32,42 @@ router.get(
     });
   })
 );
+
+const getQueryForDistance = (lat, long, radius) => {
+  const radiusOfEarth = 3963.2; // in miles
+  return {
+    location: {
+      $geoWithin: { $centerSphere: [[long, lat], radius / radiusOfEarth] }
+    }
+  };
+};
+
+const addDistanceParam = (lat, long) => resource => ({
+  ...resource.toJSON(),
+  distanceFromSearchLoc: computeDistance(
+    resource.location.coordinates[1],
+    resource.location.coordinates[0],
+    lat,
+    long
+  )
+});
+
+const computeDistance = (sourceLat, sourceLong, destLat, destLong) =>
+  (geolib.getDistance(
+    {
+      latitude: sourceLat,
+      longitude: sourceLong
+    },
+    { latitude: destLat, longitude: destLong }
+  ) /
+    1000) *
+  0.621371;
+
+const filterByOptions = filterOptions => query => resources => {
+  // else uses default weights contained in resource-utils.js
+  const fuse = new Fuse(resources, filterOptions);
+  return fuse.search(query);
+};
 
 // get list of resources filtered by location radius
 router.get(
@@ -53,31 +91,12 @@ router.get(
     const long = latlng.lng;
 
     if (radius && lat && long) {
-      const radiusOfEarth = 3963.2; // in miles
-      resources = await Resource.find({
-        location: {
-          $geoWithin: { $centerSphere: [[long, lat], radius / radiusOfEarth] }
-        }
-      });
+      resources = await Resource.find(getQueryForDistance(lat, long, radius));
 
-      resources = resources.map(resource => ({
-        ...resource._doc,
-        distanceFromSearchLoc:
-          (geolib.getDistance(
-            {
-              latitude: resource.location.coordinates[1],
-              longitude: resource.location.coordinates[0]
-            },
-            { latitude: lat, longitude: long }
-          ) /
-            1000) *
-          0.621371
-      }));
+      resources = resources.map(addDistanceParam(lat, long));
 
       // sort by closest distance
-      resources = resources.sort(
-        (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
-      );
+      resources = R.sortBy(R.prop("distanceFromSearchLoc"))(resources);
     }
     let filterOptions = DEFAULT_FILTER_OPTIONS;
     // fuzzy search
@@ -87,14 +106,11 @@ router.get(
         filterOptions = { ...filterOptions, keys: customWeights };
       }
 
-      // else uses default weights contained in resource-utils.js
-      const fuse = new Fuse(resources, filterOptions);
-      resources = fuse.search(keyword);
+      resources = filterByOptions(filterOptions)(keyword)(resources);
     }
 
     if (tag) {
-      const fuse = new Fuse(resources, TAG_ONLY_OPTIONS);
-      resources = fuse.search(tag);
+      resources = filterByOptions(TAG_ONLY_OPTIONS)(tag)(resources);
     }
 
     res.json({
