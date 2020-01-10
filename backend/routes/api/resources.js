@@ -42,7 +42,7 @@ const getQueryForDistance = (lat, long, radius) => {
   };
 };
 
-const addDistanceParam = (lat, long) => resource => ({
+const addDistanceField = (lat, long) => resource => ({
   ...resource.toJSON(),
   distanceFromSearchLoc: computeDistance(
     resource.location.coordinates[1],
@@ -64,9 +64,20 @@ const computeDistance = (sourceLat, sourceLong, destLat, destLong) =>
   0.621371;
 
 const filterByOptions = filterOptions => query => resources => {
-  // else uses default weights contained in resource-utils.js
   const fuse = new Fuse(resources, filterOptions);
+  if (!query) {
+    // Do no filtering if no query is passed in
+    return resources;
+  }
   return fuse.search(query);
+};
+
+const getResourcesWithinRadius = async (lat, long, radius) => {
+  const resources = await Resource.find(getQueryForDistance(lat, long, radius));
+  return R.pipe(
+    R.map(addDistanceField(lat, long)),
+    R.sortBy(R.prop("distanceFromSearchLoc"))
+  )(resources);
 };
 
 // get list of resources filtered by location radius
@@ -86,36 +97,28 @@ router.get(
     const { radius, address, keyword, customWeights, tag } = req.query;
     let resources = await Resource.find({});
 
-    const latlng = await resourceUtils.addressToLatLong(address);
-    const lat = latlng.lat;
-    const long = latlng.lng;
+    const { lat, lng } = await resourceUtils.addressToLatLong(address);
 
-    if (radius && lat && long) {
-      resources = await Resource.find(getQueryForDistance(lat, long, radius));
+    // let resources;
 
-      resources = resources.map(addDistanceParam(lat, long));
-
-      // sort by closest distance
-      resources = R.sortBy(R.prop("distanceFromSearchLoc"))(resources);
+    if (radius && lat && lng) {
+      resources = await getResourcesWithinRadius(lat, lng, radius);
     }
+
     let filterOptions = DEFAULT_FILTER_OPTIONS;
-    // fuzzy search
-    if (keyword) {
-      // if custom weights provided, will set custom field rankings
-      if (customWeights) {
-        filterOptions = { ...filterOptions, keys: customWeights };
-      }
-
-      resources = filterByOptions(filterOptions)(keyword)(resources);
+    // if custom weights provided, will set custom field rankings
+    if (customWeights) {
+      filterOptions = { ...filterOptions, keys: customWeights };
     }
 
-    if (tag) {
-      resources = filterByOptions(TAG_ONLY_OPTIONS)(tag)(resources);
-    }
+    resources = R.pipe(
+      filterByOptions(filterOptions)(keyword),
+      filterByOptions(TAG_ONLY_OPTIONS)(tag)
+    )(resources);
 
     res.json({
       code: 200,
-      result: { center: [long, lat], resources },
+      result: { center: [lng, lat], resources },
       success: true
     });
   })
