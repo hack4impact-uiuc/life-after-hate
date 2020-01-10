@@ -12,6 +12,9 @@
     "start:dev": "nodemon appListener.js",
     "start": "nodemon appListener.js"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

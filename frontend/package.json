@@ -27,6 +27,9 @@
     "redux-logger": "^3.0.6",
     "url-join": "^4.0.1"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
