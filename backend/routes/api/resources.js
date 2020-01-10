@@ -43,30 +43,32 @@ const addDistanceField = (lat, long) => resource => ({
   )
 });
 
-const computeDistance = (sourceLat, sourceLong, destLat, destLong) =>
-  (geolib.getDistance(
-    {
-      latitude: sourceLat,
-      longitude: sourceLong
-    },
-    { latitude: destLat, longitude: destLong }
-  ) /
-    1000) *
-  0.621371;
+const computeDistance = R.curry(
+  (sourceLat, sourceLong, destLat, destLong) =>
+    (geolib.getDistance(
+      {
+        latitude: sourceLat,
+        longitude: sourceLong
+      },
+      { latitude: destLat, longitude: destLong }
+    ) /
+      1000) *
+    0.621371
+);
 
-const filterByOptions = filterOptions => query => resources => {
+const filterByOptions = R.curry((filterOptions, query, resources) => {
   const fuse = new Fuse(resources, filterOptions);
   if (!query) {
     // Do no filtering if no query is passed in
     return resources;
   }
   return fuse.search(query);
-};
+});
 
 const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
 const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
 
-const distanceFilter = (lat, long, radius) =>
+const distanceFilter = R.curry((lat, long, radius) =>
   R.filter(
     resource =>
       computeDistance(
@@ -75,9 +77,10 @@ const distanceFilter = (lat, long, radius) =>
         lat,
         long
       ) < radius
-  );
+  )
+);
 
-const filterResourcesWithinRadius = (lat, long, radius) => resources => {
+const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   if (!lat || !long || !radius) {
     return resources;
   }
@@ -86,7 +89,7 @@ const filterResourcesWithinRadius = (lat, long, radius) => resources => {
     R.map(addDistanceField(lat, long)),
     R.sortBy(R.prop("distanceFromSearchLoc"))
   )(resources);
-};
+});
 
 // get list of resources filtered by location radius
 router.get(
