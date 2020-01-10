@@ -6,7 +6,14 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
-const resourceUtils = require("../../utils/resource-utils");
+const {
+  resourceLatLens,
+  resourceLongLens,
+  resourceRegionLens,
+  addressToLatLong,
+  filterResourcesWithinRadius,
+  filterByOptions
+} = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
   TAG_ONLY_OPTIONS
@@ -50,7 +57,7 @@ router.get(
     const { radius, address, keyword, customWeights, tag } = req.query;
     let resources = await Resource.find({});
 
-    const { lat, lng } = await resourceUtils.addressToLatLong(address);
+    const { lat, lng } = address ? await addressToLatLong(address) : {};
 
     // if custom weights provided, will set custom field rankings
     const filterOptions = customWeights
@@ -59,12 +66,10 @@ router.get(
 
     resources = R.pipe(
       lat && lng && radius
-        ? resourceUtils.filterResourcesWithinRadius(lat, lng, radius)
+        ? filterResourcesWithinRadius(lat, lng, radius)
         : R.identity,
-      keyword
-        ? resourceUtils.filterByOptions(filterOptions)(keyword)
-        : R.identity,
-      tag ? resourceUtils.filterByOptions(TAG_ONLY_OPTIONS)(tag) : R.identity
+      keyword ? filterByOptions(filterOptions)(keyword) : R.identity,
+      tag ? filterByOptions(TAG_ONLY_OPTIONS)(tag) : R.identity
     )(resources);
 
     res.json({
@@ -98,22 +103,22 @@ router.post(
     })
   }),
   errorWrap(async (req, res) => {
-    const data = req.body;
-    const created_tags = extractor.extract(data.notes, {
+    // Copy the object
+    const data = Object.assign({}, req.body);
+    const createdTags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
       return_changed_case: true,
       remove_duplicates: true
     });
 
-    const latlng = await resourceUtils.addressToLatLong(data.address);
-
-    data.location.coordinates[0] = latlng.lng;
-    data.location.coordinates[1] = latlng.lat;
-    data.federalRegion = latlng.region;
+    const { lat, lng, region } = await addressToLatLong(data.address);
+    R.set(resourceLatLens, data, lat);
+    R.set(resourceLongLens, data, lng);
+    R.set(resourceRegionLens, data, region);
 
     const newResource = new Resource(data);
-    newResource.tags = created_tags;
+    newResource.tags = createdTags;
     await newResource.save();
 
     res.status(201).json({

@@ -99,6 +99,7 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
 
 const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
 const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
+const resourceRegionLens = R.lensProp("federalRegion");
 
 const distanceFilter = R.curry((lat, long, radius) =>
   R.filter(
@@ -126,5 +127,6 @@ module.exports = {
   filterResourcesWithinRadius,
   filterByOptions,
   resourceLatLens,
-  resourceLongLens
+  resourceLongLens,
+  resourceRegionLens
 };
