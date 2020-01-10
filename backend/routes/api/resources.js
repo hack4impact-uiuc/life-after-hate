@@ -33,15 +33,6 @@ router.get(
   })
 );
 
-const getQueryForDistance = (lat, long, radius) => {
-  const radiusOfEarth = 3963.2; // in miles
-  return {
-    location: {
-      $geoWithin: { $centerSphere: [[long, lat], radius / radiusOfEarth] }
-    }
-  };
-};
-
 const addDistanceField = (lat, long) => resource => ({
   ...resource.toJSON(),
   distanceFromSearchLoc: computeDistance(
@@ -72,9 +63,26 @@ const filterByOptions = filterOptions => query => resources => {
   return fuse.search(query);
 };
 
-const getResourcesWithinRadius = async (lat, long, radius) => {
-  const resources = await Resource.find(getQueryForDistance(lat, long, radius));
+const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
+const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
+
+const distanceFilter = (lat, long, radius) =>
+  R.filter(
+    resource =>
+      computeDistance(
+        R.view(resourceLatLens, resource),
+        R.view(resourceLongLens, resource),
+        lat,
+        long
+      ) < radius
+  );
+
+const filterResourcesWithinRadius = (lat, long, radius) => resources => {
+  if (!lat || !long || !radius) {
+    return resources;
+  }
   return R.pipe(
+    distanceFilter(lat, long, radius),
     R.map(addDistanceField(lat, long)),
     R.sortBy(R.prop("distanceFromSearchLoc"))
   )(resources);
@@ -99,12 +107,6 @@ router.get(
 
     const { lat, lng } = await resourceUtils.addressToLatLong(address);
 
-    // let resources;
-
-    if (radius && lat && lng) {
-      resources = await getResourcesWithinRadius(lat, lng, radius);
-    }
-
     let filterOptions = DEFAULT_FILTER_OPTIONS;
     // if custom weights provided, will set custom field rankings
     if (customWeights) {
@@ -112,6 +114,7 @@ router.get(
     }
 
     resources = R.pipe(
+      filterResourcesWithinRadius(lat, lng, radius),
       filterByOptions(filterOptions)(keyword),
       filterByOptions(TAG_ONLY_OPTIONS)(tag)
     )(resources);
