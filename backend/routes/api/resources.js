@@ -6,11 +6,11 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
+const resourceUtils = require("../../utils/resource-utils");
 const {
   resourceLatLens,
   resourceLongLens,
   resourceRegionLens,
-  addressToLatLong,
   filterResourcesWithinRadius,
   filterByOptions
 } = require("../../utils/resource-utils");
@@ -57,7 +57,9 @@ router.get(
     const { radius, address, keyword, customWeights, tag } = req.query;
     let resources = await Resource.find({});
 
-    const { lat, lng } = address ? await addressToLatLong(address) : {};
+    const { lat, lng } = address
+      ? await resourceUtils.addressToLatLong(address)
+      : {};
 
     // if custom weights provided, will set custom field rankings
     const filterOptions = customWeights
@@ -112,7 +114,9 @@ router.post(
       remove_duplicates: true
     });
 
-    const { lat, lng, region } = await addressToLatLong(data.address);
+    const { lat, lng, region } = await resourceUtils.addressToLatLong(
+      data.address
+    );
     R.set(resourceLatLens, data, lat);
     R.set(resourceLongLens, data, lng);
     R.set(resourceRegionLens, data, region);
