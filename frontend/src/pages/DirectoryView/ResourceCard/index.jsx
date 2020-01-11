@@ -11,12 +11,13 @@ class ResourceCard extends Component {
     cardClicked: false
   };
 
-  toggleModal = () => {
+  toggleModal = event => {
+    event.stopPropagation();
     this.props.openModal({ resourceId: this.props.resource._id });
   };
 
-  toggleViewOnlyModal = () => {
-    console.log("HERE");
+  toggleViewOnlyModal = event => {
+    event.stopPropagation();
     this.props.openModal({
       resourceId: this.props.resource._id,
       editable: false

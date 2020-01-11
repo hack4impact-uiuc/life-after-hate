@@ -92,19 +92,13 @@ router.post(
       contactEmail: Joi.string().required(),
       description: Joi.string().required(),
       address: Joi.string().required(),
-      location: Joi.object({
-        type: Joi.string().default("Point"),
-        coordinates: Joi.array()
-          .length(2)
-          .items(Joi.number())
-      }).required(),
       notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string())
     })
   }),
   errorWrap(async (req, res) => {
-    // Copy the object
-    const data = Object.assign({}, req.body);
+    // Copy the object and add an empty coordinate array
+    let data = { ...req.body, location: { type: "Point", coordinates: [] } };
     const createdTags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
@@ -115,9 +109,12 @@ router.post(
     const { lat, lng, region } = await resourceUtils.addressToLatLong(
       data.address
     );
-    R.set(resourceLatLens, data, lat);
-    R.set(resourceLongLens, data, lng);
-    R.set(resourceRegionLens, data, region);
+
+    data = R.pipe(
+      R.set(resourceLatLens, lat),
+      R.set(resourceLongLens, lng),
+      R.set(resourceRegionLens, region)
+    )(data);
 
     const newResource = new Resource(data);
     newResource.tags = createdTags;

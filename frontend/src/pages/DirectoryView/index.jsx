@@ -5,37 +5,12 @@ import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
 import { openModal } from "../../redux/actions/modal";
 import "./styles.scss";
-import {
-  addResource,
-  getSearchResults,
-  refreshAllResources
-} from "../../utils/api";
+import { getSearchResults, refreshAllResources } from "../../utils/api";
 
 class ResourceManager extends Component {
   async componentDidMount() {
     await refreshAllResources();
   }
-
-  handleAddResource = async event => {
-    const formData = {
-      companyName: event.target[0].value,
-      contactName: event.target[1].value,
-      contactPhone: event.target[2].value,
-      contactEmail: event.target[3].value,
-      description: event.target[4].value,
-      address: event.target[5].value,
-      location: {
-        coordinates: [-88.2434, 40.1164]
-      },
-      notes: event.target[6].value
-    };
-    try {
-      await addResource(formData);
-      await this.updateResources();
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   handleSearch = async () => {
     let searchResults;

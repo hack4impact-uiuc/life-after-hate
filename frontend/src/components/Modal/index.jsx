@@ -4,7 +4,7 @@ import Close from "../../assets/images/close.svg";
 import { useForm } from "react-hook-form";
 import { createSelector } from "reselect";
 import { connect } from "react-redux";
-import { editAndRefreshResource } from "../../utils/api";
+import { editAndRefreshResource, addAndRefreshResource } from "../../utils/api";
 import { openModal, closeModal } from "../../redux/actions/modal";
 import "./styles.scss";
 
@@ -12,16 +12,18 @@ const LAHModal = props => {
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = data => {
     console.log(data);
-    handleEditResource(data);
+    props.isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
 
   const handleEditResource = async data => {
-    console.log(data, props.resource._id);
     await editAndRefreshResource(data, props.resource._id);
     props.closeModal();
-    // await this.props.updateResources();
   };
 
+  const handleAddResource = async data => {
+    await addAndRefreshResource(data);
+    props.closeModal();
+  };
   return (
     <div className="modal-wrap-ee">
       <Modal fade={false} isOpen={props.isOpen}>
@@ -136,10 +138,11 @@ const LAHModal = props => {
   );
 };
 
-const resourcesSelector = state => state.resources;
-const idSelector = state => state.modal.resourceId;
+const resourceIdSelector = state => state.modal.resourceId;
+
+// Gets the current resource for the modal
 const currentResourceSelector = createSelector(
-  [resourcesSelector, idSelector],
+  [state => state.resources, resourceIdSelector],
   (resources, id) => {
     if (!id) {
       return {};
@@ -148,15 +151,33 @@ const currentResourceSelector = createSelector(
   }
 );
 
+// Derives the modal title
 const titleSelector = createSelector(
-  idSelector,
-  id => (id ? "Edit Resource" : "Add Resource")
+  [currentResourceSelector, state => state.modal.editable],
+  (resource, editable) => {
+    if (!resource._id) {
+      // If there's no currently selected resource, we're adding a new one
+      return "Add Resource";
+    }
+    if (!editable) {
+      // View only, so just return the name
+      return resource.companyName;
+    }
+    return "Edit Resource";
+  }
+);
+
+// Returns whether the user is adding a new resource
+const isAddingResourceSelector = createSelector(
+  [resourceIdSelector],
+  id => (id ? false : true)
 );
 
 const mapStateToProps = state => ({
   isOpen: state.modal.isOpen,
   resource: currentResourceSelector(state),
   title: titleSelector(state),
+  isAddingResource: isAddingResourceSelector(state),
   editable: state.modal.editable
 });
 

@@ -84,11 +84,16 @@ async function editAndRefreshResource(data, id) {
   await refreshAllResources();
 }
 
+async function addAndRefreshResource(data) {
+  await addResource(data);
+  await refreshAllResources();
+}
+
 export {
   refreshGlobalAuth,
   logout,
   getSearchResults,
-  addResource,
+  addAndRefreshResource,
   editAndRefreshResource,
   refreshAllResources
 };
