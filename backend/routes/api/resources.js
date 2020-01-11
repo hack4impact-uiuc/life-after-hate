@@ -92,13 +92,19 @@ router.post(
       contactEmail: Joi.string().required(),
       description: Joi.string().required(),
       address: Joi.string().required(),
+      location: Joi.object({
+        type: Joi.string().default("Point"),
+        coordinates: Joi.array()
+          .length(2)
+          .items(Joi.number())
+      }).default({ type: "Point", coordinates: [0, 0] }),
       notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string())
     })
   }),
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
-    let data = { ...req.body, location: { type: "Point", coordinates: [] } };
+    let data = { ...req.body };
     const createdTags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
