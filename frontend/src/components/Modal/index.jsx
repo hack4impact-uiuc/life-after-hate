@@ -2,7 +2,9 @@ import React from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import Close from "../../assets/images/close.svg";
 import { useForm } from "react-hook-form";
-import { editResource } from "../../utils/api";
+import { connect } from "react-redux";
+import { editAndRefreshResource } from "../../utils/api";
+import { openModal, closeModal } from "../../redux/actions/modal";
 import "./styles.scss";
 
 const LAHModal = props => {
@@ -13,19 +15,19 @@ const LAHModal = props => {
   };
 
   const handleEditResource = async data => {
-    await editResource(data, props.id);
+    await editAndRefreshResource(data, props.id);
     // await this.props.updateResources();
   };
 
   return (
     <div className="modal-wrap-ee">
-      <Modal fade={false} isOpen={props.showModal}>
+      <Modal fade={false} isOpen={props.isOpen}>
         <ModalHeader>
           {props.modalName}
           <Button
             color="link"
             className="close-button"
-            onClick={props.toggleModal}
+            onClick={props.closeModal}
           >
             <img id="close-image" src={Close} alt="close" />
           </Button>
@@ -134,5 +136,16 @@ const LAHModal = props => {
     </div>
   );
 };
+const mapStateToProps = state => ({
+  isOpen: state.modal.isOpen
+});
 
-export default LAHModal;
+const mapDispatchToProps = {
+  openModal,
+  closeModal
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LAHModal);

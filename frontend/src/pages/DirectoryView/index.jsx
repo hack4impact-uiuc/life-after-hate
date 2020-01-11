@@ -1,50 +1,20 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
-import Modal from "../../components/Modal";
-
+import { openModal } from "../../redux/actions/modal";
 import "./styles.scss";
 import {
   addResource,
-  getAllResources,
-  getSearchResults
+  getSearchResults,
+  refreshAllResources
 } from "../../utils/api";
 
 class ResourceManager extends Component {
-  state = {
-    showModal: false,
-    resources: null,
-    keywordInput: "",
-    locationInput: "",
-    tagInput: "",
-    searchResults: [],
-    showSearchResults: false
-  };
-
-  componentDidMount = async () => {
-    await this.updateResources();
-  };
-
-  updateResources = async () => {
-    if (this.state.showSearchResults) {
-      this.setState({
-        resources: this.state.searchResults,
-        showSearchResults: false
-      });
-    } else {
-      const resources = await getAllResources();
-      this.setState({
-        resources: resources
-      });
-    }
-  };
-
-  toggleModal = () => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal
-    }));
-  };
+  async componentDidMount() {
+    await refreshAllResources();
+  }
 
   handleAddResource = async event => {
     const formData = {
@@ -118,7 +88,7 @@ class ResourceManager extends Component {
       <div className="directory">
         <div className="manager-header">
           <h1>Resource Directory</h1>
-          <Button onClick={this.toggleModal} id="add-button">
+          <Button onClick={this.props.openModal} id="add-button">
             Add Resource
           </Button>
         </div>
@@ -145,17 +115,22 @@ class ResourceManager extends Component {
             </div>
             <div />
           </div>
-          {this.state.resources && this.state.resources.map(this.renderCards)}
+          {this.props.resources && this.props.resources.map(this.renderCards)}
         </div>
-        <Modal
-          toggleModal={this.toggleModal}
-          showModal={this.state.showModal}
-          modalName="Add Resource"
-          handleSubmit={this.handleAddResource}
-        />
       </div>
     );
   }
 }
 
-export default ResourceManager;
+const MapStateToProps = state => ({
+  resources: state.resources
+});
+
+const mapDispatchToProps = {
+  openModal
+};
+
+export default connect(
+  MapStateToProps,
+  mapDispatchToProps
+)(ResourceManager);

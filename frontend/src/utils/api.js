@@ -3,6 +3,8 @@ import {
   updateGlobalAuthState,
   purgeGlobalAuthState
 } from "./apiHelpers";
+import { updateResources } from "../redux/actions/resources";
+import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
   const endptStr = `resources/filter?`;
@@ -72,8 +74,14 @@ async function editResource(data, id) {
   })).result;
 }
 
-async function getAllResources() {
-  return (await apiRequest({ endpoint: `resources/` })).result;
+async function refreshAllResources() {
+  const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  store.dispatch(updateResources(resourceList));
+}
+
+async function editAndRefreshResource(data, id) {
+  await editResource(data, id);
+  await refreshAllResources();
 }
 
 export {
@@ -81,6 +89,6 @@ export {
   logout,
   getSearchResults,
   addResource,
-  editResource,
-  getAllResources
+  editAndRefreshResource,
+  refreshAllResources
 };

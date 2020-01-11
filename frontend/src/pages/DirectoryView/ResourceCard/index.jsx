@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
-import Modal from "../../../components/Modal";
 import Edit from "../../../assets/images/edit.svg";
 import "../styles.scss";
 
@@ -53,7 +52,7 @@ class ResourceCard extends Component {
             </Button>
           </div>
         </div>
-        <Modal
+        {/* <Modal
           toggleModal={
             this.state.cardClicked ? this.toggleCardModal : this.toggleModal
           }
@@ -72,7 +71,7 @@ class ResourceCard extends Component {
           resourceDescription={this.props.resource.description}
           resourceAddress={this.props.resource.address}
           resourceNotes={this.props.resource.notes}
-        />
+        /> */}
       </div>
     );
   }
