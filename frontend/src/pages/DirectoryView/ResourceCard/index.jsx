@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
+import { connect } from "react-redux";
+import { openModal } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/edit.svg";
 import "../styles.scss";
 
@@ -9,18 +11,16 @@ class ResourceCard extends Component {
     cardClicked: false
   };
 
-  toggleModal = event => {
-    event.stopPropagation();
-    this.setState(prevState => ({
-      showModal: !prevState.showModal
-    }));
+  toggleModal = () => {
+    this.props.openModal({ resourceId: this.props.resource._id });
   };
 
-  toggleCardModal = () => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal,
-      cardClicked: !prevState.cardClicked
-    }));
+  toggleViewOnlyModal = () => {
+    console.log("HERE");
+    this.props.openModal({
+      resourceId: this.props.resource._id,
+      editable: false
+    });
   };
 
   render() {
@@ -29,7 +29,7 @@ class ResourceCard extends Component {
         className="card-click"
         role="button"
         tabIndex="0"
-        onClick={this.toggleCardModal}
+        onClick={this.toggleViewOnlyModal}
         onKeyPress={this.onKeyPress}
       >
         <div className="card-wrapper">
@@ -77,4 +77,11 @@ class ResourceCard extends Component {
   }
 }
 
-export default ResourceCard;
+const mapDispatchToProps = {
+  openModal
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ResourceCard);

@@ -51,14 +51,14 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       dispatch(apiSuccess(data));
       // Request was successful, so call the callback for success
       onSuccess(data);
-      if (notification) {
+      if (notification && notification.successMessage) {
         toast.success(notification.successMessage);
       }
     })
     .catch(error => {
       dispatch(apiError(error.response));
       onFailure(error.response);
-      if (notification) {
+      if (notification && notification.failureMessage) {
         toast.error(notification.failureMessage);
       }
       if (

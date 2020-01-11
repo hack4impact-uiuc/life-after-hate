@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import Close from "../../assets/images/close.svg";
 import { useForm } from "react-hook-form";
+import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { editAndRefreshResource } from "../../utils/api";
 import { openModal, closeModal } from "../../redux/actions/modal";
@@ -15,7 +16,9 @@ const LAHModal = props => {
   };
 
   const handleEditResource = async data => {
-    await editAndRefreshResource(data, props.id);
+    console.log(data, props.resource._id);
+    await editAndRefreshResource(data, props.resource._id);
+    props.closeModal();
     // await this.props.updateResources();
   };
 
@@ -23,7 +26,7 @@ const LAHModal = props => {
     <div className="modal-wrap-ee">
       <Modal fade={false} isOpen={props.isOpen}>
         <ModalHeader>
-          {props.modalName}
+          {props.title}
           <Button
             color="link"
             className="close-button"
@@ -48,9 +51,9 @@ const LAHModal = props => {
                 ref={register({ required: true })}
                 type="text"
                 name="companyName"
-                defaultValue={props.companyName}
+                defaultValue={props.resource.companyName}
                 className="modal-input-field"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
               {/* errors will return when field validation fails  */}
               {errors.companyName && <span>This field is required</span>}
@@ -61,9 +64,9 @@ const LAHModal = props => {
                 ref={register}
                 type="text"
                 name="contactName"
-                defaultValue={props.resourceContact}
+                defaultValue={props.resource.contactName}
                 className="modal-input-field"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
@@ -72,9 +75,9 @@ const LAHModal = props => {
                 ref={register}
                 type="text"
                 name="contactPhone"
-                defaultValue={props.resourcePhone}
+                defaultValue={props.resource.contactPhone}
                 className="modal-input-field"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
@@ -83,9 +86,9 @@ const LAHModal = props => {
                 ref={register}
                 type="text"
                 name="contactEmail"
-                defaultValue={props.resourceEmail}
+                defaultValue={props.resource.contactEmail}
                 className="modal-input-field"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
@@ -93,10 +96,10 @@ const LAHModal = props => {
               <textarea
                 ref={register}
                 name="description"
-                defaultValue={props.resourceDescription}
+                defaultValue={props.resource.description}
                 className="modal-input-field modal-input-textarea"
                 rows="10"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
@@ -105,9 +108,9 @@ const LAHModal = props => {
                 ref={register}
                 name="address"
                 type="text"
-                defaultValue={props.resourceAddress}
+                defaultValue={props.resource.address}
                 className="modal-input-field"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
@@ -115,18 +118,14 @@ const LAHModal = props => {
               <textarea
                 ref={register}
                 name="notes"
-                defaultValue={props.resourceNotes}
+                defaultValue={props.resource.notes}
                 className="modal-input-field modal-input-textarea"
                 rows="5"
-                disabled={props.cardClicked}
+                disabled={!props.editable}
               />
             </label>
             {props.cardClicked ? null : (
-              <Button
-                id="submit-form-button"
-                type="submit"
-                onClick={props.toggleModal}
-              >
+              <Button id="submit-form-button" type="submit">
                 Save
               </Button>
             )}
@@ -136,8 +135,29 @@ const LAHModal = props => {
     </div>
   );
 };
+
+const resourcesSelector = state => state.resources;
+const idSelector = state => state.modal.resourceId;
+const currentResourceSelector = createSelector(
+  [resourcesSelector, idSelector],
+  (resources, id) => {
+    if (!id) {
+      return {};
+    }
+    return resources.find(resource => resource._id === id);
+  }
+);
+
+const titleSelector = createSelector(
+  idSelector,
+  id => (id ? "Edit Resource" : "Add Resource")
+);
+
 const mapStateToProps = state => ({
-  isOpen: state.modal.isOpen
+  isOpen: state.modal.isOpen,
+  resource: currentResourceSelector(state),
+  title: titleSelector(state),
+  editable: state.modal.editable
 });
 
 const mapDispatchToProps = {
