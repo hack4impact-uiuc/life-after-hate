@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles.scss";
-import Maximize from "../../assets/images/maximize.svg";
+import Maximize from "../../../assets/images/maximize.svg";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({

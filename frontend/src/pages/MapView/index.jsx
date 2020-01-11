@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import StaticMap, { Popup, FlyToInterpolator } from "react-map-gl";
 
 import { getSearchResults } from "../../utils/api";
-import ResourceCard from "../../components/ResourceCard";
-import Search from "../../components/SearchBar";
+import ResourceCard from "./ResourceCard";
+import Search from "./SearchBar";
 import Modal from "../../components/Modal";
 import "./styles.scss";
 import DeckGL from "@deck.gl/react";
