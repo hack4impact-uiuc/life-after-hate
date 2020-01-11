@@ -67,11 +67,9 @@ router.get(
       : DEFAULT_FILTER_OPTIONS;
 
     resources = R.pipe(
-      lat && lng && radius
-        ? filterResourcesWithinRadius(lat, lng, radius)
-        : R.identity,
-      keyword ? filterByOptions(filterOptions)(keyword) : R.identity,
-      tag ? filterByOptions(TAG_ONLY_OPTIONS)(tag) : R.identity
+      filterResourcesWithinRadius(lat, lng, radius),
+      filterByOptions(filterOptions)(keyword),
+      filterByOptions(TAG_ONLY_OPTIONS)(tag)
     )(resources);
 
     res.json({

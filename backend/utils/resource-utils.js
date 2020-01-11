@@ -93,6 +93,9 @@ const computeDistance = R.curry(
 );
 
 const filterByOptions = R.curry((filterOptions, query, resources) => {
+  if (!(filterOptions && query && resources)) {
+    return resources;
+  }
   const fuse = new Fuse(resources, filterOptions);
   return fuse.search(query);
 });
@@ -113,13 +116,17 @@ const distanceFilter = R.curry((lat, long, radius) =>
   )
 );
 
-const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) =>
-  R.pipe(
+const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
+  if (!(lat && long && radius)) {
+    // Do nothing if undefined
+    return resources;
+  }
+  return R.pipe(
     distanceFilter(lat, long, radius),
     R.map(addDistanceField(lat, long)),
     R.sortBy(R.prop("distanceFromSearchLoc"))
-  )(resources)
-);
+  )(resources);
+});
 
 module.exports = {
   addressToLatLong,

@@ -236,6 +236,8 @@ class MapView extends Component {
             width="100%"
             height="100vh"
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+            reuseMap
+            preventStyleDiffing={true}
           >
             {this.state.popup && (
               <Popup
