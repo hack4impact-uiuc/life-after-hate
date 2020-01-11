@@ -44,11 +44,11 @@ const parseLatLongResponse = resp => {
   return { region, lat: getCoord("lat"), lng: getCoord("lng") };
 };
 
-const addressToLatLong = async address => {
+const addressToLatLong = R.memoizeWith(R.identity, async address => {
   const addressQuery = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
   const response = await axios.get(addressQuery);
   return parseLatLongResponse(response.data);
-};
+});
 
 const latlongToAddress = async function(lat, long) {
   const apiAddress = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;

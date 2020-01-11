@@ -90,9 +90,9 @@ async function addAndRefreshResource(data) {
 }
 
 async function filterAndRefreshResource(keyword, address, tag, radius) {
-  const { resources } = await getSearchResults(keyword, address, tag, radius);
-  store.dispatch(updateResources(resources));
-  return resources;
+  const results = await getSearchResults(keyword, address, tag, radius);
+  store.dispatch(updateResources(results.resources));
+  return results;
 }
 export {
   refreshGlobalAuth,
