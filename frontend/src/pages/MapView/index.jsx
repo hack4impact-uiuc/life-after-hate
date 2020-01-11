@@ -289,7 +289,7 @@ class MapView extends Component {
             cardClicked={true}
             showModal={this.state.showModal}
             modalName={this.state.modalResource.companyName}
-            resourceName={this.state.modalResource.companyName}
+            companyName={this.state.modalResource.companyName}
             resourceContact={this.state.modalResource.contactName}
             resourcePhone={this.state.modalResource.contactPhone}
             resourceEmail={this.state.modalResource.contactEmail}

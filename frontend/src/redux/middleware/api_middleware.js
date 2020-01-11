@@ -2,8 +2,6 @@ import axios from "axios";
 import {
   accessDenied,
   apiError,
-  apiStart,
-  apiEnd,
   API_REQUEST,
   apiSuccess
 } from "../actions/api";
@@ -36,8 +34,6 @@ const apiMiddleware = ({ dispatch }) => next => action => {
   // Headers set for all requests
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";
   axios.defaults.headers.common["Content-Type"] = "application/json";
-
-  dispatch(apiStart(url));
 
   if (withLoader) {
     dispatch(startLoader());
@@ -75,7 +71,6 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       }
     })
     .finally(() => {
-      dispatch(apiEnd(url));
       if (withLoader) {
         dispatch(endLoader());
       }

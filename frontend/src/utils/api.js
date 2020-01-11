@@ -55,10 +55,17 @@ async function addResource(data) {
 }
 
 async function editResource(data, id) {
+  // Remove non-empty string fields from the object
+  const filteredData = Object.keys(data).reduce((accum, key) => {
+    if (data[key] !== "") {
+      accum[key] = data[key];
+    }
+    return accum;
+  }, {});
   return (await apiRequest({
     endpoint: `/resources/${id}`,
     method: "PUT",
-    data,
+    data: filteredData,
     notification: {
       successMessage: "Successfully edited resource!"
     }

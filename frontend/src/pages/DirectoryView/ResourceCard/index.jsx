@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
 import Modal from "../../../components/Modal";
-
-import { editResource } from "../../../utils/api";
 import Edit from "../../../assets/images/edit.svg";
 import "../styles.scss";
 
@@ -17,32 +15,6 @@ class ResourceCard extends Component {
     this.setState(prevState => ({
       showModal: !prevState.showModal
     }));
-  };
-
-  handleEditResource = async event => {
-    const formData = {
-      companyName: event.target[0].value,
-      contactName: event.target[1].value,
-      contactPhone: event.target[2].value,
-      contactEmail: event.target[3].value,
-      description: event.target[4].value,
-      address: event.target[5].value
-    };
-
-    // Remove non-empty string fields from the object
-    const filteredData = Object.keys(formData).reduce((accum, key) => {
-      if (formData[key] !== "") {
-        accum[key] = formData[key];
-      }
-      return accum;
-    }, {});
-
-    try {
-      await editResource(filteredData, this.props.resource._id);
-      await this.props.updateResources();
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   toggleCardModal = () => {
@@ -92,8 +64,8 @@ class ResourceCard extends Component {
               ? this.props.resource.companyName
               : "Edit Resource"
           }
-          handleSubmit={this.handleEditResource}
-          resourceName={this.props.resource.companyName}
+          id={this.props.resource._id}
+          companyName={this.props.resource.companyName}
           resourceContact={this.props.resource.contactName}
           resourcePhone={this.props.resource.contactPhone}
           resourceEmail={this.props.resource.contactEmail}
