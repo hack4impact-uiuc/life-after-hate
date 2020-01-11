@@ -5,7 +5,7 @@ import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
 import { openModal } from "../../redux/actions/modal";
 import "./styles.scss";
-import { getSearchResults, refreshAllResources } from "../../utils/api";
+import { filterAndRefreshResource, refreshAllResources } from "../../utils/api";
 
 class ResourceManager extends Component {
   async componentDidMount() {
@@ -15,7 +15,7 @@ class ResourceManager extends Component {
   handleSearch = async () => {
     let searchResults;
     try {
-      ({ resources: searchResults } = await getSearchResults(
+      ({ resources: searchResults } = await filterAndRefreshResource(
         this.state.keywordInput,
         this.state.locationInput,
         this.state.tagInput

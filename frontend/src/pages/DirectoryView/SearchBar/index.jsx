@@ -1,58 +1,45 @@
-import React, { Component } from "react";
+import React from "react";
 import { Button } from "reactstrap";
+import { useForm } from "react-hook-form";
+import { filterAndRefreshResource } from "../../../utils/api";
 
 import "../styles.scss";
 
-class SearchBar extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.handleSearch();
+const SearchBar = () => {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = data => {
+    console.log(data);
+    filterAndRefreshResource(data.keyword, data.location, data.tag);
   };
 
-  onChangeKeyword = e => {
-    this.props.onChangeKeyword(e.target.value);
-  };
-
-  onChangeLocation = e => {
-    this.props.onChangeLocation(e.target.value);
-  };
-
-  onChangeTag = e => {
-    this.props.onChangeTag(e.target.value);
-  };
-
-  render() {
-    return (
-      <div className="searchbar-wrapper">
-        <form className="search" onSubmit={this.handleSubmit}>
-          <label>
-            <input
-              id="search-general"
-              type="text"
-              onChange={this.onChangeKeyword}
-            />
-          </label>
-          <label>
-            <input
-              id="search-location"
-              type="text"
-              onChange={this.onChangeLocation}
-            />
-          </label>
-          <label>
-            <input id="search-tag" type="text" onChange={this.onChangeTag} />
-          </label>
-          <Button
-            id="search-button"
-            type="submit"
-            onClick={this.props.toggleModal}
-          >
-            SEARCH
-          </Button>
-        </form>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="searchbar-wrapper">
+      <form className="search" onSubmit={handleSubmit(onSubmit)}>
+        <label>
+          <input
+            id="search-general"
+            type="text"
+            name="keyword"
+            ref={register}
+          />
+        </label>
+        <label>
+          <input
+            id="search-location"
+            type="text"
+            name="location"
+            ref={register}
+          />
+        </label>
+        <label>
+          <input id="search-tag" type="text" name="tag" ref={register} />
+        </label>
+        <Button id="search-button" type="submit">
+          SEARCH
+        </Button>
+      </form>
+    </div>
+  );
+};
 
 export default SearchBar;

@@ -89,10 +89,15 @@ async function addAndRefreshResource(data) {
   await refreshAllResources();
 }
 
+async function filterAndRefreshResource(keyword, address, tag, radius) {
+  const { resources } = await getSearchResults(keyword, address, tag, radius);
+  store.dispatch(updateResources(resources));
+  return resources;
+}
 export {
   refreshGlobalAuth,
   logout,
-  getSearchResults,
+  filterAndRefreshResource,
   addAndRefreshResource,
   editAndRefreshResource,
   refreshAllResources

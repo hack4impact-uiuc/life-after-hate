@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import StaticMap, { Popup, FlyToInterpolator } from "react-map-gl";
 
-import { getSearchResults } from "../../utils/api";
+import { filterAndRefreshResource } from "../../utils/api";
 import ResourceCard from "./ResourceCard";
 import Search from "./SearchBar";
 import Modal from "../../components/Modal";
@@ -151,7 +151,7 @@ class MapView extends Component {
   searchHandler = async () => {
     let resources, center;
     try {
-      ({ resources, center } = await getSearchResults(
+      ({ resources, center } = await filterAndRefreshResource(
         this.state.inputValue,
         this.state.locationValue
       ));

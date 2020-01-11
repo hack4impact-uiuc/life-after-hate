@@ -11,7 +11,6 @@ import "./styles.scss";
 const LAHModal = props => {
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = data => {
-    console.log(data);
     props.isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
 
@@ -126,7 +125,7 @@ const LAHModal = props => {
                 disabled={!props.editable}
               />
             </label>
-            {props.cardClicked ? null : (
+            {props.editable && (
               <Button id="submit-form-button" type="submit">
                 Save
               </Button>

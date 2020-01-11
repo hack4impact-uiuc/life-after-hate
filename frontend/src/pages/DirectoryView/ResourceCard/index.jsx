@@ -31,7 +31,7 @@ class ResourceCard extends Component {
         role="button"
         tabIndex="0"
         onClick={this.toggleViewOnlyModal}
-        onKeyPress={this.onKeyPress}
+        onKeyPress={this.toggleViewOnlyModal}
       >
         <div className="card-wrapper">
           <div className="col">
