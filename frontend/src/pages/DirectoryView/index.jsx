@@ -1,101 +1,52 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
 import { openModal } from "../../redux/actions/modal";
 import "./styles.scss";
-import { filterAndRefreshResource, refreshAllResources } from "../../utils/api";
+import { refreshAllResources } from "../../utils/api";
 
-class ResourceManager extends Component {
-  async componentDidMount() {
-    await refreshAllResources();
-  }
+const ResourceManager = props => {
+  useEffect(() => {
+    refreshAllResources();
+  }, []);
 
-  handleSearch = async () => {
-    let searchResults;
-    try {
-      ({ resources: searchResults } = await filterAndRefreshResource(
-        this.state.keywordInput,
-        this.state.locationInput,
-        this.state.tagInput
-      ));
-    } catch (error) {
-      console.error(error);
-      alert(error);
-    }
-
-    this.setState({
-      searchResults: searchResults,
-      showSearchResults: true
-    });
-    await this.updateResources();
-  };
-
-  onChangeKeyword = input => {
-    this.setState({
-      keywordInput: input
-    });
-  };
-
-  onChangeLocation = input => {
-    this.setState({
-      locationInput: input
-    });
-  };
-
-  onChangeTag = input => {
-    this.setState({
-      tagInput: input
-    });
-  };
-
-  renderCards = resource => (
-    <ResourceCard
-      key={resource._id}
-      resource={resource}
-      updateResources={this.updateResources}
-    />
+  const renderCards = resource => (
+    <ResourceCard key={resource._id} resource={resource} />
   );
 
-  render() {
-    return (
-      <div className="directory">
-        <div className="manager-header">
-          <h1>Resource Directory</h1>
-          <Button onClick={this.props.openModal} id="add-button">
-            Add Resource
-          </Button>
-        </div>
-
-        <div className="resources">
-          <SearchBar
-            handleSearch={this.handleSearch}
-            onChangeKeyword={this.onChangeKeyword}
-            onChangeLocation={this.onChangeLocation}
-            onChangeTag={this.onChangeTag}
-          />
-          <div className="resource-labels clearfix">
-            <div className="col">
-              <h3>Resource Name</h3>
-            </div>
-            <div className="col">
-              <h3>Location</h3>
-            </div>
-            <div className="col">
-              <h3>Point of Contact</h3>
-            </div>
-            <div className="col">
-              <h3>Description</h3>
-            </div>
-            <div />
-          </div>
-          {this.props.resources && this.props.resources.map(this.renderCards)}
-        </div>
+  return (
+    <div className="directory">
+      <div className="manager-header">
+        <h1>Resource Directory</h1>
+        <Button onClick={props.openModal} id="add-button">
+          Add Resource
+        </Button>
       </div>
-    );
-  }
-}
+
+      <div className="resources">
+        <SearchBar />
+        <div className="resource-labels clearfix">
+          <div className="col">
+            <h3>Resource Name</h3>
+          </div>
+          <div className="col">
+            <h3>Location</h3>
+          </div>
+          <div className="col">
+            <h3>Point of Contact</h3>
+          </div>
+          <div className="col">
+            <h3>Description</h3>
+          </div>
+          <div />
+        </div>
+        {props.resources && props.resources.map(renderCards)}
+      </div>
+    </div>
+  );
+};
 
 const MapStateToProps = state => ({
   resources: state.resources
