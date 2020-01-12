@@ -30,7 +30,7 @@ const ResourceCard = ({
             role="button"
             tabIndex="0"
             onClick={() => selectCard(indexInList)}
-            onKeyPress=""
+            onKeyPress={() => "noop"}
           >
             {name}
           </div>
@@ -38,7 +38,7 @@ const ResourceCard = ({
             className="card-maximize"
             role="button"
             tabIndex="0"
-            onKeyPress=""
+            onKeyPress={() => "noop"}
             onClick={() => toggleModal(indexInList)}
           >
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
@@ -48,7 +48,7 @@ const ResourceCard = ({
           role="button"
           tabIndex="0"
           onClick={() => selectCard(indexInList)}
-          onKeyPress=""
+          onKeyPress={() => "noop"}
           className="card-wrap"
         >
           {distanceFromSearchLoc && (

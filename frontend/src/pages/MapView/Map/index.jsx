@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import StaticMap, { Popup } from "react-map-gl";
+import StaticMap from "react-map-gl";
 import DeckGL from "@deck.gl/react";
 import { connect } from "react-redux";
 import { resourceSelector } from "../../../redux/selectors/resource";
+import {
+  selectMapResource,
+  clearMapResource
+} from "../../../redux/actions/map";
 import { IconLayer } from "@deck.gl/layers";
-import MaximizeImg from "../../../assets/images/maximize-white.svg";
 import MarkerImg from "../../../assets/images/marker-atlas.png";
+import Popup from "../Popup";
+
 const pinSize = 45;
 
 const mapping = {
@@ -100,10 +105,12 @@ const Map = props => {
       controller={{ dragRotate: false }}
       onClick={e => {
         if (e.object && e.object.location.type !== "Center") {
+          console.log(e);
+          console.log(props.resources[e.index]._id);
+          props.selectMapResource(props.resources[e.index]._id);
           // Don't show a popup if hovering over the current (searched) location
-          this.setState({ popup: { ...e.object, idxInResults: e.index } });
         } else {
-          this.setState({ popup: null });
+          props.clearMapResource();
         }
       }}
     >
@@ -114,41 +121,7 @@ const Map = props => {
         reuseMap
         preventStyleDiffing={true}
       >
-        {false && (
-          <Popup
-            latitude={this.state.popup.location.coordinates[1]}
-            longitude={this.state.popup.location.coordinates[0]}
-            tipSize={5}
-            closeOnClick={false}
-            dynamicPosition={true}
-            offsetTop={-27}
-            captureScroll={false}
-            onClose={() => this.setState({ popup: null })}
-          >
-            <div className="popup">
-              <div className="popup-title">{this.state.popup.companyName}</div>
-              {this.state.popup.distanceFromSearchLoc && (
-                <div className="popup-distance">
-                  {Math.round(this.state.popup.distanceFromSearchLoc * 10) / 10}{" "}
-                  miles away
-                </div>
-              )}
-              <div className="popup-desc">{this.state.popup.description}</div>
-              <button
-                tabIndex="0"
-                className="popup-max"
-                onClick={() => this.toggleModal(this.state.popup.idxInResults)}
-              >
-                See More{" "}
-                <img
-                  src={MaximizeImg}
-                  alt="icon"
-                  className="popup-button-icon"
-                />
-              </button>
-            </div>
-          </Popup>
-        )}
+        <Popup></Popup>
       </StaticMap>
     </DeckGL>
   );
@@ -159,4 +132,11 @@ const mapStateToProps = state => ({
   center: state.map.center
 });
 
-export default connect(mapStateToProps)(Map);
+const mapDispatchToProps = {
+  selectMapResource,
+  clearMapResource
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Map);
