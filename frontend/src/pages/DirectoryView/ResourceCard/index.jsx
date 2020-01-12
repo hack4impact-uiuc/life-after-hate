@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
-import { openModal } from "../../../redux/actions/modal";
+import { openModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/edit.svg";
 import "../styles.scss";
 
@@ -13,12 +13,12 @@ class ResourceCard extends Component {
 
   toggleModal = event => {
     event.stopPropagation();
-    this.props.openModal({ resourceId: this.props.resource._id });
+    this.props.openModalWithPayload({ resourceId: this.props.resource._id });
   };
 
   toggleViewOnlyModal = event => {
     event.stopPropagation();
-    this.props.openModal({
+    this.props.openModalWithPayload({
       resourceId: this.props.resource._id,
       editable: false
     });
@@ -79,7 +79,7 @@ class ResourceCard extends Component {
 }
 
 const mapDispatchToProps = {
-  openModal
+  openModalWithPayload
 };
 
 export default connect(

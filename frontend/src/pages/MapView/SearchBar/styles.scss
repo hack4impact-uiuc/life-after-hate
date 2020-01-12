@@ -6,12 +6,14 @@
   width: auto;
 }
 
-.locationIcon, .searchIcon {
+.locationIcon,
+.searchIcon {
   width: 16px;
   margin-top: 4px;
 }
 
-.locationInput, .searchInput {
+.locationInput,
+.searchInput {
   display: inline;
   width: 250px;
   height: auto;
@@ -43,8 +45,8 @@
 .submitSearch {
   border: none;
   outline: none;
-  background-color: #F79230;
-  color: #FFFFFF;
+  background-color: #f79230;
+  color: #ffffff;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 12px;
