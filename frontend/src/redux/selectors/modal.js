@@ -1,9 +1,12 @@
 import { createSelector } from "reselect";
-export const resourceIdSelector = state => state.modal.resourceId;
+import { resourceSelector } from "./resource";
+
+// Gets the ID of the selected resource for the modal to display
+export const modalResourceIdSelector = state => state.modal.resourceId;
 
 // Gets the current resource for the modal
 export const currentResourceSelector = createSelector(
-  [state => state.resources, resourceIdSelector],
+  [resourceSelector, modalResourceIdSelector],
   (resources, id) => {
     if (!id) {
       return {};
@@ -30,6 +33,6 @@ export const titleSelector = createSelector(
 
 // Returns whether the user is adding a new resource
 export const isAddingResourceSelector = createSelector(
-  [resourceIdSelector],
+  [modalResourceIdSelector],
   id => (id ? false : true)
 );

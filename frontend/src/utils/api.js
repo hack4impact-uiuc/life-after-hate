@@ -4,6 +4,7 @@ import {
   purgeGlobalAuthState
 } from "./apiHelpers";
 import { updateResources } from "../redux/actions/resources";
+import { updateMapCenter } from "../redux/actions/map";
 import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
@@ -92,6 +93,9 @@ async function addAndRefreshResource(data) {
 async function filterAndRefreshResource(keyword, address, tag, radius) {
   const results = await getSearchResults(keyword, address, tag, radius);
   store.dispatch(updateResources(results.resources));
+  if (results.center) {
+    store.dispatch(updateMapCenter(results.center));
+  }
   return results;
 }
 export {

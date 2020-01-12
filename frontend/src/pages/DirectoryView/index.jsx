@@ -4,6 +4,7 @@ import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
 import { openModal } from "../../redux/actions/modal";
+import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { refreshAllResources } from "../../utils/api";
 
@@ -49,7 +50,7 @@ const ResourceManager = props => {
 };
 
 const MapStateToProps = state => ({
-  resources: state.resources
+  resources: resourceSelector(state)
 });
 
 const mapDispatchToProps = {
