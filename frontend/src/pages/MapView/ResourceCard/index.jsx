@@ -7,7 +7,6 @@ import {
   clearMapResource
 } from "../../../redux/actions/map";
 import { openModalWithPayload } from "../../../redux/actions/modal";
-import { mapResourceIdSelector } from "../../../redux/selectors/map";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
@@ -15,11 +14,12 @@ const ResourceCard = ({
   isSelected,
   selectMapResource,
   openModalWithPayload,
-  clearMapResource
+  clearMapResource,
+  myRef
 }) => {
   const renderTags = tag => <div className="card-tag">{tag}</div>;
   return (
-    <div className="resource-card">
+    <div className="resource-card" ref={myRef}>
       <div className={isSelected ? "expanded" : "collapsed"}>
         <div className="clearfix">
           <div
@@ -89,10 +89,6 @@ const ResourceCard = ({
     </div>
   );
 };
-
-const mapStatetoProps = (state, props) => ({
-  isSelected: mapResourceIdSelector(state) === props.resource._id
-});
 const mapDispatchToProps = {
   selectMapResource,
   openModalWithPayload,
@@ -100,6 +96,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  mapStatetoProps,
+  null,
   mapDispatchToProps
 )(ResourceCard);
