@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import StaticMap from "react-map-gl";
+import React, { useState, useEffect } from "react";
+import StaticMap, { FlyToInterpolator } from "react-map-gl";
 import DeckGL from "@deck.gl/react";
 import { connect } from "react-redux";
 import { resourceSelector } from "../../../redux/selectors/resource";
@@ -12,7 +12,7 @@ import MarkerImg from "../../../assets/images/marker-atlas.png";
 import Popup from "../Popup";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const pinSize = 45;
+const PIN_SIZE = 45;
 
 // Mapping used for IconAtlas, which is not really being used fully currently,
 // As we're only rendering two types of icons: searched location and regular marker
@@ -49,8 +49,27 @@ const INITIAL_VIEW_STATE = {
   bearing: 0
 };
 
+const ZOOMED_IN_CONSTANT = 5;
+const TRANSITION_LENGTH = 1500;
+
 const Map = props => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
+
+  const handleCenterChange = () => {
+    if (props.center && props.center[0]) {
+      // If we received a new center point, focus the map
+      setViewport(prevState => ({
+        ...prevState,
+        latitude: props.center[1],
+        longitude: props.center[0],
+        zoom: ZOOMED_IN_CONSTANT,
+        transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+        transitionDuration: TRANSITION_LENGTH
+      }));
+    }
+  };
+
+  useEffect(handleCenterChange, [props.center]);
 
   const _onViewportChange = ({ viewState }) => {
     setViewport(viewState);
@@ -66,6 +85,7 @@ const Map = props => {
     }
     return props.resources;
   };
+
   const getLayers = () => {
     const data = getMarkerPoints();
     const layerProps = {
@@ -83,10 +103,19 @@ const Map = props => {
       getIcon: d =>
         d.location.type === "Center" ? "currentLocation" : "marker",
       sizeUnits: "meters",
-      sizeMinPixels: pinSize
+      sizeMinPixels: PIN_SIZE
     });
 
     return [layer];
+  };
+
+  const handlePopupClick = e => {
+    // Don't show a popup if hovering over the current (searched) location
+    if (e.object && e.object.location.type !== "Center") {
+      props.selectMapResource(props.resources[e.index]._id);
+    } else {
+      props.clearMapResource();
+    }
   };
 
   return (
@@ -96,14 +125,7 @@ const Map = props => {
       onViewStateChange={_onViewportChange}
       viewState={viewport}
       controller={{ dragRotate: false }}
-      onClick={e => {
-        // Don't show a popup if hovering over the current (searched) location
-        if (e.object && e.object.location.type !== "Center") {
-          props.selectMapResource(props.resources[e.index]._id);
-        } else {
-          props.clearMapResource();
-        }
-      }}
+      onClick={handlePopupClick}
     >
       <StaticMap
         width="100%"
