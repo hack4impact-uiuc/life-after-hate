@@ -4,10 +4,7 @@ import { resourceSelector } from "../../../redux/selectors/resource";
 import ResourceCard from "../ResourceCard";
 
 const CardView = props => {
-  const renderCard = card => {
-    console.log("We rendering!");
-    return <ResourceCard key={card._id} resource={card} />;
-  };
+  const renderCard = card => <ResourceCard key={card._id} resource={card} />;
 
   return (
     props.resources.length > 0 && (

@@ -2,11 +2,13 @@ import React from "react";
 import { Popup } from "react-map-gl";
 import MaximizeImg from "../../../assets/images/maximize-white.svg";
 import { openModalWithPayload } from "../../../redux/actions/modal";
+import { clearMapResource } from "../../../redux/actions/map";
 import { connect } from "react-redux";
 import {
   currentResourceSelector,
   mapResourceIdSelector
 } from "../../../redux/selectors/map";
+
 const MapPopup = props => (
   <div>
     {props.isResourceSelected && (
@@ -18,7 +20,7 @@ const MapPopup = props => (
         dynamicPosition={true}
         offsetTop={-27}
         captureScroll={false}
-        onClose={() => this.setState({ popup: null })}
+        onClose={props.clearMapResource}
       >
         <div className="popup">
           <div className="popup-title">{props.resource.companyName}</div>
@@ -50,7 +52,7 @@ const mapStateToProps = state => ({
   isResourceSelected: mapResourceIdSelector(state) !== undefined
 });
 
-const mapDispatchToProps = { openModalWithPayload };
+const mapDispatchToProps = { openModalWithPayload, clearMapResource };
 
 export default connect(
   mapStateToProps,

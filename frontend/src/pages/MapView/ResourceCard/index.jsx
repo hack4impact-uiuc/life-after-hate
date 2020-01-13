@@ -6,7 +6,7 @@ import {
   selectMapResource,
   clearMapResource
 } from "../../../redux/actions/map";
-import { openModal } from "../../../redux/actions/modal";
+import { openModalWithPayload } from "../../../redux/actions/modal";
 import { mapResourceIdSelector } from "../../../redux/selectors/map";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
@@ -14,11 +14,10 @@ const ResourceCard = ({
   resource,
   isSelected,
   selectMapResource,
-  openModal,
+  openModalWithPayload,
   clearMapResource
 }) => {
   const renderTags = tag => <div className="card-tag">{tag}</div>;
-
   return (
     <div className="resource-card">
       <div className={isSelected ? "expanded" : "collapsed"}>
@@ -37,7 +36,7 @@ const ResourceCard = ({
             role="button"
             tabIndex="0"
             onKeyPress={() => "noop"}
-            onClick={() => openModal(resource._id)}
+            onClick={() => openModalWithPayload({ resourceId: resource._id })}
           >
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
           </div>
@@ -96,7 +95,7 @@ const mapStatetoProps = (state, props) => ({
 });
 const mapDispatchToProps = {
   selectMapResource,
-  openModal,
+  openModalWithPayload,
   clearMapResource
 };
 

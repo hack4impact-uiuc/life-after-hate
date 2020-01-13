@@ -104,11 +104,9 @@ const Map = props => {
       viewState={viewport}
       controller={{ dragRotate: false }}
       onClick={e => {
+        // Don't show a popup if hovering over the current (searched) location
         if (e.object && e.object.location.type !== "Center") {
-          console.log(e);
-          console.log(props.resources[e.index]._id);
           props.selectMapResource(props.resources[e.index]._id);
-          // Don't show a popup if hovering over the current (searched) location
         } else {
           props.clearMapResource();
         }
