@@ -14,6 +14,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 const pinSize = 45;
 
+// Mapping used for IconAtlas, which is not really being used fully currently,
+// As we're only rendering two types of icons: searched location and regular marker
 const mapping = {
   marker: {
     x: 0,
@@ -48,34 +50,24 @@ const INITIAL_VIEW_STATE = {
 };
 
 const Map = props => {
-  // Mapping used for IconAtlas, which is not really being used fully currently,
-  // As we're only rendering two types of icons: searched location and regular marker
-
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
 
   const _onViewportChange = ({ viewState }) => {
     setViewport(viewState);
   };
 
-  // const _goToViewport = ({ longitude, latitude }) => {
-  //   _onViewportChange({
-  //     viewState: {
-  //       longitude,
-  //       latitude,
-  //       zoom: 8,
-  //       transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
-  //       transitionDuration: 2000
-  //     }
-  //   });
-  // };
-
+  const getMarkerPoints = () => {
+    // If the location information came back correct, display on the map
+    if (props.center && props.center[0]) {
+      return [
+        ...props.resources,
+        { location: { type: "Center", coordinates: props.center } }
+      ];
+    }
+    return props.resources;
+  };
   const getLayers = () => {
-    const data = [
-      ...props.resources,
-      {
-        location: { type: "Center", coordinates: props.center }
-      }
-    ];
+    const data = getMarkerPoints();
     const layerProps = {
       data,
       pickable: true,
