@@ -10,6 +10,7 @@ import {
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../../assets/images/marker-atlas.png";
 import Popup from "../Popup";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const pinSize = 45;
 

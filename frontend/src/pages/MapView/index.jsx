@@ -31,24 +31,6 @@ class MapView extends Component {
     };
   }
 
-  selectCard = selectedIdx => {
-    this.setState(state => ({
-      selectedIdx,
-      cardCache: state.searchResults.map(this.renderCards(selectedIdx))
-    }));
-    this._goToViewport({
-      latitude: this.state.searchResults[selectedIdx].location.coordinates[1],
-      longitude: this.state.searchResults[selectedIdx].location.coordinates[0]
-    });
-  };
-
-  closeCard = () => {
-    this.setState(state => ({
-      selectedIdx: -1,
-      cardCache: state.searchResults.map(this.renderCards(-1))
-    }));
-  };
-
   searchHandler = async () => {
     try {
       await filterAndRefreshResource(
@@ -71,14 +53,6 @@ class MapView extends Component {
 
   locationChangeHandler = input => {
     this.setState({ locationValue: input });
-  };
-
-  toggleModal = idx => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal,
-      modalResource:
-        prevState.showModal === false ? prevState.searchResults[idx] : null
-    }));
   };
 
   render() {

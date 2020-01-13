@@ -17,7 +17,11 @@ const ResourceCard = ({
   clearMapResource,
   myRef
 }) => {
-  const renderTags = tag => <div className="card-tag">{tag}</div>;
+  const renderTags = (tag, idx) => (
+    <div className="card-tag" key={idx}>
+      {tag}
+    </div>
+  );
   return (
     <div className="resource-card" ref={myRef}>
       <div className={isSelected ? "expanded" : "collapsed"}>
