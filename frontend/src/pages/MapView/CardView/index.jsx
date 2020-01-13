@@ -38,7 +38,6 @@ class CardView extends React.Component {
     }
   }
   render() {
-    console.log("Hi");
     return (
       this.props.resources.length > 0 && (
         <div className="card-content">
