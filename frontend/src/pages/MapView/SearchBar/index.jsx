@@ -1,69 +1,47 @@
-import React, { Component } from "react";
-
+import React from "react";
+import { useForm } from "react-hook-form";
 import SearchIcon from "../../../assets/images/search.svg";
 import LocationIcon from "../../../assets/images/location-icon.svg";
+import { filterAndRefreshResource } from "../../../utils/api";
+
 import "./styles.scss";
 
-class Search extends Component {
-  handleChange = e => {
-    this.props.changeHandler(e.target.value);
+const SearchBar = () => {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = data => {
+    filterAndRefreshResource(data.keyword, data.location);
   };
 
-  handleLocationChange = e => {
-    this.props.locationChangeHandler(e.target.value);
-  };
-
-  handleSubmit = e => {
-    this.props.searchHandler();
-    e.preventDefault();
-  };
-
-  handleSuggestionClick = suggestion => {
-    this.props.changeHandler(suggestion);
-    this.props.searchHandler();
-  };
-
-  renderSuggestions = suggestion => (
-    <tr onClick={() => this.handleSuggestionClick(suggestion)}>{suggestion}</tr>
+  return (
+    <div className="search">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="searchLocation">
+          <img className="locationIcon" src={LocationIcon} alt="Location" />
+          <input
+            className="locationInput"
+            name="location"
+            ref={register}
+            type="text"
+            placeholder="Location"
+          />
+        </div>
+        <div className="searchKeyword">
+          <img className="searchIcon" src={SearchIcon} alt="Search" />
+          <input
+            className="searchInput"
+            type="text"
+            name="keyword"
+            ref={register}
+            list="suggestionsList"
+            placeholder="Search"
+          />
+          <button className="submitSearch" type="submit">
+            Go
+          </button>
+        </div>
+      </form>
+    </div>
   );
+};
 
-  render() {
-    return (
-      <div className="search">
-        <form onSubmit={this.handleSubmit}>
-          <div className="searchLocation">
-            <img className="locationIcon" src={LocationIcon} alt="Location" />
-            <input
-              className="locationInput"
-              type="text"
-              value={this.props.locationValue}
-              onChange={this.handleLocationChange}
-              placeholder="Location"
-            />
-          </div>
-          <div className="searchKeyword">
-            <img className="searchIcon" src={SearchIcon} alt="Search" />
-            <input
-              className="searchInput"
-              type="text"
-              value={this.props.inputValue}
-              onChange={this.handleChange}
-              list="suggestionsList"
-              placeholder="Search"
-            />
-            <table className="dropdownStyle">
-              {this.props.showSearchSuggestions &&
-                this.props.searchSuggestions &&
-                this.props.searchSuggestions.map(this.renderSuggestions)}
-            </table>
-            <button className="submitSearch" type="submit">
-              Go
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
-
-export default Search;
+export default SearchBar;
