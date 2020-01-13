@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { filterAndRefreshResource } from "../../utils/api";
-import ResourceCard from "./ResourceCard";
+import CardView from "./CardView";
 import Search from "./SearchBar";
 import Map from "./Map";
 import "./styles.scss";
@@ -48,51 +48,17 @@ class MapView extends Component {
       cardCache: state.searchResults.map(this.renderCards(-1))
     }));
   };
-  renderCards = selectedIdx => (card, idx) => (
-    <ResourceCard
-      key={card._id}
-      name={card.companyName}
-      description={card.description}
-      tags={card.tags}
-      contactName={card.contactName}
-      contactPhone={card.contactPhone}
-      contactEmail={card.contactEmail}
-      address={card.address}
-      notes={card.notes}
-      distanceFromSearchLoc={card.distanceFromSearchLoc}
-      indexInList={idx}
-      selectCard={this.selectCard}
-      expanded={idx === selectedIdx}
-      closeCard={this.closeCard}
-      toggleModal={this.toggleModal}
-    />
-  );
 
   searchHandler = async () => {
-    let resources, center;
     try {
-      ({ resources, center } = await filterAndRefreshResource(
+      await filterAndRefreshResource(
         this.state.inputValue,
         this.state.locationValue
-      ));
+      );
     } catch (error) {
       console.error(error);
       alert(error);
     }
-
-    this.setState({
-      searchResults: resources,
-      markers: [
-        ...resources,
-        {
-          location: { type: "Center", coordinates: center }
-        }
-      ],
-      searchCenter: center,
-      showResults: true,
-      showSearchSuggestions: false,
-      cardCache: resources.map(this.renderCards(-1))
-    });
   };
 
   changeHandler = input => {
@@ -131,11 +97,7 @@ class MapView extends Component {
               />
             </div>
           </div>
-          {this.state.showResults && (
-            <div className="card-content">
-              {this.state.searchResults && this.state.cardCache}
-            </div>
-          )}
+          <CardView></CardView>
         </div>
         <Map></Map>
       </div>

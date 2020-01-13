@@ -1,45 +1,43 @@
 import React from "react";
 import "./styles.scss";
 import Maximize from "../../../assets/images/maximize.svg";
+import { connect } from "react-redux";
+import {
+  selectMapResource,
+  clearMapResource
+} from "../../../redux/actions/map";
+import { openModal } from "../../../redux/actions/modal";
+import { mapResourceIdSelector } from "../../../redux/selectors/map";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
-  expanded,
-  selectCard,
-  closeCard,
-  name,
-  description,
-  tags,
-  contactName,
-  contactPhone,
-  contactEmail,
-  address,
-  notes,
-  distanceFromSearchLoc,
-  indexInList,
-  toggleModal
+  resource,
+  isSelected,
+  selectMapResource,
+  openModal,
+  clearMapResource
 }) => {
   const renderTags = tag => <div className="card-tag">{tag}</div>;
 
   return (
     <div className="resource-card">
-      <div className={expanded ? "expanded" : "collapsed"}>
+      <div className={isSelected ? "expanded" : "collapsed"}>
         <div className="clearfix">
           <div
             className="card-title"
             role="button"
             tabIndex="0"
-            onClick={() => selectCard(indexInList)}
+            onClick={() => selectMapResource(resource._id)}
             onKeyPress={() => "noop"}
           >
-            {name}
+            {resource.companyName}
           </div>
           <div
             className="card-maximize"
             role="button"
             tabIndex="0"
             onKeyPress={() => "noop"}
-            onClick={() => toggleModal(indexInList)}
+            onClick={() => openModal(resource._id)}
           >
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
           </div>
@@ -47,42 +45,45 @@ const ResourceCard = ({
         <div
           role="button"
           tabIndex="0"
-          onClick={() => selectCard(indexInList)}
+          onClick={() => selectMapResource(resource._id)}
           onKeyPress={() => "noop"}
           className="card-wrap"
         >
-          {distanceFromSearchLoc && (
+          {resource.distanceFromSearchLoc && (
             <div className="card-distance">
-              {Math.round(distanceFromSearchLoc * 10) / 10} miles away
+              {Math.round(resource.distanceFromSearchLoc * 10) / 10} miles away
             </div>
           )}
 
-          <div className="card-desc">{description}</div>
+          <div className="card-desc">{resource.description}</div>
 
           <div className="card-details">
             <div className="detail-section">
               <p className="detail-title">Point of Contact</p>
-              <p className="detail-content">{contactName}</p>
-              <a className="detail-content" href={`mailto:${contactEmail}`}>
-                {contactEmail}
+              <p className="detail-content">{resource.contactName}</p>
+              <a
+                className="detail-content"
+                href={`mailto:${resource.contactEmail}`}
+              >
+                {resource.contactEmail}
               </a>
-              <p className="detail-content">Phone: {contactPhone}</p>
+              <p className="detail-content">Phone: {resource.contactPhone}</p>
             </div>
 
             <div className="detail-section">
               <p className="detail-title">Address</p>
-              <p className="detail-content">{address}</p>
+              <p className="detail-content">{resource.address}</p>
             </div>
 
             <div className="detail-section">
               <p className="detail-title">Notes</p>
-              <p className="detail-content">{notes}</p>
+              <p className="detail-content">{resource.notes}</p>
             </div>
           </div>
 
-          <div className="card-tags">{tags.map(renderTags)}</div>
+          <div className="card-tags">{resource.tags.map(renderTags)}</div>
         </div>
-        <button tabIndex="0" className="card-close" onClick={closeCard}>
+        <button tabIndex="0" className="card-close" onClick={clearMapResource}>
           Close
         </button>
       </div>
@@ -90,4 +91,16 @@ const ResourceCard = ({
   );
 };
 
-export default ResourceCard;
+const mapStatetoProps = (state, props) => ({
+  isSelected: mapResourceIdSelector(state) === props.resource._id
+});
+const mapDispatchToProps = {
+  selectMapResource,
+  openModal,
+  clearMapResource
+};
+
+export default connect(
+  mapStatetoProps,
+  mapDispatchToProps
+)(ResourceCard);

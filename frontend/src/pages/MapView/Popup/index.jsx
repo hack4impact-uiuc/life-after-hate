@@ -1,6 +1,7 @@
 import React from "react";
 import { Popup } from "react-map-gl";
 import MaximizeImg from "../../../assets/images/maximize-white.svg";
+import { openModalWithPayload } from "../../../redux/actions/modal";
 import { connect } from "react-redux";
 import {
   currentResourceSelector,
@@ -31,9 +32,11 @@ const MapPopup = props => (
           <button
             tabIndex="0"
             className="popup-max"
-            onClick={() => this.toggleModal(props.resource.idxInResults)}
+            onClick={() =>
+              props.openModalWithPayload({ resourceId: props.resource._id })
+            }
           >
-            See More{" "}
+            See More / Edit{" "}
             <img src={MaximizeImg} alt="icon" className="popup-button-icon" />
           </button>
         </div>
@@ -47,7 +50,7 @@ const mapStateToProps = state => ({
   isResourceSelected: mapResourceIdSelector(state) !== undefined
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { openModalWithPayload };
 
 export default connect(
   mapStateToProps,

@@ -4,7 +4,7 @@ import { resourceSelector } from "./resource";
 // Gets the ID of the selected resource for the map
 export const mapResourceIdSelector = state => state.map.selectedId;
 
-// Gets the current resource for the modal
+// Gets the current resource selected on the map
 export const currentResourceSelector = createSelector(
   [resourceSelector, mapResourceIdSelector],
   (resources, id) => {
