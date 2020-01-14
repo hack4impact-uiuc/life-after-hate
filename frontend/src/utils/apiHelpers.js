@@ -13,8 +13,7 @@ export const toQueryString = R.pipe(
   Object.entries,
   R.filter(([, v]) => v),
   R.map(([k, v]) => `${k}=${v}`),
-  R.join("&"),
-  R.defaultTo("")
+  R.join("&")
 );
 
 export const getURLForEndpoint = endpoint => urljoin(API_URI, endpoint);

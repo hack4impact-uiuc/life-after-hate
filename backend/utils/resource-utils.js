@@ -56,8 +56,6 @@ const latlongToAddress = async function(lat, long) {
   const response = await fetch(apiAddress, {});
   const responseJson = await response.json();
 
-  console.log(responseJson["results"][0]["locations"]);
-
   const streetAddress = responseJson["results"][0]["locations"][0]["street"];
   const city = responseJson["results"][0]["locations"][0]["adminArea5"];
   const state = responseJson["results"][0]["locations"][0]["adminArea3"];

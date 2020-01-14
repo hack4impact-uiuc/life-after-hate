@@ -8,7 +8,6 @@ import "../styles.scss";
 const SearchBar = () => {
   const { register, handleSubmit } = useForm();
   const onSubmit = data => {
-    console.log(data);
     filterAndRefreshResource(data.keyword, data.location, data.tag);
   };
 
