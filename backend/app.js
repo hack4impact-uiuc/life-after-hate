@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const axios = require("axios");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -13,6 +14,17 @@ const { setMockUser } = require("./utils/auth-middleware");
 
 require("./utils/passport-setup");
 require("./utils/auth-middleware");
+
+// Loggers for external API requests
+axios.interceptors.request.use(request => {
+  console.log(`Starting Axios Request with URL: ${request.url}`);
+  return request;
+});
+
+axios.interceptors.response.use(response => {
+  console.log("Response:", response.status);
+  return response;
+});
 
 app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 app.use(morgan("dev"));

@@ -1,21 +1,29 @@
 const express = require("express");
-const router = express.Router();
+const R = require("ramda");
+const { celebrate, Joi } = require("celebrate");
+const extractor = require("keyword-extractor");
+Joi.objectId = require("joi-objectid")(Joi);
+
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
-const { celebrate, Joi } = require("celebrate");
-const Fuse = require("fuse.js");
 const resourceUtils = require("../../utils/resource-utils");
+const {
+  resourceLatLens,
+  resourceLongLens,
+  resourceRegionLens,
+  filterResourcesWithinRadius,
+  filterByOptions
+} = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
   TAG_ONLY_OPTIONS
 } = require("../../utils/constants");
-Joi.objectId = require("joi-objectid")(Joi);
-const extractor = require("keyword-extractor");
 const {
   requireAdminStatus,
   requireVolunteerStatus
 } = require("../../utils/auth-middleware");
-const geolib = require("geolib");
+
+const router = express.Router();
 
 // get all resources
 router.get(
@@ -23,6 +31,7 @@ router.get(
   requireVolunteerStatus,
   errorWrap(async (req, res) => {
     const resources = await Resource.find({});
+
     res.json({
       code: 200,
       result: resources,
@@ -48,58 +57,24 @@ router.get(
     const { radius, address, keyword, customWeights, tag } = req.query;
     let resources = await Resource.find({});
 
-    const latlng = await resourceUtils.addressToLatLong(address);
-    const lat = latlng.lat;
-    const long = latlng.lng;
+    const { lat, lng } = address
+      ? await resourceUtils.addressToLatLong(address)
+      : {};
 
-    if (radius && lat && long) {
-      const radiusOfEarth = 3963.2; // in miles
-      resources = await Resource.find({
-        location: {
-          $geoWithin: { $centerSphere: [[long, lat], radius / radiusOfEarth] }
-        }
-      });
+    // if custom weights provided, will set custom field rankings
+    const filterOptions = customWeights
+      ? { ...DEFAULT_FILTER_OPTIONS, keys: customWeights }
+      : DEFAULT_FILTER_OPTIONS;
 
-      resources = resources.map(resource => ({
-        ...resource._doc,
-        distanceFromSearchLoc:
-          (geolib.getDistance(
-            {
-              latitude: resource.location.coordinates[1],
-              longitude: resource.location.coordinates[0]
-            },
-            { latitude: lat, longitude: long }
-          ) /
-            1000) *
-          0.621371
-      }));
-
-      // sort by closest distance
-      resources = resources.sort(
-        (a, b) => a.distanceFromSearchLoc - b.distanceFromSearchLoc
-      );
-    }
-    let filterOptions = DEFAULT_FILTER_OPTIONS;
-    // fuzzy search
-    if (keyword) {
-      // if custom weights provided, will set custom field rankings
-      if (customWeights) {
-        filterOptions = { ...filterOptions, keys: customWeights };
-      }
-
-      // else uses default weights contained in resource-utils.js
-      const fuse = new Fuse(resources, filterOptions);
-      resources = fuse.search(keyword);
-    }
-
-    if (tag) {
-      const fuse = new Fuse(resources, TAG_ONLY_OPTIONS);
-      resources = fuse.search(tag);
-    }
+    resources = R.pipe(
+      filterResourcesWithinRadius(lat, lng, radius),
+      filterByOptions(filterOptions)(keyword),
+      filterByOptions(TAG_ONLY_OPTIONS)(tag)
+    )(resources);
 
     res.json({
       code: 200,
-      result: { center: [long, lat], resources },
+      result: { center: [lng, lat], resources },
       success: true
     });
   })
@@ -122,28 +97,33 @@ router.post(
         coordinates: Joi.array()
           .length(2)
           .items(Joi.number())
-      }).required(),
+      }).default({ type: "Point", coordinates: [0, 0] }),
       notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string())
     })
   }),
   errorWrap(async (req, res) => {
-    const data = req.body;
-    const created_tags = extractor.extract(data.notes, {
+    // Copy the object and add an empty coordinate array
+    let data = { ...req.body };
+    const createdTags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
       return_changed_case: true,
       remove_duplicates: true
     });
 
-    const latlng = await resourceUtils.addressToLatLong(data.address);
+    const { lat, lng, region } = await resourceUtils.addressToLatLong(
+      data.address
+    );
 
-    data.location.coordinates[0] = latlng.lng;
-    data.location.coordinates[1] = latlng.lat;
-    data.federalRegion = latlng.region;
+    data = R.pipe(
+      R.set(resourceLatLens, lat),
+      R.set(resourceLongLens, lng),
+      R.set(resourceRegionLens, region)
+    )(data);
 
     const newResource = new Resource(data);
-    newResource.tags = created_tags;
+    newResource.tags = createdTags;
     await newResource.save();
 
     res.status(201).json({

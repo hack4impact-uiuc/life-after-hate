@@ -1,24 +1,58 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import Close from "../../assets/images/close.svg";
+import { useForm } from "react-hook-form";
+import {
+  currentResourceSelector,
+  isAddingResourceSelector,
+  titleSelector
+} from "../../redux/selectors/modal";
+import { connect } from "react-redux";
+import {
+  editAndRefreshResource,
+  addAndRefreshResource,
+  deleteAndRefreshResource
+} from "../../utils/api";
+import { openModal, closeModal } from "../../redux/actions/modal";
 import "./styles.scss";
 
-class LAHModal extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.handleSubmit(e);
+const LAHModal = props => {
+  const { register, handleSubmit, errors } = useForm();
+  const [deleteClicked, setDeleteClicked] = useState(false);
+
+  const onSubmit = data => {
+    props.isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
 
-  render() {
-    return (
-      <div className="modal-wrap-ee">
-        <Modal fade={false} isOpen={this.props.showModal}>
+  const handleEditResource = async data => {
+    await editAndRefreshResource(data, props.resource._id);
+    props.closeModal();
+  };
+
+  const handleAddResource = async data => {
+    await addAndRefreshResource(data);
+    props.closeModal();
+  };
+
+  const handleDeleteResource = () => {
+    if (!deleteClicked) {
+      return setDeleteClicked(true);
+    }
+    props.closeModal();
+    setDeleteClicked(false);
+    return deleteAndRefreshResource(props.resource._id);
+  };
+
+  return (
+    <div className="modal-wrap-ee">
+      {props.isOpen && (
+        <Modal fade={false} isOpen={props.isOpen}>
           <ModalHeader>
-            {this.props.modalName}
+            {props.title}
             <Button
               color="link"
               className="close-button"
-              onClick={this.props.toggleModal}
+              onClick={props.closeModal}
             >
               <img id="close-image" src={Close} alt="close" />
             </Button>
@@ -30,87 +64,124 @@ class LAHModal extends Component {
             }}
           >
             <form
-              onSubmit={this.handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               className="add-edit-resource-form"
             >
               <label className="modal-lab">
                 <p>Resource Name</p>
                 <input
+                  ref={register({ required: true })}
                   type="text"
-                  defaultValue={this.props.resourceName}
+                  name="companyName"
+                  defaultValue={props.resource.companyName}
                   className="modal-input-field"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
+                {/* errors will return when field validation fails  */}
+                {errors.companyName && <span>This field is required</span>}
               </label>
               <label className="modal-lab">
                 <p>Contact Name</p>
                 <input
+                  ref={register}
                   type="text"
-                  defaultValue={this.props.resourceContact}
+                  name="contactName"
+                  defaultValue={props.resource.contactName}
                   className="modal-input-field"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
               </label>
               <label className="modal-lab">
                 <p>Contact Phone</p>
                 <input
+                  ref={register}
                   type="text"
-                  defaultValue={this.props.resourcePhone}
+                  name="contactPhone"
+                  defaultValue={props.resource.contactPhone}
                   className="modal-input-field"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
               </label>
               <label className="modal-lab">
                 <p>Contact Email</p>
                 <input
+                  ref={register}
                   type="text"
-                  defaultValue={this.props.resourceEmail}
+                  name="contactEmail"
+                  defaultValue={props.resource.contactEmail}
                   className="modal-input-field"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
               </label>
               <label className="modal-lab">
                 <p>Description</p>
                 <textarea
-                  defaultValue={this.props.resourceDescription}
+                  ref={register}
+                  name="description"
+                  defaultValue={props.resource.description}
                   className="modal-input-field modal-input-textarea"
                   rows="10"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
               </label>
               <label className="modal-lab">
                 <p>Address</p>
                 <input
+                  ref={register}
+                  name="address"
                   type="text"
-                  defaultValue={this.props.resourceAddress}
+                  defaultValue={props.resource.address}
                   className="modal-input-field"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
               </label>
               <label className="modal-lab">
                 <p>Notes</p>
                 <textarea
-                  defaultValue={this.props.resourceNotes}
+                  ref={register}
+                  name="notes"
+                  defaultValue={props.resource.notes}
                   className="modal-input-field modal-input-textarea"
                   rows="5"
-                  disabled={this.props.cardClicked}
+                  disabled={!props.editable}
                 />
               </label>
-              {this.props.cardClicked ? null : (
-                <Button
-                  id="submit-form-button"
-                  type="submit"
-                  onClick={this.props.toggleModal}
-                >
-                  Save
-                </Button>
+              {props.editable && (
+                <div>
+                  <Button id="submit-form-button" type="submit">
+                    Save
+                  </Button>
+                  <Button
+                    id="delete-form-button"
+                    onClick={handleDeleteResource}
+                    onBlur={() => setDeleteClicked(false)}
+                  >
+                    {deleteClicked ? "Confirm" : "Delete"}
+                  </Button>
+                </div>
               )}
             </form>
           </ModalBody>
         </Modal>
-      </div>
-    );
-  }
-}
+      )}
+    </div>
+  );
+};
 
-export default LAHModal;
+const mapStateToProps = state => ({
+  isOpen: state.modal.isOpen,
+  resource: currentResourceSelector(state),
+  title: titleSelector(state),
+  isAddingResource: isAddingResourceSelector(state),
+  editable: state.modal.editable
+});
+
+const mapDispatchToProps = {
+  openModal,
+  closeModal
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LAHModal);

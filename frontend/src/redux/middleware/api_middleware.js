@@ -2,8 +2,6 @@ import axios from "axios";
 import {
   accessDenied,
   apiError,
-  apiStart,
-  apiEnd,
   API_REQUEST,
   apiSuccess
 } from "../actions/api";
@@ -37,8 +35,6 @@ const apiMiddleware = ({ dispatch }) => next => action => {
   axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";
   axios.defaults.headers.common["Content-Type"] = "application/json";
 
-  dispatch(apiStart(url));
-
   if (withLoader) {
     dispatch(startLoader());
   }
@@ -55,14 +51,14 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       dispatch(apiSuccess(data));
       // Request was successful, so call the callback for success
       onSuccess(data);
-      if (notification) {
+      if (notification && notification.successMessage) {
         toast.success(notification.successMessage);
       }
     })
     .catch(error => {
       dispatch(apiError(error.response));
       onFailure(error.response);
-      if (notification) {
+      if (notification && notification.failureMessage) {
         toast.error(notification.failureMessage);
       }
       if (
@@ -75,7 +71,6 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       }
     })
     .finally(() => {
-      dispatch(apiEnd(url));
       if (withLoader) {
         dispatch(endLoader());
       }

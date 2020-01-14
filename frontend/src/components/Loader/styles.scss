@@ -1,14 +1,20 @@
 .loading-spinner {
+  position: absolute;
+  img {
     position: absolute;
-    img {
-        position:absolute;
-        margin:auto;
-        margin:50px;
-        width:100px;
-        height:100px;
-    }
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    margin: auto;
+    margin: 50px;
+    width: 100px;
+    height: 100px;
+  }
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+#nprogress .bar,
+#nprogress .spinner {
+  z-index: 1200 !important;
+  height: 3px !important;
 }

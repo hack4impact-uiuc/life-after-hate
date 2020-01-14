@@ -1,25 +1,18 @@
 import {
   apiRequest,
   updateGlobalAuthState,
-  purgeGlobalAuthState
+  purgeGlobalAuthState,
+  toQueryString
 } from "./apiHelpers";
+import { updateResources } from "../redux/actions/resources";
+import { updateMapCenter } from "../redux/actions/map";
+import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
   const endptStr = `resources/filter?`;
-  let queryParamStr = "";
-
-  if (address) {
-    queryParamStr += `&radius=${radius}&address=${address}`;
-  }
-  if (keyword) {
-    queryParamStr += `&keyword=${keyword}`;
-  }
-  if (tag) {
-    queryParamStr += `&tag=${tag}`;
-  }
-
+  const arglist = { keyword, address, tag, radius };
   return (await apiRequest({
-    endpoint: endptStr + queryParamStr.slice(1)
+    endpoint: endptStr + toQueryString(arglist)
   })).result;
 }
 
@@ -55,25 +48,68 @@ async function addResource(data) {
 }
 
 async function editResource(data, id) {
+  // Remove non-empty string fields from the object
+  const filteredData = Object.keys(data).reduce((accum, key) => {
+    if (data[key] !== "") {
+      accum[key] = data[key];
+    }
+    return accum;
+  }, {});
   return (await apiRequest({
     endpoint: `/resources/${id}`,
     method: "PUT",
-    data,
+    data: filteredData,
     notification: {
       successMessage: "Successfully edited resource!"
     }
   })).result;
 }
 
-async function getAllResources() {
-  return (await apiRequest({ endpoint: `resources/` })).result;
+async function deleteResource(id) {
+  return (await apiRequest({
+    endpoint: `resources/${id}`,
+    method: "DELETE",
+    notification: {
+      successMessage: "Successfully deleted resource!",
+      failureMessage: "Failed to delete resource."
+    }
+  })).result;
 }
 
+async function refreshAllResources() {
+  const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  store.dispatch(updateResources(resourceList));
+}
+
+async function editAndRefreshResource(data, id) {
+  await editResource(data, id);
+  await refreshAllResources();
+}
+
+async function addAndRefreshResource(data) {
+  await addResource(data);
+  await refreshAllResources();
+}
+
+async function deleteAndRefreshResource(id) {
+  await deleteResource(id);
+  await refreshAllResources();
+}
+
+async function filterAndRefreshResource(keyword, address, tag, radius) {
+  const results = await getSearchResults(keyword, address, tag, radius);
+  store.dispatch(updateResources(results.resources));
+  if (results.center) {
+    store.dispatch(updateMapCenter(results.center));
+  }
+  return results;
+}
 export {
   refreshGlobalAuth,
   logout,
-  getSearchResults,
-  addResource,
-  editResource,
-  getAllResources
+  filterAndRefreshResource,
+  addAndRefreshResource,
+  editAndRefreshResource,
+  deleteAndRefreshResource,
+  refreshAllResources
 };
