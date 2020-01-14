@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import Close from "../../assets/images/close.svg";
 import { useForm } from "react-hook-form";
@@ -8,12 +8,18 @@ import {
   titleSelector
 } from "../../redux/selectors/modal";
 import { connect } from "react-redux";
-import { editAndRefreshResource, addAndRefreshResource } from "../../utils/api";
+import {
+  editAndRefreshResource,
+  addAndRefreshResource,
+  deleteAndRefreshResource
+} from "../../utils/api";
 import { openModal, closeModal } from "../../redux/actions/modal";
 import "./styles.scss";
 
 const LAHModal = props => {
   const { register, handleSubmit, errors } = useForm();
+  const [deleteClicked, setDeleteClicked] = useState(false);
+
   const onSubmit = data => {
     props.isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
@@ -27,6 +33,16 @@ const LAHModal = props => {
     await addAndRefreshResource(data);
     props.closeModal();
   };
+
+  const handleDeleteResource = () => {
+    if (!deleteClicked) {
+      return setDeleteClicked(true);
+    }
+    props.closeModal();
+    setDeleteClicked(false);
+    return deleteAndRefreshResource(props.resource._id);
+  };
+
   return (
     <div className="modal-wrap-ee">
       {props.isOpen && (
@@ -131,9 +147,18 @@ const LAHModal = props => {
                 />
               </label>
               {props.editable && (
-                <Button id="submit-form-button" type="submit">
-                  Save
-                </Button>
+                <div>
+                  <Button id="submit-form-button" type="submit">
+                    Save
+                  </Button>
+                  <Button
+                    id="delete-form-button"
+                    onClick={handleDeleteResource}
+                    onBlur={() => setDeleteClicked(false)}
+                  >
+                    {deleteClicked ? "Confirm" : "Delete"}
+                  </Button>
+                </div>
               )}
             </form>
           </ModalBody>

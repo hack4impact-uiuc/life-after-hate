@@ -56,11 +56,24 @@
   padding-top: 50px;
 }
 
-#submit-form-button {
-  margin-top: 20px;
-  width: 60px;
-  background-color: #f7922f;
+#delete-form-button {
+  background-color: #f7462f;
   color: white;
+  width: 90px !important;
+  margin-left: 30px;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  padding: 12px 0 12px 0;
+  box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+  border-radius: 4px;
+  &:hover,
+  &:focus {
+    background-color: #b31313;
+  }
 }
 
 .modal-title {

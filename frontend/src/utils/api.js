@@ -65,6 +65,17 @@ async function editResource(data, id) {
   })).result;
 }
 
+async function deleteResource(id) {
+  return (await apiRequest({
+    endpoint: `resources/${id}`,
+    method: "DELETE",
+    notification: {
+      successMessage: "Successfully deleted resource!",
+      failureMessage: "Failed to delete resource."
+    }
+  })).result;
+}
+
 async function refreshAllResources() {
   const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
   store.dispatch(updateResources(resourceList));
@@ -77,6 +88,11 @@ async function editAndRefreshResource(data, id) {
 
 async function addAndRefreshResource(data) {
   await addResource(data);
+  await refreshAllResources();
+}
+
+async function deleteAndRefreshResource(id) {
+  await deleteResource(id);
   await refreshAllResources();
 }
 
@@ -94,5 +110,6 @@ export {
   filterAndRefreshResource,
   addAndRefreshResource,
   editAndRefreshResource,
+  deleteAndRefreshResource,
   refreshAllResources
 };
