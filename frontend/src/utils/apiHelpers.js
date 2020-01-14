@@ -2,10 +2,20 @@ import store from "../redux/store";
 import { apiAction } from "../redux/actions/api";
 import { authUpdateAction, authPurgeAction } from "../redux/actions/auth";
 import urljoin from "url-join";
+const R = require("ramda");
 
 const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
   : "/api";
+
+// Map an object with key/value pairs to a query string of the form key=value&key2=value2
+export const toQueryString = R.pipe(
+  Object.entries,
+  R.filter(([, v]) => v),
+  R.map(([k, v]) => `${k}=${v}`),
+  R.join("&"),
+  R.defaultTo("")
+);
 
 export const getURLForEndpoint = endpoint => urljoin(API_URI, endpoint);
 /**

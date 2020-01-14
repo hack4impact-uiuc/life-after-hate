@@ -1,7 +1,8 @@
 import {
   apiRequest,
   updateGlobalAuthState,
-  purgeGlobalAuthState
+  purgeGlobalAuthState,
+  toQueryString
 } from "./apiHelpers";
 import { updateResources } from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
@@ -9,20 +10,9 @@ import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
   const endptStr = `resources/filter?`;
-  let queryParamStr = "";
-
-  if (address) {
-    queryParamStr += `&radius=${radius}&address=${address}`;
-  }
-  if (keyword) {
-    queryParamStr += `&keyword=${keyword}`;
-  }
-  if (tag) {
-    queryParamStr += `&tag=${tag}`;
-  }
-
+  const arglist = { keyword, address, tag, radius };
   return (await apiRequest({
-    endpoint: endptStr + queryParamStr.slice(1)
+    endpoint: endptStr + toQueryString(arglist)
   })).result;
 }
 
