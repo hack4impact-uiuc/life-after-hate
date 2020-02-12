@@ -19,7 +19,6 @@ const User = new mongoose.Schema({
   lastName: { type: String, required: true },
   oauthId: { type: String, required: true, unique: true },
   propicUrl: { type: String, required: false },
-  isApproved: { type: Boolean, default: false, required: true },
   role: {
     type: String,
     enum: [roleEnum.ADMIN, roleEnum.VOLUNTEER, roleEnum.PENDING],

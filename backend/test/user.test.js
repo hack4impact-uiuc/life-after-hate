@@ -171,50 +171,6 @@ describe("PUT /user/:user_id/role", () => {
   });
 });
 
-describe("PUT /user/:user_id/approve", () => {
-  it("should approve the user", async () => {
-    const reqBody = {
-      isApproved: true
-    };
-
-    await createSampleUser();
-
-    const foundUser = await User.findOne({
-      firstName: sampleUserInfo.firstName
-    });
-    const id = foundUser._id;
-
-    await request(app)
-      .put(`/api/users/${id}/approve`)
-      .send(reqBody)
-      .expect(200);
-
-    const afterUpdate = await User.findOne({
-      firstName: sampleUserInfo.firstName
-    });
-    expect(afterUpdate.isApproved).to.eq(true);
-    expect(didCheckIsAdmin()).to.be.true;
-  });
-});
-
-describe("PUT /user/:user_id/approve", () => {
-  it("should fail to approve nonexistent user", async () => {
-    const reqBody = {
-      isApproved: true
-    };
-
-    const id = mongoose.Types.ObjectId();
-
-    const res = await request(app)
-      .put(`/api/users/${id}/approve`)
-      .send(reqBody)
-      .expect(404);
-
-    expect(res.body.message).to.eq("User Not Found");
-    expect(didCheckIsAdmin()).to.be.true;
-  });
-});
-
 describe("DELETE /user/:user_id", () => {
   it("should delete specified user", async () => {
     await createSampleUser();

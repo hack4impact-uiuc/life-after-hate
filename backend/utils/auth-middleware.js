@@ -34,7 +34,6 @@ const setMockUser = (req, _, next) => {
     oauthId: "12345678",
     propicUrl:
       "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
-    isApproved: true,
     role: roleEnum.ADMIN,
     location: "SOUTH",
     email: "abc@def.xyz"

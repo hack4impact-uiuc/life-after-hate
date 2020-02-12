@@ -108,7 +108,6 @@ router.put(
       lastName: Joi.string(),
       oauthId: Joi.string(),
       propicUrl: Joi.string(),
-      isApproved: Joi.boolean(),
       role: Joi.string().required(),
       location: Joi.string(),
       email: Joi.string()
@@ -127,45 +126,6 @@ router.put(
       ? {
           code: 200,
           message: "User Role Updated Successfully",
-          success: true
-        }
-      : {
-          code: 404,
-          message: "User Not Found",
-          success: false
-        };
-    res.status(ret.code).json(ret);
-  })
-);
-
-// approve user
-router.put(
-  "/:user_id/approve",
-  requireAdminStatus,
-  celebrate({
-    body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      oauthId: Joi.string(),
-      propicUrl: Joi.string(),
-      isApproved: Joi.boolean(),
-      role: Joi.string(),
-      location: Joi.string(),
-      email: Joi.string()
-    })
-  }),
-  errorWrap(async (req, res) => {
-    const userId = req.params.user_id;
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { $set: { isApproved: true } },
-      { new: true }
-    );
-    const ret = user
-      ? {
-          code: 200,
-          message: "User Approved Successfully",
           success: true
         }
       : {
