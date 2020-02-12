@@ -19,16 +19,16 @@ const samplePendingUserInfo = {
   lastName: "chen",
   email: "eug@illinois.edu",
   location: "NORTH",
-  oauthId: "1234567"
+  oauthId: "1234568"
 };
 
 const sampleVolunteerUserInfo = {
-  firstName: "eugenia",
-  lastName: "chen",
-  email: "eug@illinois.edu",
+  firstName: "josh",
+  lastName: "byster",
+  email: "josh@illinois.edu",
   role: "VOLUNTEER",
   location: "NORTH",
-  oauthId: "1234567"
+  oauthId: "1234569"
 };
 
 const incompleteUserInfo = {
@@ -43,7 +43,20 @@ const createSampleUser = async (userInfo = sampleUserInfo) => {
   await newUser.save();
 };
 
-describe("GET /user/", () => {
+const createSamplePendingUser = async (userInfo = samplePendingUserInfo) => {
+  userInfo.role = "PENDING";
+  const newUser = new User(userInfo);
+  await newUser.save();
+};
+
+const createSampleVolunteerUser = async (
+  userInfo = sampleVolunteerUserInfo
+) => {
+  const newUser = new User(userInfo);
+  await newUser.save();
+};
+
+describe("GET /users/", () => {
   it("should get all users", async () => {
     await createSampleUser();
 
@@ -56,7 +69,55 @@ describe("GET /user/", () => {
   });
 });
 
-describe("GET /user/:user_id", () => {
+describe("GET /users/role/:role", () => {
+  it("should get all users with PENDING role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    const res = await request(app)
+      .get(`/api/users/role/pending`)
+      .expect(200);
+
+    expect(res.body.result[0].firstName).to.eq("eugenia");
+    expect(res.body.result.length).to.eq(1);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/role/:role", () => {
+  it("should get all users with VOLUNTEER role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    const res = await request(app)
+      .get(`/api/users/role/volunteer`)
+      .expect(200);
+
+    expect(res.body.result[0].firstName).to.eq("josh");
+    expect(res.body.result.length).to.eq(1);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/role/:role", () => {
+  it("should get all users with ADMIN role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    const res = await request(app)
+      .get(`/api/users/role/admin`)
+      .expect(200);
+
+    expect(res.body.result[0].firstName).to.eq("alan");
+    expect(res.body.result.length).to.eq(1);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/:user_id", () => {
   it("should get a single user", async () => {
     await createSampleUser();
     const foundUser = await User.findOne({

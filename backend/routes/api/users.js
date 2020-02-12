@@ -48,6 +48,21 @@ router.get("/current", requireVolunteerStatus, (req, res) => {
   });
 });
 
+// get all users of given role
+router.get(
+  "/role/:role",
+  requireAdminStatus,
+  errorWrap(async (req, res) => {
+    const role = req.params.role.toUpperCase();
+    const users = await User.find({ role: role });
+    res.json({
+      code: 200,
+      result: users.map(filterSensitiveInfo),
+      success: true
+    });
+  })
+);
+
 // get one user
 router.get(
   "/:user_id",
