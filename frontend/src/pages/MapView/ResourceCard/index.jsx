@@ -7,11 +7,13 @@ import {
   clearMapResource
 } from "../../../redux/actions/map";
 import { openModalWithPayload } from "../../../redux/actions/modal";
+import { roleEnum } from "../../../utils/enums";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
   resource,
   isSelected,
+  role,
   selectMapResource,
   openModalWithPayload,
   clearMapResource,
@@ -35,7 +37,7 @@ const ResourceCard = ({
           >
             {resource.companyName}
           </div>
-          <div
+          {(role === roleEnum.ADMIN ) && <div
             className="card-maximize"
             role="button"
             tabIndex="0"
@@ -43,7 +45,7 @@ const ResourceCard = ({
             onClick={() => openModalWithPayload({ resourceId: resource._id })}
           >
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
-          </div>
+          </div>}
         </div>
         <div
           role="button"
@@ -93,6 +95,11 @@ const ResourceCard = ({
     </div>
   );
 };
+
+const mapStateToProps = state => ({
+  role: state.auth.role
+});
+
 const mapDispatchToProps = {
   selectMapResource,
   openModalWithPayload,
@@ -100,6 +107,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ResourceCard);
