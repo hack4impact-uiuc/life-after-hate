@@ -2,9 +2,12 @@ const fetch = require("node-fetch");
 const mongoose = require("mongoose");
 const colors = require("colors");
 const Resource = require("../models/Resource");
+const fs = require("fs");
 
 const JSON_LINK =
   "http://www.json-generator.com/api/json/get/bUvEqZDKPS?indent=2";
+
+const FILE_PATH = "/var/www/app/assets/mock_data.json";
 
 const createConnection = async () => {
   console.log(colors.green("Attempting to connect to Mongo..."));
@@ -26,20 +29,33 @@ const fetchJson = async () => {
   return dataJSON;
 };
 
+const fetchFromFile = () => JSON.parse(fs.readFileSync(FILE_PATH, "utf-8"));
+
 const addSampleResource = resource => {
   const newResource = new Resource(resource);
   return newResource.save();
 };
 
 const main = async () => {
+  const args = process.argv.slice(2);
+  const resourceCountLimit = args[0];
+  const shouldUseLoremData = args[1] === "lorem";
   await createConnection();
   console.log(colors.green("Clearing all existing resource data..."));
   await Resource.deleteMany({});
-  const data = await fetchJson();
-  let resources = data.map(addSampleResource);
+  const data = shouldUseLoremData ? await fetchJson() : fetchFromFile();
+  const resources = resourceCountLimit
+    ? data.slice(0, parseInt(args[0])).map(addSampleResource)
+    : data.map(addSampleResource);
   console.log(colors.green("Saving mock data in DB..."));
-  await Promise.all(resources);
-  await closeConnection();
+  try {
+    await Promise.all(resources);
+    console.log(
+      colors.green(`Added ${resources.length} mock resources to DB!`)
+    );
+  } finally {
+    await closeConnection();
+  }
 };
 
 main();

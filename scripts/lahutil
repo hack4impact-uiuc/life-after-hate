@@ -129,16 +129,28 @@ const updateEnv = async isWindows => {
   }
 };
 
-const seedDB = async () => {
+const seedDB = async ({ count, lorem }) => {
+  const DEFAULT_NUM_RESOURCES = 100;
   console.log(
     colors.blue("LAHUTIL: Attempting to seed DB with sample data...")
   );
+  if (!count) {
+    console.log(
+      colors.blue(
+        `LAHUTIL: "count" argument to lahutil seed is not defined, will seed database with default ${DEFAULT_NUM_RESOURCES} resources.`
+      )
+    );
+  }
+
   await runSingleCommand("docker-compose", [
     "run",
     "backend",
-    "node",
-    "utils/generate_mock_data.js",
-    "--colors"
+
+    "/bin/bash",
+    "-c",
+    `node utils/generate_mock_data.js ${
+      count ? count : DEFAULT_NUM_RESOURCES
+    } ${lorem ? "lorem" : "false"} --color`
   ]);
 };
 
@@ -216,13 +228,20 @@ program
 
 program
   .command("seed")
+  .option("-c, --count <number>", "Number of resources")
+  .option(
+    "-l, --lorem",
+    "Use the more boring but standardized lorem ispum data"
+  )
   .description("Seeds the database with the mock data")
   .action(seedDB);
 
 program
   .command("test")
   .description("Runs backend testing suite")
-  .action(() => runSingleCommand("docker-compose",["run","backend","npm","test"]));
+  .action(() =>
+    runSingleCommand("docker-compose", ["run", "backend", "npm", "test"])
+  );
 
 if (!process.argv.slice(2).length) {
   program.outputHelp();
