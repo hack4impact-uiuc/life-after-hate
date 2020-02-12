@@ -73,8 +73,7 @@ router.post(
       lastName: Joi.string().required(),
       oauthId: Joi.string().required(),
       propicUrl: Joi.string(),
-      isApproved: Joi.boolean().default(false),
-      role: Joi.string().required(),
+      role: Joi.string().default("PENDING"),
       location: Joi.string().required(),
       email: Joi.string().required()
     })
