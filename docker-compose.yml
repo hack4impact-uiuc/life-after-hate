@@ -32,6 +32,7 @@ services:
       - ./.env
     volumes:
       - ./backend:/var/www/app
+      - ./assets:/var/www/app/assets
       # expose a named volume that works because installing
       # and then mounting will hide that folder, so we need to explicitly
       # show it again

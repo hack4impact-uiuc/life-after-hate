@@ -13,5 +13,5 @@ jobs:
       env: 
         DB_URI: ${{ secrets.PROD_DB_URI }}
     - name: Seed MongoDB Instance
-      run: docker-compose run backend node utils/generate_mock_data.js --color
+      run: docker-compose run backend node utils/generate_mock_data.js 100 false --color
    
