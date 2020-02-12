@@ -14,6 +14,23 @@ const sampleUserInfo = {
   oauthId: "1234567"
 };
 
+const samplePendingUserInfo = {
+  firstName: "eugenia",
+  lastName: "chen",
+  email: "eug@illinois.edu",
+  location: "NORTH",
+  oauthId: "1234567"
+};
+
+const sampleVolunteerUserInfo = {
+  firstName: "eugenia",
+  lastName: "chen",
+  email: "eug@illinois.edu",
+  role: "VOLUNTEER",
+  location: "NORTH",
+  oauthId: "1234567"
+};
+
 const incompleteUserInfo = {
   email: "joshb@illinois.edu",
   role: "ADMIN",
@@ -57,7 +74,37 @@ describe("GET /user/:user_id", () => {
 });
 
 describe("POST /users/", () => {
-  it("should create a new user", async () => {
+  it("should create a new user with default pending role", async () => {
+    await request(app)
+      .post(`/api/users/`)
+      .send(samplePendingUserInfo)
+      .expect(200);
+    const foundUser = await User.findOne({
+      firstName: samplePendingUserInfo.firstName
+    });
+    expect(foundUser.oauthId).to.eq(samplePendingUserInfo.oauthId);
+    expect(foundUser.role).to.eq("PENDING");
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("POST /users/", () => {
+  it("should create a new user with volunteer role", async () => {
+    await request(app)
+      .post(`/api/users/`)
+      .send(sampleVolunteerUserInfo)
+      .expect(200);
+    const foundUser = await User.findOne({
+      firstName: sampleVolunteerUserInfo.firstName
+    });
+    expect(foundUser.oauthId).to.eq(sampleVolunteerUserInfo.oauthId);
+    expect(foundUser.role).to.eq("VOLUNTEER");
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("POST /users/", () => {
+  it("should create a new user with admin role", async () => {
     await request(app)
       .post(`/api/users/`)
       .send(sampleUserInfo)
