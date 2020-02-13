@@ -1,6 +1,7 @@
-let roleEnum = {
+const roleEnum = {
   ADMIN: "ADMIN",
-  VOLUNTEER: "VOLUNTEER"
+  VOLUNTEER: "VOLUNTEER",
+  PENDING: "PENDING"
 };
 
 module.exports.roleEnum = roleEnum;

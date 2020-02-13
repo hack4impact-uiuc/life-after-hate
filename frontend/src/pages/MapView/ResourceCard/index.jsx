@@ -37,7 +37,7 @@ const ResourceCard = ({
           >
             {resource.companyName}
           </div>
-          {(role === roleEnum.ADMIN ) && <div
+          {(role === roleEnum.ADMIN) && <div
             className="card-maximize"
             role="button"
             tabIndex="0"
