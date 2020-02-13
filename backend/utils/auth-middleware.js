@@ -35,7 +35,7 @@ const setMockUser = (req, _, next) => {
     propicUrl:
       "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
     isApproved: true,
-    role: roleEnum.ADMIN,
+    role: process.env.BYPASS_AUTH_ROLE,
     location: "SOUTH",
     email: "abc@def.xyz"
   };
