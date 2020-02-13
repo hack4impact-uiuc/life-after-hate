@@ -68,7 +68,7 @@ const latlongToAddress = async function(lat, long) {
 };
 
 const addDistanceField = (lat, long) => resource => ({
-  ...resource.toJSON(),
+  ...resource,
   distanceFromSearchLoc: computeDistance(
     resource.location.coordinates[1],
     resource.location.coordinates[0],
