@@ -9,7 +9,7 @@ const {
   requireAdminStatus,
   requireVolunteerStatus
 } = require("../../utils/auth-middleware");
-
+const { roleEnum } = require("../../models/User");
 // Filters down the user information into just what's needed
 const filterSensitiveInfo = R.pipe(
   R.pick([
@@ -52,6 +52,14 @@ router.get("/current", requireVolunteerStatus, (req, res) => {
 router.get(
   "/role/:role",
   requireAdminStatus,
+  celebrate({
+    params: {
+      role: Joi.string()
+        .valid(...Object.values(roleEnum))
+        .insensitive()
+        .required()
+    }
+  }),
   errorWrap(async (req, res) => {
     const role = req.params.role.toUpperCase();
     const users = await User.find({ role: role });
