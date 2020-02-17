@@ -174,12 +174,23 @@ program
   .description(
     "Start up a new instance of the LAH frontend, backend, and database using Docker Compose."
   )
-  .option("-n, --no-auth", "Running without auth enabled")
-  .action(cmdObj =>
+  .option("-a, --admin", "Run with admin role")
+  .option("-v, --volunteer", "Run with volunteer role")
+  .option("-p, --pending", "Run with pending role")
+  .action(cmdObj => {
+    let currentRole;
+    if (cmdObj.admin) {
+      currentRole = "ADMIN";
+    } else if (cmdObj.volunteer) {
+      currentRole = "VOLUNTEER";
+    } else if (cmdObj.pending) {
+      currentRole = "PENDING";
+    }
+
     runSingleCommand("docker-compose", ["up"], null, {
-      BYPASS_AUTH: !cmdObj.auth
-    })
-  );
+      BYPASS_AUTH_ROLE: currentRole
+    });
+  });
 
 program
   .command("down")

@@ -2,6 +2,7 @@ import store from "../redux/store";
 import { apiAction } from "../redux/actions/api";
 import { authUpdateAction, authPurgeAction } from "../redux/actions/auth";
 import urljoin from "url-join";
+import { toast } from "react-toastify";
 const R = require("ramda");
 
 const API_URI = process.env.REACT_APP_API_URI
@@ -52,6 +53,9 @@ export const apiRequest = ({
 
 export const updateGlobalAuthState = payload => {
   store.dispatch(authUpdateAction(payload));
+  if (process.env.NODE_ENV === "development") {
+    toast.info(`Logged in with ${payload.role} role!`);
+  }
 };
 
 export const purgeGlobalAuthState = () => {

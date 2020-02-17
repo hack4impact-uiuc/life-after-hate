@@ -36,8 +36,10 @@ app.use(passport.session());
 app.use(bodyParser.json());
 
 // If we're running in a mode that should bypass auth, set up a mock user
-if (process.env.BYPASS_AUTH === "true") {
-  console.warn("Auth is being bypassed!");
+if (process.env.BYPASS_AUTH_ROLE) {
+  console.warn(
+    `Auth is being bypassed with role \"${process.env.BYPASS_AUTH_ROLE}\"!`
+  );
   app.use(setMockUser);
 }
 
