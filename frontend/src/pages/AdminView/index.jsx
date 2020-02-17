@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { refreshAllUsers } from "../../utils/api";
 import { connect } from "react-redux";
 import { userSelector } from "../../redux/selectors/users";
-//import { UserCard } from "./UserCard";
+//import { UserCard } from "./UserCard"; TODO: implement UserCard
 import "./styles.scss";
 
 const UserManager = props => {
   useEffect(() => {
     refreshAllUsers();
+    console.log("hooook");
   }, []);
 
   // const renderCards = user => (
@@ -46,7 +47,7 @@ const MapStateToProps = state => ({
   users: userSelector(state)
 });
 
-//   const mapDispatchToProps = {
+//   const mapDispatchToProps = { TODO: make user modal
 //     openModal
 //   };
 
