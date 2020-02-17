@@ -7,7 +7,7 @@ const { celebrate, Joi } = require("celebrate");
 const errorWrap = require("../../utils/error-wrap");
 const {
   requireAdminStatus,
-  requireVolunteerStatus
+  requirePendingStatus
 } = require("../../utils/auth-middleware");
 const { roleEnum } = require("../../models/User");
 // Filters down the user information into just what's needed
@@ -39,7 +39,7 @@ router.get(
 );
 
 // get current users (partial info only)
-router.get("/current", requireVolunteerStatus, (req, res) => {
+router.get("/current", requirePendingStatus, (req, res) => {
   const user_info = req.user;
   res.json({
     code: 200,
