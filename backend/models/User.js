@@ -1,14 +1,15 @@
 /** Schema representing a LAH user
- * Role should be one of the following: [Admin, Volunteer]
+ * Role should be one of the following: [Admin, Volunteer, Pending]
  */
 const mongoose = require("mongoose");
 
-let roleEnum = {
+const roleEnum = {
   ADMIN: "ADMIN",
-  VOLUNTEER: "VOLUNTEER"
+  VOLUNTEER: "VOLUNTEER",
+  PENDING: "PENDING"
 };
 
-let locationEnum = {
+const locationEnum = {
   NORTH: "NORTH",
   SOUTH: "SOUTH"
 };
@@ -18,10 +19,9 @@ const User = new mongoose.Schema({
   lastName: { type: String, required: true },
   oauthId: { type: String, required: true, unique: true },
   propicUrl: { type: String, required: false },
-  isApproved: { type: Boolean, default: false, required: true },
   role: {
     type: String,
-    enum: [roleEnum.ADMIN, roleEnum.VOLUNTEER],
+    enum: [roleEnum.ADMIN, roleEnum.VOLUNTEER, roleEnum.PENDING],
     required: true
   },
   location: {

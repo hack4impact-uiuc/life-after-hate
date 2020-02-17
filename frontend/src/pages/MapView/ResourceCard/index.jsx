@@ -37,15 +37,17 @@ const ResourceCard = ({
           >
             {resource.companyName}
           </div>
-          {(role === roleEnum.ADMIN) && <div
-            className="card-maximize"
-            role="button"
-            tabIndex="0"
-            onKeyPress={() => "noop"}
-            onClick={() => openModalWithPayload({ resourceId: resource._id })}
-          >
-            <img src={Maximize} alt="Maximize" className="maximize-icon" />
-          </div>}
+          {role === roleEnum.ADMIN && (
+            <div
+              className="card-maximize"
+              role="button"
+              tabIndex="0"
+              onKeyPress={() => "noop"}
+              onClick={() => openModalWithPayload({ resourceId: resource._id })}
+            >
+              <img src={Maximize} alt="Maximize" className="maximize-icon" />
+            </div>
+          )}
         </div>
         <div
           role="button"

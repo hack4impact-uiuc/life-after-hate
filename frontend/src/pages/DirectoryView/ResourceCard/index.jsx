@@ -41,12 +41,14 @@ const ResourceCard = props => {
         <div className="col col-desc col-desc-collapsed">
           <p>{props.resource.description}</p>
         </div>
-        {(props.role === roleEnum.ADMIN) && <div className="col col-edit">
-          <Button onClick={toggleModal} className="edit-button">
-            <img id="edit-icon" src={Edit} alt="edit icon" />
-            Edit
-          </Button>
-        </div>}
+        {props.role === roleEnum.ADMIN && (
+          <div className="col col-edit">
+            <Button onClick={toggleModal} className="edit-button">
+              <img id="edit-icon" src={Edit} alt="edit icon" />
+              Edit
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -54,7 +56,7 @@ const ResourceCard = props => {
 
 const mapStateToProps = state => ({
   role: state.auth.role
-})
+});
 
 const mapDispatchToProps = {
   openModalWithPayload

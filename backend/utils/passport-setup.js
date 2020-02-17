@@ -42,7 +42,6 @@ passport.use(
           lastName: profile.name.familyName,
           oauthId: profile.id,
           propicUrl: profile.photos[0].value,
-          isApproved: false,
           role: DEFAULTROLE,
           location: DEFAULTLOC,
           email: profile.emails[0].value
