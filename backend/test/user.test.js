@@ -4,12 +4,13 @@ const app = require("../app.js");
 const User = require("../models/User");
 const mongoose = require("mongoose");
 const { didCheckIsAdmin } = require("./auth_stubs");
+const { roleEnum } = require("../models/User");
 
 const sampleUserInfo = {
   firstName: "alan",
   lastName: "fang",
   email: "analfang@illinois.edu",
-  role: "ADMIN",
+  role: roleEnum.ADMIN,
   location: "SOUTH",
   oauthId: "1234567"
 };
@@ -26,14 +27,14 @@ const sampleVolunteerUserInfo = {
   firstName: "josh",
   lastName: "byster",
   email: "josh@illinois.edu",
-  role: "VOLUNTEER",
+  role: roleEnum.VOLUNTEER,
   location: "NORTH",
   oauthId: "1234569"
 };
 
 const incompleteUserInfo = {
   email: "joshb@illinois.edu",
-  role: "ADMIN",
+  role: roleEnum.ADMIN,
   location: "SOUTH",
   oauthId: "1234567"
 };
@@ -44,7 +45,7 @@ const createSampleUser = async (userInfo = sampleUserInfo) => {
 };
 
 const createSamplePendingUser = async (userInfo = samplePendingUserInfo) => {
-  userInfo.role = "PENDING";
+  userInfo.role = roleEnum.PENDING;
   const newUser = new User(userInfo);
   await newUser.save();
 };
@@ -117,6 +118,20 @@ describe("GET /users/role/:role", () => {
   });
 });
 
+describe("GET /users/role/:role", () => {
+  it("should fail to get all users with nonexistent role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    await request(app)
+      .get(`/api/users/role/none`)
+      .expect(400);
+
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
 describe("GET /users/:user_id", () => {
   it("should get a single user", async () => {
     await createSampleUser();
@@ -144,7 +159,7 @@ describe("POST /users/", () => {
       firstName: samplePendingUserInfo.firstName
     });
     expect(foundUser.oauthId).to.eq(samplePendingUserInfo.oauthId);
-    expect(foundUser.role).to.eq("PENDING");
+    expect(foundUser.role).to.eq(roleEnum.PENDING);
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
@@ -159,7 +174,7 @@ describe("POST /users/", () => {
       firstName: sampleVolunteerUserInfo.firstName
     });
     expect(foundUser.oauthId).to.eq(sampleVolunteerUserInfo.oauthId);
-    expect(foundUser.role).to.eq("VOLUNTEER");
+    expect(foundUser.role).to.eq(roleEnum.VOLUNTEER);
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
@@ -193,7 +208,7 @@ describe("PUT /user/:user_id/role", () => {
     await createSampleUser();
 
     const reqBody = {
-      role: "VOLUNTEER"
+      role: roleEnum.VOLUNTEER
     };
 
     const foundUser = await User.findOne({
@@ -209,7 +224,7 @@ describe("PUT /user/:user_id/role", () => {
     const afterUpdate = await User.findOne({
       firstName: sampleUserInfo.firstName
     });
-    expect(afterUpdate.role).to.eq("VOLUNTEER");
+    expect(afterUpdate.role).to.eq(roleEnum.VOLUNTEER);
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
@@ -217,7 +232,7 @@ describe("PUT /user/:user_id/role", () => {
 describe("PUT /user/:user_id/role", () => {
   it("should fail to update role of nonexistent user", async () => {
     const reqBody = {
-      role: "VOLUNTEER"
+      role: roleEnum.VOLUNTEER
     };
 
     const id = mongoose.Types.ObjectId();
