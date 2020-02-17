@@ -2,12 +2,21 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import Loader from "../Loader";
 import Navbar from "../Navbar";
+import Pending from "../../pages/Pending";
 import { connect } from "react-redux";
+import { roleEnum } from "../../utils/enums";
 
-function PrivateRoute({ component: Component, authed, showLoader, ...rest }) {
+function PrivateRoute({
+  component: Component,
+  authed,
+  role,
+  showLoader,
+  ...rest
+}) {
+  const pending = role === roleEnum.PENDING;
   return (
     <div>
-      {authed && <Navbar />}
+      {!pending && <Navbar />}
       <Route
         {...rest}
         render={props => {
@@ -15,7 +24,10 @@ function PrivateRoute({ component: Component, authed, showLoader, ...rest }) {
             return <Loader></Loader>;
           }
           if (authed === true) {
-            return <Component {...props} />;
+            if (!pending) {
+              return <Component {...props} />;
+            }
+            return <Pending {...props} />;
           }
           if (authed === false) {
             return (
@@ -31,6 +43,7 @@ function PrivateRoute({ component: Component, authed, showLoader, ...rest }) {
 }
 const mapStateToProps = state => ({
   authed: state.auth.authenticated,
+  role: state.auth.role,
   showLoader: state.auth.isFetchingAuth
 });
 
