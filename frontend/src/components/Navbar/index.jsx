@@ -29,6 +29,7 @@ const Navbar = props => {
       <div className="nav-links">
         <Link to="/">Map</Link>
         <Link to="/directory">Directory</Link>
+        <Link to="/users">Account Management</Link>
       </div>
       <Dropdown isOpen={dropdownOpen} toggle={toggleUserDropdown}>
         <DropdownToggle id="dropdown-button">
