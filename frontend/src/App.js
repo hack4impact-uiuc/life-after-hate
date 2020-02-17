@@ -5,6 +5,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import MapView from "./pages/MapView";
 import DirectoryView from "./pages/DirectoryView";
+import AdminView from "./pages/AdminView";
 import MiniLoader from "./components/Loader/mini-loader";
 import Modal from "./components/Modal";
 import store from "./redux/store";
@@ -28,6 +29,7 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MapView} />
             <PrivateRoute exact path="/directory" component={DirectoryView} />
+            <PrivateRoute exact path="/users" component={AdminView} />
           </Router>
         </div>
       </Provider>
