@@ -96,7 +96,7 @@ router.post(
       lastName: Joi.string().required(),
       oauthId: Joi.string().required(),
       propicUrl: Joi.string(),
-      role: Joi.string().default("PENDING"),
+      role: Joi.string().default(roleEnum.PENDING),
       location: Joi.string().required(),
       email: Joi.string().required()
     })
