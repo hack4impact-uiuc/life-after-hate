@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { refreshAllUsers } from "../../utils/api";
 import { connect } from "react-redux";
 import { userSelector } from "../../redux/selectors/users";
-//import { UserCard } from "./UserCard"; TODO: implement UserCard
+import UserCard from "./UserCard";
 import "./styles.scss";
 
 const UserManager = props => {
@@ -11,9 +11,7 @@ const UserManager = props => {
     console.log("hooook");
   }, []);
 
-  // const renderCards = user => (
-  //     <UserCard key={user._id} user={user} />
-  // );
+  const renderCards = user => <UserCard key={user._id} user={user} />;
 
   return (
     <div className="directory">
@@ -37,7 +35,7 @@ const UserManager = props => {
           </div>
           <div />
         </div>
-        {props.users /*&& props.users.map(renderCards)*/}
+        {props.users && props.users.map(renderCards)}
       </div>
     </div>
   );
