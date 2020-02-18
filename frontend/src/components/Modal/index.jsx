@@ -130,7 +130,7 @@ const LAHModal = props => {
                 <input
                   ref={register}
                   name="tags"
-                  defaultValue={props.resource.tags.join(',')}
+                  defaultValue={props.resource.tags.join(', ')}
                   className="modal-input-field"
                   disabled={!props.editable}
                 />
