@@ -122,18 +122,12 @@ router.post(
 );
 
 // set role
-router.put(
-  "/:user_id/role",
+router.patch(
+  "/:user_id",
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      oauthId: Joi.string(),
-      propicUrl: Joi.string(),
-      role: Joi.string().required(),
-      location: Joi.string(),
-      email: Joi.string()
+      role: Joi.string().required()
     })
   }),
   errorWrap(async (req, res) => {
