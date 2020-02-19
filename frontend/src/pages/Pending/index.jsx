@@ -1,9 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
+import Logo from "../../assets/images/lah-logo-2.png";
 
-class Pending extends Component {
-  render() {
-    return <div>lets pretend we dont exist</div>;
-  }
-}
+import "./styles.scss";
+
+const Pending = () => (
+  <div className="pending">
+    <img id="lah-logo" src={Logo} alt="LAH Logo" />
+    <p>Your request is pending.</p>
+  </div>
+);
 
 export default Pending;
