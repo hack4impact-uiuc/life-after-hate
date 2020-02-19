@@ -8,7 +8,6 @@ import "./styles.scss";
 const UserManager = props => {
   useEffect(() => {
     refreshAllUsers();
-    console.log("hooook");
   }, []);
 
   const renderCards = user => <UserCard key={user._id} user={user} />;
