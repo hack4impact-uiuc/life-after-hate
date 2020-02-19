@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
+import { roleEnum } from "../../utils/enums";
 
 const Navbar = props => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -29,7 +30,9 @@ const Navbar = props => {
       <div className="nav-links">
         <Link to="/">Map</Link>
         <Link to="/directory">Directory</Link>
-        <Link to="/users">Account Management</Link>
+        {props.role === roleEnum.ADMIN && (
+          <Link to="/users">Account Management</Link>
+        )}
       </div>
       <Dropdown isOpen={dropdownOpen} toggle={toggleUserDropdown}>
         <DropdownToggle id="dropdown-button">
