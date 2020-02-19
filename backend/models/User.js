@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const roleEnum = {
   ADMIN: "ADMIN",
   VOLUNTEER: "VOLUNTEER",
-  PENDING: "PENDING"
+  PENDING: "PENDING",
+  REJECTED: "REJECTED"
 };
 
 const locationEnum = {
