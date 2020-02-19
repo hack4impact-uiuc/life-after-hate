@@ -28,6 +28,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "express-winston": "^4.0.3",
     "fuse.js": "^3.4.6",
     "geolib": "^3.2.0",
     "joi-objectid": "^3.0.1",
@@ -43,6 +44,8 @@
     "ramda": "^0.26.1",
     "ramda-adjunct": "^2.23.0",
     "sinon": "^7.5.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "winston": "^3.2.1",
+    "winston-loggly-bulk": "^3.0.1"
   }
 }
