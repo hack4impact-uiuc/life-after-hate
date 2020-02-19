@@ -26,7 +26,9 @@ const User = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: false
+    required: false,
+    default: "",
+    setDefaultsOnInsert: true
   },
   location: {
     type: String,
