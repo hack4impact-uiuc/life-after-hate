@@ -130,7 +130,8 @@ router.patch(
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      role: Joi.string().required()
+      role: Joi.string().required(),
+      title: Joi.string().default("")
     })
   }),
   errorWrap(async (req, res) => {
@@ -139,7 +140,7 @@ router.patch(
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { $set: { role: data.role } },
+      { $set: { role: data.role, title: data.title } },
       { new: true }
     );
     const ret = user

@@ -204,11 +204,12 @@ describe("POST /users/", () => {
 });
 
 describe("PATCH /user/:user_id", () => {
-  it("should update user to have new role", async () => {
+  it("should update user to have new role and title", async () => {
     await createSampleUser();
 
     const reqBody = {
-      role: roleEnum.VOLUNTEER
+      role: roleEnum.VOLUNTEER,
+      title: "new title"
     };
 
     const foundUser = await User.findOne({
@@ -225,6 +226,7 @@ describe("PATCH /user/:user_id", () => {
       firstName: sampleUserInfo.firstName
     });
     expect(afterUpdate.role).to.eq(roleEnum.VOLUNTEER);
+    expect(afterUpdate.title).to.eq("new title");
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
