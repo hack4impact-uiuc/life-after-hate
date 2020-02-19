@@ -55,7 +55,8 @@ const Navbar = props => {
 const mapStateToProps = state => ({
   profilePic: state.auth.propicUrl,
   firstName: state.auth.firstName,
-  lastName: state.auth.lastName
+  lastName: state.auth.lastName,
+  role: state.auth.role
 });
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
 export default connect(mapStateToProps)(withRouter(Navbar));
