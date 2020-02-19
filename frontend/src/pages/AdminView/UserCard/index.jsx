@@ -24,7 +24,7 @@ const UserCard = props => (
       <div className="col">
         <p>{props.user.role}</p>
       </div>
-      <div className="col col-desc col-desc-collapsed">
+      <div className="col">
         <p>{props.user.role /* TODO: Get correct title? */}</p>
       </div>
       <div className="col col-edit">
