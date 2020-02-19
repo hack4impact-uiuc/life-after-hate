@@ -24,6 +24,12 @@ const User = new mongoose.Schema({
     enum: [roleEnum.ADMIN, roleEnum.VOLUNTEER, roleEnum.PENDING],
     required: true
   },
+  title: {
+    type: String,
+    required: false,
+    default: "",
+    setDefaultsOnInsert: true
+  },
   location: {
     type: String,
     enum: [locationEnum.NORTH, locationEnum.SOUTH],

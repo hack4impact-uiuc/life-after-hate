@@ -17,6 +17,7 @@ const filterSensitiveInfo = R.pipe(
     "firstName",
     "lastName",
     "role",
+    "title",
     "location",
     "propicUrl",
     "email"
@@ -97,6 +98,7 @@ router.post(
       oauthId: Joi.string().required(),
       propicUrl: Joi.string(),
       role: Joi.string().default(roleEnum.PENDING),
+      title: Joi.string(),
       location: Joi.string().required(),
       email: Joi.string().required()
     })
@@ -109,6 +111,7 @@ router.post(
       oauthId: data.oauthId,
       propicUrl: data.propicUrl,
       role: data.role,
+      title: data.title,
       location: data.location,
       email: data.email
     });
@@ -121,7 +124,7 @@ router.post(
   })
 );
 
-// set role
+// set role and title
 router.patch(
   "/:user_id",
   requireAdminStatus,
