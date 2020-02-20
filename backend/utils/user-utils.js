@@ -6,6 +6,7 @@ module.exports.filterSensitiveInfo = R.pipe(
     "firstName",
     "lastName",
     "role",
+    "title",
     "location",
     "propicUrl",
     "email"

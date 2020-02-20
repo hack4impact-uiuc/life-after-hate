@@ -84,6 +84,7 @@ router.post(
       oauthId: Joi.string().required(),
       propicUrl: Joi.string(),
       role: Joi.string().default(roleEnum.PENDING),
+      title: Joi.string(),
       location: Joi.string().required(),
       email: Joi.string().required()
     })
@@ -96,6 +97,7 @@ router.post(
       oauthId: data.oauthId,
       propicUrl: data.propicUrl,
       role: data.role,
+      title: data.title,
       location: data.location,
       email: data.email
     });
@@ -119,6 +121,7 @@ router.put(
       oauthId: Joi.string(),
       propicUrl: Joi.string(),
       role: Joi.string().required(),
+      title: Joi.string(),
       location: Joi.string(),
       email: Joi.string()
     })
