@@ -17,6 +17,7 @@ require("./utils/passport-setup");
 require("./utils/auth-middleware");
 
 const isProd = process.env.NODE_ENV === "production";
+console.log(`is prod: ${isProd}`);
 // Console Logger for external API requests
 axios.interceptors.request.use(request => {
   console.log(`Starting Axios Request with URL: ${request.url}`);
