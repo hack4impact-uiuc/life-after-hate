@@ -25,7 +25,7 @@ const LAHModal = props => {
   };
 
   const handleEditResource = async data => {
-    data.tags = data.tags.split(',').map(tag => tag.trim());
+    data.tags = data.tags.split(",").map(tag => tag.trim());
     await editAndRefreshResource(data, props.resource._id);
     props.closeModal();
   };
@@ -130,7 +130,7 @@ const LAHModal = props => {
                 <input
                   ref={register}
                   name="tags"
-                  defaultValue={props.resource.tags.join(', ')}
+                  defaultValue={props.resource.tags.join(", ")}
                   className="modal-input-field"
                   disabled={!props.editable}
                 />

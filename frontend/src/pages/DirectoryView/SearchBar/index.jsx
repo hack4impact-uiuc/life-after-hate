@@ -33,7 +33,11 @@ const SearchBar = () => {
         <label>
           <input id="search-tag" type="text" name="tag" ref={register} />
         </label>
-        <Button id="search-button" type="submit">
+        <Button
+          id="search-button"
+          type="submit"
+          onSubmit={e => e.preventDefault()}
+        >
           SEARCH
         </Button>
       </form>

@@ -1,6 +1,5 @@
 const express = require("express");
-const R = require("ramda");
-const { renameKeys } = require("ramda-adjunct");
+const { filterSensitiveInfo } = require("../../utils/user-utils");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
@@ -11,19 +10,6 @@ const {
 } = require("../../utils/auth-middleware");
 const { roleEnum } = require("../../models/User");
 // Filters down the user information into just what's needed
-const filterSensitiveInfo = R.pipe(
-  R.pick([
-    "_id",
-    "firstName",
-    "lastName",
-    "role",
-    "title",
-    "location",
-    "propicUrl",
-    "email"
-  ]),
-  renameKeys({ _id: "id" })
-);
 
 // get all users
 router.get(
