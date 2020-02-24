@@ -7,6 +7,7 @@ import { openModal } from "../../redux/actions/modal";
 import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { refreshAllResources } from "../../utils/api";
+import { roleEnum } from "../../utils/enums";
 
 const ResourceManager = props => {
   useEffect(() => {
@@ -21,9 +22,11 @@ const ResourceManager = props => {
     <div className="directory">
       <div className="manager-header">
         <h1>Resource Directory</h1>
-        <Button onClick={props.openModal} id="add-button">
-          Add Resource
-        </Button>
+        {props.role === roleEnum.ADMIN && (
+          <Button onClick={props.openModal} id="add-button">
+            Add Resource
+          </Button>
+        )}
       </div>
 
       <div className="resources">
@@ -50,7 +53,8 @@ const ResourceManager = props => {
 };
 
 const MapStateToProps = state => ({
-  resources: resourceSelector(state)
+  resources: resourceSelector(state),
+  role: state.auth.role
 });
 
 const mapDispatchToProps = {
