@@ -177,6 +177,7 @@ program
   .option("-a, --admin", "Run with admin role")
   .option("-v, --volunteer", "Run with volunteer role")
   .option("-p, --pending", "Run with pending role")
+  .option("-r, --rejected", "Run with rejected role")
   .action(cmdObj => {
     let currentRole;
     if (cmdObj.admin) {
@@ -185,6 +186,8 @@ program
       currentRole = "VOLUNTEER";
     } else if (cmdObj.pending) {
       currentRole = "PENDING";
+    } else if (cmdObj.rejected) {
+      currentRole = "REJECTED"
     }
 
     runSingleCommand("docker-compose", ["up"], null, {
