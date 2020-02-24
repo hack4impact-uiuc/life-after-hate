@@ -4,6 +4,7 @@ const axios = require("axios");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const app = express();
 const passport = require("passport");
 const bodyParser = require("body-parser");
@@ -17,7 +18,6 @@ require("./utils/passport-setup");
 require("./utils/auth-middleware");
 
 const isProd = process.env.NODE_ENV === "production";
-console.log(`is prod: ${isProd}`);
 // Console Logger for external API requests
 axios.interceptors.request.use(request => {
   console.log(`Starting Axios Request with URL: ${request.url}`);
@@ -32,9 +32,26 @@ axios.interceptors.response.use(response => {
 app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 app.use(morgan("dev"));
 
+mongoose.connect(process.env.DB_URI, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+});
+// Silence deprecation warnings
+mongoose.set("useCreateIndex", true);
+
 app.use(
-  session({ secret: "keyboard cat", saveUninitialized: false, resave: false })
+  session({
+    secret: process.env.SESSION_SECRET,
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      touchAfter: 24 * 3600,
+      stringify: false
+    }),
+    saveUninitialized: false, // don't create session until something stored
+    resave: false //don't save session if unmodified
+  })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
@@ -58,13 +75,6 @@ app.use(require("./routes"));
 if (isProd) {
   app.use(errorLogger);
 }
-
-mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
-// Silence deprecation warnings
-mongoose.set("useCreateIndex", true);
 
 app.use(errors());
 app.use(errorHandler);
