@@ -1,0 +1,14 @@
+# docker-compose.yml
+version: "3.7"
+services:
+    cypress:
+        # the Docker image to use from https://github.com/cypress-io/cypress-docker-images
+        image: "cypress/included:4.0.2"
+        depends_on:
+          - frontend
+        links:
+          - frontend
+        working_dir: /e2e
+        volumes:
+            - ./frontend:/e2e
+        entrypoint: cypress run --project /e2e
