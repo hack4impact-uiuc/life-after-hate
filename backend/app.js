@@ -11,7 +11,10 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const { errors } = require("celebrate");
 const errorHandler = require("./utils/error-handler");
-const { setMockUser } = require("./utils/auth-middleware");
+const {
+  mockUserMiddleware,
+  setMockUserRole
+} = require("./utils/auth-middleware");
 const { requestLogger, errorLogger } = require("./utils/logging-middleware");
 
 require("./utils/passport-setup");
@@ -62,11 +65,12 @@ if (isProd) {
 }
 
 // If we're running in a mode that should bypass auth, set up a mock user
-if (process.env.BYPASS_AUTH_ROLE) {
+if (!isProd && process.env.BYPASS_AUTH_ROLE) {
   console.warn(
     `Auth is being bypassed with role \"${process.env.BYPASS_AUTH_ROLE}\"!`
   );
-  app.use(setMockUser);
+  setMockUserRole(app, process.env.BYPASS_AUTH_ROLE);
+  app.use(mockUserMiddleware);
 }
 
 app.use(require("./routes"));
