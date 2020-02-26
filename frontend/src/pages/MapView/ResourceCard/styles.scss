@@ -41,7 +41,8 @@
     outline: none;
   }
 
-  .card-maximize {
+  .card-maximize,
+  .top-card-close {
     float: left;
     width: 6%;
     transition: all 0.2s;
@@ -50,7 +51,22 @@
     opacity: 0.2;
   }
 
-  .card-maximize .maximize-icon {
+  .collapsed .card-maximize {
+    display: block;
+  }
+  .collapsed .top-card-close {
+    display: none;
+  }
+
+  .expanded .card-maximize {
+    display: none;
+  }
+  .expanded .top-card-close {
+    display: block;
+  }
+
+  .card-maximize .maximize-icon,
+  .top-card-close .top-close-icon {
     height: 14px;
     width: auto;
     margin: 0;
@@ -59,7 +75,9 @@
   }
 
   .card-maximize:hover,
-  .card-maximize:focus {
+  .card-maximize:focus,
+  .top-card-close:hover,
+  .top-card-close:focus {
     opacity: 0.5;
   }
 
@@ -162,5 +180,10 @@
 
   .collapsed .card-close {
     display: none;
+  }
+  .expanded-button-icon {
+    height: 12px;
+    margin-left: 3px;
+    margin-top: -3px;
   }
 }

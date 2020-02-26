@@ -1,6 +1,8 @@
 import React from "react";
 import "./styles.scss";
 import Maximize from "../../../assets/images/maximize.svg";
+import WhiteMaximize from "../../../assets/images/maximize-white.svg";
+import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
 import {
   selectMapResource,
@@ -48,6 +50,15 @@ const ResourceCard = ({
               <img src={Maximize} alt="Maximize" className="maximize-icon" />
             </div>
           )}
+          <div
+            className="top-card-close"
+            role="button"
+            tabIndex="0"
+            onKeyPress={() => "noop"}
+            onClick={() => clearMapResource({ resourceId: resource._id })}
+          >
+            <img src={Close} alt="Close" className="top-close-icon" />
+          </div>
         </div>
         <div
           role="button"
@@ -90,8 +101,17 @@ const ResourceCard = ({
 
           <div className="card-tags">{resource.tags.map(renderTags)}</div>
         </div>
-        <button tabIndex="0" className="card-close" onClick={clearMapResource}>
-          Close
+        <button
+          tabIndex="0"
+          className="card-close"
+          onClick={() => openModalWithPayload({ resourceId: resource._id })}
+        >
+          See More / Edit{" "}
+          <img
+            src={WhiteMaximize}
+            alt="Maximize"
+            className="expanded-button-icon"
+          />
         </button>
       </div>
     </div>
