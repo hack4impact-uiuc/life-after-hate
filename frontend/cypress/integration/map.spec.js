@@ -2,7 +2,7 @@
 
 context("Window", () => {
   beforeEach(() => {
-    cy.visit("http://frontend:3000/");
+    cy.visit("http://frontend:3000/", { timeout: 60000 });
   });
 
   it("cy.window() - get the global window object", () => {
