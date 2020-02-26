@@ -37,6 +37,7 @@ jobs:
         GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
         GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         SESSION_SECRET: ${{ secrets.SESSION_SECRET }}  
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
     - name: Run Cypress Tests
       run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml -f docker-compose.yml up --exit-code-from=cypress --abort-on-container-exit
 
