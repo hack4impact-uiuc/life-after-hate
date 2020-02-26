@@ -46,7 +46,8 @@
     "DB_URI": "@lah_db_uri",
     "MAPQUEST_KEY": "@lah_mapquest_key",
     "MAPQUEST_URI": "@lah_mapquest_uri",
-    "LOGGLY_TOKEN": "@loggly_token"
+    "LOGGLY_TOKEN": "@loggly_token",
+    "SESSION_SECRET": "@lah_session_secret"
   },
   "build": {
     "env": {
