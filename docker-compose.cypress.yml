@@ -12,4 +12,4 @@ services:
         volumes:
             - ./frontend:/e2e
             - ./scripts:/scripts
-        entrypoint: /scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY}
+        entrypoint: /scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record
