@@ -41,7 +41,7 @@ mongoose.connect(process.env.DB_URI, {
 });
 // Silence deprecation warnings
 mongoose.set("useCreateIndex", true);
-
+console.log(`REACT_APP: ${process.env.REACT_APP_API_URI}`);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,

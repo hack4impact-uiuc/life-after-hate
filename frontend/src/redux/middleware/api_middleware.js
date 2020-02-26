@@ -16,8 +16,6 @@ const apiMiddleware = ({ dispatch }) => next => action => {
     return;
   }
 
-  console.log("HERE!");
-  console.log(url);
   const {
     url,
     method,
