@@ -2,7 +2,6 @@
 
 context("Window", () => {
   beforeEach(() => {
-    cy.wait(45000);
     cy.visit("http://frontend:3000/");
   });
 

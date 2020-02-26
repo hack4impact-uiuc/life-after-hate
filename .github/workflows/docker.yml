@@ -39,7 +39,7 @@ jobs:
         SESSION_SECRET: ${{ secrets.SESSION_SECRET }}  
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
     - name: Run Cypress Tests
-      run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml -f docker-compose.yml up --exit-code-from=cypress --abort-on-container-exit
+      run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up --exit-code-from=cypress --abort-on-container-exit
 
   test-be:
     runs-on: ubuntu-latest

@@ -1,15 +1,53 @@
 # docker-compose.yml
 version: "3.7"
-services:
-    cypress:
-        # the Docker image to use from https://github.com/cypress-io/cypress-docker-images
-        image: "cypress/included:4.0.2"
-        depends_on:
-          - frontend
-        links:
-          - frontend
-        working_dir: /e2e
-        volumes:
-            - ./frontend:/e2e
-            - ./scripts:/scripts
-        entrypoint: /scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY}
+services: 
+  backend: 
+    build: ./backend
+    command: "npm run start:dev"
+    depends_on: 
+      - db
+    env_file: 
+      - ./.env
+    environment: 
+      - PORT=5000
+      - "BYPASS_AUTH_ROLE=${BYPASS_AUTH_ROLE}"
+    ports: 
+      - "5000:5000"
+  cypress: 
+    depends_on: 
+      - frontend
+    entrypoint: "/scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY}"
+    image: "cypress/included:4.0.2"
+    links: 
+      - frontend
+    volumes: 
+      - "./frontend:/e2e"
+      - "./scripts:/scripts"
+    working_dir: /e2e
+  db: 
+    image: mongo
+    init: true
+    logging: 
+      driver: none
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - "mongo_data:/data/db"
+  frontend: 
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    command: "http-server ./build"
+    depends_on: 
+      - backend
+      - db
+    environment: 
+      - REACT_APP_API_PORT=5000
+      - PORT=3000
+    ports: 
+      - "3000:3000"
+version: "3.7"
+volumes: 
+  be_modules: ~
+  fe_modules: ~
+  mongo_data: ~
