@@ -25,6 +25,8 @@ jobs:
       run: bash scripts/setup_ci.sh 
     - name: Seed Test Database
       run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js --color"
+      env:
+        DB_URI: ${{ secrets.TEST_DB_URI }}
     - name: Run Cypress Tests
       run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml -f docker-compose.yml up --exit-code-from=cypress --abort-on-container-exit
 
