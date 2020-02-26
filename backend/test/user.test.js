@@ -203,12 +203,13 @@ describe("POST /users/", () => {
   });
 });
 
-describe("PUT /user/:user_id/role", () => {
-  it("should update user to have new role", async () => {
+describe("PATCH /user/:user_id", () => {
+  it("should update user to have new role and title", async () => {
     await createSampleUser();
 
     const reqBody = {
-      role: roleEnum.VOLUNTEER
+      role: roleEnum.VOLUNTEER,
+      title: "new title"
     };
 
     const foundUser = await User.findOne({
@@ -217,7 +218,7 @@ describe("PUT /user/:user_id/role", () => {
 
     const id = foundUser._id;
     await request(app)
-      .put(`/api/users/${id}/role`)
+      .patch(`/api/users/${id}`)
       .send(reqBody)
       .expect(200);
 
@@ -225,11 +226,12 @@ describe("PUT /user/:user_id/role", () => {
       firstName: sampleUserInfo.firstName
     });
     expect(afterUpdate.role).to.eq(roleEnum.VOLUNTEER);
+    expect(afterUpdate.title).to.eq("new title");
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
-describe("PUT /user/:user_id/role", () => {
+describe("PATCH /user/:user_id", () => {
   it("should fail to update role of nonexistent user", async () => {
     const reqBody = {
       role: roleEnum.VOLUNTEER
@@ -238,7 +240,7 @@ describe("PUT /user/:user_id/role", () => {
     const id = mongoose.Types.ObjectId();
 
     const res = await request(app)
-      .put(`/api/users/${id}/role`)
+      .patch(`/api/users/${id}`)
       .send(reqBody)
       .expect(404);
 

@@ -110,20 +110,14 @@ router.post(
   })
 );
 
-// set role
-router.put(
-  "/:user_id/role",
+// set role and title
+router.patch(
+  "/:user_id",
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      oauthId: Joi.string(),
-      propicUrl: Joi.string(),
       role: Joi.string().required(),
-      title: Joi.string(),
-      location: Joi.string(),
-      email: Joi.string()
+      title: Joi.string().default("")
     })
   }),
   errorWrap(async (req, res) => {
@@ -132,7 +126,7 @@ router.put(
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { $set: { role: data.role } },
+      { $set: { role: data.role, title: data.title } },
       { new: true }
     );
     const ret = user
