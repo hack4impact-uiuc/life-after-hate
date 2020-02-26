@@ -17,6 +17,17 @@ jobs:
     - name: Check successful frontend render without crash
       run: docker run -e CI=true lah-frontend npm test
     
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup CI Script 
+      run: bash scripts/setup_ci.sh 
+    - name: Seed Test Database
+      run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js --color"
+    - name: Run Cypress Tests
+      run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml -f docker-compose.yml up --exit-code-from=cypress --abort-on-container-exit
+
   test-be:
     runs-on: ubuntu-latest
     steps:

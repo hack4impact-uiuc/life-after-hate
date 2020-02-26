@@ -41,10 +41,11 @@ const mapping = {
 };
 
 const INITIAL_VIEW_STATE = {
-  longitude: -35,
-  latitude: 36.7,
-  zoom: 1.8,
+  longitude: -98,
+  latitude: 39.82,
+  zoom: 3.5,
   maxZoom: 20,
+  minZoom: 2.7,
   pitch: 0,
   bearing: 0
 };

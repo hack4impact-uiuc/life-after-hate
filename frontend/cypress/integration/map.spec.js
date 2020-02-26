@@ -2,7 +2,7 @@
 
 context("Window", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/");
+    cy.visit("http://frontend:3000/");
   });
 
   it("cy.window() - get the global window object", () => {
@@ -19,6 +19,6 @@ context("Window", () => {
 
   it("cy.title() - get the title", () => {
     // https://on.cypress.io/title
-    cy.title().should("include", "Kitchen Sink");
+    cy.title().should("eq", "Life After Hate Resource Map");
   });
 });

@@ -264,7 +264,7 @@ program
     const cypressExec = path.resolve(__dirname, "../node_modules/.bin/cypress");
     await seedDB({ count: 100 });
     runCommand("docker-compose", ["up"], null, {
-      BYPASS_AUTH_ROLE: "VOLUNTEER"
+      BYPASS_AUTH_ROLE: "ADMIN"
     });
     await runCommand(cypressExec, ["open", "--project", "./frontend"]);
     runCommand("docker-compose", ["down"]);
