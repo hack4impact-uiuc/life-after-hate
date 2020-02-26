@@ -46,7 +46,7 @@ const ResourceModal = props => {
   return (
     <div className="modal-wrap-ee">
       {props.isOpen && props.modalType === modalEnum.RESOURCE && (
-        <LAHModal modalName="Add Resource">
+        <LAHModal>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="add-edit-resource-form"
