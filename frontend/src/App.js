@@ -7,7 +7,7 @@ import MapView from "./pages/MapView";
 import DirectoryView from "./pages/DirectoryView";
 import AdminView from "./pages/AdminView";
 import MiniLoader from "./components/Loader/mini-loader";
-import Modal from "./components/Modal";
+import ResourceModal from "./components/Modal/ResourceModal";
 import store from "./redux/store";
 import { refreshGlobalAuth } from "./utils/api";
 import { ToastContainer } from "react-toastify";
@@ -24,7 +24,8 @@ class App extends Component {
         <div className="App">
           <MiniLoader />
           <ToastContainer />
-          <Modal modalName="Add Resource" />
+          <ResourceModal />
+          {/* <UserModal />*/}
           <Router>
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MapView} />

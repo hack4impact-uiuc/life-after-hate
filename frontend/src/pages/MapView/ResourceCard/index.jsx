@@ -6,7 +6,7 @@ import {
   selectMapResource,
   clearMapResource
 } from "../../../redux/actions/map";
-import { openModalWithPayload } from "../../../redux/actions/modal";
+import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { roleEnum } from "../../../utils/enums";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
@@ -15,7 +15,7 @@ const ResourceCard = ({
   isSelected,
   role,
   selectMapResource,
-  openModalWithPayload,
+  openResourceModalWithPayload,
   clearMapResource,
   myRef
 }) => {
@@ -43,7 +43,9 @@ const ResourceCard = ({
               role="button"
               tabIndex="0"
               onKeyPress={() => "noop"}
-              onClick={() => openModalWithPayload({ resourceId: resource._id })}
+              onClick={() =>
+                openResourceModalWithPayload({ resourceId: resource._id })
+              }
             >
               <img src={Maximize} alt="Maximize" className="maximize-icon" />
             </div>
@@ -104,7 +106,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   selectMapResource,
-  openModalWithPayload,
+  openResourceModalWithPayload,
   clearMapResource
 };
 

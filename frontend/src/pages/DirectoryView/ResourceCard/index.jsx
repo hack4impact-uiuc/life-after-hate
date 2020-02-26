@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
-import { openModalWithPayload } from "../../../redux/actions/modal";
+import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/edit.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
@@ -9,12 +9,12 @@ import "../styles.scss";
 const ResourceCard = props => {
   const toggleModal = event => {
     event.stopPropagation();
-    props.openModalWithPayload({ resourceId: props.resource._id });
+    props.openResourceModalWithPayload({ resourceId: props.resource._id });
   };
 
   const toggleViewOnlyModal = event => {
     event.stopPropagation();
-    props.openModalWithPayload({
+    props.openResourceModalWithPayload({
       resourceId: props.resource._id,
       editable: false
     });
@@ -59,7 +59,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  openModalWithPayload
+  openResourceModalWithPayload
 };
 
 export default connect(

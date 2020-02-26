@@ -42,7 +42,7 @@ const UserCard = props => (
 //   });
 
 //   const mapDispatchToProps = {
-//     openModalWithPayload
+//     openUserModalWithPayload
 //   };
 
 export default UserCard;

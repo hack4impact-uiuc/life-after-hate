@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
-import { openModal } from "../../redux/actions/modal";
+import { openResourceModal } from "../../redux/actions/modal";
 import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { refreshAllResources } from "../../utils/api";
@@ -21,7 +21,7 @@ const ResourceManager = props => {
     <div className="directory">
       <div className="manager-header">
         <h1>Resource Directory</h1>
-        <Button onClick={props.openModal} id="add-button">
+        <Button onClick={props.openResourceModal} id="add-button">
           Add Resource
         </Button>
       </div>
@@ -54,7 +54,7 @@ const MapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  openModal
+  openResourceModal
 };
 
 export default connect(
