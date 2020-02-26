@@ -37,6 +37,8 @@ services:
     build: 
       context: ./frontend
       dockerfile: Dockerfile.prod
+    env_file: 
+      - ./.env
     command: "http-server ./build"
     depends_on: 
       - backend

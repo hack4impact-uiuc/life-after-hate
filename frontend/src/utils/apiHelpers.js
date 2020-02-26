@@ -7,7 +7,7 @@ const R = require("ramda");
 
 const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
-  : "http://backend:5000/api/";
+  : "/api/";
 
 console.log(`API URI is ${API_URI}`);
 
