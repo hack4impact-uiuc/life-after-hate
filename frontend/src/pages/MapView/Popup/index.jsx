@@ -8,6 +8,7 @@ import {
   currentResourceSelector,
   mapResourceIdSelector
 } from "../../../redux/selectors/map";
+import { roleEnum } from "../../../utils/enums";
 
 const MapPopup = props => (
   <div>
@@ -35,10 +36,13 @@ const MapPopup = props => (
             tabIndex="0"
             className="popup-max"
             onClick={() =>
-              props.openModalWithPayload({ resourceId: props.resource._id })
+              props.openModalWithPayload({
+                resourceId: props.resource._id,
+                editable: props.role === roleEnum.ADMIN
+              })
             }
           >
-            See More / Edit{" "}
+            See More {props.role === roleEnum.ADMIN && "/ Edit "}
             <img src={MaximizeImg} alt="icon" className="popup-button-icon" />
           </button>
         </div>
@@ -49,7 +53,8 @@ const MapPopup = props => (
 
 const mapStateToProps = state => ({
   resource: currentResourceSelector(state),
-  isResourceSelected: mapResourceIdSelector(state) !== undefined
+  isResourceSelected: mapResourceIdSelector(state) !== undefined,
+  role: state.auth.role
 });
 
 const mapDispatchToProps = { openModalWithPayload, clearMapResource };
