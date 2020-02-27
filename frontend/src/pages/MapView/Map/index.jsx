@@ -111,6 +111,7 @@ const Map = props => {
   };
 
   const handlePopupClick = e => {
+    console.log(e);
     // Don't show a popup if hovering over the current (searched) location
     if (e.object && e.object.location.type !== "Center") {
       props.selectMapResource(props.resources[e.index]._id);
