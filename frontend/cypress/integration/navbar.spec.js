@@ -7,7 +7,7 @@ context("Navbar", () => {
 
   it("Page title is correct", () => {
     // https://on.cypress.io/title
-    cy.title().should("eq", "Life After Hate Resource Map");
+    cy.title().should("eq", "Life After Hate Resource Maps");
   });
 
   it("Has a navbar with 2 elements", () => {
