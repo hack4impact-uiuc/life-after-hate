@@ -266,7 +266,9 @@ program
     runCommand("docker-compose", ["up"], null, {
       BYPASS_AUTH_ROLE: "ADMIN"
     });
-    await runCommand(cypressExec, ["open", "--project", "./frontend"]);
+    await runCommand(cypressExec, ["open", "--project", "./frontend"], null, {
+      CYPRESS_BASE_URI: "http://localhost:3000/"
+    });
     runCommand("docker-compose", ["down"]);
   });
 

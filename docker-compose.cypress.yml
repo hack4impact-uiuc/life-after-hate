@@ -14,9 +14,10 @@ services:
     ports: 
       - "5000:5000"
   cypress: 
+    ipc: host ## this line right here
     depends_on: 
       - frontend
-    entrypoint: "/scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY}"
+    entrypoint: "/scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY} --env CYPRESS_BASE_URI=${FE_URI}"
     image: "cypress/included:4.0.2"
     links: 
       - frontend
@@ -24,6 +25,8 @@ services:
       - "./frontend:/e2e"
       - "./scripts:/scripts"
     working_dir: /e2e
+    # environment: 
+    #   - DEBUG=cypress:*
   db: 
     image: mongo
     init: true
@@ -34,11 +37,11 @@ services:
     volumes: 
       - "mongo_data:/data/db"
   frontend: 
+    env_file: 
+      - ./.env
     build: 
       context: ./frontend
       dockerfile: Dockerfile.prod
-    env_file: 
-      - ./.env
     command: "http-server ./build"
     depends_on: 
       - backend
