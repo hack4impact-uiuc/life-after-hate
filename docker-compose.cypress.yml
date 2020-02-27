@@ -17,7 +17,7 @@ services:
     ipc: host ## this line right here
     depends_on: 
       - frontend
-    entrypoint: "/scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY} --env CYPRESS_BASE_URI=${FE_URI}"
+    entrypoint: "/scripts/wait-for-it.sh frontend:3000 -t 60 -- cypress run --project /e2e --record -k ${CYPRESS_RECORD_KEY} --env BASE_URI=http://frontend:3000/"
     image: "cypress/included:4.0.2"
     links: 
       - frontend

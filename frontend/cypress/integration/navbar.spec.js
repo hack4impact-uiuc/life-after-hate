@@ -19,6 +19,6 @@ context("Navbar", () => {
     cy.get(".nav-links")
       .first()
       .children()
-      .each(a => a.should("be.visible"));
+      .should("have.length.gt", 0);
   });
 });
