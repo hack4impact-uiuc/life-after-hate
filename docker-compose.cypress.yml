@@ -27,7 +27,8 @@ services:
     working_dir: /e2e
     env_file: 
       - ./.ci_info
-    environment: 
+    # Turn on if wanting to debug the cypress run in CI
+    # environment: 
       # - DEBUG=cypress:*
   db: 
     image: mongo

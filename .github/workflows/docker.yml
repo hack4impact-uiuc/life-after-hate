@@ -40,8 +40,9 @@ jobs:
           node-version: '12.x'
       - run: npm install
       - run: node ./scripts/commit_info.js > .ci_info
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
+      # Setup tmate for debugging
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v1
       - name: Run Cypress Tests
         run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up --exit-code-from=cypress --abort-on-container-exit
 
