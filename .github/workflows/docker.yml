@@ -35,8 +35,13 @@ jobs:
           FE_URI: ${{ secrets.FE_URI }}
       - name: Seed Test Database
         run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js --color"
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm install
+      - run: node ./scripts/commit_info.js > .ci_info
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v1
       - name: Run Cypress Tests
         run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up --exit-code-from=cypress --abort-on-container-exit
 
