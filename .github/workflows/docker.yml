@@ -34,7 +34,7 @@ jobs:
           REACT_APP_API_URI: ${{ secrets.REACT_APP_API_URI }}
           FE_URI: ${{ secrets.FE_URI }}
       - name: Seed Test Database
-        run: docker-compose -f docker-compose.cypress.yml run prod-backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
+        run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
       # # Setup tmate for debugging
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
