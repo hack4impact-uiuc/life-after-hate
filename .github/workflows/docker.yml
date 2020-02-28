@@ -38,7 +38,9 @@ jobs:
       # # Setup tmate for debugging
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
-      - name: Cypress run
+      - name: Build Stack
+        run: docker-compose -f /home/runner/work/life-after-hate/life-after-hate/docker-compose.cypress.yml build 
+      - name: Cypress run 
         uses: cypress-io/github-action@v1
         with:
           record: true
