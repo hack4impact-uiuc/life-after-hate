@@ -42,12 +42,14 @@ jobs:
         uses: cypress-io/github-action@v1
         with:
           record: true
-          start: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up
+          start: docker-compose -f docker-compose.cypress.yml up
+          working-directory: frontend
+          env: BASE_URI=http://frontend:3000
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          
   test-be:
     runs-on: ubuntu-latest
     steps:
