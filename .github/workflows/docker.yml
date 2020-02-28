@@ -17,7 +17,7 @@ jobs:
         run: docker run -e CI=true lah-frontend npm test
 
   cypress:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
       - uses: actions/checkout@v1
       - name: Setup CI Script
@@ -35,16 +35,18 @@ jobs:
           FE_URI: ${{ secrets.FE_URI }}
       - name: Seed Test Database
         run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
-      - uses: actions/setup-node@v1
+      # # Setup tmate for debugging
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
         with:
-          node-version: '12.x'
-      - run: npm install
-      - run: node ./scripts/commit_info.js > .ci_info
-      # Setup tmate for debugging
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
-      - name: Run Cypress Tests
-        run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up --exit-code-from=cypress --abort-on-container-exit
+          record: true
+          start: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test-be:
     runs-on: ubuntu-latest
