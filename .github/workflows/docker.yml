@@ -38,14 +38,13 @@ jobs:
       # # Setup tmate for debugging
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
-      - name: Start Full Stack Server 
-        run: docker-compose -f docker-compose.cypress.yml up -d
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
           record: true
           working-directory: frontend
           env: BASE_URI=http://localhost:3000
+          start: docker-compose -f /home/runner/work/life-after-hate/life-after-hate/docker-compose.cypress.yml up -d
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
