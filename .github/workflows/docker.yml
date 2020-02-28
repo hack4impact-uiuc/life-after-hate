@@ -39,7 +39,7 @@ jobs:
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
       - name: Start Full Stack Server 
-        run: docker-compose -f docker-compose.cypress.yml up
+        run: docker-compose -f docker-compose.cypress.yml up -d
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
