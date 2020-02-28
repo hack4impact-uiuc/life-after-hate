@@ -32,7 +32,7 @@ axios.interceptors.response.use(response => {
   return response;
 });
 
-app.use(cors({ origin: /.*/, credentials: true }));
+app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 app.use(morgan("dev"));
 
 mongoose.connect(process.env.DB_URI, {
