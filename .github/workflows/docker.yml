@@ -33,8 +33,8 @@ jobs:
           REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
           REACT_APP_API_URI: ${{ secrets.REACT_APP_API_URI }}
           FE_URI: ${{ secrets.FE_URI }}
-      - name: Seed Test Database
-        run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js --color"
+      # - name: Seed Test Database
+      #   run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js --color"
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
@@ -44,7 +44,7 @@ jobs:
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
       - name: Run Cypress Tests
-        run: BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up --exit-code-from=cypress --abort-on-container-exit
+        run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js --color" && BYPASS_AUTH_ROLE=ADMIN docker-compose -f docker-compose.cypress.yml up --exit-code-from=cypress --abort-on-container-exit
 
   test-be:
     runs-on: ubuntu-latest
