@@ -34,17 +34,18 @@ jobs:
           REACT_APP_API_URI: ${{ secrets.REACT_APP_API_URI }}
           FE_URI: ${{ secrets.FE_URI }}
       - name: Seed Test Database
-        run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
+        run: docker-compose -f docker-compose.cypress.yml run prod-backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
       # # Setup tmate for debugging
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
+      - name: Start Full Stack Server 
+        run: docker-compose -f docker-compose.cypress.yml up
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
           record: true
-          start: docker-compose -f docker-compose.cypress.yml up
           working-directory: frontend
-          env: BASE_URI=http://frontend:3000
+          env: BASE_URI=http://localhost:3000
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
