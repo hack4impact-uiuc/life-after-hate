@@ -39,14 +39,14 @@ jobs:
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
       - name: Build Stack
-        run: docker-compose -f /home/runner/work/life-after-hate/life-after-hate/docker-compose.cypress.yml build 
+        run: docker-compose -f ./docker-compose.cypress.yml build 
       - name: Cypress run 
         uses: cypress-io/github-action@v1
         with:
           record: true
           working-directory: frontend
           env: BASE_URI=http://localhost:3000
-          start: docker-compose -f /home/runner/work/life-after-hate/life-after-hate/docker-compose.cypress.yml up -d
+          start: docker-compose -f ./docker-compose.cypress.yml up -d
           wait-on: 'http://localhost:3000'
         env:
           # pass the Dashboard record key as an environment variable
