@@ -1,17 +1,21 @@
 import React from "react";
 import "./styles.scss";
 import Maximize from "../../../assets/images/maximize.svg";
+import WhiteMaximize from "../../../assets/images/maximize-white.svg";
+import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
 import {
   selectMapResource,
   clearMapResource
 } from "../../../redux/actions/map";
 import { openModalWithPayload } from "../../../redux/actions/modal";
+import { roleEnum } from "../../../utils/enums";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
   resource,
   isSelected,
+  role,
   selectMapResource,
   openModalWithPayload,
   clearMapResource,
@@ -36,14 +40,25 @@ const ResourceCard = ({
           >
             {resource.companyName}
           </div>
+          {role === roleEnum.ADMIN && (
+            <div
+              className="card-maximize"
+              role="button"
+              tabIndex="0"
+              onKeyPress={() => "noop"}
+              onClick={() => openModalWithPayload({ resourceId: resource._id })}
+            >
+              <img src={Maximize} alt="Maximize" className="maximize-icon" />
+            </div>
+          )}
           <div
-            className="card-maximize"
+            className="top-card-close"
             role="button"
             tabIndex="0"
             onKeyPress={() => "noop"}
-            onClick={() => openModalWithPayload({ resourceId: resource._id })}
+            onClick={() => clearMapResource({ resourceId: resource._id })}
           >
-            <img src={Maximize} alt="Maximize" className="maximize-icon" />
+            <img src={Close} alt="Close" className="top-close-icon" />
           </div>
         </div>
         <div
@@ -87,13 +102,27 @@ const ResourceCard = ({
 
           <div className="card-tags">{resource.tags.map(renderTags)}</div>
         </div>
-        <button tabIndex="0" className="card-close" onClick={clearMapResource}>
-          Close
+        <button
+          tabIndex="0"
+          className="card-close"
+          onClick={() => openModalWithPayload({ resourceId: resource._id })}
+        >
+          See More / Edit{" "}
+          <img
+            src={WhiteMaximize}
+            alt="Maximize"
+            className="expanded-button-icon"
+          />
         </button>
       </div>
     </div>
   );
 };
+
+const mapStateToProps = state => ({
+  role: state.auth.role
+});
+
 const mapDispatchToProps = {
   selectMapResource,
   openModalWithPayload,
@@ -101,6 +130,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ResourceCard);

@@ -45,7 +45,9 @@
     "OAUTH_CALLBACK_URI": "@lah_oauth_callback_uri",
     "DB_URI": "@lah_db_uri",
     "MAPQUEST_KEY": "@lah_mapquest_key",
-    "MAPQUEST_URI": "@lah_mapquest_uri"
+    "MAPQUEST_URI": "@lah_mapquest_uri",
+    "LOGGLY_TOKEN": "@loggly_token",
+    "SESSION_SECRET": "@lah_session_secret"
   },
   "build": {
     "env": {

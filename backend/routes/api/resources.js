@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const express = require("express");
 const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");

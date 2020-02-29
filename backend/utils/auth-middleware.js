@@ -26,20 +26,44 @@ const requireAdminStatus = (req, res, next) => {
     .send(Boom.unauthorized("You are not authorized (requires admin status)."));
 };
 
+const requirePendingStatus = (req, res, next) => {
+  if (
+    authValidators.validateRequestForRole(req, roleEnum.PENDING) ||
+    authValidators.validateRequestForRole(req, roleEnum.VOLUNTEER) ||
+    authValidators.validateRequestForRole(req, roleEnum.ADMIN)
+  ) {
+    return next();
+  }
+  res
+    .status(401)
+    .send(
+      Boom.unauthorized("You are not authorized (requires pending status).")
+    );
+};
+
+const setMockUserRole = (app, role) => {
+  app.locals.mockRole = role;
+};
+
 // Middleware that'll set a mock user if the bypass authorization environment variable gets set
-const setMockUser = (req, _, next) => {
+const mockUserMiddleware = (req, _, next) => {
   req.user = {
     firstName: "John",
     lastName: "Doe",
     oauthId: "12345678",
     propicUrl:
       "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
-    isApproved: true,
-    role: roleEnum.ADMIN,
+    role: req.app.locals.mockRole,
     location: "SOUTH",
     email: "abc@def.xyz"
   };
   req.isAuthenticated = () => true;
   next();
 };
-module.exports = { requireVolunteerStatus, requireAdminStatus, setMockUser };
+module.exports = {
+  requirePendingStatus,
+  requireVolunteerStatus,
+  requireAdminStatus,
+  mockUserMiddleware,
+  setMockUserRole
+};

@@ -20,10 +20,12 @@ const authValidatorCalled = type =>
 
 const didCheckIsVolunteer = () => authValidatorCalled(roleEnum.VOLUNTEER);
 const didCheckIsAdmin = () => authValidatorCalled(roleEnum.ADMIN);
+const didCheckIsPending = () => authValidatorCalled(roleEnum.PENDING);
 
 module.exports = {
   stubOutAuth,
   unstubAuth,
   didCheckIsAdmin,
-  didCheckIsVolunteer
+  didCheckIsVolunteer,
+  didCheckIsPending
 };

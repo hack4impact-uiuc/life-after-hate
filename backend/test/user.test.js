@@ -4,19 +4,37 @@ const app = require("../app.js");
 const User = require("../models/User");
 const mongoose = require("mongoose");
 const { didCheckIsAdmin } = require("./auth_stubs");
+const { roleEnum } = require("../models/User");
 
 const sampleUserInfo = {
   firstName: "alan",
   lastName: "fang",
   email: "analfang@illinois.edu",
-  role: "ADMIN",
+  role: roleEnum.ADMIN,
   location: "SOUTH",
   oauthId: "1234567"
 };
 
+const samplePendingUserInfo = {
+  firstName: "eugenia",
+  lastName: "chen",
+  email: "eug@illinois.edu",
+  location: "NORTH",
+  oauthId: "1234568"
+};
+
+const sampleVolunteerUserInfo = {
+  firstName: "josh",
+  lastName: "byster",
+  email: "josh@illinois.edu",
+  role: roleEnum.VOLUNTEER,
+  location: "NORTH",
+  oauthId: "1234569"
+};
+
 const incompleteUserInfo = {
   email: "joshb@illinois.edu",
-  role: "ADMIN",
+  role: roleEnum.ADMIN,
   location: "SOUTH",
   oauthId: "1234567"
 };
@@ -26,7 +44,20 @@ const createSampleUser = async (userInfo = sampleUserInfo) => {
   await newUser.save();
 };
 
-describe("GET /user/", () => {
+const createSamplePendingUser = async (userInfo = samplePendingUserInfo) => {
+  userInfo.role = roleEnum.PENDING;
+  const newUser = new User(userInfo);
+  await newUser.save();
+};
+
+const createSampleVolunteerUser = async (
+  userInfo = sampleVolunteerUserInfo
+) => {
+  const newUser = new User(userInfo);
+  await newUser.save();
+};
+
+describe("GET /users/", () => {
   it("should get all users", async () => {
     await createSampleUser();
 
@@ -39,7 +70,69 @@ describe("GET /user/", () => {
   });
 });
 
-describe("GET /user/:user_id", () => {
+describe("GET /users/role/:role", () => {
+  it("should get all users with PENDING role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    const res = await request(app)
+      .get(`/api/users/role/pending`)
+      .expect(200);
+
+    expect(res.body.result[0].firstName).to.eq("eugenia");
+    expect(res.body.result.length).to.eq(1);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/role/:role", () => {
+  it("should get all users with VOLUNTEER role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    const res = await request(app)
+      .get(`/api/users/role/volunteer`)
+      .expect(200);
+
+    expect(res.body.result[0].firstName).to.eq("josh");
+    expect(res.body.result.length).to.eq(1);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/role/:role", () => {
+  it("should get all users with ADMIN role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    const res = await request(app)
+      .get(`/api/users/role/admin`)
+      .expect(200);
+
+    expect(res.body.result[0].firstName).to.eq("alan");
+    expect(res.body.result.length).to.eq(1);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/role/:role", () => {
+  it("should fail to get all users with nonexistent role", async () => {
+    await createSamplePendingUser();
+    await createSampleVolunteerUser();
+    await createSampleUser();
+
+    await request(app)
+      .get(`/api/users/role/none`)
+      .expect(400);
+
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("GET /users/:user_id", () => {
   it("should get a single user", async () => {
     await createSampleUser();
     const foundUser = await User.findOne({
@@ -57,7 +150,37 @@ describe("GET /user/:user_id", () => {
 });
 
 describe("POST /users/", () => {
-  it("should create a new user", async () => {
+  it("should create a new user with default pending role", async () => {
+    await request(app)
+      .post(`/api/users/`)
+      .send(samplePendingUserInfo)
+      .expect(200);
+    const foundUser = await User.findOne({
+      firstName: samplePendingUserInfo.firstName
+    });
+    expect(foundUser.oauthId).to.eq(samplePendingUserInfo.oauthId);
+    expect(foundUser.role).to.eq(roleEnum.PENDING);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("POST /users/", () => {
+  it("should create a new user with volunteer role", async () => {
+    await request(app)
+      .post(`/api/users/`)
+      .send(sampleVolunteerUserInfo)
+      .expect(200);
+    const foundUser = await User.findOne({
+      firstName: sampleVolunteerUserInfo.firstName
+    });
+    expect(foundUser.oauthId).to.eq(sampleVolunteerUserInfo.oauthId);
+    expect(foundUser.role).to.eq(roleEnum.VOLUNTEER);
+    expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("POST /users/", () => {
+  it("should create a new user with admin role", async () => {
     await request(app)
       .post(`/api/users/`)
       .send(sampleUserInfo)
@@ -80,12 +203,13 @@ describe("POST /users/", () => {
   });
 });
 
-describe("PUT /user/:user_id/role", () => {
-  it("should update user to have new role", async () => {
+describe("PATCH /user/:user_id", () => {
+  it("should update user to have new role and title", async () => {
     await createSampleUser();
 
     const reqBody = {
-      role: "VOLUNTEER"
+      role: roleEnum.VOLUNTEER,
+      title: "new title"
     };
 
     const foundUser = await User.findOne({
@@ -94,72 +218,29 @@ describe("PUT /user/:user_id/role", () => {
 
     const id = foundUser._id;
     await request(app)
-      .put(`/api/users/${id}/role`)
+      .patch(`/api/users/${id}`)
       .send(reqBody)
       .expect(200);
 
     const afterUpdate = await User.findOne({
       firstName: sampleUserInfo.firstName
     });
-    expect(afterUpdate.role).to.eq("VOLUNTEER");
+    expect(afterUpdate.role).to.eq(roleEnum.VOLUNTEER);
+    expect(afterUpdate.title).to.eq("new title");
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
 
-describe("PUT /user/:user_id/role", () => {
+describe("PATCH /user/:user_id", () => {
   it("should fail to update role of nonexistent user", async () => {
     const reqBody = {
-      role: "VOLUNTEER"
+      role: roleEnum.VOLUNTEER
     };
 
     const id = mongoose.Types.ObjectId();
 
     const res = await request(app)
-      .put(`/api/users/${id}/role`)
-      .send(reqBody)
-      .expect(404);
-
-    expect(res.body.message).to.eq("User Not Found");
-    expect(didCheckIsAdmin()).to.be.true;
-  });
-});
-
-describe("PUT /user/:user_id/approve", () => {
-  it("should approve the user", async () => {
-    const reqBody = {
-      isApproved: true
-    };
-
-    await createSampleUser();
-
-    const foundUser = await User.findOne({
-      firstName: sampleUserInfo.firstName
-    });
-    const id = foundUser._id;
-
-    await request(app)
-      .put(`/api/users/${id}/approve`)
-      .send(reqBody)
-      .expect(200);
-
-    const afterUpdate = await User.findOne({
-      firstName: sampleUserInfo.firstName
-    });
-    expect(afterUpdate.isApproved).to.eq(true);
-    expect(didCheckIsAdmin()).to.be.true;
-  });
-});
-
-describe("PUT /user/:user_id/approve", () => {
-  it("should fail to approve nonexistent user", async () => {
-    const reqBody = {
-      isApproved: true
-    };
-
-    const id = mongoose.Types.ObjectId();
-
-    const res = await request(app)
-      .put(`/api/users/${id}/approve`)
+      .patch(`/api/users/${id}`)
       .send(reqBody)
       .expect(404);
 
