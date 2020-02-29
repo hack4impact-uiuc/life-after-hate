@@ -87,6 +87,22 @@ async function refreshAllUsers() {
   store.dispatch(updateUsers(userList));
 }
 
+async function editAndRefreshUser(data, id) {
+  await editUser(data, id);
+  await refreshAllUsers();
+}
+
+async function editUser(data, id) {
+  return (await apiRequest({
+    endpoint: `/users/${id}`, // TODO: create put endpoint in backend api
+    method: "PUT",
+    data: data,
+    notification: {
+      successMessage: "Successfully edited user!"
+    }
+  })).result;
+}
+
 async function editAndRefreshResource(data, id) {
   await editResource(data, id);
   await refreshAllResources();
@@ -118,5 +134,7 @@ export {
   editAndRefreshResource,
   deleteAndRefreshResource,
   refreshAllResources,
-  refreshAllUsers
+  refreshAllUsers,
+  editAndRefreshUser,
+  editUser
 };
