@@ -15,7 +15,11 @@ const UserModal = props => {
   const onSubmit = data => handleEditUser(data);
 
   const handleEditUser = async data => {
-    await editAndRefreshUser(data, props.user.id);
+    // TODO: Maybe make this more elegant
+    props.user.role = data.role;
+    props.user.title = data.title;
+    console.log(props.user);
+    await editAndRefreshUser(props.user, props.user.id);
     props.closeModal();
   };
 
@@ -34,7 +38,7 @@ const UserModal = props => {
               <input
                 ref={register}
                 type="text"
-                name="userName"
+                name="name"
                 defaultValue={`${props.user.firstName} ${props.user.lastName}`}
                 className="modal-input-field"
                 disabled={true}
@@ -45,7 +49,7 @@ const UserModal = props => {
               <input
                 ref={register}
                 type="text"
-                name="userEmail"
+                name="email"
                 defaultValue={props.user.email}
                 className="modal-input-field"
                 disabled={true}
@@ -55,7 +59,7 @@ const UserModal = props => {
               <p>Role</p>
               <select
                 ref={register}
-                name="userRole"
+                name="role"
                 defaultValue={props.user.role}
                 className="modal-select-field"
                 disabled={!props.editable}
@@ -67,7 +71,7 @@ const UserModal = props => {
               <p>Title</p>
               <textarea
                 ref={register}
-                name="userTitle"
+                name="title"
                 defaultValue={props.user.title}
                 className="modal-input-field modal-input-textarea"
                 rows="3"
