@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
-import { modalEnum } from "../../../utils/enums";
+import { modalEnum, roleEnum } from "../../../utils/enums";
 import { editAndRefreshUser } from "../../../utils/api";
 import { currentUserSelector } from "../../../redux/selectors/modal";
 import LAHModal from "../../Modal";
@@ -15,12 +15,13 @@ const UserModal = props => {
   const onSubmit = data => handleEditUser(data);
 
   const handleEditUser = async data => {
-    await editAndRefreshUser(data, props.usere._id);
+    await editAndRefreshUser(data, props.user.id);
     props.closeModal();
   };
 
+  const makeOption = option => <option>{option}</option>;
+
   return (
-    // TODO: adapt to user modal fields
     <div className="modal-wrap-ee">
       {props.isOpen && props.modalType === modalEnum.USER && (
         <LAHModal>
@@ -52,14 +53,15 @@ const UserModal = props => {
             </label>
             <label className="modal-lab">
               <p>Role</p>
-              <input
+              <select
                 ref={register}
-                type="text" // TODO: Make select
                 name="userRole"
                 defaultValue={props.user.role}
-                className="modal-input-field"
+                className="modal-select-field"
                 disabled={!props.editable}
-              />
+              >
+                {Object.values(roleEnum).map(makeOption) /* Enum to options */}
+              </select>
             </label>
             <label className="modal-lab">
               <p>Title</p>
