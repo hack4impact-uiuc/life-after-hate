@@ -56,9 +56,20 @@ class CardView extends React.Component {
         r => r._id === this.props.selectedResource
       );
       cache.clear(currResourceIdx, 0);
-      this.list.recomputeRowHeights();
-      console.log(cache);
-      this.list.scrollToRow(currResourceIdx);
+      const firstOffset = this.list.getOffsetForRow({
+        alignment: "start",
+        index: currResourceIdx
+      });
+      this.list.scrollToPosition(firstOffset);
+      setTimeout(() => {
+        console.log(this.list.Grid);
+        this.list.scrollToPosition(
+          this.list.getOffsetForRow({
+            alignment: "start",
+            index: currResourceIdx
+          })
+        );
+      }, 500);
     }
   }
 

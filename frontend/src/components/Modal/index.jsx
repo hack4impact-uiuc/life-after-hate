@@ -46,7 +46,7 @@ const LAHModal = props => {
   return (
     <div className="modal-wrap-ee">
       {props.isOpen && (
-        <Modal fade={false} isOpen={props.isOpen}>
+        <Modal fade={false} isOpen={props.isOpen} toggle={props.closeModal}>
           <ModalHeader>
             {props.title}
             <Button
