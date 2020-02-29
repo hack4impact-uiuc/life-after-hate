@@ -1,6 +1,6 @@
 {
   "plugins": ["@h4iuiuc"],
-  "extends": ["plugin:@h4iuiuc/recommended"],
+  "extends": ["plugin:@h4iuiuc/recommended", "plugin:cypress/recommended"],
   "rules": {
     "import/no-unresolved": "off",
     "no-magic-numbers": "off",
@@ -12,6 +12,7 @@
   "env": {
     "browser": true,
     "node": true,
-    "jest": true
+    "jest": true,
+    "cypress/globals": true
   }
 }

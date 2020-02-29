@@ -14,5 +14,8 @@ router.use("/sample", require("./sample"));
 router.use("/auth", require("./auth"));
 router.use("/users", require("./users"));
 router.use("/resources", require("./resources"));
+if (process.env.NODE_ENV !== "production" && process.env.BYPASS_AUTH_ROLE) {
+  router.use("/test", require("./test"));
+}
 
 module.exports = router;

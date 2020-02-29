@@ -41,10 +41,11 @@ const mapping = {
 };
 
 const INITIAL_VIEW_STATE = {
-  longitude: -35,
-  latitude: 36.7,
-  zoom: 1.8,
+  longitude: -98,
+  latitude: 39.82,
+  zoom: 3.5,
   maxZoom: 20,
+  minZoom: 2.7,
   pitch: 0,
   bearing: 0
 };
@@ -110,6 +111,7 @@ const Map = props => {
   };
 
   const handlePopupClick = e => {
+    console.log(e);
     // Don't show a popup if hovering over the current (searched) location
     if (e.object && e.object.location.type !== "Center") {
       props.selectMapResource(props.resources[e.index]._id);

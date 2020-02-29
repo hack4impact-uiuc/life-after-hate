@@ -41,15 +41,19 @@ const requirePendingStatus = (req, res, next) => {
     );
 };
 
+const setMockUserRole = (app, role) => {
+  app.locals.mockRole = role;
+};
+
 // Middleware that'll set a mock user if the bypass authorization environment variable gets set
-const setMockUser = (req, _, next) => {
+const mockUserMiddleware = (req, _, next) => {
   req.user = {
     firstName: "John",
     lastName: "Doe",
     oauthId: "12345678",
     propicUrl:
       "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
-    role: process.env.BYPASS_AUTH_ROLE,
+    role: req.app.locals.mockRole,
     location: "SOUTH",
     email: "abc@def.xyz"
   };
@@ -60,5 +64,6 @@ module.exports = {
   requirePendingStatus,
   requireVolunteerStatus,
   requireAdminStatus,
-  setMockUser
+  mockUserMiddleware,
+  setMockUserRole
 };

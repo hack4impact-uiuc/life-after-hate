@@ -3,31 +3,65 @@ name: FE/BE Testing
 on: [push]
 
 jobs:
-
   test-fe:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup CI Script 
-      run: bash scripts/setup_ci.sh
-    - name: Build Docker Image
-      run: docker build -t lah-frontend ./frontend
-    - name: Check successful frontend NPM build 
-      run: docker run lah-frontend npm run build
-    - name: Check successful frontend render without crash
-      run: docker run -e CI=true lah-frontend npm test
-    
+      - uses: actions/checkout@v1
+      - name: Setup CI Script
+        run: bash scripts/setup_ci.sh
+      - name: Build Docker Image
+        run: docker build -t lah-frontend ./frontend
+      - name: Check successful frontend NPM build
+        run: docker run lah-frontend npm run build
+      - name: Check successful frontend render without crash
+        run: docker run -e CI=true lah-frontend npm test
+
+  cypress:
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup CI Script
+        run: bash scripts/setup_ci.sh
+        env:
+          DB_URI: ${{ secrets.TEST_DB_URI }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          MAPQUEST_KEY: ${{ secrets.MAPQUEST_KEY }}
+          MAPQUEST_URI: ${{ secrets.MAPQUEST_URI }}
+          REACT_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.REACT_APP_MAPBOX_ACCESS_TOKEN }}
+          REACT_APP_API_URI: ${{ secrets.REACT_APP_API_URI }}
+          FE_URI: ${{ secrets.FE_URI }}
+      - name: Seed Test Database
+        run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
+      # # Setup tmate for debugging
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v1
+      - name: Build Stack
+        run: docker-compose -f docker-compose.cypress.yml build 
+      - name: Cypress run 
+        uses: cypress-io/github-action@v1
+        with:
+          record: true
+          working-directory: frontend
+          env: BASE_URI=http://localhost:3000
+          start: docker-compose -f ../docker-compose.cypress.yml up -d
+          wait-on: 'http://localhost:3000'
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
   test-be:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup CI Script 
-      run: bash scripts/setup_ci.sh
-      env:
-        DB_URI: ${{ secrets.TEST_DB_URI }}
-        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
-        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-        SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-    - name: Build Backend & Run Tests 
-      run: docker-compose run -e CI=true backend npm test
-    
+      - uses: actions/checkout@v1
+      - name: Setup CI Script
+        run: bash scripts/setup_ci.sh
+        env:
+          DB_URI: ${{ secrets.TEST_DB_URI }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      - name: Build Backend & Run Tests
+        run: docker-compose run -e CI=true backend npm test
