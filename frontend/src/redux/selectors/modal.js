@@ -24,7 +24,7 @@ export const currentUserSelector = createSelector(
     if (!id) {
       return {};
     }
-    return users.find(user => user._id === id);
+    return users.find(user => user.id === id);
   }
 );
 
@@ -48,7 +48,7 @@ export const titleSelector = createSelector(
       }
       return "Edit Resource";
     } else if (modalType === modalEnum.USER) {
-      if (!user._id) {
+      if (!user.id) {
         // There should never be no user ID
         return "";
       }

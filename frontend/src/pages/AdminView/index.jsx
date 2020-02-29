@@ -10,7 +10,7 @@ const UserManager = props => {
     refreshAllUsers();
   }, []);
 
-  const renderCards = user => <UserCard key={user._id} user={user} />;
+  const renderCards = user => <UserCard key={user.id} user={user} />;
 
   return (
     <div className="directory">
@@ -43,9 +43,5 @@ const UserManager = props => {
 const MapStateToProps = state => ({
   users: userSelector(state)
 });
-
-//   const mapDispatchToProps = { TODO: make user modal
-//     openModal
-//   };
 
 export default connect(MapStateToProps)(UserManager);
