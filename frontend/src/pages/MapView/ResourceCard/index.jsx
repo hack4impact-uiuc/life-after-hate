@@ -19,7 +19,8 @@ const ResourceCard = ({
   selectMapResource,
   openModalWithPayload,
   clearMapResource,
-  myRef
+  myRef,
+  style
 }) => {
   const renderTags = (tag, idx) => (
     <div className="card-tag" key={idx}>
@@ -27,7 +28,7 @@ const ResourceCard = ({
     </div>
   );
   return (
-    <div className="resource-card" ref={myRef}>
+    <div className="resource-card" ref={myRef} style={style}>
       <div className={isSelected ? "expanded" : "collapsed"}>
         <div className="clearfix">
           <div
