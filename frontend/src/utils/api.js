@@ -94,7 +94,7 @@ async function editAndRefreshUser(data, id) {
 
 async function editUser(data, id) {
   return (await apiRequest({
-    endpoint: `/users/${id}`, // TODO: create put endpoint in backend api
+    endpoint: `/users/${id}`,
     method: "PATCH",
     data: data,
     notification: {
