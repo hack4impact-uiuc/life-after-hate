@@ -1,6 +1,5 @@
 const express = require("express");
-const R = require("ramda");
-const { renameKeys } = require("ramda-adjunct");
+const { filterSensitiveInfo } = require("../../utils/user-utils");
 const router = express.Router();
 const User = require("../../models/User");
 const { celebrate, Joi } = require("celebrate");
@@ -11,18 +10,6 @@ const {
 } = require("../../utils/auth-middleware");
 const { roleEnum } = require("../../models/User");
 // Filters down the user information into just what's needed
-const filterSensitiveInfo = R.pipe(
-  R.pick([
-    "_id",
-    "firstName",
-    "lastName",
-    "role",
-    "location",
-    "propicUrl",
-    "email"
-  ]),
-  renameKeys({ _id: "id" })
-);
 
 // get all users
 router.get(
@@ -97,6 +84,7 @@ router.post(
       oauthId: Joi.string().required(),
       propicUrl: Joi.string(),
       role: Joi.string().default(roleEnum.PENDING),
+      title: Joi.string(),
       location: Joi.string().required(),
       email: Joi.string().required()
     })
@@ -109,6 +97,7 @@ router.post(
       oauthId: data.oauthId,
       propicUrl: data.propicUrl,
       role: data.role,
+      title: data.title,
       location: data.location,
       email: data.email
     });
@@ -121,19 +110,14 @@ router.post(
   })
 );
 
-// set role
-router.put(
-  "/:user_id/role",
+// set role and title
+router.patch(
+  "/:user_id",
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      oauthId: Joi.string(),
-      propicUrl: Joi.string(),
       role: Joi.string().required(),
-      location: Joi.string(),
-      email: Joi.string()
+      title: Joi.string().default("")
     })
   }),
   errorWrap(async (req, res) => {
@@ -142,7 +126,7 @@ router.put(
 
     const user = await User.findByIdAndUpdate(
       userId,
-      { $set: { role: data.role } },
+      { $set: { role: data.role, title: data.title } },
       { new: true }
     );
     const ret = user

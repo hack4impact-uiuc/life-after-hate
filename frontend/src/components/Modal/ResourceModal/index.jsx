@@ -25,6 +25,7 @@ const ResourceModal = props => {
   };
 
   const handleEditResource = async data => {
+    data.tags = data.tags.split(",").map(tag => tag.trim());
     await editAndRefreshResource(data, props.resource._id);
     props.closeModal();
   };
@@ -105,6 +106,18 @@ const ResourceModal = props => {
                 defaultValue={props.resource.description}
                 className="modal-input-field modal-input-textarea"
                 rows="10"
+                disabled={!props.editable}
+              />
+            </label>
+            <label className="modal-lab">
+              <p>Tags</p>
+              <input
+                ref={register}
+                name="tags"
+                defaultValue={
+                  props.isAddingResource ? "" : props.resource.tags.join(", ")
+                }
+                className="modal-input-field"
                 disabled={!props.editable}
               />
             </label>

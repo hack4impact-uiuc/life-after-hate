@@ -1,6 +1,8 @@
 import React from "react";
 import "./styles.scss";
 import Maximize from "../../../assets/images/maximize.svg";
+import WhiteMaximize from "../../../assets/images/maximize-white.svg";
+import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
 import {
   selectMapResource,
@@ -17,7 +19,8 @@ const ResourceCard = ({
   selectMapResource,
   openResourceModalWithPayload,
   clearMapResource,
-  myRef
+  myRef,
+  style
 }) => {
   const renderTags = (tag, idx) => (
     <div className="card-tag" key={idx}>
@@ -25,7 +28,7 @@ const ResourceCard = ({
     </div>
   );
   return (
-    <div className="resource-card" ref={myRef}>
+    <div className="resource-card" ref={myRef} style={style}>
       <div className={isSelected ? "expanded" : "collapsed"}>
         <div className="clearfix">
           <div
@@ -50,6 +53,15 @@ const ResourceCard = ({
               <img src={Maximize} alt="Maximize" className="maximize-icon" />
             </div>
           )}
+          <div
+            className="top-card-close"
+            role="button"
+            tabIndex="0"
+            onKeyPress={() => "noop"}
+            onClick={() => clearMapResource({ resourceId: resource._id })}
+          >
+            <img src={Close} alt="Close" className="top-close-icon" />
+          </div>
         </div>
         <div
           role="button"
@@ -92,8 +104,19 @@ const ResourceCard = ({
 
           <div className="card-tags">{resource.tags.map(renderTags)}</div>
         </div>
-        <button tabIndex="0" className="card-close" onClick={clearMapResource}>
-          Close
+        <button
+          tabIndex="0"
+          className="card-close"
+          onClick={() =>
+            openResourceModalWithPayload({ resourceId: resource._id })
+          }
+        >
+          See More / Edit{" "}
+          <img
+            src={WhiteMaximize}
+            alt="Maximize"
+            className="expanded-button-icon"
+          />
         </button>
       </div>
     </div>

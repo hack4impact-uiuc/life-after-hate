@@ -7,7 +7,9 @@ const R = require("ramda");
 
 const API_URI = process.env.REACT_APP_API_URI
   ? process.env.REACT_APP_API_URI
-  : "/api";
+  : "/api/";
+
+console.log(`API URI is ${API_URI}`);
 
 // Map an object with key/value pairs to a query string of the form key=value&key2=value2
 export const toQueryString = R.pipe(

@@ -7,7 +7,7 @@ import { titleSelector } from "../../redux/selectors/modal";
 import "./styles.scss";
 
 const LAHModal = props => (
-  <Modal fade={false} isOpen={props.isOpen}>
+  <Modal fade={false} isOpen={props.isOpen} toggle={props.closeModal}>
     <ModalHeader>
       {props.title}
       <Button color="link" className="close-button" onClick={props.closeModal}>

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const express = require("express");
 const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");
@@ -30,7 +31,7 @@ router.get(
   "/",
   requireVolunteerStatus,
   errorWrap(async (req, res) => {
-    const resources = await Resource.find({});
+    const resources = await Resource.find({}).lean();
 
     res.json({
       code: 200,
@@ -55,7 +56,7 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const { radius, address, keyword, customWeights, tag } = req.query;
-    let resources = await Resource.find({});
+    let resources = await Resource.find({}).lean();
 
     const { lat, lng } = address
       ? await resourceUtils.addressToLatLong(address)
