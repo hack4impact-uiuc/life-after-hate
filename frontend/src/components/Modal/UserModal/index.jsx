@@ -15,11 +15,11 @@ const UserModal = props => {
   const onSubmit = data => handleEditUser(data);
 
   const handleEditUser = async data => {
-    // TODO: Maybe make this more elegant
-    props.user.role = data.role;
-    props.user.title = data.title;
-    console.log(props.user);
-    await editAndRefreshUser(props.user, props.user.id);
+    const reqBody = {
+      role: data.role,
+      title: data.title
+    };
+    await editAndRefreshUser(reqBody, props.user.id);
     props.closeModal();
   };
 
