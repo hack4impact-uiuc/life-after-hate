@@ -16,7 +16,6 @@ function PrivateRoute({
   const pending = role === roleEnum.PENDING;
   return (
     <div>
-      {authed && !pending && <Navbar />}
       <Route
         {...rest}
         render={props => {
@@ -25,8 +24,14 @@ function PrivateRoute({
           }
           if (authed === true) {
             if (!pending) {
-              return <Component {...props} />;
+              return (
+                <div>
+                  {authed && !pending && <Navbar />}
+                  <Component {...props} />
+                </div>
+              );
             }
+
             return <Pending {...props} />;
           }
           if (authed === false) {
