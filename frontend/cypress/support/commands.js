@@ -23,3 +23,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+// Used to set the current role
+Cypress.Commands.add("setRole", role => {
+  cy.request({
+    url: `${Cypress.env("API_URI")}/api/test/setRole/${role}`,
+    method: "GET"
+  });
+});

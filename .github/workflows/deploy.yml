@@ -3,8 +3,8 @@ name: Deployment Tasks
 on: [push]
 
 jobs:
-   
   seed-db:
+    name: Seed Production Database
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
