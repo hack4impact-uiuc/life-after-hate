@@ -2,6 +2,7 @@
 
 context("Navbar", () => {
   beforeEach(() => {
+    cy.setRole("ADMIN");
     cy.visit(Cypress.env("BASE_URI"));
   });
 
@@ -10,15 +11,14 @@ context("Navbar", () => {
     cy.title().should("eq", "Life After Hate Resource Map");
   });
 
-  // it("Has a navbar with 2 elements", () => {
-  //   cy.get(".nav-links")
-  //     .first()
-  //     .children()
-  //     .first()
-  //     .should("have.text", "Map");
-  //   cy.get(".nav-links")
-  //     .first()
-  //     .children()
-  //     .should("have.length.gt", 0);
-  // });
+  it("Has a navbar with 2 links", () => {
+    cy.get("[data-cy=nav-links]")
+      .children()
+      .eq(0)
+      .should("have.text", "Map");
+    cy.get("[data-cy=nav-links]")
+      .children()
+      .eq(1)
+      .should("have.text", "Directory");
+  });
 });
