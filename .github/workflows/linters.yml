@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   format:
+    name: Prettier Check
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -20,6 +21,7 @@ jobs:
 
   lint-frontend:
     runs-on: ubuntu-latest
+    name: ESLint Frontend
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -32,6 +34,7 @@ jobs:
 
   lint-backend:
     runs-on: ubuntu-latest
+    name: ESLint Backend
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
