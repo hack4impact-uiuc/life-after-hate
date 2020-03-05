@@ -3,3 +3,7 @@ frontend:
 
 backend: 
   - backend/**/*
+
+infrastructure:
+  - scripts/**/*
+  - .github/**/*
