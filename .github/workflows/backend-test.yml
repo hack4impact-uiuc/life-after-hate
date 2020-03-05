@@ -1,0 +1,18 @@
+name: Backend Testing
+
+on: [push]
+
+jobs:
+  test-be:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup CI Script
+        run: bash scripts/setup_ci.sh
+        env:
+          DB_URI: ${{ secrets.TEST_DB_URI }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      - name: Build Backend & Run Tests
+        run: docker-compose run -e CI=true backend npm test
