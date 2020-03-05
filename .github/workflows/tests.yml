@@ -58,7 +58,7 @@ jobs:
           record: true
           parallel: true
           working-directory: frontend
-          env: BASE_URI=http://localhost:3000, API_URI=http://localhost:5000
+          env: BASE_URI=http://localhost:3000,API_URI=http://localhost:5000
           start: docker-compose -f ../docker-compose.cypress.yml up -d
           wait-on: "http://localhost:3000"
         env:
