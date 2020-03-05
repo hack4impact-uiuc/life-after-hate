@@ -5,8 +5,8 @@ import "./styles.scss";
 
 const Pending = () => (
   <div className="pending">
-    <img id="lah-logo" src={Logo} alt="LAH Logo" />
-    <p>Your request is pending.</p>
+    <img id="lah-logo" data-cy="logo" src={Logo} alt="LAH Logo" />
+    <p data-cy="pending">Your request is pending.</p>
   </div>
 );
 

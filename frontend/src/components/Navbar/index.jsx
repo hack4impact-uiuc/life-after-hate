@@ -22,12 +22,12 @@ const Navbar = props => {
   };
 
   return (
-    <div className="lah_navbar">
+    <div className="lah_navbar" data-cy="navbar">
       <Link to="/">
         <img src={Logo} alt="LAH Logo" id="logo" />
       </Link>
       <div className="spacing" />
-      <div className="nav-links">
+      <div className="nav-links" data-cy="nav-links">
         <Link to="/">Map</Link>
         <Link to="/directory">Directory</Link>
         {props.role === roleEnum.ADMIN && (

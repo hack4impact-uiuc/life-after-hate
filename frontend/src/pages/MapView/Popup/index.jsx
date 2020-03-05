@@ -24,7 +24,9 @@ const MapPopup = props => (
         onClose={props.clearMapResource}
       >
         <div className="popup">
-          <div className="popup-title">{props.resource.companyName}</div>
+          <div data-cy="popup-title" className="popup-title">
+            {props.resource.companyName}
+          </div>
           {props.resource.distanceFromSearchLoc && (
             <div className="popup-distance">
               {Math.round(props.resource.distanceFromSearchLoc * 10) / 10} miles
