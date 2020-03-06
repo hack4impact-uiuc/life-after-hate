@@ -62,8 +62,18 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       # Workaround since everything is run within the context of the Docker container in /var/www/app, 
+       # but Cypress is run outside the container, we need to spin up a container in order to generate the report
+       # to get accurate source mappings
       - name: Generate Coverage Report
-        run: docker-compose -f docker-compose.cypress.yml run -v "$(pwd)"/frontend:/var/temp prod-frontend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cove --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
-      # # Setup tmate for debugging
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
+        run: docker-compose -f docker-compose.cypress.yml run -v "$(pwd)"/frontend:/var/temp prod-frontend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cover --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
+      - name: Upload Coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./frontend/cover/lcov.info
+          name: codecov-umbrella
+          fail_ci_if_error: true
+      # # # Setup tmate for debugging
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v1
