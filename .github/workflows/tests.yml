@@ -62,6 +62,8 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate Coverage Report
+        run: docker-compose -f docker-compose.cypress.yml run -v "$(pwd)"/frontend:/var/temp prod-frontend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cove --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
       # # Setup tmate for debugging
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v1

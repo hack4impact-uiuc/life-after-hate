@@ -33,8 +33,6 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     command: "npm run start:coverage"
-    volumes:
-      - ./frontend:/var/www/app
     depends_on: 
       - prod-backend
       - db
