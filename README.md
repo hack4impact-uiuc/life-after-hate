@@ -10,6 +10,8 @@
 
 <p align="center">
 
+<img src="https://github.com/hack4impact-uiuc/life-after-hate/workflows/Testing/badge.svg">
+<img src="https://codecov.io/gh/hack4impact-uiuc/life-after-hate/branch/master/graph/badge.svg">
 </p>
 
 <p align="center">
