@@ -20,6 +20,11 @@ const { requestLogger, errorLogger } = require("./utils/logging-middleware");
 require("./utils/passport-setup");
 require("./utils/auth-middleware");
 
+// For code coverage
+app.get("/__coverage__", (req, res) => {
+  res.json(global.__coverage__ || null);
+});
+
 const isProd = process.env.NODE_ENV === "production";
 // Console Logger for external API requests
 axios.interceptors.request.use(request => {

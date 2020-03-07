@@ -16,20 +16,28 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
       - name: Build Backend & Run Tests
-        run: docker-compose run -e CI=true backend npm test
-
+        run: docker-compose run -e CI=true backend npm run test:coverage 
+      - name: Generate Coverage Report
+        run: docker-compose run -v "$(pwd)"/backend:/var/temp backend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cover --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
+      - name: Upload BE Coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./backend/cover/lcov.info
+          name: be-unit-coverage
   test:
     name: Cypress Run
     runs-on: ubuntu-16.04
-    strategy:
+    # If we want to use a build matrix for parallelism
+    # strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
       # leaving the Dashboard hanging ...
       # https://github.com/cypress-io/github-action/issues/48
-      fail-fast: false
-      matrix:
+      # fail-fast: false
+      # matrix:
         # run 3 copies of the current job in parallel
-        containers: [1, 2]
+        # containers: [1, 2]
     steps:
       - uses: actions/checkout@v1
       - name: Setup CI Script
@@ -47,21 +55,39 @@ jobs:
           FE_URI: ${{ secrets.FE_URI }}
       - name: Seed Test Database
         run: docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js 100 false --color"
-      # # Setup tmate for debugging
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v1
+
       - name: Build Stack
         run: docker-compose -f docker-compose.cypress.yml build
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
           record: true
-          parallel: true
+          # parallel: true
           working-directory: frontend
           env: BASE_URI=http://localhost:3000,API_URI=http://localhost:5000
           start: docker-compose -f ../docker-compose.cypress.yml up -d
           wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+       # Workaround since everything is run within the context of the Docker container in /var/www/app, 
+       # but Cypress is run outside the container, we need to spin up a container in order to generate the report
+       # to get accurate source mappings
+      - name: Generate Full Stack Coverage Report
+        run: bash scripts/get_coverage.sh
+      - name: Upload FE Coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./frontend/cover/lcov.info
+          name: fe-cypress-coverage
+      - name: Upload BE Coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./backend/cover/lcov.info
+          name: be-cypress-coverage
+      # # # Setup tmate for debugging
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v1
