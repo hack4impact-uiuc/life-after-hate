@@ -4,7 +4,7 @@ services:
 
   prod-backend: 
     build: ./backend
-    command: "npm run start"
+    command: "npm run start:coverage"
     depends_on: 
       - db
     env_file: 
@@ -44,6 +44,4 @@ services:
       - "3000:3000"
 
 volumes: 
-  be_modules: ~
-  fe_modules: ~
   mongo_data: ~
