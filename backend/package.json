@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec --exit",
+    "test:coverage": "nyc --reporter=lcov mocha --reporter spec --exit",
     "start:dev": "nodemon appListener.js",
     "start": "node appListener.js",
     "start:coverage": "nyc --reporter=lcov node appListener.js"
