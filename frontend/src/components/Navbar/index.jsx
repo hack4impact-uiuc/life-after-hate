@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
+import { roleEnum } from "../../utils/enums";
 
 const Navbar = props => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -29,6 +30,9 @@ const Navbar = props => {
       <div className="nav-links" data-cy="nav-links">
         <Link to="/">Map</Link>
         <Link to="/directory">Directory</Link>
+        {props.role === roleEnum.ADMIN && (
+          <Link to="/users">Account Management</Link>
+        )}
       </div>
       <Dropdown isOpen={dropdownOpen} toggle={toggleUserDropdown}>
         <DropdownToggle id="dropdown-button">
@@ -51,7 +55,8 @@ const Navbar = props => {
 const mapStateToProps = state => ({
   profilePic: state.auth.propicUrl,
   firstName: state.auth.firstName,
-  lastName: state.auth.lastName
+  lastName: state.auth.lastName,
+  role: state.auth.role
 });
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
 export default connect(mapStateToProps)(withRouter(Navbar));

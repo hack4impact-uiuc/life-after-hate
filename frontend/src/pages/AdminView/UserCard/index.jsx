@@ -1,21 +1,21 @@
 import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
-import { openResourceModalWithPayload } from "../../../redux/actions/modal";
+import { openUserModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/edit.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const ResourceCard = props => {
+const UserCard = props => {
   const toggleModal = event => {
     event.stopPropagation();
-    props.openResourceModalWithPayload({ resourceId: props.resource._id });
+    props.openUserModalWithPayload({ userId: props.user.id });
   };
 
   const toggleViewOnlyModal = event => {
     event.stopPropagation();
-    props.openResourceModalWithPayload({
-      resourceId: props.resource._id,
+    props.openUserModalWithPayload({
+      userId: props.user.id,
       editable: false
     });
   };
@@ -30,16 +30,16 @@ const ResourceCard = props => {
     >
       <div className="card-wrapper">
         <div className="col">
-          <p>{props.resource.companyName}</p>
+          <p>{`${props.user.firstName} ${props.user.lastName}`}</p>
         </div>
         <div className="col">
-          <p>{props.resource.address}</p>
+          <p>{props.user.email}</p>
         </div>
         <div className="col">
-          <p>{props.resource.contactEmail}</p>
+          <p>{props.user.role}</p>
         </div>
-        <div className="col col-desc col-desc-collapsed">
-          <p>{props.resource.description}</p>
+        <div className="col">
+          <p>{props.user.title}</p>
         </div>
         {props.role === roleEnum.ADMIN && (
           <div className="col col-edit">
@@ -59,10 +59,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  openResourceModalWithPayload
+  openUserModalWithPayload
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ResourceCard);
+)(UserCard);

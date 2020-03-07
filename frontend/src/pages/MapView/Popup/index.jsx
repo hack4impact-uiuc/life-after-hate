@@ -1,7 +1,7 @@
 import React from "react";
 import { Popup } from "react-map-gl";
 import MaximizeImg from "../../../assets/images/maximize-white.svg";
-import { openModalWithPayload } from "../../../redux/actions/modal";
+import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { clearMapResource } from "../../../redux/actions/map";
 import { connect } from "react-redux";
 import {
@@ -38,7 +38,7 @@ const MapPopup = props => (
             tabIndex="0"
             className="popup-max"
             onClick={() =>
-              props.openModalWithPayload({
+              props.openResourceModalWithPayload({
                 resourceId: props.resource._id,
                 editable: props.role === roleEnum.ADMIN
               })
@@ -59,7 +59,7 @@ const mapStateToProps = state => ({
   role: state.auth.role
 });
 
-const mapDispatchToProps = { openModalWithPayload, clearMapResource };
+const mapDispatchToProps = { openResourceModalWithPayload, clearMapResource };
 
 export default connect(
   mapStateToProps,

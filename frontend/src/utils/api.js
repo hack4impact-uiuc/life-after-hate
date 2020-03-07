@@ -6,6 +6,7 @@ import {
 } from "./apiHelpers";
 import { updateResources } from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
+import { updateUsers } from "../redux/actions/users";
 import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
@@ -81,6 +82,27 @@ async function refreshAllResources() {
   store.dispatch(updateResources(resourceList));
 }
 
+async function refreshAllUsers() {
+  const userList = (await apiRequest({ endpoint: `users/` })).result;
+  store.dispatch(updateUsers(userList));
+}
+
+async function editAndRefreshUser(data, id) {
+  await editUser(data, id);
+  await refreshAllUsers();
+}
+
+async function editUser(data, id) {
+  return (await apiRequest({
+    endpoint: `/users/${id}`,
+    method: "PATCH",
+    data: data,
+    notification: {
+      successMessage: "Successfully edited user!"
+    }
+  })).result;
+}
+
 async function editAndRefreshResource(data, id) {
   await editResource(data, id);
   await refreshAllResources();
@@ -111,5 +133,8 @@ export {
   addAndRefreshResource,
   editAndRefreshResource,
   deleteAndRefreshResource,
-  refreshAllResources
+  refreshAllResources,
+  refreshAllUsers,
+  editAndRefreshUser,
+  editUser
 };
