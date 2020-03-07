@@ -18,7 +18,7 @@ jobs:
       - name: Build Backend & Run Tests
         run: docker-compose run -e CI=true backend npm run test:coverage 
       - name: Generate Coverage Report
-        run: docker-compose run -v "$(pwd)"/backend:/var/temp prod-backend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cover --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
+        run: docker-compose run -v "$(pwd)"/backend:/var/temp backend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cover --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
       - name: Upload BE Coverage to Codecov  
         uses: codecov/codecov-action@v1
         with:
