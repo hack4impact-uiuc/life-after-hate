@@ -26,8 +26,6 @@ function PrivateRoute({
           if (authed === true) {
             if (!pending) {
               if (!roleRequired || roleRequired === role) {
-                console.log(roleRequired);
-                console.log("validated user");
                 return (
                   <div>
                     {authed && !pending && <Navbar />}
@@ -35,7 +33,6 @@ function PrivateRoute({
                   </div>
                 );
               }
-              console.log("user role not valid");
               return (
                 <Redirect
                   to={{ pathname: "/", state: { from: props.location } }}
