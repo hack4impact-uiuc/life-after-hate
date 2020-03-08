@@ -5,6 +5,12 @@ const roleEnum = {
   REJECTED: "REJECTED"
 };
 
+const userFilterEnum = {
+  ACTIVE: "ACTIVE",
+  PENDING: "PENDING",
+  REJECTED: "REJECTED"
+};
+
 const modalEnum = {
   RESOURCE: "RESOURCE",
   USER: "USER"
@@ -12,3 +18,4 @@ const modalEnum = {
 
 module.exports.roleEnum = roleEnum;
 module.exports.modalEnum = modalEnum;
+module.exports.userFilterEnum = userFilterEnum;
