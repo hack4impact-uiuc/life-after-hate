@@ -31,6 +31,7 @@ const ResourceModal = props => {
   };
 
   const handleAddResource = async data => {
+    data.tags = data.tags.split(",").map(tag => tag.trim());
     await addAndRefreshResource(data);
     props.closeModal();
   };
