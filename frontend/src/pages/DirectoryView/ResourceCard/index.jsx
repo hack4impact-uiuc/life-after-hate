@@ -30,10 +30,10 @@ const ResourceCard = props => {
     >
       <div className="card-wrapper">
         <div className="col">
-          <p>{props.resource.companyName}</p>
+          <p data-cy="card-companyName">{props.resource.companyName}</p>
         </div>
         <div className="col">
-          <p>{props.resource.address}</p>
+          <p data-cy="card-address">{props.resource.address}</p>
         </div>
         <div className="col">
           <p>{props.resource.contactEmail}</p>
