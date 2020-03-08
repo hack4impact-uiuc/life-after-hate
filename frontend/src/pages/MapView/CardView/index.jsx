@@ -56,6 +56,7 @@ class CardView extends React.Component {
         r => r._id === this.props.selectedResource
       );
       cache.clear(currResourceIdx, 0);
+      this.list.recomputeRowHeights();
       const firstOffset = this.list.getOffsetForRow({
         alignment: "start",
         index: currResourceIdx
