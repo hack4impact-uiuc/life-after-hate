@@ -1,0 +1,2 @@
+ignore:
+  - "frontend/src/serviceWorker.js"
