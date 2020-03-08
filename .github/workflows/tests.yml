@@ -19,6 +19,11 @@ jobs:
         run: docker-compose run -e CI=true backend npm run test:coverage 
       - name: Generate Coverage Report
         run: docker-compose run -v "$(pwd)"/backend:/var/temp backend /var/www/app/node_modules/.bin/nyc report --report-dir /var/temp/cover --temp-dir /var/temp/.nyc_output --reporter=lcov --reporter=clover --reporter=json
+      - name: Upload BE Coverage Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Unit BE Test Coverage Report
+          path: backend/cover/lcov-report 
       - name: Upload BE Coverage to Codecov  
         uses: codecov/codecov-action@v1
         with:
@@ -76,6 +81,19 @@ jobs:
        # to get accurate source mappings
       - name: Generate Full Stack Coverage Report
         run: bash scripts/get_coverage.sh
+      
+      - name: Upload FE Coverage Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Cypress FE Test Coverage Report
+          path: frontend/cover/lcov-report 
+
+      - name: Upload BE Coverage Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Cypress BE Test Coverage Report
+          path: backend/cover/lcov-report 
+
       - name: Upload FE Coverage to Codecov  
         uses: codecov/codecov-action@v1
         with:
@@ -88,6 +106,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./backend/cover/lcov.info
           name: be-cypress-coverage
+      
       # # # Setup tmate for debugging
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v1
