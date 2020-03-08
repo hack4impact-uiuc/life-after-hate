@@ -61,7 +61,7 @@ context("Directory View", () => {
       .should("have.text", "Test Resource");
   });
 
-  it.only("Shows a correct modal upon clicking a resource", () => {
+  it("Shows a correct modal upon clicking a resource", () => {
     cy.get("#search-general").type("Extended Stay America");
     cy.get("#search-button").click();
 
