@@ -117,7 +117,9 @@ router.patch(
   celebrate({
     body: Joi.object().keys({
       role: Joi.string().required(),
-      title: Joi.string().default("")
+      title: Joi.string()
+        .allow("")
+        .default("")
     })
   }),
   errorWrap(async (req, res) => {
