@@ -9,6 +9,7 @@ import AdminView from "./pages/AdminView";
 import MiniLoader from "./components/Loader/mini-loader";
 import ResourceModal from "./components/Modal/ResourceModal";
 import UserModal from "./components/Modal/UserModal";
+import { roleEnum } from "./utils/enums";
 import store from "./redux/store";
 import { refreshGlobalAuth } from "./utils/api";
 import { ToastContainer } from "react-toastify";
@@ -31,7 +32,12 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MapView} />
             <PrivateRoute exact path="/directory" component={DirectoryView} />
-            <PrivateRoute exact path="/users" component={AdminView} />
+            <PrivateRoute
+              exact
+              path="/users"
+              component={AdminView}
+              roleRequired={roleEnum.ADMIN}
+            />
           </Router>
         </div>
       </Provider>
