@@ -61,13 +61,19 @@ context("Directory View", () => {
       .should("have.text", "Test Resource");
   });
 
-  it("Shows a correct modal upon clicking a resource", () => {
+  it.only("Shows a correct modal upon clicking a resource", () => {
+    cy.get("#search-general").type("Extended Stay America");
+    cy.get("#search-button").click();
+
     cy.get("[data-cy=card-companyName]")
-      .first()
+      .should("have.length", 1)
       .click();
 
-    cy.get(".modal-title").should("contain.text", "Pear Tree Inn");
-    cy.get('[name="companyName"]').should("contain.value", "Pear Tree Inn");
+    cy.get(".modal-title").should("contain.text", "Extended Stay America");
+    cy.get('[name="companyName"]').should(
+      "contain.value",
+      "Extended Stay America"
+    );
     cy.get('[name="companyName"]').should("be.disabled");
     cy.get("#submit-form-button").should("not.exist");
   });
