@@ -15,6 +15,9 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          # # Setup tmate for debugging
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v1
       - name: Chmod
         run: sudo chmod -R 777 /var/lib/docker/overlay2
       - name: Docker Cache 
@@ -25,5 +28,6 @@ jobs:
           key: ${{ runner.os }}-beunittest-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-beunittest-
+        
       - name: Build Backend & Run Tests
         run: docker-compose run -e CI=true backend npm run test:coverage 
