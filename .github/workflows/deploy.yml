@@ -1,17 +1,17 @@
-name: Deployment Tasks
+# name: Deployment Tasks
 
-on: [push]
+# on: [push]
 
-jobs:
-  seed-db:
-    name: Seed Production Database
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Setup CI Script 
-      run: bash scripts/setup_ci.sh
-      env: 
-        DB_URI: ${{ secrets.PROD_DB_URI }}
-    - name: Seed MongoDB Instance
-      run: docker-compose run backend node utils/generate_mock_data.js 100 false --color
+# jobs:
+#   seed-db:
+#     name: Seed Production Database
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v1
+#     - name: Setup CI Script 
+#       run: bash scripts/setup_ci.sh
+#       env: 
+#         DB_URI: ${{ secrets.PROD_DB_URI }}
+#     - name: Seed MongoDB Instance
+#       run: docker-compose run backend node utils/generate_mock_data.js 100 false --color
    

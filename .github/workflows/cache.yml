@@ -1,0 +1,29 @@
+name: Cache
+
+on: [push]
+
+jobs:
+  test-be:
+    name: Backend Cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup CI Script
+        run: bash scripts/setup_ci.sh
+        env:
+          DB_URI: ${{ secrets.TEST_DB_URI }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      - name: Chmod
+        run: sudo chmod -R 777 /var/lib/docker/overlay2
+      - name: Docker Cache 
+        id: cache-docker-layer
+        uses: actions/cache@v1
+        with:
+          path: /var/lib/docker/overlay2
+          key: ${{ runner.os }}-unittest-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-unittest-
+      - name: Build Backend & Run Tests
+        run: docker-compose run -e CI=true backend npm run test:coverage 
