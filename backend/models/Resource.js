@@ -24,7 +24,7 @@ const Resource = new mongoose.Schema({
   type: {
     type: String,
     enum: [resourceEnum.GROUP, resourceEnum.INDIVIDUAL],
-    required: true
+    default: resourceEnum.GROUP
   }
 });
 
