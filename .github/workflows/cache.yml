@@ -22,8 +22,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: /var/lib/docker/overlay2
-          key: ${{ runner.os }}-unittest-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-beunittest-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-unittest-
+            ${{ runner.os }}-beunittest-
       - name: Build Backend & Run Tests
         run: docker-compose run -e CI=true backend npm run test:coverage 
