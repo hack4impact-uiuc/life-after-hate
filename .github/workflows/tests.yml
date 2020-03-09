@@ -15,6 +15,14 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+      - name: Docker Cache 
+        id: cache-docker-layer
+        uses: actions/cache@v1
+        with:
+          path: /var/lib/docker/aufs
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Build Backend & Run Tests
         run: docker-compose run -e CI=true backend npm run test:coverage 
       - name: Generate Coverage Report
