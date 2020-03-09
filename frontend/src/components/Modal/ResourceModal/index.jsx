@@ -25,13 +25,19 @@ const ResourceModal = props => {
   };
 
   const handleEditResource = async data => {
-    data.tags = data.tags.split(",").map(tag => tag.trim());
+    data.tags = data.tags
+      .split(",")
+      .filter(t => t)
+      .map(tag => tag.trim());
     await editAndRefreshResource(data, props.resource._id);
     props.closeModal();
   };
 
   const handleAddResource = async data => {
-    data.tags = data.tags.split(",").map(tag => tag.trim());
+    data.tags = data.tags
+      .split(",")
+      .filter(t => t)
+      .map(tag => tag.trim());
     await addAndRefreshResource(data);
     props.closeModal();
   };
@@ -44,6 +50,8 @@ const ResourceModal = props => {
     setDeleteClicked(false);
     return deleteAndRefreshResource(props.resource._id);
   };
+
+  const errorStyle = { border: "1px solid red" };
 
   return (
     <div className="modal-wrap-ee">
@@ -62,52 +70,55 @@ const ResourceModal = props => {
                 defaultValue={props.resource.companyName}
                 className="modal-input-field"
                 disabled={!props.editable}
+                style={errors.companyName && errorStyle}
               />
-              {/* errors will return when field validation fails  */}
-              {errors.companyName && <span>This field is required</span>}
             </label>
             <label className="modal-lab">
               <p>Contact Name</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 type="text"
                 name="contactName"
                 defaultValue={props.resource.contactName}
                 className="modal-input-field"
                 disabled={!props.editable}
+                style={errors.contactName && errorStyle}
               />
             </label>
             <label className="modal-lab">
               <p>Contact Phone</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 type="text"
                 name="contactPhone"
                 defaultValue={props.resource.contactPhone}
                 className="modal-input-field"
                 disabled={!props.editable}
+                style={errors.contactPhone && errorStyle}
               />
             </label>
             <label className="modal-lab">
               <p>Contact Email</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 type="text"
                 name="contactEmail"
                 defaultValue={props.resource.contactEmail}
                 className="modal-input-field"
                 disabled={!props.editable}
+                style={errors.contactEmail && errorStyle}
               />
             </label>
             <label className="modal-lab">
               <p>Description</p>
               <textarea
-                ref={register}
+                ref={register({ required: true })}
                 name="description"
                 defaultValue={props.resource.description}
                 className="modal-input-field modal-input-textarea"
                 rows="10"
                 disabled={!props.editable}
+                style={errors.description && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -125,23 +136,25 @@ const ResourceModal = props => {
             <label className="modal-lab">
               <p>Address</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 name="address"
                 type="text"
                 defaultValue={props.resource.address}
                 className="modal-input-field"
                 disabled={!props.editable}
+                style={errors.address && errorStyle}
               />
             </label>
             <label className="modal-lab">
               <p>Notes</p>
               <textarea
-                ref={register}
+                ref={register({ required: true })}
                 name="notes"
                 defaultValue={props.resource.notes}
                 className="modal-input-field modal-input-textarea"
                 rows="5"
                 disabled={!props.editable}
+                style={errors.notes && errorStyle}
               />
             </label>
             {props.editable && (
