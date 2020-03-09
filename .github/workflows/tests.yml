@@ -19,7 +19,7 @@ jobs:
         id: cache-docker-layer
         uses: actions/cache@v1
         with:
-          path: /var/lib/docker/aufs
+          path: /var/lib/docker/overlay2
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -39,8 +39,8 @@ jobs:
           file: ./backend/cover/lcov.info
           name: be-unit-coverage
                 # # # Setup tmate for debugging
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v1
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v1
   test:
     name: Cypress Run
     runs-on: ubuntu-16.04
