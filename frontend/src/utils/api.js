@@ -12,9 +12,11 @@ import store from "../redux/store";
 async function getSearchResults(keyword, address, tag, radius = 500) {
   const endptStr = `resources/filter?`;
   const arglist = { keyword, address, tag, radius };
-  return (await apiRequest({
-    endpoint: endptStr + toQueryString(arglist)
-  })).result;
+  return (
+    await apiRequest({
+      endpoint: endptStr + toQueryString(arglist)
+    })
+  ).result;
 }
 
 const refreshGlobalAuth = async () => {
@@ -37,15 +39,17 @@ const logout = async () => {
 };
 
 async function addResource(data) {
-  return (await apiRequest({
-    endpoint: `resources/`,
-    method: "POST",
-    data,
-    notification: {
-      successMessage: "Successfully added resource!",
-      failureMessage: "Failed to add resource."
-    }
-  })).result;
+  return (
+    await apiRequest({
+      endpoint: `resources/`,
+      method: "POST",
+      data,
+      notification: {
+        successMessage: "Successfully added resource!",
+        failureMessage: "Failed to add resource."
+      }
+    })
+  ).result;
 }
 
 async function editResource(data, id) {
@@ -56,25 +60,29 @@ async function editResource(data, id) {
     }
     return accum;
   }, {});
-  return (await apiRequest({
-    endpoint: `/resources/${id}`,
-    method: "PUT",
-    data: filteredData,
-    notification: {
-      successMessage: "Successfully edited resource!"
-    }
-  })).result;
+  return (
+    await apiRequest({
+      endpoint: `/resources/${id}`,
+      method: "PUT",
+      data: filteredData,
+      notification: {
+        successMessage: "Successfully edited resource!"
+      }
+    })
+  ).result;
 }
 
 async function deleteResource(id) {
-  return (await apiRequest({
-    endpoint: `resources/${id}`,
-    method: "DELETE",
-    notification: {
-      successMessage: "Successfully deleted resource!",
-      failureMessage: "Failed to delete resource."
-    }
-  })).result;
+  return (
+    await apiRequest({
+      endpoint: `resources/${id}`,
+      method: "DELETE",
+      notification: {
+        successMessage: "Successfully deleted resource!",
+        failureMessage: "Failed to delete resource."
+      }
+    })
+  ).result;
 }
 
 async function refreshAllResources() {
@@ -93,14 +101,16 @@ async function editAndRefreshUser(data, id) {
 }
 
 async function editUser(data, id) {
-  return (await apiRequest({
-    endpoint: `/users/${id}`,
-    method: "PATCH",
-    data: data,
-    notification: {
-      successMessage: "Successfully edited user!"
-    }
-  })).result;
+  return (
+    await apiRequest({
+      endpoint: `/users/${id}`,
+      method: "PATCH",
+      data: data,
+      notification: {
+        successMessage: "Successfully edited user!"
+      }
+    })
+  ).result;
 }
 
 async function editAndRefreshResource(data, id) {

@@ -36,10 +36,7 @@ const parseLatLongResponse = resp => {
     R.prop("Region")
   )(resp);
 
-  const getCoord = R.pipe(
-    getLocationFromResults,
-    R.flip(R.prop)
-  )(resp);
+  const getCoord = R.pipe(getLocationFromResults, R.flip(R.prop))(resp);
 
   return { region, lat: getCoord("lat"), lng: getCoord("lng") };
 };
