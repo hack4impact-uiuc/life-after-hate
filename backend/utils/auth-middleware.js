@@ -3,7 +3,7 @@ const roleEnum = require("../models/User.js").roleEnum;
 const authValidators = require("./auth/auth_validators");
 
 const requireVolunteerStatus = (req, res, next) => {
-  // Anything that a volunteer is authorized to do, an admin can do as well
+  // Anything that a volunteer is authorized to do, an admin can do as well!
   if (
     authValidators.validateRequestForRole(req, roleEnum.VOLUNTEER) ||
     authValidators.validateRequestForRole(req, roleEnum.ADMIN)
