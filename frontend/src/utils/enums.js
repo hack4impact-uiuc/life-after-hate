@@ -6,6 +6,7 @@ const roleEnum = {
 };
 
 const userFilterEnum = {
+  ALL: "ALL",
   ACTIVE: "ACTIVE",
   PENDING: "PENDING",
   REJECTED: "REJECTED"

@@ -1,5 +1,6 @@
 import { UPDATE_USERS, CHANGE_USER_FILTER } from "../actions/users";
-const users = (state = [], action) => {
+import { userFilterEnum } from "../../utils/enums";
+const users = (state = { userFilterType: userFilterEnum.ALL }, action) => {
   switch (action.type) {
     case UPDATE_USERS:
       return { ...state, userList: action.payload };

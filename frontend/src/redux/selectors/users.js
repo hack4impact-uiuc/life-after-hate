@@ -11,21 +11,18 @@ export const filteredUserSelector = createSelector(
     if (!users) {
       return [];
     }
-    if (!filter) {
-      return users.filter(
-        user => user.role === roleEnum.VOLUNTEER || user.role === roleEnum.ADMIN
-      );
-    }
     switch (filter) {
+      case userFilterEnum.ACTIVE:
+        return users.filter(
+          user =>
+            user.role === roleEnum.VOLUNTEER || user.role === roleEnum.ADMIN
+        );
       case userFilterEnum.REJECTED:
         return users.filter(user => user.role === roleEnum.REJECTED);
       case userFilterEnum.PENDING:
         return users.filter(user => user.role === roleEnum.PENDING);
       default:
-        return users.filter(
-          user =>
-            user.role === roleEnum.VOLUNTEER || user.role === roleEnum.ADMIN
-        );
+        return users;
     }
   }
 );
