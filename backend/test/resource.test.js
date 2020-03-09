@@ -5,6 +5,7 @@ const Resource = require("../models/Resource");
 const { didCheckIsAdmin, didCheckIsVolunteer } = require("./auth_stubs");
 const sinon = require("sinon");
 const resourceUtils = require("../utils/resource-utils");
+const { resourceEnum } = require("../models/Resource");
 
 const sampleResourceInfo = {
   companyName: "Google",
@@ -16,7 +17,8 @@ const sampleResourceInfo = {
   location: {
     coordinates: [35, 40]
   },
-  tags: ["tech"]
+  tags: ["tech"],
+  type: resourceEnum.GROUP
 };
 
 const sampleResourceInfo2 = {
@@ -29,7 +31,8 @@ const sampleResourceInfo2 = {
   location: {
     coordinates: [40, 40]
   },
-  tags: ["social"]
+  tags: ["social"],
+  type: resourceEnum.INDIVIDUAL
 };
 
 const sampleResourceInfo3 = {
@@ -42,7 +45,8 @@ const sampleResourceInfo3 = {
   location: {
     coordinates: [40, 40]
   },
-  tags: ["social"]
+  tags: ["social"],
+  type: resourceEnum.INDIVIDUAL
 };
 
 const createSampleResource = async (resourceInfo = sampleResourceInfo) => {
