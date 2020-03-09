@@ -8,26 +8,26 @@
     "@cypress/commit-info": "^2.2.0",
     "chai": "^4.2.0",
     "colors": "^1.4.0",
-    "commander": "^3.0.2",
+    "commander": "^4.1.1",
     "express-session": "^1.17.0",
     "find-up": "^4.1.0",
     "istanbul-lib-coverage": "^3.0.0",
     "joi-objectid": "^3.0.1",
-    "mocha": "^6.2.2",
+    "mocha": "^7.1.0",
     "node-fetch": "^2.6.0",
     "nyc": "^15.0.0",
-    "sinon": "^7.5.0"
+    "sinon": "^9.0.0"
   },
   "devDependencies": {
     "@h4iuiuc/eslint-plugin": "^1.0.12",
-    "@typescript-eslint/parser": "^2.3.3",
-    "cypress": "^4.0.2",
-    "eslint": "^6.5.1",
+    "@typescript-eslint/parser": "^2.22.0",
+    "cypress": "^4.1.0",
+    "eslint": "^6.8.0",
     "eslint-plugin-cypress": "^2.10.3",
-    "husky": "^3.0.9",
-    "lint-staged": "^9.4.2",
-    "prettier": "^1.18.2",
-    "typescript": "^3.6.4"
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "prettier": "^1.19.1",
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "prettier": "prettier --write '{frontend/**/*.{js,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
