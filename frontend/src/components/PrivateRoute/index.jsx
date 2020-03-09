@@ -11,6 +11,7 @@ function PrivateRoute({
   authed,
   role,
   showLoader,
+  roleRequired,
   ...rest
 }) {
   const pending = role === roleEnum.PENDING;
@@ -24,11 +25,18 @@ function PrivateRoute({
           }
           if (authed === true) {
             if (!pending) {
+              if (!roleRequired || roleRequired === role) {
+                return (
+                  <div>
+                    {authed && !pending && <Navbar />}
+                    <Component {...props} />
+                  </div>
+                );
+              }
               return (
-                <div>
-                  {authed && !pending && <Navbar />}
-                  <Component {...props} />
-                </div>
+                <Redirect
+                  to={{ pathname: "/", state: { from: props.location } }}
+                />
               );
             }
             return <Pending {...props} />;
