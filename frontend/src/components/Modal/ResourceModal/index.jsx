@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
-import { modalEnum } from "../../../utils/enums";
+import { modalEnum, resourceEnum } from "../../../utils/enums";
 import {
   editAndRefreshResource,
   addAndRefreshResource,
@@ -44,6 +44,8 @@ const ResourceModal = props => {
     setDeleteClicked(false);
     return deleteAndRefreshResource(props.resource._id);
   };
+
+  const makeOption = option => <option>{option}</option>;
 
   return (
     <div className="modal-wrap-ee">
@@ -121,6 +123,20 @@ const ResourceModal = props => {
                 className="modal-input-field"
                 disabled={!props.editable}
               />
+            </label>
+            <label className="modal-lab">
+              <p>Type</p>
+              <select
+                ref={register}
+                name="type"
+                defaultValue={props.resource.type}
+                className="modal-select-field"
+                disabled={!props.editable}
+              >
+                {Object.values(resourceEnum).map(
+                  makeOption
+                ) /* Enum to options */}
+              </select>
             </label>
             <label className="modal-lab">
               <p>Address</p>
