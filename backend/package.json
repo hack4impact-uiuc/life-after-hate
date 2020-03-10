@@ -51,6 +51,7 @@
     "sinon": "^7.5.0",
     "supertest": "^4.0.2",
     "winston": "^3.2.1",
-    "winston-loggly-bulk": "^3.0.1"
+    "winston-loggly-bulk": "^3.0.1",
+    "xlsx": "^0.15.5"
   }
 }
