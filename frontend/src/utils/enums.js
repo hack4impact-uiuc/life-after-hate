@@ -5,6 +5,11 @@ const roleEnum = {
   REJECTED: "REJECTED"
 };
 
+const resourceEnum = {
+  GROUP: "GROUP",
+  INDIVIDUAL: "INDIVIDUAL"
+};
+
 const userFilterEnum = {
   ACTIVE: "ACTIVE",
   PENDING: "PENDING",
@@ -17,5 +22,6 @@ const modalEnum = {
 };
 
 module.exports.roleEnum = roleEnum;
-module.exports.modalEnum = modalEnum;
+module.exports.resourceEnum = resourceEnum;
 module.exports.userFilterEnum = userFilterEnum;
+module.exports.modalEnum = modalEnum;
