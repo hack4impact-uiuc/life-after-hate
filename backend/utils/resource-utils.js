@@ -16,13 +16,7 @@ const parseGeocodingResponse = resp => {
   ]);
 
   // Grab the street within the result JSON
-  const getStreetFromResults = R.path([
-    "results",
-    0,
-    "locations",
-    0,
-    "street"
-  ]);
+  const getStreetFromResults = R.path(["results", 0, "locations", 0, "street"]);
 
   // Grab the city within the result JSON
   const getCityFromResults = R.path([
@@ -63,12 +57,17 @@ const parseGeocodingResponse = resp => {
     R.prop("Region")
   )(resp);
 
-  const getCoord = R.pipe(
-    getLocationFromResults,
-    R.flip(R.prop)
-  )(resp);
+  const getCoord = R.pipe(getLocationFromResults, R.flip(R.prop))(resp);
 
-  return { region, lat: getCoord("lat"), lng: getCoord("lng"), street: getStreetFromResults(), city: getCityFromResults(), state: getStateFromResults(), postalCode: getPostalCodeFromResults() };
+  return {
+    region,
+    lat: getCoord("lat"),
+    lng: getCoord("lng"),
+    street: getStreetFromResults(),
+    city: getCityFromResults(),
+    state: getStateFromResults(),
+    postalCode: getPostalCodeFromResults()
+  };
 };
 
 const geocodeAddress = R.memoizeWith(R.identity, async address => {
