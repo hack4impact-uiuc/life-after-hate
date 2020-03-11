@@ -42,10 +42,20 @@ const createTags = ({
 
 const getLocation = async address => {
   try {
-    const { lat, lng } = await resourceUtils.addressToLatLong(address);
-    return [lng, lat];
+    const { lat, lng, region } = await resourceUtils.addressToLatLong(address);
+    return {
+      location: {
+        coordinates: [lng, lat]
+      },
+      federalRegion: region
+    };
   } catch (err) {
-    return [null, null];
+    return {
+      location: {
+        coordinates: [null, null]
+      },
+      federalRegion: -1
+    };
   }
 };
 
@@ -53,15 +63,12 @@ const convertSchema = async entry => ({
   companyName: "a",
   contactName: `${entry["First Name"]} ${entry["Last Name"]}`,
   contactPhone: "a",
-  contactEmail: entry["Email Address"] || "a",
-  description: entry["Skills, Qualifications, Current Occupation"] || "a",
-  address: entry["Mailing Address"] || "a",
-  location: {
-    coordinates: await getLocation(entry["Mailing Address"])
-  },
-  federalRegion: 1,
+  contactEmail: entry["Email Address"],
+  description: entry["Skills, Qualifications, Current Occupation"],
+  address: entry["Mailing Address"],
   notes: formatNotes(entry),
-  tags: createTags(entry).filter(tag => tag !== null)
+  tags: createTags(entry).filter(tag => tag !== null),
+  ...(await getLocation(entry["Mailing Address"]))
 });
 
 const main = async () => {
