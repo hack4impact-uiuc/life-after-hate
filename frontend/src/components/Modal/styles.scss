@@ -41,6 +41,14 @@
   font-size: 15px;
 }
 
+.modal-input-field.invalid {
+  transition: all 0.3s;
+  border: 1.5px solid rgb(255, 190, 190);
+}
+.modal-input-field.invalid:focus {
+  border: solid red 1.5px;
+}
+
 .modal-input-field:focus {
   border: solid #f7922f 1.5px;
 }

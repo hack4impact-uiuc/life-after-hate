@@ -51,8 +51,6 @@ const ResourceModal = props => {
     return deleteAndRefreshResource(props.resource._id);
   };
 
-  const errorStyle = { border: "1px solid red" };
-
   return (
     <div className="modal-wrap-ee">
       {props.isOpen && props.modalType === modalEnum.RESOURCE && (
@@ -68,9 +66,10 @@ const ResourceModal = props => {
                 type="text"
                 name="companyName"
                 defaultValue={props.resource.companyName}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.companyName ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
-                style={errors.companyName && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -80,9 +79,10 @@ const ResourceModal = props => {
                 type="text"
                 name="contactName"
                 defaultValue={props.resource.contactName}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.contactName ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
-                style={errors.contactName && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -92,9 +92,10 @@ const ResourceModal = props => {
                 type="text"
                 name="contactPhone"
                 defaultValue={props.resource.contactPhone}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.contactPhone ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
-                style={errors.contactPhone && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -104,9 +105,10 @@ const ResourceModal = props => {
                 type="text"
                 name="contactEmail"
                 defaultValue={props.resource.contactEmail}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.contactEmail ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
-                style={errors.contactEmail && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -115,10 +117,11 @@ const ResourceModal = props => {
                 ref={register({ required: true })}
                 name="description"
                 defaultValue={props.resource.description}
-                className="modal-input-field modal-input-textarea"
+                className={`modal-input-field modal-input-textarea ${
+                  errors.description ? "invalid" : ""
+                }`}
                 rows="10"
                 disabled={!props.editable}
-                style={errors.description && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -129,7 +132,7 @@ const ResourceModal = props => {
                 defaultValue={
                   props.isAddingResource ? "" : props.resource.tags.join(", ")
                 }
-                className="modal-input-field"
+                className={`modal-input-field ${errors.tags && "invalid"}`}
                 disabled={!props.editable}
               />
             </label>
@@ -140,9 +143,8 @@ const ResourceModal = props => {
                 name="address"
                 type="text"
                 defaultValue={props.resource.address}
-                className="modal-input-field"
+                className={`modal-input-field ${errors.address && "invalid"}`}
                 disabled={!props.editable}
-                style={errors.address && errorStyle}
               />
             </label>
             <label className="modal-lab">
@@ -151,10 +153,11 @@ const ResourceModal = props => {
                 ref={register({ required: true })}
                 name="notes"
                 defaultValue={props.resource.notes}
-                className="modal-input-field modal-input-textarea"
                 rows="5"
+                className={`modal-input-field modal-input-textarea ${
+                  errors.notes ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
-                style={errors.notes && errorStyle}
               />
             </label>
             {props.editable && (
