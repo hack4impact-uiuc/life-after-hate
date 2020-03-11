@@ -17,18 +17,10 @@ const formatNotes = ({
   "How did you hear about LAH?": refer,
   "Volunteer Roles": roles
 }) =>
-  `Form Received: ${ 
-  formReceived 
-  }\n\n` +
-  `Availability: ${ 
-  availability 
-  }\n\n` +
-  `How they heard about LAH: ${ 
-  refer 
-  }\n\n` +
-  `Volunteer Roles: ${ 
-  roles 
-  }\n\n`;
+  `Form Received: ${formReceived}\n\n` +
+  `Availability: ${availability}\n\n` +
+  `How they heard about LAH: ${refer}\n\n` +
+  `Volunteer Roles: ${roles}\n\n`;
 
 const createTags = ({
   "18 or Older?": eighteen,
@@ -40,7 +32,7 @@ const createTags = ({
   eighteen === "Yes" ? "18+" : null,
   mentalHealth === "Yes" ? "Mental Health" : null,
   travel === "Yes" ? "Able to travel" : null,
-  ...extractor.extract(`${skills } ${ roles}`, {
+  ...extractor.extract(`${skills} ${roles}`, {
     language: "english",
     remove_digits: true,
     return_changed_case: true,
@@ -59,7 +51,7 @@ const getLocation = async address => {
 
 const convertSchema = async entry => ({
   companyName: "a",
-  contactName: `${entry["First Name"] } ${ entry["Last Name"]}`,
+  contactName: `${entry["First Name"]} ${entry["Last Name"]}`,
   contactPhone: "a",
   contactEmail: entry["Email Address"] || "a",
   description: entry["Skills, Qualifications, Current Occupation"] || "a",
