@@ -12,6 +12,7 @@ const {
   resourceLatLens,
   resourceLongLens,
   resourceRegionLens,
+  resourceAddressLens,
   filterResourcesWithinRadius,
   filterByOptions
 } = require("../../utils/resource-utils");
@@ -60,7 +61,7 @@ router.get(
     let resources = await Resource.find({}).lean();
 
     const { lat, lng } = address
-      ? await resourceUtils.addressToLatLong(address)
+      ? await resourceUtils.geocodeAddress(address)
       : {};
 
     // if custom weights provided, will set custom field rankings
@@ -115,14 +116,15 @@ router.post(
       remove_duplicates: true
     });
 
-    const { lat, lng, region } = await resourceUtils.addressToLatLong(
+    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       data.address
     );
 
     data = R.pipe(
       R.set(resourceLatLens, lat),
       R.set(resourceLongLens, lng),
-      R.set(resourceRegionLens, region)
+      R.set(resourceRegionLens, region),
+      R.set(resourceAddressLens, address)
     )(data);
 
     const newResource = new Resource(data);

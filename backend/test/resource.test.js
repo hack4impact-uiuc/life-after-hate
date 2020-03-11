@@ -101,7 +101,7 @@ describe("GET /resources/filter", () => {
     const radius = 100000;
     const address = "Chicago, IL";
     const stub = sinon
-      .stub(resourceUtils, "addressToLatLong")
+      .stub(resourceUtils, "geocodeAddress")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
     const res = await request(app)
@@ -117,7 +117,7 @@ describe("GET /resources/filter", () => {
     await createSampleResource2();
     const query = "social";
     const stub = sinon
-      .stub(resourceUtils, "addressToLatLong")
+      .stub(resourceUtils, "geocodeAddress")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
     const res = await request(app)
@@ -133,7 +133,7 @@ describe("GET /resources/filter", () => {
 describe("POST /resources", () => {
   it("should create a new Resource", async () => {
     const stub = sinon
-      .stub(resourceUtils, "addressToLatLong")
+      .stub(resourceUtils, "geocodeAddress")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
     await request(app)
