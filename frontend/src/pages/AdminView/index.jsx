@@ -28,6 +28,7 @@ const UserManager = props => {
       <div className="manager-header">
         <h1>User Directory</h1>
         <select onChange={onCategoryChange} defaultValue={props.filter}>
+          <option value={userFilterEnum.ALL}>All Users</option>
           <option value={userFilterEnum.ACTIVE}>Active Users</option>
           <option value={userFilterEnum.PENDING}>Pending Users</option>
           <option value={userFilterEnum.REJECTED}>

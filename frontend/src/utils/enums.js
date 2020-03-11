@@ -11,6 +11,7 @@ const resourceEnum = {
 };
 
 const userFilterEnum = {
+  ALL: "ALL",
   ACTIVE: "ACTIVE",
   PENDING: "PENDING",
   REJECTED: "REJECTED"
