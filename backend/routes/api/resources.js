@@ -28,6 +28,12 @@ const { resourceEnum } = require("../../models/Resource");
 
 const router = express.Router();
 
+const concatAddress = resource => {
+  const { streetAddress, city, state, postalCode } = resource.address;
+  resource.address = [streetAddress, city, [state, postalCode].join(" ")].join(", ");
+  return resource;
+}
+
 // get all resources
 router.get(
   "/",
@@ -37,7 +43,7 @@ router.get(
 
     res.json({
       code: 200,
-      result: resources,
+      result: resources.map(concatAddress),
       success: true
     });
   })
