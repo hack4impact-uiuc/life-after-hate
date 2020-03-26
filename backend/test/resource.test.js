@@ -13,7 +13,12 @@ const sampleResourceInfo = {
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
-  address: "Silicon Valley",
+  address: {
+    streetAddress: "10 Silicon Way",
+    city: "Silicon Valley",
+    state: "IL",
+    postalCode: 61820
+  },
   location: {
     coordinates: [35, 40]
   },
@@ -27,7 +32,12 @@ const sampleResourceInfo2 = {
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
-  address: "Silicon Valley",
+  address: {
+    streetAddress: "10 Silicon Way",
+    city: "Silicon Valley",
+    state: "IL",
+    postalCode: 61820
+  },
   location: {
     coordinates: [40, 40]
   },
@@ -41,7 +51,12 @@ const sampleResourceInfo3 = {
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
-  address: "Silicon Valley",
+  address: {
+    streetAddress: "10 Silicon Way",
+    city: "Silicon Valley",
+    state: "IL",
+    postalCode: 61820
+  },
   location: {
     coordinates: [40, 40]
   },
