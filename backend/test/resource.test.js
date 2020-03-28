@@ -147,9 +147,15 @@ describe("GET /resources/filter", () => {
 
 describe("POST /resources", () => {
   it("should create a new Resource", async () => {
-    const stub = sinon
-      .stub(resourceUtils, "geocodeAddress")
-      .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
+    const stub = sinon.stub(resourceUtils, "geocodeAddress").callsFake(() => ({
+      lat: 30,
+      lng: 20,
+      region: 2,
+      street: "10 Silicon Way",
+      city: "Silicon Valley",
+      state: "IL",
+      postalCode: 61820
+    }));
 
     await request(app)
       .post(`/api/resources/`)

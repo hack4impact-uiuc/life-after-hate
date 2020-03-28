@@ -85,7 +85,7 @@ router.get(
 
     res.json({
       code: 200,
-      result: { center: [lng, lat], resources },
+      result: { center: [lng, lat], resources: resources.map(concatAddress) },
       success: true
     });
   })
@@ -161,7 +161,7 @@ router.get(
     const resource = await Resource.findById(resourceId);
     res.json({
       code: 200,
-      result: resource,
+      result: concatAddress(resource),
       success: true
     });
   })
