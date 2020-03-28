@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
-import { modalEnum } from "../../../utils/enums";
+import { modalEnum, resourceEnum } from "../../../utils/enums";
 import {
   editAndRefreshResource,
   addAndRefreshResource,
@@ -25,13 +25,19 @@ const ResourceModal = props => {
   };
 
   const handleEditResource = async data => {
-    data.tags = data.tags.split(",").map(tag => tag.trim());
+    data.tags = data.tags
+      .split(",")
+      .filter(t => t)
+      .map(tag => tag.trim());
     await editAndRefreshResource(data, props.resource._id);
     props.closeModal();
   };
 
   const handleAddResource = async data => {
-    data.tags = data.tags.split(",").map(tag => tag.trim());
+    data.tags = data.tags
+      .split(",")
+      .filter(t => t)
+      .map(tag => tag.trim());
     await addAndRefreshResource(data);
     props.closeModal();
   };
@@ -44,6 +50,8 @@ const ResourceModal = props => {
     setDeleteClicked(false);
     return deleteAndRefreshResource(props.resource._id);
   };
+
+  const makeOption = option => <option>{option}</option>;
 
   return (
     <div className="modal-wrap-ee">
@@ -60,52 +68,60 @@ const ResourceModal = props => {
                 type="text"
                 name="companyName"
                 defaultValue={props.resource.companyName}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.companyName ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
               />
-              {/* errors will return when field validation fails  */}
-              {errors.companyName && <span>This field is required</span>}
             </label>
             <label className="modal-lab">
               <p>Contact Name</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 type="text"
                 name="contactName"
                 defaultValue={props.resource.contactName}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.contactName ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
               <p>Contact Phone</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 type="text"
                 name="contactPhone"
                 defaultValue={props.resource.contactPhone}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.contactPhone ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
               <p>Contact Email</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 type="text"
                 name="contactEmail"
                 defaultValue={props.resource.contactEmail}
-                className="modal-input-field"
+                className={`modal-input-field ${
+                  errors.contactEmail ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
               <p>Description</p>
               <textarea
-                ref={register}
+                ref={register({ required: true })}
                 name="description"
                 defaultValue={props.resource.description}
-                className="modal-input-field modal-input-textarea"
+                className={`modal-input-field modal-input-textarea ${
+                  errors.description ? "invalid" : ""
+                }`}
                 rows="10"
                 disabled={!props.editable}
               />
@@ -118,29 +134,45 @@ const ResourceModal = props => {
                 defaultValue={
                   props.isAddingResource ? "" : props.resource.tags.join(", ")
                 }
-                className="modal-input-field"
+                className={`modal-input-field ${errors.tags && "invalid"}`}
                 disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
+              <p>Type</p>
+              <select
+                ref={register}
+                name="type"
+                defaultValue={props.resource.type}
+                className="modal-select-field"
+                disabled={!props.editable}
+              >
+                {Object.values(resourceEnum).map(
+                  makeOption
+                ) /* Enum to options */}
+              </select>
+            </label>
+            <label className="modal-lab">
               <p>Address</p>
               <input
-                ref={register}
+                ref={register({ required: true })}
                 name="address"
                 type="text"
                 defaultValue={props.resource.address}
-                className="modal-input-field"
+                className={`modal-input-field ${errors.address && "invalid"}`}
                 disabled={!props.editable}
               />
             </label>
             <label className="modal-lab">
               <p>Notes</p>
               <textarea
-                ref={register}
+                ref={register({ required: true })}
                 name="notes"
                 defaultValue={props.resource.notes}
-                className="modal-input-field modal-input-textarea"
                 rows="5"
+                className={`modal-input-field modal-input-textarea ${
+                  errors.notes ? "invalid" : ""
+                }`}
                 disabled={!props.editable}
               />
             </label>

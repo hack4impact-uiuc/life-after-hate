@@ -23,6 +23,7 @@ const {
   requireAdminStatus,
   requireVolunteerStatus
 } = require("../../utils/auth-middleware");
+const { resourceEnum } = require("../../models/Resource");
 
 const router = express.Router();
 
@@ -100,7 +101,8 @@ router.post(
           .items(Joi.number())
       }).default({ type: "Point", coordinates: [0, 0] }),
       notes: Joi.string().allow(""),
-      tags: Joi.array().items(Joi.string())
+      tags: Joi.array().items(Joi.string()),
+      type: Joi.string().default(resourceEnum.GROUP)
     })
   }),
   errorWrap(async (req, res) => {
@@ -174,7 +176,8 @@ router.put(
           .items(Joi.number())
       }),
       notes: Joi.string(),
-      tags: Joi.array().items(Joi.string())
+      tags: Joi.array().items(Joi.string()),
+      type: Joi.string()
     }),
     params: {
       resource_id: Joi.objectId().required()

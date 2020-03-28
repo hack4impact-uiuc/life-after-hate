@@ -21,6 +21,9 @@
   .card-wrap {
     outline: none !important;
   }
+  .expanded .card-wrap {
+    cursor: auto;
+  }
 
   .collapsed {
     cursor: pointer !important;

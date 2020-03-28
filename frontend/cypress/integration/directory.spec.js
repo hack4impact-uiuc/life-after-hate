@@ -24,7 +24,13 @@ context("Directory View", () => {
     cy.get('[name="companyName"]').type("Test Resource");
 
     cy.get("#submit-form-button").click();
-    cy.get(".Toastify__toast-body").should("contain.text", "Fail");
+    cy.get('[name="contactName"]').should("have.class", "invalid");
+
+    cy.get('[name="contactPhone"]').type("123-456-7890");
+
+    cy.get("#submit-form-button").click();
+    cy.get('[name="contactName"]').should("have.class", "invalid");
+    cy.get('[name="contactPhone"]').should("not.have.class", "invalid");
 
     // Don't close out of the modal on error
     cy.get(".modal-title").should("be.visible");
