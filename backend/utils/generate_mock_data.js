@@ -7,10 +7,9 @@ const fs = require("fs");
 
 const JSON_LINK_RESOURCES =
   "http://www.json-generator.com/api/json/get/bUvEqZDKPS?indent=2";
-const JSON_LINK_USERS =
-  "http://www.json-generator.com/api/json/get/ceNGynncVu?indent=2";
 
-const FILE_PATH = "/var/www/app/assets/mock_data.json";
+const RESOURCE_FILE_PATH = "/var/www/app/assets/mock_data.json";
+const USER_FILE_PATH = "/var/www/app/assets/mock_user_data.json";
 
 const createConnection = async () => {
   console.log(colors.green("Attempting to connect to Mongo..."));
@@ -32,7 +31,7 @@ const fetchJson = async jsonLink => {
   return dataJSON;
 };
 
-const fetchFromFile = () => JSON.parse(fs.readFileSync(FILE_PATH, "utf-8"));
+const fetchFromFile = path => JSON.parse(fs.readFileSync(path, "utf-8"));
 
 const addSampleResource = resource => {
   const newResource = new Resource(resource);
@@ -49,18 +48,18 @@ const main = async () => {
   const resourceCountLimit = args[0];
   const shouldUseLoremData = args[1] === "lorem";
   await createConnection();
-  console.log(colors.green("Clearing all existing resource data..."));
-  await Resource.deleteMany({});
-  const data = shouldUseLoremData
-    ? await fetchJson(JSON_LINK_RESOURCES)
-    : fetchFromFile();
-  const userData = await fetchJson(JSON_LINK_USERS);
-  const resources = resourceCountLimit
-    ? data.slice(0, parseInt(args[0])).map(addSampleResource)
-    : data.map(addSampleResource);
-  const users = userData.map(addSampleUser);
-  console.log(colors.green("Saving mock data in DB..."));
   try {
+    console.log(colors.green("Clearing all existing resource data..."));
+    await Resource.deleteMany({});
+    const data = shouldUseLoremData
+      ? await fetchJson(JSON_LINK_RESOURCES)
+      : fetchFromFile(RESOURCE_FILE_PATH);
+    const userData = await fetchFromFile(USER_FILE_PATH);
+    const resources = resourceCountLimit
+      ? data.slice(0, parseInt(args[0])).map(addSampleResource)
+      : data.map(addSampleResource);
+    const users = userData.map(addSampleUser);
+    console.log(colors.green("Saving mock data in DB..."));
     await Promise.all(resources);
     console.log(
       colors.green(`Added ${resources.length} mock resources to DB!`)
