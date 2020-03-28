@@ -128,12 +128,16 @@ router.post(
       data.address
     );
 
+    console.log(data)
+
     data = R.pipe(
       R.set(resourceLatLens, lat),
       R.set(resourceLongLens, lng),
       R.set(resourceRegionLens, region),
       R.set(resourceAddressLens, address)
     )(data);
+
+    console.log(data)
 
     const newResource = new Resource(data);
     newResource.tags = createdTags;
