@@ -51,12 +51,7 @@ const sampleResourceInfo3 = {
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
-  address: {
-    streetAddress: "10 Silicon Way",
-    city: "Silicon Valley",
-    state: "IL",
-    postalCode: 61820
-  },
+  address: "Silicon Valley",
   location: {
     coordinates: [40, 40]
   },
@@ -151,7 +146,7 @@ describe("POST /resources", () => {
       lat: 30,
       lng: 20,
       region: 2,
-      street: "10 Silicon Way",
+      streetAddress: "10 Silicon Way",
       city: "Silicon Valley",
       state: "IL",
       postalCode: 61820

@@ -128,8 +128,6 @@ router.post(
       data.address
     );
 
-    console.log(data)
-
     data = R.pipe(
       R.set(resourceLatLens, lat),
       R.set(resourceLongLens, lng),

@@ -66,7 +66,7 @@ const parseGeocodingResponse = resp => {
     region,
     lat: getCoord("lat"),
     lng: getCoord("lng"),
-    street: getStreetFromResults(),
+    streetAddress: getStreetFromResults(),
     city: getCityFromResults(),
     state: getStateFromResults(),
     postalCode: getPostalCodeFromResults()
