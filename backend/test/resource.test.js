@@ -191,7 +191,7 @@ describe("PUT /resources", () => {
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
     expect(didCheckIsAdmin()).to.be.true;
-    stub.restore()
+    stub.restore();
   });
 });
 
