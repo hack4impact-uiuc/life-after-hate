@@ -172,6 +172,17 @@ describe("PUT /resources", () => {
       contactName: "new contact",
       description: "new description"
     };
+
+    const stub = sinon.stub(resourceUtils, "geocodeAddress").callsFake(() => ({
+      lat: 30,
+      lng: 20,
+      region: 2,
+      streetAddress: "10 Silicon Way",
+      city: "Silicon Valley",
+      state: "IL",
+      postalCode: 61820
+    }));
+
     await request(app)
       .put(`/api/resources/${resourceId}`)
       .send(newData)

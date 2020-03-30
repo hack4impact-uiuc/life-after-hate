@@ -13,7 +13,7 @@ const parseGeocodingResponse = resp => {
     "locations",
     0,
     "latLng"
-  ])(resp);
+  ]);
 
   // Grab the street within the result JSON
   const getStreetFromResults = R.path(["results", 0, "locations", 0, "street"]);
@@ -25,7 +25,7 @@ const parseGeocodingResponse = resp => {
     "locations",
     0,
     "adminArea5"
-  ])(resp);
+  ]);
 
   // Grab the 2 letter state code within the result JSON
   const getStateFromResults = R.path([
@@ -34,7 +34,7 @@ const parseGeocodingResponse = resp => {
     "locations",
     0,
     "adminArea3"
-  ])(resp);
+  ]);
 
   // Grab the postal code within the result JSON
   const getPostalCodeFromResults = R.path([
@@ -43,7 +43,7 @@ const parseGeocodingResponse = resp => {
     "locations",
     0,
     "postalCode"
-  ])(resp);
+  ]);
 
   // Take the state and find the federal region that maps to it
   const findFederalRegion = R.pipe(
@@ -66,10 +66,10 @@ const parseGeocodingResponse = resp => {
     region,
     lat: getCoord("lat"),
     lng: getCoord("lng"),
-    streetAddress: getStreetFromResults(),
-    city: getCityFromResults(),
-    state: getStateFromResults(),
-    postalCode: getPostalCodeFromResults()
+    streetAddress: getStreetFromResults(resp),
+    city: getCityFromResults(resp),
+    state: getStateFromResults(resp),
+    postalCode: getPostalCodeFromResults(resp)
   };
 };
 
