@@ -135,8 +135,6 @@ router.post(
       R.set(resourceAddressLens, address)
     )(data);
 
-    console.log(data)
-
     const newResource = new Resource(data);
     newResource.tags = createdTags;
     await newResource.save();
@@ -196,8 +194,19 @@ router.put(
     }
   }),
   errorWrap(async (req, res) => {
-    const data = req.body;
+    let data = { ...req.body };
     const resourceId = req.params.resource_id;
+
+    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
+      data.address
+    );
+
+    data = R.pipe(
+      R.set(resourceLatLens, lat),
+      R.set(resourceLongLens, lng),
+      R.set(resourceRegionLens, region),
+      R.set(resourceAddressLens, address)
+    )(data);
 
     const resource = await Resource.findByIdAndUpdate(
       resourceId,
