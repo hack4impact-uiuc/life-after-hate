@@ -13,7 +13,12 @@ const Resource = new mongoose.Schema({
   contactPhone: { type: String, required: true },
   contactEmail: { type: String, required: true },
   description: { type: String, required: true },
-  address: { type: String, required: true },
+  address: {
+    streetAddress: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    postalCode: { type: String, required: true }
+  },
   location: {
     type: { type: String, default: "Point" },
     coordinates: { type: Array, default: [] }

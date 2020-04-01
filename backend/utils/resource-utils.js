@@ -5,7 +5,7 @@ const mapquestURI = process.env.MAPQUEST_URI;
 const { STATE_REGION_MAP } = require("./constants");
 const Fuse = require("fuse.js");
 const geolib = require("geolib");
-const parseLatLongResponse = resp => {
+const parseGeocodingResponse = resp => {
   // Grab the lat/lng object within the result JSON
   const getLocationFromResults = R.path([
     "results",
@@ -15,6 +15,18 @@ const parseLatLongResponse = resp => {
     "latLng"
   ]);
 
+  // Grab the street within the result JSON
+  const getStreetFromResults = R.path(["results", 0, "locations", 0, "street"]);
+
+  // Grab the city within the result JSON
+  const getCityFromResults = R.path([
+    "results",
+    0,
+    "locations",
+    0,
+    "adminArea5"
+  ]);
+
   // Grab the 2 letter state code within the result JSON
   const getStateFromResults = R.path([
     "results",
@@ -22,6 +34,15 @@ const parseLatLongResponse = resp => {
     "locations",
     0,
     "adminArea3"
+  ]);
+
+  // Grab the postal code within the result JSON
+  const getPostalCodeFromResults = R.path([
+    "results",
+    0,
+    "locations",
+    0,
+    "postalCode"
   ]);
 
   // Take the state and find the federal region that maps to it
@@ -41,13 +62,21 @@ const parseLatLongResponse = resp => {
     R.flip(R.prop)
   )(resp);
 
-  return { region, lat: getCoord("lat"), lng: getCoord("lng") };
+  return {
+    region,
+    lat: getCoord("lat"),
+    lng: getCoord("lng"),
+    streetAddress: getStreetFromResults(resp),
+    city: getCityFromResults(resp),
+    state: getStateFromResults(resp),
+    postalCode: getPostalCodeFromResults(resp)
+  };
 };
 
-const addressToLatLong = R.memoizeWith(R.identity, async address => {
+const geocodeAddress = R.memoizeWith(R.identity, async address => {
   const addressQuery = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
   const response = await axios.get(addressQuery);
-  return parseLatLongResponse(response.data);
+  return parseGeocodingResponse(response.data);
 });
 
 const latlongToAddress = async function(lat, long) {
@@ -101,6 +130,7 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
 const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
 const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
 const resourceRegionLens = R.lensProp("federalRegion");
+const resourceAddressLens = R.lensProp("address");
 
 const distanceFilter = R.curry((lat, long, radius) =>
   R.filter(
@@ -127,11 +157,12 @@ const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
 });
 
 module.exports = {
-  addressToLatLong,
+  geocodeAddress,
   latlongToAddress,
   filterResourcesWithinRadius,
   filterByOptions,
   resourceLatLens,
   resourceLongLens,
-  resourceRegionLens
+  resourceRegionLens,
+  resourceAddressLens
 };

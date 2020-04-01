@@ -12,6 +12,7 @@ const {
   resourceLatLens,
   resourceLongLens,
   resourceRegionLens,
+  resourceAddressLens,
   filterResourcesWithinRadius,
   filterByOptions
 } = require("../../utils/resource-utils");
@@ -27,6 +28,14 @@ const { resourceEnum } = require("../../models/Resource");
 
 const router = express.Router();
 
+const concatAddress = resource => {
+  const { streetAddress, city, state, postalCode } = resource.address;
+  resource.address = [streetAddress, city, [state, postalCode].join(" ")].join(
+    ", "
+  );
+  return resource;
+};
+
 // get all resources
 router.get(
   "/",
@@ -36,7 +45,7 @@ router.get(
 
     res.json({
       code: 200,
-      result: resources,
+      result: resources.map(concatAddress),
       success: true
     });
   })
@@ -60,7 +69,7 @@ router.get(
     let resources = await Resource.find({}).lean();
 
     const { lat, lng } = address
-      ? await resourceUtils.addressToLatLong(address)
+      ? await resourceUtils.geocodeAddress(address)
       : {};
 
     // if custom weights provided, will set custom field rankings
@@ -76,7 +85,7 @@ router.get(
 
     res.json({
       code: 200,
-      result: { center: [lng, lat], resources },
+      result: { center: [lng, lat], resources: resources.map(concatAddress) },
       success: true
     });
   })
@@ -115,14 +124,15 @@ router.post(
       remove_duplicates: true
     });
 
-    const { lat, lng, region } = await resourceUtils.addressToLatLong(
+    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       data.address
     );
 
     data = R.pipe(
       R.set(resourceLatLens, lat),
       R.set(resourceLongLens, lng),
-      R.set(resourceRegionLens, region)
+      R.set(resourceRegionLens, region),
+      R.set(resourceAddressLens, address)
     )(data);
 
     const newResource = new Resource(data);
@@ -151,7 +161,7 @@ router.get(
     const resource = await Resource.findById(resourceId);
     res.json({
       code: 200,
-      result: resource,
+      result: concatAddress(resource),
       success: true
     });
   })
@@ -184,8 +194,19 @@ router.put(
     }
   }),
   errorWrap(async (req, res) => {
-    const data = req.body;
+    let data = { ...req.body };
     const resourceId = req.params.resource_id;
+
+    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
+      data.address
+    );
+
+    data = R.pipe(
+      R.set(resourceLatLens, lat),
+      R.set(resourceLongLens, lng),
+      R.set(resourceRegionLens, region),
+      R.set(resourceAddressLens, address)
+    )(data);
 
     const resource = await Resource.findByIdAndUpdate(
       resourceId,
