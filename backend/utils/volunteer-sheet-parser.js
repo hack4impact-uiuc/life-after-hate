@@ -53,12 +53,8 @@ const getLocation = async mailingAddress => {
       address
     };
   } catch (err) {
-    return {
-      location: {
-        coordinates: [null, null]
-      },
-      federalRegion: -1
-    };
+    console.log(mailingAddress);
+    return {};
   }
 };
 
