@@ -42,7 +42,9 @@ const createTags = ({
 
 const getLocation = async mailingAddress => {
   try {
-    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(mailingAddress);
+    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
+      mailingAddress
+    );
     return {
       location: {
         coordinates: [lng, lat]
