@@ -32,8 +32,14 @@ const SearchBar = () => {
               ref={register}
               type="text"
               placeholder="Location"
+              tabIndex="0"
             />
-            <Button className="closeButtons" close onClick={clearLocation} />
+            <Button
+              className="closeButtons"
+              close
+              onClick={clearLocation}
+              tabIndex="-1"
+            />
           </div>
         </div>
         <div className="searchKeyword">
@@ -46,8 +52,14 @@ const SearchBar = () => {
               ref={register}
               list="suggestionsList"
               placeholder="Search"
+              tabIndex="0"
             />
-            <Button className="closeButtons" close onClick={clearSearch} />
+            <Button
+              className="closeButtons"
+              close
+              onClick={clearSearch}
+              tabIndex="-1"
+            />
           </div>
           <button className="submitSearch" type="submit">
             Go
