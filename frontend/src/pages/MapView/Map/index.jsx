@@ -7,7 +7,7 @@ import {
   selectMapResource,
   clearMapResource
 } from "../../../redux/actions/map";
-import { IconLayer } from "@deck.gl/layers";
+import { IconLayer, GeoJsonLayer } from "@deck.gl/layers";
 import MarkerImg from "../../../assets/images/marker-atlas.png";
 import Popup from "../Popup";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -98,25 +98,45 @@ const Map = props => {
       iconMapping: mapping
     };
 
-    const layer = new IconLayer({
+    const iconLayer = new IconLayer({
       ...layerProps,
-      id: "icon",
+      id: "icon-layer",
       getIcon: d =>
         d.location.type === "Center" ? "currentLocation" : "marker",
       sizeUnits: "meters",
       sizeMinPixels: PIN_SIZE
     });
 
-    return [layer];
+    const stateLayer = new GeoJsonLayer({
+      ...layerProps,
+      id: "state-lines",
+      data: "https://docs.mapbox.com/mapbox-gl-js/assets/us_states.geojson",
+      pickable: true,
+      stroked: true,
+      filled: true,
+      extruded: false,
+      lineWidthScale: 20,
+      lineWidthMinPixels: 2,
+      getFillColor: [247, 146, 48, 0],
+      getLineColor: [247, 146, 48, 255],
+      getLineWidth: 1,
+      updateTriggers: {
+        getFillColor: []
+      }
+    });
+
+    return [stateLayer, iconLayer];
   };
 
   const handlePopupClick = e => {
     console.log(e);
     // Don't show a popup if hovering over the current (searched) location
-    if (e.object && e.object.location.type !== "Center") {
-      props.selectMapResource(props.resources[e.index]._id);
-    } else {
-      props.clearMapResource();
+    if (e.layer.id === "icon-layer") {
+      if (e.object && e.object.location.type !== "Center") {
+        props.selectMapResource(props.resources[e.index]._id);
+      } else {
+        props.clearMapResource();
+      }
     }
   };
 
