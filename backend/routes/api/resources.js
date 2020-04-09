@@ -14,7 +14,8 @@ const {
   resourceRegionLens,
   resourceAddressLens,
   filterResourcesWithinRadius,
-  filterByOptions
+  filterByOptions,
+  filterByTags
 } = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
@@ -86,6 +87,31 @@ router.get(
     res.json({
       code: 200,
       result: { center: [lng, lat], resources: resources.map(concatAddress) },
+      success: true
+    });
+  })
+);
+
+// get list of resources filtered by tag options
+router.get(
+  "/filter/tags",
+  requireVolunteerStatus,
+  celebrate({
+    query: {
+      tags: Joi.string()
+    }
+  }),
+  errorWrap(async (req, res) => {
+    const { tags } = req.query;
+    let resources = await Resource.find({}).lean();
+
+    const tagArray = tags.split(",");
+
+    resources = filterByTags(tagArray, resources);
+
+    res.json({
+      code: 200,
+      result: resources.map(concatAddress),
       success: true
     });
   })
