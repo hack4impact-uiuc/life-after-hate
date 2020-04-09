@@ -22,7 +22,7 @@ const sampleResourceInfo = {
   location: {
     coordinates: [35, 40]
   },
-  tags: ["tech"],
+  tags: ["tech", "company"],
   type: resourceEnum.GROUP
 };
 
@@ -41,7 +41,7 @@ const sampleResourceInfo2 = {
   location: {
     coordinates: [40, 40]
   },
-  tags: ["social"],
+  tags: ["social", "company"],
   type: resourceEnum.INDIVIDUAL
 };
 
@@ -137,6 +137,39 @@ describe("GET /resources/filter", () => {
     expect(res.body.result.resources[0].companyName).equals("Facebook");
     expect(didCheckIsVolunteer()).to.be.true;
     stub.restore();
+  });
+});
+
+describe("GET /resources/filter/tags", () => {
+  it("should filter resources by single tag", async () => {
+    await createSampleResource2();
+    const query = "company";
+    const res = await request(app)
+      .get(`/api/resources/filter/tags?tags=${query}`)
+      .expect(200);
+    expect(res.body.result).to.have.lengthOf(2);
+    expect(res.body.result[0].companyName).equals("Google");
+    expect(res.body.result[1].companyName).equals("Facebook");
+    expect(didCheckIsVolunteer()).to.be.true;
+  });
+  it("should filter resources by list of tags", async () => {
+    await createSampleResource2();
+    const query = "tech,company";
+    const res = await request(app)
+      .get(`/api/resources/filter/tags?tags=${query}`)
+      .expect(200);
+    expect(res.body.result).to.have.lengthOf(1);
+    expect(res.body.result[0].companyName).equals("Google");
+    expect(didCheckIsVolunteer()).to.be.true;
+  });
+  it("filter returns no resources for tag that doesn't exist", async () => {
+    await createSampleResource2();
+    const query = "cool";
+    const res = await request(app)
+      .get(`/api/resources/filter/tags?tags=${query}`)
+      .expect(200);
+    expect(res.body.result).to.have.lengthOf(0);
+    expect(didCheckIsVolunteer()).to.be.true;
   });
 });
 
