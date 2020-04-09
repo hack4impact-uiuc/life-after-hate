@@ -127,6 +127,13 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
   return fuse.search(query);
 });
 
+const filterByTags = R.curry((tags, resources) => {
+  var tagMatch = function(resource) {
+    return tags.every(t => resource.tags.includes(t));
+  };
+  return resources.filter(r => tagMatch(r));
+});
+
 const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
 const resourceLongLens = R.lensPath(["location", "coordinates", 0]);
 const resourceRegionLens = R.lensProp("federalRegion");
@@ -161,6 +168,7 @@ module.exports = {
   latlongToAddress,
   filterResourcesWithinRadius,
   filterByOptions,
+  filterByTags,
   resourceLatLens,
   resourceLongLens,
   resourceRegionLens,
