@@ -8,12 +8,17 @@ const resourceEnum = {
 };
 
 const Resource = new mongoose.Schema({
-  companyName: { type: String, required: true },
+  companyName: { type: String, default: "" },
   contactName: { type: String, required: true },
-  contactPhone: { type: String, required: true },
-  contactEmail: { type: String, required: true },
-  description: { type: String, required: true },
-  address: { type: String, required: true },
+  contactPhone: { type: String, default: "" },
+  contactEmail: { type: String, default: "" },
+  description: { type: String, default: "" },
+  address: {
+    streetAddress: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    postalCode: { type: String, required: true }
+  },
   location: {
     type: { type: String, default: "Point" },
     coordinates: { type: Array, default: [] }

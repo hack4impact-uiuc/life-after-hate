@@ -51,6 +51,7 @@ const main = async () => {
   try {
     console.log(colors.green("Clearing all existing resource data..."));
     await Resource.deleteMany({});
+    await User.deleteMany({});
     const data = shouldUseLoremData
       ? await fetchJson(JSON_LINK_RESOURCES)
       : fetchFromFile(RESOURCE_FILE_PATH);

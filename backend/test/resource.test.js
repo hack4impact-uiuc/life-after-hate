@@ -13,7 +13,12 @@ const sampleResourceInfo = {
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
-  address: "Silicon Valley",
+  address: {
+    streetAddress: "10 Silicon Way",
+    city: "Silicon Valley",
+    state: "IL",
+    postalCode: 61820
+  },
   location: {
     coordinates: [35, 40]
   },
@@ -27,7 +32,12 @@ const sampleResourceInfo2 = {
   contactPhone: "123456789",
   contactEmail: "123@gmail.com",
   description: "Let me dream",
-  address: "Silicon Valley",
+  address: {
+    streetAddress: "10 Silicon Way",
+    city: "Silicon Valley",
+    state: "IL",
+    postalCode: 61820
+  },
   location: {
     coordinates: [40, 40]
   },
@@ -101,7 +111,7 @@ describe("GET /resources/filter", () => {
     const radius = 100000;
     const address = "Chicago, IL";
     const stub = sinon
-      .stub(resourceUtils, "addressToLatLong")
+      .stub(resourceUtils, "geocodeAddress")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
     const res = await request(app)
@@ -117,7 +127,7 @@ describe("GET /resources/filter", () => {
     await createSampleResource2();
     const query = "social";
     const stub = sinon
-      .stub(resourceUtils, "addressToLatLong")
+      .stub(resourceUtils, "geocodeAddress")
       .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
 
     const res = await request(app)
@@ -132,9 +142,15 @@ describe("GET /resources/filter", () => {
 
 describe("POST /resources", () => {
   it("should create a new Resource", async () => {
-    const stub = sinon
-      .stub(resourceUtils, "addressToLatLong")
-      .callsFake(() => ({ lat: 30, lng: 20, region: 2 }));
+    const stub = sinon.stub(resourceUtils, "geocodeAddress").callsFake(() => ({
+      lat: 30,
+      lng: 20,
+      region: 2,
+      streetAddress: "10 Silicon Way",
+      city: "Silicon Valley",
+      state: "IL",
+      postalCode: 61820
+    }));
 
     await request(app)
       .post(`/api/resources/`)
@@ -156,6 +172,17 @@ describe("PUT /resources", () => {
       contactName: "new contact",
       description: "new description"
     };
+
+    const stub = sinon.stub(resourceUtils, "geocodeAddress").callsFake(() => ({
+      lat: 30,
+      lng: 20,
+      region: 2,
+      streetAddress: "10 Silicon Way",
+      city: "Silicon Valley",
+      state: "IL",
+      postalCode: 61820
+    }));
+
     await request(app)
       .put(`/api/resources/${resourceId}`)
       .send(newData)
@@ -164,6 +191,7 @@ describe("PUT /resources", () => {
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
     expect(didCheckIsAdmin()).to.be.true;
+    stub.restore();
   });
 });
 
