@@ -93,6 +93,7 @@ class CardView extends React.Component {
             isSelected={
               this.props.resources[index]._id === this.props.selectedResource
             }
+            addTagToSearch={this.props.addTagToSearch}
             style={style}
           />
           // <div ref={registerChild} style={style}>

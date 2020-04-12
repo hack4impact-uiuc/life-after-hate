@@ -19,11 +19,17 @@ const ResourceCard = ({
   selectMapResource,
   openResourceModalWithPayload,
   clearMapResource,
+  addTagToSearch,
   myRef,
   style
 }) => {
+  const addSearchTag = (e, tag) => {
+    e.stopPropagation();
+    addTagToSearch(tag);
+  }
+
   const renderTags = (tag, idx) => (
-    <div className="card-tag" key={idx}>
+    <div className="card-tag" key={idx} onClick={e => addSearchTag(e, tag)}>
       {tag}
     </div>
   );

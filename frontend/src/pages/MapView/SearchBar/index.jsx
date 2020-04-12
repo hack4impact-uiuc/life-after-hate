@@ -7,7 +7,10 @@ import { filterAndRefreshResource } from "../../../utils/api";
 
 import "./styles.scss";
 
-const SearchBar = () => {
+const SearchBar = ({
+  tags,
+  removeTag
+}) => {
   const { register, handleSubmit } = useForm();
   const onSubmit = data => {
     filterAndRefreshResource(data.keyword, data.location);
@@ -65,9 +68,21 @@ const SearchBar = () => {
             Go
           </button>
         </div>
+        {tags.length > 0 && (<div className="card-tags">  
+          {tags.map((tag, idx) => (
+            <div className="card-tag" key={idx}>
+              {tag}
+              <Button
+                className="closeButtons"
+                close
+                onClick={() => removeTag(tag)}
+              />
+            </div>
+          ))}
+        </div>)}
       </form>
     </div>
   );
-};
+}; //DONT OPEN CARD AND REMOVE SEARCG TAG CALLBACK
 
 export default SearchBar;
