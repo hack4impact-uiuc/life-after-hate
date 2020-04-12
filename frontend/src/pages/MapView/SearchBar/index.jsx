@@ -69,11 +69,13 @@ const SearchBar = ({
           </button>
         </div>
         {tags.length > 0 && (<div className="card-tags">  
-          {tags.map((tag, idx) => (
-            <div className="card-tag" key={idx}>
-              {tag}
+          {tags.map(tag => (
+            <div className="card-tag" key={tag}>
+              <span className="search-tag">
+                {tag}
+              </span>
               <Button
-                className="closeButtons"
+                className="closeButtons close-tag"
                 close
                 onClick={() => removeTag(tag)}
               />
