@@ -68,14 +68,14 @@ const SearchBar = ({
             Go
           </button>
         </div>
-        {tags.length > 0 && (<div className="card-tags">  
+        {tags.length > 0 && (<div className="card-tags-search">  
           {tags.map(tag => (
-            <div className="card-tag" key={tag}>
+            <div className="card-tag-search" key={tag}>
               <span className="search-tag">
                 {tag}
               </span>
               <Button
-                className="closeButtons close-tag"
+                className="close-tag closeButtons"
                 close
                 onClick={() => removeTag(tag)}
               />
