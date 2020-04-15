@@ -121,7 +121,7 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
     return resources;
   }
   const fuse = new Fuse(resources, filterOptions);
-  return fuse.search(query);
+  return fuse.search(query).map((i) => i.item);
 });
 
 const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
