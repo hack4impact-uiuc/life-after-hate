@@ -7,7 +7,9 @@
     "@h4iuiuc/no-null-ternary": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
     "prefer-const": "warn",
-    "camelcase": "warn"
+    "camelcase": "warn",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off"
   },
   "env": {
     "browser": true,
