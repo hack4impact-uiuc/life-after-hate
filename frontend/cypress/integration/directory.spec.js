@@ -17,9 +17,7 @@ context("Directory View", () => {
   });
 
   it("Adding an incomplete resource fails", () => {
-    cy.get("#add-button")
-      .should("have.text", "Add Resource")
-      .click();
+    cy.get("#add-button").should("have.text", "Add Resource").click();
 
     cy.get('[name="companyName"]').type("Test Resource");
 
@@ -71,9 +69,7 @@ context("Directory View", () => {
     cy.get("#search-general").type("Extended Stay America");
     cy.get("#search-button").click();
 
-    cy.get("[data-cy=card-companyName]")
-      .should("have.length", 1)
-      .click();
+    cy.get("[data-cy=card-companyName]").should("have.length", 1).click();
 
     cy.get(".modal-title").should("contain.text", "Extended Stay America");
     cy.get('[name="companyName"]').should(
@@ -91,13 +87,9 @@ context("Directory View", () => {
   });
 
   it("Allows and persists edits", () => {
-    cy.get(".edit-button")
-      .first()
-      .click();
+    cy.get(".edit-button").first().click();
     cy.get(".modal-title").should("have.text", "Edit Resource");
-    cy.get('[name="companyName"]')
-      .clear()
-      .type("Edited Resource!!");
+    cy.get('[name="companyName"]').clear().type("Edited Resource!!");
     cy.get("#submit-form-button").click();
 
     // Search for edited resource

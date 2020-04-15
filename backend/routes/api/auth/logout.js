@@ -6,7 +6,7 @@ router.get("/", requireVolunteerStatus, (req, res) => {
   res.send({
     code: 200,
     message: "You have been signed out!",
-    success: true
+    success: true,
   });
 });
 

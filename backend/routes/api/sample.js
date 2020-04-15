@@ -8,10 +8,10 @@ router.get(
     body: Joi.object().keys({
       name: Joi.string().required(),
       age: Joi.number().integer(),
-      role: Joi.string().default("admin")
-    })
+      role: Joi.string().default("admin"),
+    }),
   }),
-  function(req, res) {
+  function (req, res) {
     console.log("HI");
     res.send("Hello world!");
   }
@@ -23,8 +23,8 @@ router.post(
     body: Joi.object().keys({
       name: Joi.string().required(),
       age: Joi.number().integer(),
-      role: Joi.string().default("admin")
-    })
+      role: Joi.string().default("admin"),
+    }),
   }),
   (req, res) => {
     res.send("HI");

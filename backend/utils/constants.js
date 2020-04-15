@@ -54,7 +54,7 @@ const STATE_REGION_MAP = [
   { State: "District of Columbia", Region: 3 },
   { State: "American Samoa", Region: 9 },
   { State: "Guam", Region: 9 },
-  { State: "Northern Mariana Islands", Region: 9 }
+  { State: "Northern Mariana Islands", Region: 9 },
 ];
 
 const DEFAULT_FILTER_OPTIONS = {
@@ -67,25 +67,25 @@ const DEFAULT_FILTER_OPTIONS = {
   keys: [
     {
       name: "contactName",
-      weight: 0.35
+      weight: 0.35,
     },
     {
       name: "companyName",
-      weight: 0.3
+      weight: 0.3,
     },
     {
       name: "tags",
-      weight: 0.15
+      weight: 0.15,
     },
     {
       name: "description",
-      weight: 0.1
+      weight: 0.1,
     },
     {
       name: "notes",
-      weight: 0.1
-    }
-  ]
+      weight: 0.1,
+    },
+  ],
 };
 
 const TAG_ONLY_OPTIONS = {
@@ -99,13 +99,13 @@ const TAG_ONLY_OPTIONS = {
   keys: [
     {
       name: "tags",
-      weight: 1.0
-    }
-  ]
+      weight: 1.0,
+    },
+  ],
 };
 
 module.exports = {
   STATE_REGION_MAP,
   TAG_ONLY_OPTIONS,
-  DEFAULT_FILTER_OPTIONS
+  DEFAULT_FILTER_OPTIONS,
 };

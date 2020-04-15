@@ -4,8 +4,8 @@ import { userSelector } from "./users";
 import { modalEnum } from "../../utils/enums";
 
 // Gets the ID of the selected resource/user for the modal to display
-export const modalResourceIdSelector = state => state.modal.resourceId;
-export const modalUserIdSelector = state => state.modal.userId;
+export const modalResourceIdSelector = (state) => state.modal.resourceId;
+export const modalUserIdSelector = (state) => state.modal.userId;
 
 // Gets the current resource for the modal
 export const currentResourceSelector = createSelector(
@@ -14,7 +14,7 @@ export const currentResourceSelector = createSelector(
     if (!id) {
       return {};
     }
-    return resources.find(resource => resource._id === id);
+    return resources.find((resource) => resource._id === id);
   }
 );
 
@@ -24,7 +24,7 @@ export const currentUserSelector = createSelector(
     if (!id) {
       return {};
     }
-    return users.find(user => user.id === id);
+    return users.find((user) => user.id === id);
   }
 );
 
@@ -33,8 +33,8 @@ export const titleSelector = createSelector(
   [
     currentResourceSelector,
     currentUserSelector,
-    state => state.modal.modalType,
-    state => state.modal.editable
+    (state) => state.modal.modalType,
+    (state) => state.modal.editable,
   ],
   (resource, user, modalType, editable) => {
     if (modalType === modalEnum.RESOURCE) {
@@ -65,5 +65,5 @@ export const titleSelector = createSelector(
 // Returns whether the user is adding a new resource
 export const isAddingResourceSelector = createSelector(
   [modalResourceIdSelector],
-  id => (id ? false : true)
+  (id) => (id ? false : true)
 );

@@ -9,7 +9,7 @@ module.exports.filterSensitiveInfo = R.pipe(
     "title",
     "location",
     "propicUrl",
-    "email"
+    "email",
   ]),
   renameKeys({ _id: "id" })
 );
