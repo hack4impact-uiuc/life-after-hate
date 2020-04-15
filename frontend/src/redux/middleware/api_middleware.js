@@ -3,12 +3,12 @@ import {
   accessDenied,
   apiError,
   API_REQUEST,
-  apiSuccess
+  apiSuccess,
 } from "../actions/api";
 import { startLoader, endLoader } from "../actions/loader";
 import { toast } from "react-toastify";
 
-const apiMiddleware = ({ dispatch }) => next => action => {
+const apiMiddleware = ({ dispatch }) => (next) => (action) => {
   // Call the next method in the middleware
   next(action);
 
@@ -25,7 +25,7 @@ const apiMiddleware = ({ dispatch }) => next => action => {
     headers,
     withLoader,
     notification,
-    expectUnauthorizedResponse
+    expectUnauthorizedResponse,
   } = action.payload;
 
   // Depending on the type of request, there might be a "data" or "params" field.
@@ -45,7 +45,7 @@ const apiMiddleware = ({ dispatch }) => next => action => {
       method,
       headers,
       [dataOrParams]: data,
-      withCredentials: true
+      withCredentials: true,
     })
     .then(({ data }) => {
       dispatch(apiSuccess(data));
@@ -55,7 +55,7 @@ const apiMiddleware = ({ dispatch }) => next => action => {
         toast.success(notification.successMessage);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(apiError(error.response));
       onFailure(error.response);
       if (notification && notification.failureMessage) {

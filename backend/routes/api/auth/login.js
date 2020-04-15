@@ -3,7 +3,7 @@ const router = require("express").Router();
 const Boom = require("@hapi/boom");
 const {
   requireAdminStatus,
-  requireVolunteerStatus
+  requireVolunteerStatus,
 } = require("../../../utils/auth-middleware");
 // Defines the endpoint which will be serializecd in state
 const CALLBACK_ENDPOINT = "/api/auth/login/callback";
@@ -21,7 +21,7 @@ router.get("/", (req, res, next) => {
     : undefined;
   const auth = passport.authenticate("google", {
     scope: ["openid", "profile", "email"],
-    state
+    state,
   });
   auth(req, res, next);
   next();
@@ -56,26 +56,26 @@ router.get("/redirectURI", (req, res) => {
 router.get(
   "/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login"
+    failureRedirect: "/login",
   }),
   (req, res) => {
     res.redirect(LOGIN_SUCCESS_REDIRECT);
   }
 );
 
-router.get("/testVolunteer", requireVolunteerStatus, function(req, res) {
+router.get("/testVolunteer", requireVolunteerStatus, function (req, res) {
   res.json({
     code: 200,
     result: "you are a volunteer boo yah",
-    success: true
+    success: true,
   });
 });
 
-router.get("/testAdmin", requireAdminStatus, function(req, res) {
+router.get("/testAdmin", requireAdminStatus, function (req, res) {
   res.json({
     code: 200,
     result: "you are an admin boo yah",
-    success: true
+    success: true,
   });
 });
 

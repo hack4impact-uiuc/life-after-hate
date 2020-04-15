@@ -5,32 +5,32 @@ export const API_SUCCESS = "API_SUCCESS";
 export const API_END = "API_END";
 export const API_ACCESS_DENIED = "API_ACCESS_DENIED";
 
-export const apiStart = url => ({
+export const apiStart = (url) => ({
   type: API_START,
-  url
+  url,
 });
 
-export const apiEnd = url => ({
+export const apiEnd = (url) => ({
   type: API_END,
-  url
+  url,
 });
 
-export const apiError = error => ({
+export const apiError = (error) => ({
   type: API_ERROR,
-  error
+  error,
 });
 
-export const apiSuccess = payload => ({
+export const apiSuccess = (payload) => ({
   type: API_SUCCESS,
-  payload
+  payload,
 });
 
-export const accessDenied = url => ({
+export const accessDenied = (url) => ({
   type: API_ACCESS_DENIED,
-  url
+  url,
 });
 
-export const apiAction = payload => ({
+export const apiAction = (payload) => ({
   type: API_REQUEST,
-  payload
+  payload,
 });
