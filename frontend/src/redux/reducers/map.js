@@ -1,7 +1,7 @@
 import {
   UPDATE_MAP_CENTER,
   SELECT_MAP_RESOURCE,
-  CLEAR_MAP_RESOURCE,
+  CLEAR_MAP_RESOURCE
 } from "../actions/map";
 import { UPDATE_RESOURCES } from "../actions/resources";
 const R = require("ramda");

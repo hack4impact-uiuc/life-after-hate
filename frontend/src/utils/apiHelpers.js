@@ -19,7 +19,7 @@ export const toQueryString = R.pipe(
   R.join("&")
 );
 
-export const getURLForEndpoint = (endpoint) => urljoin(API_URI, endpoint);
+export const getURLForEndpoint = endpoint => urljoin(API_URI, endpoint);
 /**
  *
  * @param {String} endpoint - A string representing the URI of the endpoint (just the end part)
@@ -36,7 +36,7 @@ export const apiRequest = ({
   data = null,
   withLoader = true,
   notification,
-  expectUnauthorizedResponse = false,
+  expectUnauthorizedResponse = false
 }) =>
   new Promise((resolve, reject) => {
     store.dispatch(
@@ -48,12 +48,12 @@ export const apiRequest = ({
         withLoader,
         data,
         notification,
-        expectUnauthorizedResponse,
+        expectUnauthorizedResponse
       })
     );
   });
 
-export const updateGlobalAuthState = (payload) => {
+export const updateGlobalAuthState = payload => {
   store.dispatch(authUpdateAction(payload));
   if (process.env.NODE_ENV === "development") {
     toast.info(`Logged in with ${payload.role} role!`);

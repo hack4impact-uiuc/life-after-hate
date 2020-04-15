@@ -12,5 +12,5 @@ export default combineReducers({
   resources,
   modal,
   map,
-  users,
+  users
 });

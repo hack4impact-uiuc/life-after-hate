@@ -13,7 +13,7 @@ const { errors } = require("celebrate");
 const errorHandler = require("./utils/error-handler");
 const {
   mockUserMiddleware,
-  setMockUserRole,
+  setMockUserRole
 } = require("./utils/auth-middleware");
 const { requestLogger, errorLogger } = require("./utils/logging-middleware");
 
@@ -27,12 +27,12 @@ app.get("/__coverage__", (req, res) => {
 
 const isProd = process.env.NODE_ENV === "production";
 // Console Logger for external API requests
-axios.interceptors.request.use((request) => {
+axios.interceptors.request.use(request => {
   console.log(`Starting Axios Request with URL: ${request.url}`);
   return request;
 });
 
-axios.interceptors.response.use((response) => {
+axios.interceptors.response.use(response => {
   console.log("Response:", response.status);
   return response;
 });
@@ -42,7 +42,7 @@ app.use(morgan("dev"));
 
 mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
-  useNewUrlParser: true,
+  useNewUrlParser: true
 });
 // Silence deprecation warnings
 mongoose.set("useCreateIndex", true);
@@ -55,10 +55,10 @@ app.use(
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
       touchAfter: 24 * 3600,
-      stringify: false,
+      stringify: false
     }),
     saveUninitialized: false, // don't create session until something stored
-    resave: false, //don't save session if unmodified
+    resave: false //don't save session if unmodified
   })
 );
 

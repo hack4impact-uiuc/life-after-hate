@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const resourceEnum = {
   GROUP: "GROUP",
-  INDIVIDUAL: "INDIVIDUAL",
+  INDIVIDUAL: "INDIVIDUAL"
 };
 
 const Resource = new mongoose.Schema({
@@ -16,7 +16,7 @@ const Resource = new mongoose.Schema({
   address: { type: String, required: true },
   location: {
     type: { type: String, default: "Point" },
-    coordinates: { type: Array, default: [] },
+    coordinates: { type: Array, default: [] }
   },
   federalRegion: { type: Number, default: 0 },
   notes: { type: String },
@@ -24,8 +24,8 @@ const Resource = new mongoose.Schema({
   type: {
     type: String,
     enum: [resourceEnum.GROUP, resourceEnum.INDIVIDUAL],
-    default: resourceEnum.GROUP,
-  },
+    default: resourceEnum.GROUP
+  }
 });
 
 module.exports = mongoose.model("Resource", Resource);

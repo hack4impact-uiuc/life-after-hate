@@ -12,7 +12,7 @@ const sampleUserInfo = {
   email: "analfang@illinois.edu",
   role: roleEnum.ADMIN,
   location: "SOUTH",
-  oauthId: "1234567",
+  oauthId: "1234567"
 };
 
 const samplePendingUserInfo = {
@@ -20,7 +20,7 @@ const samplePendingUserInfo = {
   lastName: "chen",
   email: "eug@illinois.edu",
   location: "NORTH",
-  oauthId: "1234568",
+  oauthId: "1234568"
 };
 
 const sampleVolunteerUserInfo = {
@@ -29,14 +29,14 @@ const sampleVolunteerUserInfo = {
   email: "josh@illinois.edu",
   role: roleEnum.VOLUNTEER,
   location: "NORTH",
-  oauthId: "1234569",
+  oauthId: "1234569"
 };
 
 const incompleteUserInfo = {
   email: "joshb@illinois.edu",
   role: roleEnum.ADMIN,
   location: "SOUTH",
-  oauthId: "1234567",
+  oauthId: "1234567"
 };
 
 const createSampleUser = async (userInfo = sampleUserInfo) => {
@@ -61,7 +61,9 @@ describe("GET /users/", () => {
   it("should get all users", async () => {
     await createSampleUser();
 
-    const res = await request(app).get(`/api/users/`).expect(200);
+    const res = await request(app)
+      .get(`/api/users/`)
+      .expect(200);
 
     expect(res.body.result[0].firstName).to.eq("alan");
     expect(didCheckIsAdmin()).to.be.true;
@@ -74,7 +76,9 @@ describe("GET /users/role/:role", () => {
     await createSampleVolunteerUser();
     await createSampleUser();
 
-    const res = await request(app).get(`/api/users/role/pending`).expect(200);
+    const res = await request(app)
+      .get(`/api/users/role/pending`)
+      .expect(200);
 
     expect(res.body.result[0].firstName).to.eq("eugenia");
     expect(res.body.result.length).to.eq(1);
@@ -88,7 +92,9 @@ describe("GET /users/role/:role", () => {
     await createSampleVolunteerUser();
     await createSampleUser();
 
-    const res = await request(app).get(`/api/users/role/volunteer`).expect(200);
+    const res = await request(app)
+      .get(`/api/users/role/volunteer`)
+      .expect(200);
 
     expect(res.body.result[0].firstName).to.eq("josh");
     expect(res.body.result.length).to.eq(1);
@@ -102,7 +108,9 @@ describe("GET /users/role/:role", () => {
     await createSampleVolunteerUser();
     await createSampleUser();
 
-    const res = await request(app).get(`/api/users/role/admin`).expect(200);
+    const res = await request(app)
+      .get(`/api/users/role/admin`)
+      .expect(200);
 
     expect(res.body.result[0].firstName).to.eq("alan");
     expect(res.body.result.length).to.eq(1);
@@ -116,7 +124,9 @@ describe("GET /users/role/:role", () => {
     await createSampleVolunteerUser();
     await createSampleUser();
 
-    await request(app).get(`/api/users/role/none`).expect(400);
+    await request(app)
+      .get(`/api/users/role/none`)
+      .expect(400);
 
     expect(didCheckIsAdmin()).to.be.true;
   });
@@ -126,11 +136,13 @@ describe("GET /users/:user_id", () => {
   it("should get a single user", async () => {
     await createSampleUser();
     const foundUser = await User.findOne({
-      firstName: sampleUserInfo.firstName,
+      firstName: sampleUserInfo.firstName
     });
     const id = foundUser._id;
 
-    const res = await request(app).get(`/api/users/${id}`).expect(200);
+    const res = await request(app)
+      .get(`/api/users/${id}`)
+      .expect(200);
 
     expect(res.body.result.firstName).to.eq("alan");
     expect(didCheckIsAdmin()).to.be.true;
@@ -144,7 +156,7 @@ describe("POST /users/", () => {
       .send(samplePendingUserInfo)
       .expect(200);
     const foundUser = await User.findOne({
-      firstName: samplePendingUserInfo.firstName,
+      firstName: samplePendingUserInfo.firstName
     });
     expect(foundUser.oauthId).to.eq(samplePendingUserInfo.oauthId);
     expect(foundUser.role).to.eq(roleEnum.PENDING);
@@ -159,7 +171,7 @@ describe("POST /users/", () => {
       .send(sampleVolunteerUserInfo)
       .expect(200);
     const foundUser = await User.findOne({
-      firstName: sampleVolunteerUserInfo.firstName,
+      firstName: sampleVolunteerUserInfo.firstName
     });
     expect(foundUser.oauthId).to.eq(sampleVolunteerUserInfo.oauthId);
     expect(foundUser.role).to.eq(roleEnum.VOLUNTEER);
@@ -169,9 +181,12 @@ describe("POST /users/", () => {
 
 describe("POST /users/", () => {
   it("should create a new user with admin role", async () => {
-    await request(app).post(`/api/users/`).send(sampleUserInfo).expect(200);
+    await request(app)
+      .post(`/api/users/`)
+      .send(sampleUserInfo)
+      .expect(200);
     const foundUser = await User.findOne({
-      firstName: sampleUserInfo.firstName,
+      firstName: sampleUserInfo.firstName
     });
     expect(foundUser.oauthId).to.eq(sampleUserInfo.oauthId);
     expect(didCheckIsAdmin()).to.be.true;
@@ -180,7 +195,10 @@ describe("POST /users/", () => {
 
 describe("POST /users/", () => {
   it("should fail to create user with incomplete fields", async () => {
-    await request(app).post(`/api/users/`).send(incompleteUserInfo).expect(400);
+    await request(app)
+      .post(`/api/users/`)
+      .send(incompleteUserInfo)
+      .expect(400);
     expect(didCheckIsAdmin()).to.be.true;
   });
 });
@@ -191,18 +209,21 @@ describe("PATCH /user/:user_id", () => {
 
     const reqBody = {
       role: roleEnum.VOLUNTEER,
-      title: "new title",
+      title: "new title"
     };
 
     const foundUser = await User.findOne({
-      firstName: sampleUserInfo.firstName,
+      firstName: sampleUserInfo.firstName
     });
 
     const id = foundUser._id;
-    await request(app).patch(`/api/users/${id}`).send(reqBody).expect(200);
+    await request(app)
+      .patch(`/api/users/${id}`)
+      .send(reqBody)
+      .expect(200);
 
     const afterUpdate = await User.findOne({
-      firstName: sampleUserInfo.firstName,
+      firstName: sampleUserInfo.firstName
     });
     expect(afterUpdate.role).to.eq(roleEnum.VOLUNTEER);
     expect(afterUpdate.title).to.eq("new title");
@@ -213,7 +234,7 @@ describe("PATCH /user/:user_id", () => {
 describe("PATCH /user/:user_id", () => {
   it("should fail to update role of nonexistent user", async () => {
     const reqBody = {
-      role: roleEnum.VOLUNTEER,
+      role: roleEnum.VOLUNTEER
     };
 
     const id = mongoose.Types.ObjectId();
@@ -233,11 +254,13 @@ describe("DELETE /user/:user_id", () => {
     await createSampleUser();
 
     const foundUser = await User.findOne({
-      firstName: sampleUserInfo.firstName,
+      firstName: sampleUserInfo.firstName
     });
     const id = foundUser._id;
 
-    const res = await request(app).delete(`/api/users/${id}`).expect(200);
+    const res = await request(app)
+      .delete(`/api/users/${id}`)
+      .expect(200);
 
     expect(res.body.message).to.eq("User deleted successfully");
     expect(didCheckIsAdmin()).to.be.true;
@@ -248,7 +271,9 @@ describe("DELETE /user/:user_id", () => {
   it("should fail to delete user that doesn't exist", async () => {
     const id = mongoose.Types.ObjectId();
 
-    const res = await request(app).delete(`/api/users/${id}`).expect(404);
+    const res = await request(app)
+      .delete(`/api/users/${id}`)
+      .expect(404);
 
     expect(res.body.message).to.eq("User not found");
     expect(didCheckIsAdmin()).to.be.true;

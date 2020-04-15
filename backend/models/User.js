@@ -7,12 +7,12 @@ const roleEnum = {
   ADMIN: "ADMIN",
   VOLUNTEER: "VOLUNTEER",
   PENDING: "PENDING",
-  REJECTED: "REJECTED",
+  REJECTED: "REJECTED"
 };
 
 const locationEnum = {
   NORTH: "NORTH",
-  SOUTH: "SOUTH",
+  SOUTH: "SOUTH"
 };
 
 const User = new mongoose.Schema({
@@ -26,22 +26,22 @@ const User = new mongoose.Schema({
       roleEnum.ADMIN,
       roleEnum.VOLUNTEER,
       roleEnum.PENDING,
-      roleEnum.REJECTED,
+      roleEnum.REJECTED
     ],
-    required: true,
+    required: true
   },
   title: {
     type: String,
     required: false,
     default: "",
-    setDefaultsOnInsert: true,
+    setDefaultsOnInsert: true
   },
   location: {
     type: String,
     enum: [locationEnum.NORTH, locationEnum.SOUTH],
-    required: true,
+    required: true
   },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true }
 });
 
 module.exports = mongoose.model("User", User);

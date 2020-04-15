@@ -11,7 +11,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   // Find in DB and return user
-  User.findById(id, function (err, user) {
+  User.findById(id, function(err, user) {
     if (err) {
       console.log("err");
       done(err);
@@ -25,11 +25,11 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.OAUTH_CALLBACK_URI,
+      callbackURL: process.env.OAUTH_CALLBACK_URI
     },
-    function (accessToken, refreshToken, profile, cb) {
+    function(accessToken, refreshToken, profile, cb) {
       // find the user in the database based on their facebook id
-      User.findOne({ oauthId: profile.id }, async function (err, user) {
+      User.findOne({ oauthId: profile.id }, async function(err, user) {
         if (err) {
           return cb(err);
         }
@@ -44,7 +44,7 @@ passport.use(
           propicUrl: profile.photos[0].value,
           role: DEFAULTROLE,
           location: DEFAULTLOC,
-          email: profile.emails[0].value,
+          email: profile.emails[0].value
         }).save();
 
         cb(null, newUser);

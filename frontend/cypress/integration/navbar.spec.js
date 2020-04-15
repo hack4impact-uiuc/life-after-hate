@@ -12,7 +12,10 @@ context("Navbar", () => {
   });
 
   it("Has a navbar with 2 links", () => {
-    cy.get("[data-cy=nav-links]").children().eq(0).should("have.text", "Map");
+    cy.get("[data-cy=nav-links]")
+      .children()
+      .eq(0)
+      .should("have.text", "Map");
     cy.get("[data-cy=nav-links]")
       .children()
       .eq(1)

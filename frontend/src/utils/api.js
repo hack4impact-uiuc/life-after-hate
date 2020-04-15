@@ -2,7 +2,7 @@ import {
   apiRequest,
   updateGlobalAuthState,
   purgeGlobalAuthState,
-  toQueryString,
+  toQueryString
 } from "./apiHelpers";
 import { updateResources } from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
@@ -14,7 +14,7 @@ async function getSearchResults(keyword, address, tag, radius = 500) {
   const arglist = { keyword, address, tag, radius };
   return (
     await apiRequest({
-      endpoint: endptStr + toQueryString(arglist),
+      endpoint: endptStr + toQueryString(arglist)
     })
   ).result;
 }
@@ -24,7 +24,7 @@ const refreshGlobalAuth = async () => {
     const res = await apiRequest({
       endpoint: `users/current`,
       withLoader: false,
-      expectUnauthorizedResponse: true,
+      expectUnauthorizedResponse: true
     });
     const payload = res.result;
     updateGlobalAuthState(payload);
@@ -46,8 +46,8 @@ async function addResource(data) {
       data,
       notification: {
         successMessage: "Successfully added resource!",
-        failureMessage: "Failed to add resource.",
-      },
+        failureMessage: "Failed to add resource."
+      }
     })
   ).result;
 }
@@ -66,8 +66,8 @@ async function editResource(data, id) {
       method: "PUT",
       data: filteredData,
       notification: {
-        successMessage: "Successfully edited resource!",
-      },
+        successMessage: "Successfully edited resource!"
+      }
     })
   ).result;
 }
@@ -79,8 +79,8 @@ async function deleteResource(id) {
       method: "DELETE",
       notification: {
         successMessage: "Successfully deleted resource!",
-        failureMessage: "Failed to delete resource.",
-      },
+        failureMessage: "Failed to delete resource."
+      }
     })
   ).result;
 }
@@ -107,8 +107,8 @@ async function editUser(data, id) {
       method: "PATCH",
       data: data,
       notification: {
-        successMessage: "Successfully edited user!",
-      },
+        successMessage: "Successfully edited user!"
+      }
     })
   ).result;
 }
@@ -146,5 +146,5 @@ export {
   refreshAllResources,
   refreshAllUsers,
   editAndRefreshUser,
-  editUser,
+  editUser
 };

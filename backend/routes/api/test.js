@@ -12,15 +12,15 @@ router.get(
       role: Joi.string()
         .valid(...Object.values(roleEnum))
         .insensitive()
-        .required(),
-    },
+        .required()
+    }
   }),
   errorWrap((req, res) => {
     req.app.locals.mockRole = req.params.role;
     res.json({
       code: 200,
       result: `Mock user changed to ${req.app.locals.mockRole}.`,
-      success: true,
+      success: true
     });
   })
 );

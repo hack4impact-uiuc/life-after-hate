@@ -55,7 +55,7 @@ const mockUserMiddleware = (req, _, next) => {
       "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
     role: req.app.locals.mockRole,
     location: "SOUTH",
-    email: "abc@def.xyz",
+    email: "abc@def.xyz"
   };
   req.isAuthenticated = () => true;
   next();
@@ -65,5 +65,5 @@ module.exports = {
   requireVolunteerStatus,
   requireAdminStatus,
   mockUserMiddleware,
-  setMockUserRole,
+  setMockUserRole
 };

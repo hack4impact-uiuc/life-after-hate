@@ -5,14 +5,14 @@ const mapquestURI = process.env.MAPQUEST_URI;
 const { STATE_REGION_MAP } = require("./constants");
 const Fuse = require("fuse.js");
 const geolib = require("geolib");
-const parseLatLongResponse = (resp) => {
+const parseLatLongResponse = resp => {
   // Grab the lat/lng object within the result JSON
   const getLocationFromResults = R.path([
     "results",
     0,
     "locations",
     0,
-    "latLng",
+    "latLng"
   ]);
 
   // Grab the 2 letter state code within the result JSON
@@ -21,7 +21,7 @@ const parseLatLongResponse = (resp) => {
     0,
     "locations",
     0,
-    "adminArea3",
+    "adminArea3"
   ]);
 
   // Take the state and find the federal region that maps to it
@@ -41,13 +41,13 @@ const parseLatLongResponse = (resp) => {
   return { region, lat: getCoord("lat"), lng: getCoord("lng") };
 };
 
-const addressToLatLong = R.memoizeWith(R.identity, async (address) => {
+const addressToLatLong = R.memoizeWith(R.identity, async address => {
   const addressQuery = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
   const response = await axios.get(addressQuery);
   return parseLatLongResponse(response.data);
 });
 
-const latlongToAddress = async function (lat, long) {
+const latlongToAddress = async function(lat, long) {
   const apiAddress = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
 
   const response = await fetch(apiAddress, {});
@@ -64,14 +64,14 @@ const latlongToAddress = async function (lat, long) {
   return fullAddress;
 };
 
-const addDistanceField = (lat, long) => (resource) => ({
+const addDistanceField = (lat, long) => resource => ({
   ...resource,
   distanceFromSearchLoc: computeDistance(
     resource.location.coordinates[1],
     resource.location.coordinates[0],
     lat,
     long
-  ),
+  )
 });
 
 const computeDistance = R.curry(
@@ -79,7 +79,7 @@ const computeDistance = R.curry(
     (geolib.getDistance(
       {
         latitude: sourceLat,
-        longitude: sourceLong,
+        longitude: sourceLong
       },
       { latitude: destLat, longitude: destLong }
     ) /
@@ -101,7 +101,7 @@ const resourceRegionLens = R.lensProp("federalRegion");
 
 const distanceFilter = R.curry((lat, long, radius) =>
   R.filter(
-    (resource) =>
+    resource =>
       computeDistance(
         R.view(resourceLatLens, resource),
         R.view(resourceLongLens, resource),
@@ -130,5 +130,5 @@ module.exports = {
   filterByOptions,
   resourceLatLens,
   resourceLongLens,
-  resourceRegionLens,
+  resourceRegionLens
 };

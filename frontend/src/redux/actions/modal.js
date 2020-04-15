@@ -7,17 +7,17 @@ export const MODAL_TOGGLE = "MODAL_TOGGLE";
 export const openModal = () => ({ type: MODAL_OPEN });
 export const openResourceModal = () => ({
   type: MODAL_OPEN,
-  modalType: modalEnum.RESOURCE,
+  modalType: modalEnum.RESOURCE
 });
-export const openResourceModalWithPayload = (payload) => ({
+export const openResourceModalWithPayload = payload => ({
   type: MODAL_OPEN,
   modalType: modalEnum.RESOURCE,
-  payload,
+  payload
 });
-export const openUserModalWithPayload = (payload) => ({
+export const openUserModalWithPayload = payload => ({
   type: MODAL_OPEN,
   modalType: modalEnum.USER,
-  payload,
+  payload
 });
 export const closeModal = () => ({ type: MODAL_CLOSE });
 export const toggleModal = () => ({ type: MODAL_TOGGLE });

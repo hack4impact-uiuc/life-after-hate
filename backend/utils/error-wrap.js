@@ -1,4 +1,4 @@
-const errorWrap = (fn) => (req, res, next) => {
+const errorWrap = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 module.exports = errorWrap;

@@ -15,10 +15,10 @@ const sampleResourceInfo = {
   description: "Let me dream",
   address: "Silicon Valley",
   location: {
-    coordinates: [35, 40],
+    coordinates: [35, 40]
   },
   tags: ["tech"],
-  type: resourceEnum.GROUP,
+  type: resourceEnum.GROUP
 };
 
 const sampleResourceInfo2 = {
@@ -29,10 +29,10 @@ const sampleResourceInfo2 = {
   description: "Let me dream",
   address: "Silicon Valley",
   location: {
-    coordinates: [40, 40],
+    coordinates: [40, 40]
   },
   tags: ["social"],
-  type: resourceEnum.INDIVIDUAL,
+  type: resourceEnum.INDIVIDUAL
 };
 
 const sampleResourceInfo3 = {
@@ -43,10 +43,10 @@ const sampleResourceInfo3 = {
   description: "Let me dream",
   address: "Silicon Valley",
   location: {
-    coordinates: [40, 40],
+    coordinates: [40, 40]
   },
   tags: ["social"],
-  type: resourceEnum.INDIVIDUAL,
+  type: resourceEnum.INDIVIDUAL
 };
 
 const createSampleResource = async (resourceInfo = sampleResourceInfo) => {
@@ -65,14 +65,18 @@ afterEach(() => Resource.remove({}));
 describe("GET /resources", () => {
   beforeEach(() => Resource.remove());
   it("should get no Resources", async () => {
-    const res = await request(app).get(`/api/resources`).expect(200);
+    const res = await request(app)
+      .get(`/api/resources`)
+      .expect(200);
     expect(res.body.result).to.be.an("array").that.is.empty;
     expect(didCheckIsVolunteer()).to.be.true;
   });
 
   it("should get one Resource and verify properties", async () => {
     await createSampleResource();
-    const res = await request(app).get(`/api/resources`).expect(200);
+    const res = await request(app)
+      .get(`/api/resources`)
+      .expect(200);
     expect(res.body.result).to.have.lengthOf(1);
     expect(Object.keys(res.body.result[0])).to.have.lengthOf(12);
     expect(didCheckIsVolunteer()).to.be.true;
@@ -150,7 +154,7 @@ describe("PUT /resources", () => {
     const newData = {
       companyName: "new name",
       contactName: "new contact",
-      description: "new description",
+      description: "new description"
     };
     await request(app)
       .put(`/api/resources/${resourceId}`)
@@ -167,7 +171,9 @@ describe("DELETE /resource", () => {
   it("should delete an existing Resource", async () => {
     const resource = await Resource.findOne({ companyName: "Google" });
     const resourceId = resource._id;
-    await request(app).delete(`/api/resources/${resourceId}`).expect(200);
+    await request(app)
+      .delete(`/api/resources/${resourceId}`)
+      .expect(200);
     const resources = await Resource.find();
     expect(resources).to.be.an("array").that.is.empty;
     expect(didCheckIsAdmin()).to.be.true;

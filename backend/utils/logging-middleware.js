@@ -12,14 +12,14 @@ if (process.env.LOGGLY_TOKEN) {
         inputToken: process.env.LOGGLY_TOKEN,
         json: true,
         colorize: true,
-        tags: ["Winston-Request"],
-      }),
+        tags: ["Winston-Request"]
+      })
     ],
     exitOnError: false,
     format: winston.format.json(),
-    dynamicMeta: (req) => ({
-      user: req.user ? filterSensitiveInfo(req.user) : null,
-    }),
+    dynamicMeta: req => ({
+      user: req.user ? filterSensitiveInfo(req.user) : null
+    })
   });
 
   module.exports.errorLogger = expressWinston.errorLogger({
@@ -29,10 +29,10 @@ if (process.env.LOGGLY_TOKEN) {
         inputToken: process.env.LOGGLY_TOKEN,
         json: true,
         colorize: true,
-        tags: ["Winston-Error"],
-      }),
+        tags: ["Winston-Error"]
+      })
     ],
     exitOnError: false,
-    format: winston.format.json(),
+    format: winston.format.json()
   });
 }
