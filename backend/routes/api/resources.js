@@ -14,21 +14,21 @@ const {
   resourceRegionLens,
   resourceAddressLens,
   filterResourcesWithinRadius,
-  filterByOptions
+  filterByOptions,
 } = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
-  TAG_ONLY_OPTIONS
+  TAG_ONLY_OPTIONS,
 } = require("../../utils/constants");
 const {
   requireAdminStatus,
-  requireVolunteerStatus
+  requireVolunteerStatus,
 } = require("../../utils/auth-middleware");
 const { resourceEnum } = require("../../models/Resource");
 
 const router = express.Router();
 
-const concatAddress = resource => {
+const concatAddress = (resource) => {
   const { streetAddress, city, state, postalCode } = resource.address;
   resource.address = [streetAddress, city, [state, postalCode].join(" ")].join(
     ", "
@@ -46,7 +46,7 @@ router.get(
     res.json({
       code: 200,
       result: resources.map(concatAddress),
-      success: true
+      success: true,
     });
   })
 );
@@ -61,8 +61,8 @@ router.get(
       address: Joi.string(),
       keyword: Joi.string(),
       customWeights: Joi.array(),
-      tag: Joi.string()
-    }
+      tag: Joi.string(),
+    },
   }),
   errorWrap(async (req, res) => {
     const { radius, address, keyword, customWeights, tag } = req.query;
@@ -86,7 +86,7 @@ router.get(
     res.json({
       code: 200,
       result: { center: [lng, lat], resources: resources.map(concatAddress) },
-      success: true
+      success: true,
     });
   })
 );
@@ -105,14 +105,12 @@ router.post(
       address: Joi.string().required(),
       location: Joi.object({
         type: Joi.string().default("Point"),
-        coordinates: Joi.array()
-          .length(2)
-          .items(Joi.number())
+        coordinates: Joi.array().length(2).items(Joi.number()),
       }).default({ type: "Point", coordinates: [0, 0] }),
       notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string()),
-      type: Joi.string().default(resourceEnum.GROUP)
-    })
+      type: Joi.string().default(resourceEnum.GROUP),
+    }),
   }),
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
@@ -121,7 +119,7 @@ router.post(
       language: "english",
       remove_digits: true,
       return_changed_case: true,
-      remove_duplicates: true
+      remove_duplicates: true,
     });
 
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
@@ -142,7 +140,7 @@ router.post(
     res.status(201).json({
       code: 201,
       message: "Resource Successfully Created",
-      success: true
+      success: true,
     });
   })
 );
@@ -153,8 +151,8 @@ router.get(
   requireVolunteerStatus,
   celebrate({
     params: {
-      resource_id: Joi.objectId().required()
-    }
+      resource_id: Joi.objectId().required(),
+    },
   }),
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
@@ -162,7 +160,7 @@ router.get(
     res.json({
       code: 200,
       result: concatAddress(resource),
-      success: true
+      success: true,
     });
   })
 );
@@ -181,17 +179,15 @@ router.put(
       address: Joi.string(),
       location: Joi.object({
         type: Joi.string().default("Point"),
-        coordinates: Joi.array()
-          .length(2)
-          .items(Joi.number())
+        coordinates: Joi.array().length(2).items(Joi.number()),
       }),
       notes: Joi.string(),
       tags: Joi.array().items(Joi.string()),
-      type: Joi.string()
+      type: Joi.string(),
     }),
     params: {
-      resource_id: Joi.objectId().required()
-    }
+      resource_id: Joi.objectId().required(),
+    },
   }),
   errorWrap(async (req, res) => {
     let data = { ...req.body };
@@ -218,12 +214,12 @@ router.put(
       ? {
           code: 200,
           message: "Resource Updated Successfully",
-          success: true
+          success: true,
         }
       : {
           code: 404,
           message: "Resource Not Found",
-          success: false
+          success: false,
         };
     res.status(ret.code).json(ret);
   })
@@ -235,8 +231,8 @@ router.delete(
   requireAdminStatus,
   celebrate({
     params: {
-      resource_id: Joi.objectId().required()
-    }
+      resource_id: Joi.objectId().required(),
+    },
   }),
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
@@ -245,12 +241,12 @@ router.delete(
       ? {
           code: 200,
           message: "Resource deleted successfully",
-          success: true
+          success: true,
         }
       : {
           code: 404,
           message: "Resource not found",
-          success: false
+          success: false,
         };
     res.status(ret.code).json(ret);
   })

@@ -9,7 +9,7 @@ import "./styles.scss";
 
 const SearchBar = () => {
   const { register, handleSubmit } = useForm();
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     filterAndRefreshResource(data.keyword, data.location);
   };
 

@@ -26,6 +26,7 @@ services:
     depends_on:
       - backend
       - db
+    tty: true
   backend:
     build: ./backend
     env_file: 
