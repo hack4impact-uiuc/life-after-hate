@@ -15,7 +15,7 @@ const createConnection = async () => {
   console.log(colors.green("Attempting to connect to Mongo..."));
   await mongoose.connect(process.env.DB_URI, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
   });
 };
 
@@ -24,21 +24,21 @@ const closeConnection = async () => {
   await mongoose.connection.close();
 };
 
-const fetchJson = async jsonLink => {
+const fetchJson = async (jsonLink) => {
   console.log(colors.green("Fetching JSON..."));
   const response = await fetch(jsonLink);
   const dataJSON = await response.json();
   return dataJSON;
 };
 
-const fetchFromFile = path => JSON.parse(fs.readFileSync(path, "utf-8"));
+const fetchFromFile = (path) => JSON.parse(fs.readFileSync(path, "utf-8"));
 
-const addSampleResource = resource => {
+const addSampleResource = (resource) => {
   const newResource = new Resource(resource);
   return newResource.save();
 };
 
-const addSampleUser = user => {
+const addSampleUser = (user) => {
   const newUser = new User(user);
   return newUser.save();
 };
@@ -51,6 +51,7 @@ const main = async () => {
   try {
     console.log(colors.green("Clearing all existing resource data..."));
     await Resource.deleteMany({});
+    await User.deleteMany({});
     const data = shouldUseLoremData
       ? await fetchJson(JSON_LINK_RESOURCES)
       : fetchFromFile(RESOURCE_FILE_PATH);
