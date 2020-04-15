@@ -27,6 +27,7 @@ services:
       - "mongo_data:/data/db"
       
   prod-frontend: 
+    stdin_open: true
     env_file: 
       - ./.env
     build: 

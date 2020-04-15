@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import StaticMap, { FlyToInterpolator } from "react-map-gl";
+import StaticMap, {
+  FlyToInterpolator,
+  _MapContext as MapContext,
+} from "react-map-gl";
 import DeckGL from "@deck.gl/react";
 import { connect } from "react-redux";
 import { resourceSelector } from "../../../redux/selectors/resource";
 import {
   selectMapResource,
-  clearMapResource
+  clearMapResource,
 } from "../../../redux/actions/map";
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../../assets/images/marker-atlas.png";
@@ -22,22 +25,22 @@ const mapping = {
     y: 0,
     width: 360,
     height: 512,
-    anchorY: 512
+    anchorY: 512,
   },
   markerSelect: {
     x: 360,
     y: 0,
     width: 360,
     height: 512,
-    anchorY: 512
+    anchorY: 512,
   },
   currentLocation: {
     x: 720,
     y: 0,
     width: 360,
     height: 512,
-    anchorY: 512
-  }
+    anchorY: 512,
+  },
 };
 
 const INITIAL_VIEW_STATE = {
@@ -47,30 +50,30 @@ const INITIAL_VIEW_STATE = {
   maxZoom: 20,
   minZoom: 2.7,
   pitch: 0,
-  bearing: 0
+  bearing: 0,
 };
 
 const ZOOMED_IN_CONSTANT = 5;
 const TRANSITION_LENGTH = 1500;
 
-const Map = props => {
+const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
 
   const handleCenterChange = () => {
-    if (props.center && props.center[0]) {
+    if (center && center[0]) {
       // If we received a new center point, focus the map
-      setViewport(prevState => ({
+      setViewport((prevState) => ({
         ...prevState,
-        latitude: props.center[1],
-        longitude: props.center[0],
+        latitude: center[1],
+        longitude: center[0],
         zoom: ZOOMED_IN_CONSTANT,
         transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
-        transitionDuration: TRANSITION_LENGTH
+        transitionDuration: TRANSITION_LENGTH,
       }));
     }
   };
 
-  useEffect(handleCenterChange, [props.center]);
+  useEffect(handleCenterChange, [center]);
 
   const _onViewportChange = ({ viewState }) => {
     setViewport(viewState);
@@ -78,13 +81,13 @@ const Map = props => {
 
   const getMarkerPoints = () => {
     // If the location information came back correct, display on the map
-    if (props.center && props.center[0]) {
+    if (center && center[0]) {
       return [
-        ...props.resources,
-        { location: { type: "Center", coordinates: props.center } }
+        ...resources,
+        { location: { type: "Center", coordinates: center } },
       ];
     }
-    return props.resources;
+    return resources;
   };
 
   const getLayers = () => {
@@ -93,30 +96,30 @@ const Map = props => {
       data,
       pickable: true,
       wrapLongitude: true,
-      getPosition: d => d.location.coordinates,
+      getPosition: (d) => d.location.coordinates,
       iconAtlas: MarkerImg,
-      iconMapping: mapping
+      iconMapping: mapping,
     };
 
     const layer = new IconLayer({
       ...layerProps,
       id: "icon",
-      getIcon: d =>
+      getIcon: (d) =>
         d.location.type === "Center" ? "currentLocation" : "marker",
       sizeUnits: "meters",
-      sizeMinPixels: PIN_SIZE
+      sizeMinPixels: PIN_SIZE,
     });
 
     return [layer];
   };
 
-  const handlePopupClick = e => {
+  const handlePopupClick = (e) => {
     console.log(e);
     // Don't show a popup if hovering over the current (searched) location
     if (e.object && e.object.location.type !== "Center") {
-      props.selectMapResource(props.resources[e.index]._id);
+      selectMapResource(resources[e.index]._id);
     } else {
-      props.clearMapResource();
+      clearMapResource();
     }
   };
 
@@ -128,30 +131,27 @@ const Map = props => {
       viewState={viewport}
       controller={{ dragRotate: false }}
       onClick={handlePopupClick}
+      ContextProvider={MapContext.Provider}
     >
       <StaticMap
         width="100%"
         height="100vh"
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         reuseMap
-        preventStyleDiffing={true}
-      >
-        <Popup></Popup>
-      </StaticMap>
+        preventStyleDiffing
+      ></StaticMap>
+      <Popup></Popup>
     </DeckGL>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   resources: resourceSelector(state),
-  center: state.map.center
+  center: state.map.center,
 });
 
 const mapDispatchToProps = {
   selectMapResource,
-  clearMapResource
+  clearMapResource,
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Map);
+export default connect(mapStateToProps, mapDispatchToProps)(Map);

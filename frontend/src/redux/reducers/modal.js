@@ -4,7 +4,7 @@ import { modalEnum } from "../../utils/enums";
 const DEFAULT_STATE = {
   isOpen: false,
   editable: true,
-  modalType: modalEnum.RESOURCE
+  modalType: modalEnum.RESOURCE,
 };
 
 const modal = (state = DEFAULT_STATE, action) => {
@@ -14,7 +14,7 @@ const modal = (state = DEFAULT_STATE, action) => {
         ...state,
         ...action.payload,
         modalType: action.modalType,
-        isOpen: true
+        isOpen: true,
       };
     case MODAL_CLOSE:
       return DEFAULT_STATE;

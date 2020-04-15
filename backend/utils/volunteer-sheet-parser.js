@@ -8,14 +8,14 @@ const mongoose = require("mongoose");
 
 mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
-  useNewUrlParser: true
+  useNewUrlParser: true,
 });
 
 const formatNotes = ({
   "Form Received": formReceived,
   Availability: availability,
   "How did you hear about LAH?": refer,
-  "Volunteer Roles": roles
+  "Volunteer Roles": roles,
 }) =>
   `Form Received: ${formReceived}\n\n` +
   `Availability: ${availability}\n\n` +
@@ -27,7 +27,7 @@ const createTags = ({
   "Skills, Qualifications, Current Occupation": skills,
   "Do you have a degree in the mental health field?": mentalHealth,
   "Volunteer Roles": roles,
-  "Willing to travel?": travel
+  "Willing to travel?": travel,
 }) => [
   eighteen === "Yes" ? "18+" : null,
   mentalHealth === "Yes" ? "Mental Health" : null,
@@ -36,21 +36,21 @@ const createTags = ({
     language: "english",
     remove_digits: true,
     return_changed_case: true,
-    remove_duplicates: true
-  })
+    remove_duplicates: true,
+  }),
 ];
 
-const getLocation = async mailingAddress => {
+const getLocation = async (mailingAddress) => {
   try {
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       mailingAddress
     );
     return {
       location: {
-        coordinates: [lng, lat]
+        coordinates: [lng, lat],
       },
       federalRegion: region,
-      address
+      address,
     };
   } catch (err) {
     console.log(mailingAddress);
@@ -58,13 +58,13 @@ const getLocation = async mailingAddress => {
   }
 };
 
-const convertSchema = async entry => ({
+const convertSchema = async (entry) => ({
   contactName: `${entry["First Name"]} ${entry["Last Name"]}`,
   contactEmail: entry["Email Address"],
   description: entry["Skills, Qualifications, Current Occupation"],
   notes: formatNotes(entry),
-  tags: createTags(entry).filter(tag => tag !== null),
-  ...(await getLocation(entry["Mailing Address"]))
+  tags: createTags(entry).filter((tag) => tag !== null),
+  ...(await getLocation(entry["Mailing Address"])),
 });
 
 const main = async () => {

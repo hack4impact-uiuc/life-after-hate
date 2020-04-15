@@ -6,7 +6,7 @@ const { celebrate, Joi } = require("celebrate");
 const errorWrap = require("../../utils/error-wrap");
 const {
   requireAdminStatus,
-  requirePendingStatus
+  requirePendingStatus,
 } = require("../../utils/auth-middleware");
 const { roleEnum } = require("../../models/User");
 // Filters down the user information into just what's needed
@@ -20,7 +20,7 @@ router.get(
     res.json({
       code: 200,
       result: users.map(filterSensitiveInfo),
-      success: true
+      success: true,
     });
   })
 );
@@ -31,7 +31,7 @@ router.get("/current", requirePendingStatus, (req, res) => {
   res.json({
     code: 200,
     result: filterSensitiveInfo(user_info),
-    success: true
+    success: true,
   });
 });
 
@@ -44,8 +44,8 @@ router.get(
       role: Joi.string()
         .valid(...Object.values(roleEnum))
         .insensitive()
-        .required()
-    }
+        .required(),
+    },
   }),
   errorWrap(async (req, res) => {
     const role = req.params.role.toUpperCase();
@@ -53,7 +53,7 @@ router.get(
     res.json({
       code: 200,
       result: users.map(filterSensitiveInfo),
-      success: true
+      success: true,
     });
   })
 );
@@ -68,7 +68,7 @@ router.get(
     res.json({
       code: 200,
       result: filterSensitiveInfo(user),
-      success: true
+      success: true,
     });
   })
 );
@@ -86,8 +86,8 @@ router.post(
       role: Joi.string().default(roleEnum.PENDING),
       title: Joi.string(),
       location: Joi.string().required(),
-      email: Joi.string().required()
-    })
+      email: Joi.string().required(),
+    }),
   }),
   errorWrap(async (req, res) => {
     const data = req.body;
@@ -99,13 +99,13 @@ router.post(
       role: data.role,
       title: data.title,
       location: data.location,
-      email: data.email
+      email: data.email,
     });
     await newUser.save();
     res.json({
       code: 200,
       message: "User Successfully Created",
-      success: true
+      success: true,
     });
   })
 );
@@ -117,10 +117,8 @@ router.patch(
   celebrate({
     body: Joi.object().keys({
       role: Joi.string().required(),
-      title: Joi.string()
-        .allow("")
-        .default("")
-    })
+      title: Joi.string().allow("").default(""),
+    }),
   }),
   errorWrap(async (req, res) => {
     const data = req.body;
@@ -135,12 +133,12 @@ router.patch(
       ? {
           code: 200,
           message: "User Role Updated Successfully",
-          success: true
+          success: true,
         }
       : {
           code: 404,
           message: "User Not Found",
-          success: false
+          success: false,
         };
     res.status(ret.code).json(ret);
   })
@@ -157,12 +155,12 @@ router.delete(
       ? {
           code: 200,
           message: "User deleted successfully",
-          success: true
+          success: true,
         }
       : {
           code: 404,
           message: "User not found",
-          success: false
+          success: false,
         };
     res.status(ret.code).json(ret);
   })
