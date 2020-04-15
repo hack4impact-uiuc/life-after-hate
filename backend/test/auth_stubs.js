@@ -15,7 +15,7 @@ const unstubAuth = () => {
 };
 
 // Assrets that the validator was called on a specific type of user
-const authValidatorCalled = type =>
+const authValidatorCalled = (type) =>
   authValidator.validateRequestForRole.calledWith(sinon.match.any, type);
 
 const didCheckIsVolunteer = () => authValidatorCalled(roleEnum.VOLUNTEER);
@@ -27,5 +27,5 @@ module.exports = {
   unstubAuth,
   didCheckIsAdmin,
   didCheckIsVolunteer,
-  didCheckIsPending
+  didCheckIsPending,
 };

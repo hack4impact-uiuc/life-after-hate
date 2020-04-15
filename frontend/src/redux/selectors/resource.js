@@ -1,1 +1,1 @@
-export const resourceSelector = state => state.resources;
+export const resourceSelector = (state) => state.resources;
