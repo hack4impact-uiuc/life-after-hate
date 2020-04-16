@@ -1,5 +1,7 @@
 ignore:
   - "frontend/src/serviceWorker.js"
+  - "backend/utils/logging-middleware.js"
+  - "backend/utils/passport-setup.js"
 coverage:
   status:
     project:
