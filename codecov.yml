@@ -1,2 +1,10 @@
 ignore:
   - "frontend/src/serviceWorker.js"
+  - "backend/utils/logging-middleware.js"
+  - "backend/utils/passport-setup.js"
+coverage:
+  status:
+    project:
+      default:
+        threshold: 15 # Allow coverage to drop by up to 15% in a PR before marking it failed
+    patch: off
