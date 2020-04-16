@@ -10,6 +10,7 @@ const ActionButtons = ({ role, resource, openResourceModalWithPayload }) => (
     <button
       tabIndex="0"
       className="card-action-btn"
+      data-cy="card-resource-view-btn"
       onClick={() =>
         openResourceModalWithPayload({
           resourceId: resource._id,
@@ -24,6 +25,7 @@ const ActionButtons = ({ role, resource, openResourceModalWithPayload }) => (
       <button
         tabIndex="0"
         className="card-action-btn edit"
+        data-cy="card-resource-edit-btn"
         onClick={() =>
           openResourceModalWithPayload({
             resourceId: resource._id,

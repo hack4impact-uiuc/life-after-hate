@@ -38,9 +38,12 @@ context("Resource Map", () => {
     );
   });
 
-  it("Should show modal correctly on expanding popup", () => {
+  it("Should show view/edit modals correctly on expanding popup", () => {
     cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
-    cy.get(".popup-max").click();
+    // Click the edit resource button
+    cy.get(".expanded > .card-action > [data-cy=card-resource-edit-btn]")
+      .should("be.visible")
+      .click();
     cy.get(".modal-title")
       .should("be.visible")
       .and("have.text", "Edit Resource");
@@ -55,6 +58,40 @@ context("Resource Map", () => {
     cy.get("[data-cy=popup-title]")
       .should("contain.text", "Best Western Old Mill Inn")
       .and("be.visible");
+
+    // Test the equivalent view only button
+    cy.get(
+      ".expanded > .card-action > [data-cy=card-resource-view-btn]"
+    ).click();
+    cy.get(".modal-title")
+      .should("be.visible")
+      .and("not.have.text", "Edit Resource");
+    cy.get(".close-button").click();
+  });
+
+  it.only("Popup button functionality should work", () => {
+    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
+    // Click the edit resource button
+    cy.get(".popup > .card-action > [data-cy=card-resource-edit-btn]")
+      .should("be.visible")
+      .click();
+    cy.get(".modal-title")
+      .should("be.visible")
+      .and("have.text", "Edit Resource");
+
+    cy.get(".modal-input-field").first().type("Hello world!");
+    cy.get(".close-button").click();
+    // Ensure the popup is still open
+    cy.get("[data-cy=popup-title]")
+      .should("contain.text", "Best Western Old Mill Inn")
+      .and("be.visible");
+
+    // Test the equivalent view only button
+    cy.get(".popup > .card-action > [data-cy=card-resource-view-btn]").click();
+    cy.get(".modal-title")
+      .should("be.visible")
+      .and("not.have.text", "Edit Resource");
+    cy.get(".close-button").click();
   });
 
   it("Closes modal upon clicking away", () => {
