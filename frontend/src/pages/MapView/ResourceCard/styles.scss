@@ -21,6 +21,7 @@
   .card-wrap {
     outline: none !important;
   }
+
   .expanded .card-wrap {
     cursor: auto;
   }
@@ -57,6 +58,7 @@
   .collapsed .card-maximize {
     display: block;
   }
+
   .collapsed .top-card-close {
     display: none;
   }
@@ -64,6 +66,7 @@
   .expanded .card-maximize {
     display: none;
   }
+
   .expanded .top-card-close {
     display: block;
   }
@@ -161,7 +164,7 @@
   }
 
   .card-tag:hover {
-    background-color: #00000018;
+    background-color: #f7923030;
   }
 
   .card-close {
@@ -188,6 +191,7 @@
   .collapsed .card-close {
     display: none;
   }
+
   .expanded-button-icon {
     height: 12px;
     margin-left: 3px;
