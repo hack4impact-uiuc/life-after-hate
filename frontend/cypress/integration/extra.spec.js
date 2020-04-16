@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 
-context("Directory View", () => {
+context("Extra Tests", () => {
   beforeEach(() => {
     // Set the current role to ADMIN
     cy.setRole("ADMIN");
@@ -9,5 +9,24 @@ context("Directory View", () => {
 
   it("Properly redirects on login when authed", () => {
     cy.get("[data-cy=nav-links]").children().eq(0).should("have.text", "Map");
+  });
+
+  it("Properly boots user on unauthorized request", () => {
+    cy.server();
+    cy.route({
+      method: "GET",
+      url: "**/api/resources/**",
+      status: 401,
+      response: [],
+    });
+
+    cy.get(".submitSearch").click();
+
+    cy.get(".Toastify__toast-body").should(
+      "contain.text",
+      "You have been signed out"
+    );
+
+    cy.url().should("eq", `${Cypress.env("BASE_URI")}/login`);
   });
 });

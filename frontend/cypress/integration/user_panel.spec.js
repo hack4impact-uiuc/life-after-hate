@@ -3,7 +3,7 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 /// <reference types="Cypress" />
 
-context("Navbar", () => {
+context("User Panel", () => {
   beforeEach(() => {
     cy.setRole("ADMIN");
     cy.visit(`${Cypress.env("BASE_URI")}/users`);

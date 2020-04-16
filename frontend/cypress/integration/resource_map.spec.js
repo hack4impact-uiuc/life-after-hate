@@ -15,6 +15,20 @@ context("Resource Map", () => {
     cy.get(".card-content").should("be.visible");
   });
 
+  it("Clear search works as intended", () => {
+    cy.get("#locationInput").type("hello location");
+    cy.get("#searchInput").type("hello search");
+
+    cy.get("#locationInput").should("have.value", "hello location");
+
+    cy.get("[data-cy=clear-location]").click();
+
+    cy.get("#locationInput").should("have.value", "");
+    cy.get("#searchInput").should("have.value", "hello search");
+
+    cy.get("[data-cy=clear-search]").click();
+    cy.get("#searchInput").should("have.value", "");
+  });
   it("Popup functionality works as expected", () => {
     cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
     cy.get("[data-cy=popup-title]")
