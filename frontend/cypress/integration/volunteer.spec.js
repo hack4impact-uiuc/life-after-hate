@@ -26,7 +26,7 @@ context("Volunteer User", () => {
     cy.visit(`${Cypress.env("BASE_URI")}/directory`);
 
     // Should display results
-    cy.get("[data-cy=card-address]").should("have.length.lt", 50);
+    cy.get("[data-cy=card-address]").should("have.length.gt", 50);
 
     cy.get(".edit-button").should("not.exist");
   });
