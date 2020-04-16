@@ -33,7 +33,7 @@ context("Navbar", () => {
     cy.get(".modal-title").should("not.be.visible");
   });
 
-  it.only("Allows editing", () => {
+  it("Allows editing", () => {
     cy.get(".edit-button").should("have.length", 30).first().click();
 
     cy.get(".modal-title").should("have.text", "Edit User");
