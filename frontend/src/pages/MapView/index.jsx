@@ -9,7 +9,9 @@ const MapView = () => {
   const [searchTags, setSearchTags] = useState([])
   
   const addTagToSearch = tagName => {
-    setSearchTags([...searchTags, tagName]);
+    if (!searchTags.includes(tagName)) {
+      setSearchTags([...searchTags, tagName]);
+    }
   }
 
   const removeTagFromSearch = tagName => {
