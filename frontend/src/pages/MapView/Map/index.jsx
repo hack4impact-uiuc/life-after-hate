@@ -57,7 +57,6 @@ const ZOOMED_IN_CONSTANT = 5;
 const TRANSITION_LENGTH = 1500;
 
 const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
-  console.log("Rerender");
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
   const handleCenterChange = () => {
@@ -115,7 +114,6 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   };
 
   const handlePopupClick = (e) => {
-    console.log(e);
     // Don't show a popup if hovering over the current (searched) location
     if (e.object && e.object.location.type !== "Center") {
       selectMapResource(resources[e.index]._id);
