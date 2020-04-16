@@ -56,7 +56,9 @@ export const apiRequest = ({
 export const updateGlobalAuthState = (payload) => {
   store.dispatch(authUpdateAction(payload));
   if (process.env.NODE_ENV === "development") {
-    toast.info(`Logged in with ${payload.role} role!`);
+    toast.info(`Logged in with ${payload.role} role!`, {
+      autoClose: 2000,
+    });
   }
 };
 

@@ -9,21 +9,21 @@ import { currentUserSelector } from "../../../redux/selectors/modal";
 import LAHModal from "../../Modal";
 import "../styles.scss";
 
-const UserModal = props => {
+const UserModal = (props) => {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = data => handleEditUser(data);
+  const onSubmit = (data) => handleEditUser(data);
 
-  const handleEditUser = async data => {
+  const handleEditUser = async (data) => {
     const reqBody = {
       role: data.role,
-      title: data.title
+      title: data.title,
     };
     await editAndRefreshUser(reqBody, props.user.id);
     props.closeModal();
   };
 
-  const makeOption = option => <option>{option}</option>;
+  const makeOption = (option) => <option>{option}</option>;
 
   return (
     <div className="modal-wrap-ee">
@@ -41,7 +41,8 @@ const UserModal = props => {
                 name="name"
                 defaultValue={`${props.user.firstName} ${props.user.lastName}`}
                 className="modal-input-field"
-                disabled={true}
+                data-cy="user-name-input-field"
+                disabled
               />
             </label>
             <label className="modal-lab">
@@ -52,7 +53,8 @@ const UserModal = props => {
                 name="email"
                 defaultValue={props.user.email}
                 className="modal-input-field"
-                disabled={true}
+                data-cy="email-input-field"
+                disabled
               />
             </label>
             <label className="modal-lab">
@@ -60,6 +62,7 @@ const UserModal = props => {
               <select
                 ref={register}
                 name="role"
+                data-cy="role-input-field"
                 defaultValue={props.user.role}
                 className="modal-select-field"
                 disabled={!props.editable}
@@ -74,13 +77,18 @@ const UserModal = props => {
                 name="title"
                 defaultValue={props.user.title}
                 className="modal-input-field modal-input-textarea"
+                data-cy="title-input-field"
                 rows="3"
                 disabled={!props.editable}
               />
             </label>
             {props.editable && (
               <div>
-                <Button id="submit-form-button" type="submit">
+                <Button
+                  id="submit-form-button"
+                  type="submit"
+                  data-cy="modal-submit"
+                >
                   Save
                 </Button>
               </div>
@@ -92,19 +100,16 @@ const UserModal = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isOpen: state.modal.isOpen,
   user: currentUserSelector(state),
   editable: state.modal.editable,
-  modalType: state.modal.modalType
+  modalType: state.modal.modalType,
 });
 
 const mapDispatchToProps = {
   openModal,
-  closeModal
+  closeModal,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserModal);
+export default connect(mapStateToProps, mapDispatchToProps)(UserModal);

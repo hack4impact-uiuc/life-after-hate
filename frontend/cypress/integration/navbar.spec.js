@@ -18,4 +18,14 @@ context("Navbar", () => {
       .eq(1)
       .should("have.text", "Directory");
   });
+
+  it("Dropdown functionality with logout works as expected", () => {
+    cy.get(".caret").click();
+    cy.get(".dropdown-header")
+      .should("be.visible")
+      .and("contain.text", "John Doe");
+
+    cy.get(".signout-button").click();
+    cy.url().should("eq", `${Cypress.env("BASE_URI")}/login`); // tests won't fail in case the port changes
+  });
 });
