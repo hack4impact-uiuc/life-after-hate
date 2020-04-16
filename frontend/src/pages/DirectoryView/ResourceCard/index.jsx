@@ -2,21 +2,21 @@ import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
-import Edit from "../../../assets/images/edit.svg";
+import Edit from "../../../assets/images/edit-black.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const ResourceCard = props => {
-  const toggleModal = event => {
+const ResourceCard = (props) => {
+  const toggleModal = (event) => {
     event.stopPropagation();
     props.openResourceModalWithPayload({ resourceId: props.resource._id });
   };
 
-  const toggleViewOnlyModal = event => {
+  const toggleViewOnlyModal = (event) => {
     event.stopPropagation();
     props.openResourceModalWithPayload({
       resourceId: props.resource._id,
-      editable: false
+      editable: false,
     });
   };
 
@@ -54,15 +54,12 @@ const ResourceCard = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  role: state.auth.role
+const mapStateToProps = (state) => ({
+  role: state.auth.role,
 });
 
 const mapDispatchToProps = {
-  openResourceModalWithPayload
+  openResourceModalWithPayload,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResourceCard);
+export default connect(mapStateToProps, mapDispatchToProps)(ResourceCard);

@@ -2,21 +2,21 @@ import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { openUserModalWithPayload } from "../../../redux/actions/modal";
-import Edit from "../../../assets/images/edit.svg";
+import Edit from "../../../assets/images/edit-black.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const UserCard = props => {
-  const toggleModal = event => {
+const UserCard = (props) => {
+  const toggleModal = (event) => {
     event.stopPropagation();
     props.openUserModalWithPayload({ userId: props.user.id });
   };
 
-  const toggleViewOnlyModal = event => {
+  const toggleViewOnlyModal = (event) => {
     event.stopPropagation();
     props.openUserModalWithPayload({
       userId: props.user.id,
-      editable: false
+      editable: false,
     });
   };
 
@@ -54,15 +54,12 @@ const UserCard = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  role: state.auth.role
+const mapStateToProps = (state) => ({
+  role: state.auth.role,
 });
 
 const mapDispatchToProps = {
-  openUserModalWithPayload
+  openUserModalWithPayload,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserCard);
+export default connect(mapStateToProps, mapDispatchToProps)(UserCard);

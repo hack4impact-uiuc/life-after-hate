@@ -66,7 +66,7 @@
   margin: 10px 0;
 }
 
-.popup-max {
+.card-action-btn {
   border: none;
   outline: none;
   background-color: #f79230;
@@ -84,12 +84,9 @@
   &.edit {
     background-color: rgb(239, 125, 48);
   }
-  // display: flex;
-  // align-items:center;
-  // justify-content: center;
 }
 
-.popup-max:hover {
+.card-action-btn:hover {
   background-color: #f9ac61;
 }
 

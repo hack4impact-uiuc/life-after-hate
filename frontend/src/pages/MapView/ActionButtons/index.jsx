@@ -6,37 +6,37 @@ import Edit from "../../../assets/images/edit.svg";
 import Expand from "../../../assets/images/expand.svg";
 
 const ActionButtons = ({ role, resource, openResourceModalWithPayload }) => (
-    <div className="card-action">
+  <div className="card-action">
+    <button
+      tabIndex="0"
+      className="card-action-btn"
+      onClick={() =>
+        openResourceModalWithPayload({
+          resourceId: resource._id,
+          editable: false,
+        })
+      }
+    >
+      <img src={Expand} alt="icon" className="popup-button-icon" />
+      <span> View</span>
+    </button>
+    {role === roleEnum.ADMIN && (
       <button
         tabIndex="0"
-        className="popup-max"
+        className="card-action-btn edit"
         onClick={() =>
           openResourceModalWithPayload({
             resourceId: resource._id,
-            editable: false,
+            editable: true,
           })
         }
       >
-        <img src={Expand} alt="icon" className="popup-button-icon" />
-        <span> View</span>
+        <img src={Edit} alt="icon" className="popup-button-icon" />
+        Edit
       </button>
-      {role === roleEnum.ADMIN && (
-        <button
-          tabIndex="0"
-          className="popup-max edit"
-          onClick={() =>
-            openResourceModalWithPayload({
-              resourceId: resource._id,
-              editable: false,
-            })
-          }
-        >
-          <img src={Edit} alt="icon" className="popup-button-icon" />
-          Edit
-        </button>
-      )}
-    </div>
-  );
+    )}
+  </div>
+);
 
 const mapStateToProps = (state) => ({
   role: state.auth.role,
