@@ -61,6 +61,11 @@
   -webkit-box-orient: vertical;
 }
 
+.card-action {
+  display: flex;
+  margin: 10px 0;
+}
+
 .popup-max {
   border: none;
   outline: none;
@@ -74,7 +79,14 @@
   box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
   margin-bottom: 8px;
   width: 100%;
+  margin: 0 3px;
   transition: all 0.2s;
+  &.edit {
+    background-color: rgb(239, 125, 48);
+  }
+  // display: flex;
+  // align-items:center;
+  // justify-content: center;
 }
 
 .popup-max:hover {
@@ -83,7 +95,7 @@
 
 .popup-button-icon {
   height: 12px;
-  margin-left: 3px;
+  margin-right: 3px;
   margin-top: -3px;
 }
 

@@ -6,7 +6,7 @@ import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
 import {
   selectMapResource,
-  clearMapResource
+  clearMapResource,
 } from "../../../redux/actions/map";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { roleEnum } from "../../../utils/enums";
@@ -20,7 +20,7 @@ const ResourceCard = ({
   openResourceModalWithPayload,
   clearMapResource,
   myRef,
-  style
+  style,
 }) => {
   const renderTags = (tag, idx) => (
     <div className="card-tag" key={idx}>
@@ -111,7 +111,7 @@ const ResourceCard = ({
             openResourceModalWithPayload({ resourceId: resource._id })
           }
         >
-          See More / Edit{" "}
+          See More
           <img
             src={WhiteMaximize}
             alt="Maximize"
@@ -123,17 +123,14 @@ const ResourceCard = ({
   );
 };
 
-const mapStateToProps = state => ({
-  role: state.auth.role
+const mapStateToProps = (state) => ({
+  role: state.auth.role,
 });
 
 const mapDispatchToProps = {
   selectMapResource,
   openResourceModalWithPayload,
-  clearMapResource
+  clearMapResource,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResourceCard);
+export default connect(mapStateToProps, mapDispatchToProps)(ResourceCard);
