@@ -1,2 +1,8 @@
 ignore:
   - "frontend/src/serviceWorker.js"
+coverage:
+  status:
+    project:
+      default:
+        threshold: 15 # Allow coverage to drop by up to 15% in a PR before marking it failed
+    patch: off
