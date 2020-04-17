@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
-import Edit from "../../../assets/images/edit-black.svg";
+import Edit from "../../../assets/images/pencil-edit-button-black.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 

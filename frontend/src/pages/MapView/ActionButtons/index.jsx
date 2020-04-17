@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { roleEnum } from "../../../utils/enums";
-import Edit from "../../../assets/images/edit.svg";
+import Edit from "../../../assets/images/pencil-edit-button.svg";
 import Expand from "../../../assets/images/expand.svg";
 
 const ActionButtons = ({ role, resource, openResourceModalWithPayload }) => (
