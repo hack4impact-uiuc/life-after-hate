@@ -9,7 +9,7 @@
     "chai": "^4.2.0",
     "colors": "^1.4.0",
     "commander": "^5.0.0",
-    "express-session": "^1.17.0",
+    "express-session": "^1.17.1",
     "find-up": "^4.1.0",
     "istanbul-lib-coverage": "^3.0.0",
     "joi-objectid": "^3.0.1",
