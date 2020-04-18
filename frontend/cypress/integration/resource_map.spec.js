@@ -135,6 +135,37 @@ context("Resource Map", () => {
     cy.get(".close-button").click();
   });
 
+  it("Advanced modal: Editing a resource validation works as intended", () => {
+    cy.get(".card-title").first().click();
+
+    cy.get("[data-cy=card-resource-edit-btn]").first().click();
+
+    // Clear name field
+    cy.get(".modal-input-field").first().clear();
+    // Clear email field
+    cy.get(".modal-input-field").eq(3).clear();
+    // Clear description field
+    cy.get(".modal-input-field").eq(4).clear();
+    cy.get("#submit-form-button").click();
+
+    // Make sure they all have invalid class
+    cy.get(".modal-input-field")
+      .first()
+      .should("have.class", "invalid")
+      .and("be.visible");
+    cy.get(".modal-input-field").eq(3).should("have.class", "invalid");
+    cy.get(".modal-input-field").eq(4).should("have.class", "invalid");
+
+    // Make sure that hitting delete will show confirm
+
+    cy.get("#delete-form-button")
+      .should("have.text", "Delete")
+      .click()
+      .should("have.text", "Confirm")
+      .trigger("blur")
+      .should("have.text", "Delete");
+  });
+
   it("Popup button functionality should work", () => {
     cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
     // Click the edit resource button
@@ -178,6 +209,13 @@ context("Resource Map", () => {
     cy.get("[data-cy=popup-title]").should("be.visible");
     cy.get(".mapboxgl-popup-close-button").should("be.visible").click();
     cy.get("[data-cy=popup-title]").should("not.be.visible");
+  });
+
+  it("Opens with expand button properly", () => {
+    cy.get(".maximize-icon").first().click();
+    cy.get(".modal-title").should("be.visible");
+    // Should be view only modal
+    cy.get(".modal-input-field").first().should("be.disabled");
   });
 
   it("Closes modal upon clicking away", () => {
