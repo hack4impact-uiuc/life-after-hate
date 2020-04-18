@@ -36,12 +36,14 @@ context("Volunteer User", () => {
     cy.get(".submitSearch").click();
     cy.get(".card-title").first().click();
 
+    // Wait until the view button is visible
+    cy.get("[data-cy=card-resource-view-btn]").first().should("be.visible");
+
     cy.get("[data-cy=card-resource-edit-btn]").should("not.exist");
 
     cy.get("[data-cy=card-resource-view-btn]")
       .first()
-      .should("be.visible")
-      .and("contain.text", "View")
+      .should("contain.text", "View")
       .click();
 
     cy.get(".modal-input-field")
