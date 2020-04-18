@@ -11,11 +11,23 @@ context("Navbar", () => {
     cy.title().should("eq", "Life After Hate Resource Map");
   });
 
-  it("Has a navbar with 2 links", () => {
+  it("Has a navbar with 3 links", () => {
     cy.get("[data-cy=nav-links]").children().eq(0).should("have.text", "Map");
     cy.get("[data-cy=nav-links]")
       .children()
-      .eq(1)
-      .should("have.text", "Directory");
+      .should("have.length", 3)
+      .should("contain.text", "Directory")
+      .and("contain.text", "Map")
+      .and("contain.text", "Account Management");
+  });
+
+  it("Dropdown functionality with logout works as expected", () => {
+    cy.get(".caret").click();
+    cy.get(".dropdown-header")
+      .should("be.visible")
+      .and("contain.text", "John Doe");
+
+    cy.get(".signout-button").click();
+    cy.url().should("eq", `${Cypress.env("BASE_URI")}/login`); // tests won't fail in case the port changes
   });
 });
