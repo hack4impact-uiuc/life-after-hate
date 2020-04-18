@@ -58,7 +58,7 @@ const TRANSITION_LENGTH = 1500;
 
 const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
-
+  const [hovered, setHovered] = useState(false);
   const handleCenterChange = () => {
     if (center && center[0]) {
       // If we received a new center point, focus the map
@@ -114,7 +114,6 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   };
 
   const handlePopupClick = (e) => {
-    console.log(e);
     // Don't show a popup if hovering over the current (searched) location
     if (e.object && e.object.location.type !== "Center") {
       selectMapResource(resources[e.index]._id);
@@ -123,14 +122,27 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
     }
   };
 
+  const handleHover = ({ picked }) => {
+    setHovered(picked);
+  };
+
+  const getCursor = ({ isDragging }) => {
+    if (hovered) {
+      return "pointer";
+    }
+    return isDragging ? "grabbing" : "grab";
+  };
+
   return (
     <DeckGL
       layers={getLayers()}
       initialViewState={INITIAL_VIEW_STATE}
       onViewStateChange={_onViewportChange}
       viewState={viewport}
-      controller={{ dragRotate: false }}
+      controller={{ dragRotate: false, doubleClickZoom: false }}
       onClick={handlePopupClick}
+      onHover={handleHover}
+      getCursor={getCursor}
       ContextProvider={MapContext.Provider}
     >
       <StaticMap

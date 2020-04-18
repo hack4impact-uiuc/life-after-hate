@@ -9,7 +9,7 @@
     "chai": "^4.2.0",
     "colors": "^1.4.0",
     "commander": "^5.0.0",
-    "express-session": "^1.17.0",
+    "express-session": "^1.17.1",
     "find-up": "^4.1.0",
     "istanbul-lib-coverage": "^3.0.0",
     "joi-objectid": "^3.0.1",
@@ -19,7 +19,7 @@
     "sinon": "^9.0.2"
   },
   "devDependencies": {
-    "@h4iuiuc/eslint-plugin": "^1.1.7",
+    "@h4iuiuc/eslint-plugin": "^1.1.8",
     "@typescript-eslint/parser": "^2.28.0",
     "cypress": "^4.4.0",
     "eslint": "^6.8.0",
@@ -56,12 +56,10 @@
   },
   "lint-staged": {
     "*.{js,css,scss,json,md,jsx}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ],
     "*.{js,jsx}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   }
 }
