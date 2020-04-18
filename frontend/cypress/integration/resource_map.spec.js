@@ -74,6 +74,12 @@ context("Resource Map", () => {
       .and("be.visible")
       .first()
       .should("have.text", "86 miles away");
+
+    // Check to make sure the popup has a visible distance as well
+    cy.get(".card-distance").first().click();
+    cy.get(".popup-distance")
+      .should("be.visible")
+      .and("have.text", "86 miles away");
   });
 
   it("Popup functionality works as expected", () => {
