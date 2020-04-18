@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
@@ -36,8 +37,10 @@ axios.interceptors.response.use((response) => {
   console.log("Response:", response.status);
   return response;
 });
-
-app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
+app.use(helmet());
+if (!isProd) {
+  app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
+}
 app.use(morgan("dev"));
 
 mongoose.connect(process.env.DB_URI, {

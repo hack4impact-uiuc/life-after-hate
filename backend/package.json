@@ -35,6 +35,7 @@
     "express-winston": "^4.0.3",
     "fuse.js": "^5.1.0",
     "geolib": "^3.2.1",
+    "helmet": "^3.22.0",
     "joi-objectid": "^3.0.1",
     "keyword-extractor": "0.0.18",
     "mocha": "^7.1.1",

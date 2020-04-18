@@ -10,7 +10,6 @@ var router = require("express").Router();
  * will correspond to endpoint /api/sample/info
  */
 
-router.use("/sample", require("./sample"));
 router.use("/auth", require("./auth"));
 router.use("/users", require("./users"));
 router.use("/resources", require("./resources"));
