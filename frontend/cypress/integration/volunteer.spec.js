@@ -30,4 +30,25 @@ context("Volunteer User", () => {
 
     cy.get(".edit-button").should("not.exist");
   });
+
+  it("Should show only edit buttons on map view", () => {
+    cy.visit(`${Cypress.env("BASE_URI")}`);
+    cy.get(".submitSearch").click();
+    cy.get(".card-title").first().click();
+
+    // Wait until the view button is visible
+    cy.get("[data-cy=card-resource-view-btn]").first().should("be.visible");
+
+    cy.get("[data-cy=card-resource-edit-btn]").should("not.exist");
+
+    cy.get("[data-cy=card-resource-view-btn]")
+      .first()
+      .should("contain.text", "View")
+      .click();
+
+    cy.get(".modal-input-field")
+      .first()
+      .should("be.visible")
+      .and("be.disabled");
+  });
 });
