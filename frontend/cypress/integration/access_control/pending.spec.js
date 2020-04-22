@@ -1,6 +1,6 @@
 context("Pending", () => {
   beforeEach(() => {
-    // Set the current role to ADMIN
+    // Set the current role to PENDING
     cy.setRole("PENDING");
     cy.visit(Cypress.env("BASE_URI"));
   });

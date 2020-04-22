@@ -3,7 +3,7 @@ const passport = require("passport");
 const User = require("../models/User");
 const { roleEnum } = require("../models/User");
 
-const DEFAULTROLE = roleEnum.VOLUNTEER;
+const DEFAULTROLE = roleEnum.PENDING;
 const DEFAULTLOC = "NORTH";
 
 passport.serializeUser((user, done) => {

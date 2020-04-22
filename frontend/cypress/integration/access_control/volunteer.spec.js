@@ -2,7 +2,7 @@
 
 context("Volunteer User", () => {
   beforeEach(() => {
-    // Set the current role to ADMIN
+    // Set the current role to VOLUNTEER
     cy.setRole("VOLUNTEER");
     cy.visit(Cypress.env("BASE_URI"));
   });
