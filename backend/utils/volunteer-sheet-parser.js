@@ -54,7 +54,7 @@ const getLocation = async (mailingAddress) => {
     };
   } catch (err) {
     console.log(mailingAddress);
-    throw "Bad address"
+    throw "Bad address";
     // return {};
   }
 };
@@ -79,7 +79,7 @@ const main = async () => {
   try {
     const mongoData = await Promise.all(json.map(convertSchema));
     await Resource.collection.insert(mongoData);
-  } catch(err) {
+  } catch (err) {
     console.log(err);
   }
 };
