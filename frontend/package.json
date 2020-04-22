@@ -21,7 +21,7 @@
     "ramda": "^0.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-hook-form": "^5.5.1",
+    "react-hook-form": "^5.5.3",
     "react-map-gl": "^5.2.5",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
