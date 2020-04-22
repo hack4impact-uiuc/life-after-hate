@@ -54,7 +54,8 @@ const getLocation = async (mailingAddress) => {
     };
   } catch (err) {
     console.log(mailingAddress);
-    return {};
+    throw "Bad address";
+    // return {};
   }
 };
 
@@ -75,8 +76,12 @@ const main = async () => {
     workbook.Sheets[workbook.SheetNames[0]],
     { defval: "", raw: false }
   );
-  const mongoData = await Promise.all(json.map(convertSchema));
-  await Resource.collection.insert(mongoData);
+  try {
+    const mongoData = await Promise.all(json.map(convertSchema));
+    await Resource.collection.insert(mongoData);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 main();
