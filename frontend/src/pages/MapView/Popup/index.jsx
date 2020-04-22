@@ -1,16 +1,16 @@
 import React from "react";
 import { Popup } from "react-map-gl";
-import MaximizeImg from "../../../assets/images/maximize-white.svg";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { clearMapResource } from "../../../redux/actions/map";
 import { connect } from "react-redux";
 import {
   currentResourceSelector,
-  mapResourceIdSelector
+  mapResourceIdSelector,
 } from "../../../redux/selectors/map";
-import { roleEnum } from "../../../utils/enums";
 
-const MapPopup = props => (
+import ActionButtons from "../ActionButtons";
+
+const MapPopup = (props) => (
   <div>
     {props.isResourceSelected && (
       <Popup
@@ -18,7 +18,7 @@ const MapPopup = props => (
         longitude={props.resource.location.coordinates[0]}
         tipSize={5}
         closeOnClick={false}
-        dynamicPosition={true}
+        dynamicPosition
         offsetTop={-27}
         captureScroll={false}
         onClose={props.clearMapResource}
@@ -34,34 +34,20 @@ const MapPopup = props => (
             </div>
           )}
           <div className="popup-desc">{props.resource.description}</div>
-          <button
-            tabIndex="0"
-            className="popup-max"
-            onClick={() =>
-              props.openResourceModalWithPayload({
-                resourceId: props.resource._id,
-                editable: props.role === roleEnum.ADMIN
-              })
-            }
-          >
-            See More {props.role === roleEnum.ADMIN && "/ Edit "}
-            <img src={MaximizeImg} alt="icon" className="popup-button-icon" />
-          </button>
+
+          <ActionButtons resource={props.resource}></ActionButtons>
         </div>
       </Popup>
     )}
   </div>
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   resource: currentResourceSelector(state),
   isResourceSelected: mapResourceIdSelector(state) !== undefined,
-  role: state.auth.role
+  role: state.auth.role,
 });
 
 const mapDispatchToProps = { openResourceModalWithPayload, clearMapResource };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MapPopup);
+export default connect(mapStateToProps, mapDispatchToProps)(MapPopup);

@@ -1,26 +1,24 @@
 import React from "react";
 import "./styles.scss";
-import Maximize from "../../../assets/images/maximize.svg";
-import WhiteMaximize from "../../../assets/images/maximize-white.svg";
+import Maximize from "../../../assets/images/expand-black.svg";
 import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
 import {
   selectMapResource,
-  clearMapResource
+  clearMapResource,
 } from "../../../redux/actions/map";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
-import { roleEnum } from "../../../utils/enums";
+import ActionButtons from "../ActionButtons";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
   resource,
   isSelected,
-  role,
   selectMapResource,
   openResourceModalWithPayload,
   clearMapResource,
   myRef,
-  style
+  style,
 }) => {
   const renderTags = (tag, idx) => (
     <div className="card-tag" key={idx}>
@@ -40,19 +38,20 @@ const ResourceCard = ({
           >
             {resource.companyName}
           </div>
-          {role === roleEnum.ADMIN && (
-            <div
-              className="card-maximize"
-              role="button"
-              tabIndex="0"
-              onKeyPress={() => "noop"}
-              onClick={() =>
-                openResourceModalWithPayload({ resourceId: resource._id })
-              }
-            >
-              <img src={Maximize} alt="Maximize" className="maximize-icon" />
-            </div>
-          )}
+          <div
+            className="card-maximize"
+            role="button"
+            tabIndex="0"
+            onKeyPress={() => "noop"}
+            onClick={() =>
+              openResourceModalWithPayload({
+                resourceId: resource._id,
+                editable: false,
+              })
+            }
+          >
+            <img src={Maximize} alt="Maximize" className="maximize-icon" />
+          </div>
           <div
             className="top-card-close"
             role="button"
@@ -104,36 +103,16 @@ const ResourceCard = ({
 
           <div className="card-tags">{resource.tags.map(renderTags)}</div>
         </div>
-        <button
-          tabIndex="0"
-          className="card-close"
-          onClick={() =>
-            openResourceModalWithPayload({ resourceId: resource._id })
-          }
-        >
-          See More / Edit{" "}
-          <img
-            src={WhiteMaximize}
-            alt="Maximize"
-            className="expanded-button-icon"
-          />
-        </button>
+        <ActionButtons resource={resource}></ActionButtons>
       </div>
     </div>
   );
 };
 
-const mapStateToProps = state => ({
-  role: state.auth.role
-});
-
 const mapDispatchToProps = {
   selectMapResource,
   openResourceModalWithPayload,
-  clearMapResource
+  clearMapResource,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResourceCard);
+export default connect(null, mapDispatchToProps)(ResourceCard);
