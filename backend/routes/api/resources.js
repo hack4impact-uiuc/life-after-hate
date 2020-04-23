@@ -5,6 +5,7 @@ const { celebrate, Joi } = require("celebrate");
 const extractor = require("keyword-extractor");
 Joi.objectId = require("joi-objectid")(Joi);
 
+const IndividualResource = require("../../models/IndividualResource");
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const resourceUtils = require("../../utils/resource-utils");
@@ -97,7 +98,7 @@ router.post(
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      companyName: Joi.string().required(),
+      companyName: Joi.string().optional(),
       contactName: Joi.string().required(),
       contactPhone: Joi.string().required(),
       contactEmail: Joi.string().required(),
@@ -109,12 +110,21 @@ router.post(
       }).default({ type: "Point", coordinates: [0, 0] }),
       notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string()),
-      type: Joi.string().default(resourceEnum.GROUP),
+      type: Joi.string().default(resourceEnum.INDIVIDUAL),
     }),
   }),
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
-    let data = { ...req.body };
+    let data = R.pick([
+      "contactName",
+      "contactPhone",
+      "contactEmail",
+      "description",
+      "address",
+      "location",
+      "notes",
+      "tags",
+    ])(req.body);
     const createdTags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
@@ -133,7 +143,7 @@ router.post(
       R.set(resourceAddressLens, address)
     )(data);
 
-    const newResource = new Resource(data);
+    const newResource = new IndividualResource(data);
     newResource.tags = createdTags;
     await newResource.save();
 
