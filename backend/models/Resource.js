@@ -8,7 +8,7 @@ const resourceEnum = {
   INDIVIDUAL: "INDIVIDUAL",
 };
 
-const options = { discriminatorKey: "type" };
+const options = { discriminatorKey: "type", collection: "resources" };
 
 const Resource = new mongoose.Schema(
   {

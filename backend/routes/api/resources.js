@@ -98,7 +98,6 @@ router.post(
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      companyName: Joi.string().optional(),
       contactName: Joi.string().required(),
       contactPhone: Joi.string().required(),
       contactEmail: Joi.string().required(),
@@ -111,20 +110,16 @@ router.post(
       notes: Joi.string().allow(""),
       tags: Joi.array().items(Joi.string()),
       type: Joi.string().default(resourceEnum.INDIVIDUAL),
+      availability: Joi.string().optional(),
+      howDiscovered: Joi.string().optional(),
+      volunteerReason: Joi.string().optional(),
+      skills: Joi.string().optional(),
+      volunteerRoles: Joi.string().optional(),
     }),
   }),
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
-    let data = R.pick([
-      "contactName",
-      "contactPhone",
-      "contactEmail",
-      "description",
-      "address",
-      "location",
-      "notes",
-      "tags",
-    ])(req.body);
+    let data = { ...req.body };
     const createdTags = extractor.extract(data.notes, {
       language: "english",
       remove_digits: true,
@@ -181,7 +176,6 @@ router.put(
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      companyName: Joi.string(),
       contactName: Joi.string(),
       contactPhone: Joi.string(),
       contactEmail: Joi.string(),
@@ -193,7 +187,11 @@ router.put(
       }),
       notes: Joi.string(),
       tags: Joi.array().items(Joi.string()),
-      type: Joi.string(),
+      availability: Joi.string().optional(),
+      howDiscovered: Joi.string().optional(),
+      volunteerReason: Joi.string().optional(),
+      skills: Joi.string().optional(),
+      volunteerRoles: Joi.string().optional(),
     }),
     params: {
       resource_id: Joi.objectId().required(),

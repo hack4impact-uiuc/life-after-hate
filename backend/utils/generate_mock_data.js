@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
 const colors = require("colors");
-const Resource = require("../models/Resource");
+const IndividualResource = require("../models/IndividualResource");
 const User = require("../models/User");
 const fs = require("fs");
 
@@ -34,7 +34,16 @@ const fetchJson = async (jsonLink) => {
 const fetchFromFile = (path) => JSON.parse(fs.readFileSync(path, "utf-8"));
 
 const addSampleResource = (resource) => {
-  const newResource = new Resource(resource);
+  // Convert what was an group resource to an individual resource for sake of testing out the app
+  // TODO: Mix up individual and group resources
+  const newResource = new IndividualResource({
+    ...resource,
+    availability: "My availability is...[insert availability]",
+    volunteerReason: "My reason for joining is...[insert reason]",
+    skills: "Some of my skills include...[insert skills]",
+    volunteerRoles: "I am proficient in...[insert roles]",
+    howDiscovered: "Discovered LAH through...[insert reason]",
+  });
   return newResource.save();
 };
 
@@ -50,7 +59,7 @@ const main = async () => {
   await createConnection();
   try {
     console.log(colors.green("Clearing all existing resource data..."));
-    await Resource.deleteMany({});
+    await IndividualResource.deleteMany({});
     await User.deleteMany({});
     const data = shouldUseLoremData
       ? await fetchJson(JSON_LINK_RESOURCES)
