@@ -25,7 +25,7 @@ const MapPopup = (props) => (
       >
         <div className="popup">
           <div data-cy="popup-title" className="popup-title">
-            {props.resource.companyName}
+            {props.resource.contactName}
           </div>
           {props.resource.distanceFromSearchLoc && (
             <div className="popup-distance">
@@ -33,7 +33,7 @@ const MapPopup = (props) => (
               away
             </div>
           )}
-          <div className="popup-desc">{props.resource.description}</div>
+          <div className="popup-desc">{props.resource.skills}</div>
 
           <ActionButtons resource={props.resource}></ActionButtons>
         </div>

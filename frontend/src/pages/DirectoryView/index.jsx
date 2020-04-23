@@ -9,12 +9,12 @@ import "./styles.scss";
 import { refreshAllResources } from "../../utils/api";
 import { roleEnum } from "../../utils/enums";
 
-const ResourceManager = props => {
+const ResourceManager = (props) => {
   useEffect(() => {
     refreshAllResources();
   }, []);
 
-  const renderCards = resource => (
+  const renderCards = (resource) => (
     <ResourceCard key={resource._id} resource={resource} />
   );
 
@@ -33,7 +33,7 @@ const ResourceManager = props => {
         <SearchBar />
         <div className="resource-labels clearfix">
           <div className="col">
-            <h3>Resource Name</h3>
+            <h3>Name</h3>
           </div>
           <div className="col">
             <h3>Location</h3>
@@ -42,7 +42,7 @@ const ResourceManager = props => {
             <h3>Point of Contact</h3>
           </div>
           <div className="col">
-            <h3>Description</h3>
+            <h3>Skills & Qualifications</h3>
           </div>
           <div />
         </div>
@@ -52,16 +52,13 @@ const ResourceManager = props => {
   );
 };
 
-const MapStateToProps = state => ({
+const MapStateToProps = (state) => ({
   resources: resourceSelector(state),
-  role: state.auth.role
+  role: state.auth.role,
 });
 
 const mapDispatchToProps = {
-  openResourceModal
+  openResourceModal,
 };
 
-export default connect(
-  MapStateToProps,
-  mapDispatchToProps
-)(ResourceManager);
+export default connect(MapStateToProps, mapDispatchToProps)(ResourceManager);

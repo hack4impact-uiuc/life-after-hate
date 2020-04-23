@@ -30,7 +30,7 @@ const ResourceCard = (props) => {
     >
       <div className="card-wrapper">
         <div className="col">
-          <p data-cy="card-companyName">{props.resource.companyName}</p>
+          <p data-cy="card-companyName">{props.resource.contactName}</p>
         </div>
         <div className="col">
           <p data-cy="card-address">{props.resource.address}</p>
@@ -39,7 +39,7 @@ const ResourceCard = (props) => {
           <p>{props.resource.contactEmail}</p>
         </div>
         <div className="col col-desc col-desc-collapsed">
-          <p>{props.resource.description}</p>
+          <p>{props.resource.skills}</p>
         </div>
         {props.role === roleEnum.ADMIN && (
           <div className="col col-edit">

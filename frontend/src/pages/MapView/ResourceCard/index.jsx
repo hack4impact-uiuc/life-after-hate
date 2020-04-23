@@ -36,7 +36,7 @@ const ResourceCard = ({
             onClick={() => selectMapResource(resource._id)}
             onKeyPress={() => "noop"}
           >
-            {resource.companyName}
+            {resource.contactName}
           </div>
           <div
             className="card-maximize"
@@ -75,12 +75,11 @@ const ResourceCard = ({
             </div>
           )}
 
-          <div className="card-desc">{resource.description}</div>
+          <div className="card-desc">{resource.skills}</div>
 
           <div className="card-details">
             <div className="detail-section">
-              <p className="detail-title">Point of Contact</p>
-              <p className="detail-content">{resource.contactName}</p>
+              <p className="detail-title">Contact Info</p>
               <a
                 className="detail-content"
                 href={`mailto:${resource.contactEmail}`}

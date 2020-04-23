@@ -40,7 +40,7 @@ const addSampleResource = (resource) => {
     ...resource,
     availability: "My availability is...[insert availability]",
     volunteerReason: "My reason for joining is...[insert reason]",
-    skills: "Some of my skills include...[insert skills]",
+    skills: resource.description,
     volunteerRoles: "I am proficient in...[insert roles]",
     howDiscovered: "Discovered LAH through...[insert reason]",
   });

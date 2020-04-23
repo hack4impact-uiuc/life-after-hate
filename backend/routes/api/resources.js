@@ -101,7 +101,6 @@ router.post(
       contactName: Joi.string().required(),
       contactPhone: Joi.string().required(),
       contactEmail: Joi.string().required(),
-      description: Joi.string().required(),
       address: Joi.string().required(),
       location: Joi.object({
         type: Joi.string().default("Point"),
@@ -179,7 +178,6 @@ router.put(
       contactName: Joi.string(),
       contactPhone: Joi.string(),
       contactEmail: Joi.string(),
-      description: Joi.string(),
       address: Joi.string(),
       location: Joi.object({
         type: Joi.string().default("Point"),
@@ -212,7 +210,7 @@ router.put(
       R.set(resourceAddressLens, address)
     )(data);
 
-    const resource = await Resource.findByIdAndUpdate(
+    const resource = await IndividualResource.findByIdAndUpdate(
       resourceId,
       { $set: data },
       { new: true }

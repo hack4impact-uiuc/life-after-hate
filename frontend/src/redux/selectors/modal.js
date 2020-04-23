@@ -44,7 +44,7 @@ export const titleSelector = createSelector(
       }
       if (!editable) {
         // View only, so just return the name
-        return resource.companyName;
+        return resource.contactName;
       }
       return "Edit Resource";
     } else if (modalType === modalEnum.USER) {
