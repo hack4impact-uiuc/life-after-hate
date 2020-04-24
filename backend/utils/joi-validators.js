@@ -1,12 +1,30 @@
-const { Joi } = require("celebrate");
+const { Joi: JoiOriginal } = require("celebrate");
 const { resourceEnum } = require("../models/Resource");
 // Joi.objectId = require("joi-objectid")(Joi);
+// Workaround
+// https://github.com/hapijs/joi/issues/556#issuecomment-593115711
+const Joi = JoiOriginal.extend({
+  // we want to apply this extension to all available types
+  type: /.*/,
+  rules: {
+    requiredAtFirst: {
+      method() {
+        // we apply 'required()' only if the schema
+        // is tailored to the 'finally' target
+        // see https://github.com/hapijs/joi/blob/master/API.md#anyaltertargets
+        return this.alter({
+          post: (schema) => schema.required(),
+        });
+      },
+    },
+  },
+});
 
 const BASE_RESOURCE = Joi.object().keys({
-  contactName: Joi.string().required(),
+  contactName: Joi.string().requiredAtFirst(),
   contactPhone: Joi.string(),
-  contactEmail: Joi.string().required(),
-  address: Joi.string().required(),
+  contactEmail: Joi.string().requiredAtFirst(),
+  address: Joi.string().requiredAtFirst(),
   location: Joi.object({
     type: Joi.string().default("Point"),
     coordinates: Joi.array().length(2).items(Joi.number()),
@@ -27,8 +45,8 @@ const INDIVIDUAL_RESOURCE = BASE_RESOURCE.keys({
 });
 
 const GROUP_RESOURCE = BASE_RESOURCE.keys({
-  description: Joi.string().required(),
-  companyName: Joi.string().required(),
+  description: Joi.string().requiredAtFirst(),
+  companyName: Joi.string().requiredAtFirst(),
 });
 
 const RESOURCE_SCHEMA = Joi.alternatives().conditional(".type", {
@@ -38,4 +56,7 @@ const RESOURCE_SCHEMA = Joi.alternatives().conditional(".type", {
   ],
 });
 
-module.exports = { RESOURCE_SCHEMA };
+module.exports = {
+  POST_RESOURCE_SCHEMA: RESOURCE_SCHEMA.tailor("post"),
+  PUT_RESOURCE_SCHEMA: RESOURCE_SCHEMA,
+};

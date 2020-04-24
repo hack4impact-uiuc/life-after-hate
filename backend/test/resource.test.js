@@ -164,10 +164,10 @@ describe("PUT /resources", () => {
     const resource = await Resource.findOne({ companyName: "Google" });
     const resourceId = resource._id;
     const newData = {
-      ...sampleResourceInfo3,
       companyName: "new name",
       contactName: "new contact",
       description: "new description",
+      type: "GROUP",
     };
 
     const stub = sinon.stub(resourceUtils, "geocodeAddress").callsFake(() => ({

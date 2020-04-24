@@ -97,7 +97,7 @@ router.get(
 router.post(
   "/",
   requireAdminStatus,
-  celebrate({ body: validators.RESOURCE_SCHEMA }),
+  celebrate({ body: validators.POST_RESOURCE_SCHEMA }),
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
     let data = { ...req.body };
@@ -159,7 +159,7 @@ router.put(
   "/:resource_id",
   requireAdminStatus,
   celebrate({
-    body: validators.RESOURCE_SCHEMA,
+    body: validators.PUT_RESOURCE_SCHEMA,
     params: {
       resource_id: Joi.objectId().required(),
     },
