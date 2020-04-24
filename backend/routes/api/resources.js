@@ -31,10 +31,16 @@ const validators = require("../../utils/joi-validators");
 const router = express.Router();
 
 const concatAddress = (resource) => {
-  const { streetAddress, city, state, postalCode } = resource.address;
-  resource.address = [streetAddress, city, [state, postalCode].join(" ")].join(
-    ", "
-  );
+  if (!resource.address) {
+    resource.address = "";
+  } else {
+    const { streetAddress, city, state, postalCode } = resource.address;
+    resource.address = [
+      streetAddress,
+      city,
+      [state, postalCode].join(" "),
+    ].join(", ");
+  }
   return resource;
 };
 
@@ -44,7 +50,6 @@ router.get(
   requireVolunteerStatus,
   errorWrap(async (req, res) => {
     const resources = await Resource.find({}).lean();
-
     res.json({
       code: 200,
       result: resources.map(concatAddress),

@@ -71,7 +71,9 @@ const parseGeocodingResponse = (resp) => {
 };
 
 const geocodeAddress = R.memoizeWith(R.identity, async (address) => {
-  const addressQuery = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
+  const addressQuery = encodeURI(
+    `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`
+  );
   const response = await axios.get(addressQuery);
   return parseGeocodingResponse(response.data);
 });
