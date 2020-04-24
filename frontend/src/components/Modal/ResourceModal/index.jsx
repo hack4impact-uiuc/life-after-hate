@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
-import { modalEnum } from "../../../utils/enums";
+import { modalEnum, resourceEnum } from "../../../utils/enums";
 import {
   editAndRefreshResource,
   addAndRefreshResource,
@@ -50,6 +50,63 @@ const ResourceModal = (props) => {
     setDeleteClicked(false);
     return deleteAndRefreshResource(props.resource._id);
   };
+
+  const getIndividualResourceFields = () => (
+    <React.Fragment>
+      <label className="modal-lab">
+        <p>Skills & Qualifications</p>
+        <textarea
+          ref={register({ required: true })}
+          name="skills"
+          defaultValue={props.resource.skills}
+          className={`modal-input-field modal-input-textarea ${
+            errors.skills ? "invalid" : ""
+          }`}
+          rows="10"
+          disabled={!props.editable}
+        />
+      </label>
+      <label className="modal-lab">
+        <p>Volunteer Roles</p>
+        <input
+          ref={register({ required: true })}
+          type="text"
+          name="availability"
+          defaultValue={props.resource.volunteerRoles}
+          className={`modal-input-field ${
+            errors.availability ? "invalid" : ""
+          }`}
+          disabled={!props.editable}
+        />
+      </label>
+      <label className="modal-lab">
+        <p>Availability</p>
+        <input
+          ref={register({ required: true })}
+          type="text"
+          name="availability"
+          defaultValue={props.resource.availability}
+          className={`modal-input-field ${
+            errors.availability ? "invalid" : ""
+          }`}
+          disabled={!props.editable}
+        />
+      </label>
+      <label className="modal-lab">
+        <p>Why Volunteer?</p>
+        <input
+          ref={register({ required: true })}
+          type="text"
+          name="volunteerReason"
+          defaultValue={props.resource.volunteerReason}
+          className={`modal-input-field ${
+            errors.volunteerReason ? "invalid" : ""
+          }`}
+          disabled={!props.editable}
+        />
+      </label>
+    </React.Fragment>
+  );
 
   return (
     <div className="modal-wrap-ee">
@@ -98,59 +155,8 @@ const ResourceModal = (props) => {
                 disabled={!props.editable}
               />
             </label>
-            <label className="modal-lab">
-              <p>Skills & Qualifications</p>
-              <textarea
-                ref={register({ required: true })}
-                name="skills"
-                defaultValue={props.resource.skills}
-                className={`modal-input-field modal-input-textarea ${
-                  errors.skills ? "invalid" : ""
-                }`}
-                rows="10"
-                disabled={!props.editable}
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Volunteer Roles</p>
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="availability"
-                defaultValue={props.resource.volunteerRoles}
-                className={`modal-input-field ${
-                  errors.availability ? "invalid" : ""
-                }`}
-                disabled={!props.editable}
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Availability</p>
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="availability"
-                defaultValue={props.resource.availability}
-                className={`modal-input-field ${
-                  errors.availability ? "invalid" : ""
-                }`}
-                disabled={!props.editable}
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Why Volunteer?</p>
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="volunteerReason"
-                defaultValue={props.resource.volunteerReason}
-                className={`modal-input-field ${
-                  errors.volunteerReason ? "invalid" : ""
-                }`}
-                disabled={!props.editable}
-              />
-            </label>
-
+            {props.resource.type === resourceEnum.INDIVIDUAL &&
+              getIndividualResourceFields()}
             <label className="modal-lab">
               <p>Tags</p>
               <input
@@ -175,17 +181,28 @@ const ResourceModal = (props) => {
               />
             </label>
             <label className="modal-lab">
-              <p>Notes</p>
-              <textarea
+              <p>Resource Type</p>
+              <input
                 ref={register({ required: true })}
-                name="notes"
-                defaultValue={props.resource.notes}
+                name="type"
+                defaultValue={props.resource.type}
                 rows="5"
-                className={`modal-input-field modal-input-textarea ${
-                  errors.notes ? "invalid" : ""
-                }`}
-                disabled={!props.editable}
+                className={`modal-input-field ${errors.notes ? "invalid" : ""}`}
+                disabled
               />
+              <label className="modal-lab">
+                <p>Notes</p>
+                <textarea
+                  ref={register({ required: true })}
+                  name="notes"
+                  defaultValue={props.resource.notes}
+                  rows="5"
+                  className={`modal-input-field modal-input-textarea ${
+                    errors.notes ? "invalid" : ""
+                  }`}
+                  disabled={!props.editable}
+                />
+              </label>
             </label>
             {props.editable && (
               <div>
