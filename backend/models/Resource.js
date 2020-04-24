@@ -14,7 +14,7 @@ const Resource = new mongoose.Schema(
   {
     contactName: { type: String, required: true },
     contactPhone: { type: String, default: "" },
-    contactEmail: { type: String, default: "" },
+    contactEmail: { type: String, required: true, default: "" },
     address: {
       streetAddress: { type: String, required: true },
       city: { type: String, required: true },

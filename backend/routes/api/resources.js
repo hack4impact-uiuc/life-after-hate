@@ -6,6 +6,7 @@ const extractor = require("keyword-extractor");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const IndividualResource = require("../../models/IndividualResource");
+const GroupResource = require("../../models/GroupResource");
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const resourceUtils = require("../../utils/resource-utils");
@@ -26,7 +27,7 @@ const {
   requireVolunteerStatus,
 } = require("../../utils/auth-middleware");
 const { resourceEnum } = require("../../models/Resource");
-
+const validators = require("../../utils/joi-validators");
 const router = express.Router();
 
 const concatAddress = (resource) => {
@@ -96,26 +97,7 @@ router.get(
 router.post(
   "/",
   requireAdminStatus,
-  celebrate({
-    body: Joi.object().keys({
-      contactName: Joi.string().required(),
-      contactPhone: Joi.string().required(),
-      contactEmail: Joi.string().required(),
-      address: Joi.string().required(),
-      location: Joi.object({
-        type: Joi.string().default("Point"),
-        coordinates: Joi.array().length(2).items(Joi.number()),
-      }).default({ type: "Point", coordinates: [0, 0] }),
-      notes: Joi.string().allow(""),
-      tags: Joi.array().items(Joi.string()),
-      type: Joi.string().default(resourceEnum.INDIVIDUAL),
-      availability: Joi.string().optional(),
-      howDiscovered: Joi.string().optional(),
-      volunteerReason: Joi.string().optional(),
-      skills: Joi.string().optional(),
-      volunteerRoles: Joi.string().optional(),
-    }),
-  }),
+  celebrate({ body: validators.RESOURCE_SCHEMA }),
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
     let data = { ...req.body };
@@ -137,7 +119,10 @@ router.post(
       R.set(resourceAddressLens, address)
     )(data);
 
-    const newResource = new IndividualResource(data);
+    const newResource =
+      data.type === resourceEnum.INDIVIDUAL
+        ? new IndividualResource(data)
+        : new GroupResource(data);
     newResource.tags = createdTags;
     await newResource.save();
 
@@ -174,23 +159,7 @@ router.put(
   "/:resource_id",
   requireAdminStatus,
   celebrate({
-    body: Joi.object().keys({
-      contactName: Joi.string(),
-      contactPhone: Joi.string(),
-      contactEmail: Joi.string(),
-      address: Joi.string(),
-      location: Joi.object({
-        type: Joi.string().default("Point"),
-        coordinates: Joi.array().length(2).items(Joi.number()),
-      }),
-      notes: Joi.string(),
-      tags: Joi.array().items(Joi.string()),
-      availability: Joi.string().optional(),
-      howDiscovered: Joi.string().optional(),
-      volunteerReason: Joi.string().optional(),
-      skills: Joi.string().optional(),
-      volunteerRoles: Joi.string().optional(),
-    }),
+    body: validators.RESOURCE_SCHEMA,
     params: {
       resource_id: Joi.objectId().required(),
     },
@@ -210,7 +179,11 @@ router.put(
       R.set(resourceAddressLens, address)
     )(data);
 
-    const resource = await IndividualResource.findByIdAndUpdate(
+    const resourceType =
+      data.type === resourceEnum.INDIVIDUAL
+        ? IndividualResource
+        : GroupResource;
+    const resource = await resourceType.findByIdAndUpdate(
       resourceId,
       { $set: data },
       { new: true }

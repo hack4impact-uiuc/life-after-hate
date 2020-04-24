@@ -42,7 +42,7 @@ const sampleResourceInfo2 = {
     coordinates: [40, 40],
   },
   tags: ["social"],
-  type: resourceEnum.INDIVIDUAL,
+  type: resourceEnum.GROUP,
 };
 
 const sampleResourceInfo3 = {
@@ -56,7 +56,7 @@ const sampleResourceInfo3 = {
     coordinates: [40, 40],
   },
   tags: ["social"],
-  type: resourceEnum.INDIVIDUAL,
+  type: resourceEnum.GROUP,
 };
 
 const createSampleResource = async (resourceInfo = sampleResourceInfo) => {
@@ -164,6 +164,7 @@ describe("PUT /resources", () => {
     const resource = await Resource.findOne({ companyName: "Google" });
     const resourceId = resource._id;
     const newData = {
+      ...sampleResourceInfo3,
       companyName: "new name",
       contactName: "new contact",
       description: "new description",
@@ -183,7 +184,6 @@ describe("PUT /resources", () => {
       .put(`/api/resources/${resourceId}`)
       .send(newData)
       .expect(200);
-
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
     expect(didCheckIsAdmin()).to.be.true;
