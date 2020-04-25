@@ -5,6 +5,7 @@ import resources from "./resources";
 import modal from "./modal";
 import map from "./map";
 import users from "./users";
+import tags from "./tags";
 
 export default combineReducers({
   isLoading: loading,
@@ -13,4 +14,5 @@ export default combineReducers({
   modal,
   map,
   users,
+  tags,
 });

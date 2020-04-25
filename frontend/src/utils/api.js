@@ -7,6 +7,7 @@ import {
 import { updateResources } from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
 import { updateUsers } from "../redux/actions/users";
+import { addTag, removeTag } from "../redux/actions/tags";
 import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
@@ -37,6 +38,14 @@ const logout = async () => {
   await apiRequest({ endpoint: `auth/logout` });
   purgeGlobalAuthState();
 };
+
+function addFilterTag(data) {
+  store.dispatch(addTag(data));
+}
+
+function removeFilterTag(data) {
+  store.dispatch(removeTag(data));
+}
 
 async function addResource(data) {
   return (
@@ -139,6 +148,8 @@ async function filterAndRefreshResource(keyword, address, tag, radius) {
 export {
   refreshGlobalAuth,
   logout,
+  addFilterTag,
+  removeFilterTag,
   filterAndRefreshResource,
   addAndRefreshResource,
   editAndRefreshResource,
