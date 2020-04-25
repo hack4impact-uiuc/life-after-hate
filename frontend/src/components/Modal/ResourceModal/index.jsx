@@ -94,12 +94,12 @@ const ResourceModal = (props) => {
       </label>
       <label className="modal-lab">
         <p>Why Volunteer?</p>
-        <input
+        <textarea
           ref={register({ required: true })}
           type="text"
           name="volunteerReason"
           defaultValue={props.resource.volunteerReason}
-          className={`modal-input-field ${
+          className={`modal-input-field modal-input-textarea ${
             errors.volunteerReason ? "invalid" : ""
           }`}
           disabled={!props.editable}

@@ -38,8 +38,10 @@ const concatAddress = (resource) => {
     resource.address = [
       streetAddress,
       city,
-      [state, postalCode].join(" "),
-    ].join(", ");
+      [state, postalCode].filter(Boolean).join(" "),
+    ]
+      .filter(Boolean)
+      .join(", ");
   }
   return resource;
 };

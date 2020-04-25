@@ -27,7 +27,7 @@ const MapPopup = (props) => (
           <div data-cy="popup-title" className="popup-title">
             {props.resource.contactName}
           </div>
-          {props.resource.distanceFromSearchLoc && (
+          {"distanceFromSearchLoc" in props.resource && (
             <div className="popup-distance">
               {Math.round(props.resource.distanceFromSearchLoc * 10) / 10} miles
               away

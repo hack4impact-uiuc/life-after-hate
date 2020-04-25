@@ -126,12 +126,18 @@ const distanceFilter = R.curry((lat, long, radius) =>
   )
 );
 
+// Coerce to boolean
+const nullLocationFilter = R.filter(
+  (resource) =>
+    R.view(resourceLatLens, resource) && R.view(resourceLongLens, resource)
+);
 const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   if (!(lat && long && radius)) {
     // Do nothing if undefined
     return resources;
   }
   return R.pipe(
+    nullLocationFilter,
     distanceFilter(lat, long, radius),
     R.map(addDistanceField(lat, long)),
     R.sortBy(R.prop("distanceFromSearchLoc"))

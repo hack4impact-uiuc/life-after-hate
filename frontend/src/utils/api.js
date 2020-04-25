@@ -15,6 +15,9 @@ async function getSearchResults(keyword, address, tag, radius = 500) {
   return (
     await apiRequest({
       endpoint: endptStr + toQueryString(arglist),
+      notification: {
+        failureMessage: "Failed to execute search.",
+      },
     })
   ).result;
 }
