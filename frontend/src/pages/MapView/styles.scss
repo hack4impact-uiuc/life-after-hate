@@ -81,6 +81,7 @@
   width: 100%;
   margin: 0 3px;
   transition: all 0.2s;
+  white-space: nowrap;
   &.edit {
     background-color: rgb(239, 125, 48);
   }
