@@ -69,7 +69,7 @@ const ResourceCard = ({
           onKeyPress={() => "noop"}
           className="card-wrap"
         >
-          {resource.distanceFromSearchLoc && (
+          {"distanceFromSearchLoc" in resource && (
             <div className="card-distance">
               {Math.round(resource.distanceFromSearchLoc * 10) / 10} miles away
             </div>
