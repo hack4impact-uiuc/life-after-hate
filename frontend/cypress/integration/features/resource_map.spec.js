@@ -65,10 +65,7 @@ context("Resource Map", () => {
   it("Search by only location works as intended", () => {
     cy.get("#locationInput").type("Chicago");
     cy.get(".submitSearch").click();
-    cy.get(".card-title")
-      .should("have.length.gt", 1)
-      .first()
-      .should("have.text", "Fairway Inn");
+    cy.get(".card-title").first().should("have.text", "Fairway Inn");
     cy.get(".card-distance")
       .should("have.length.gt", 1)
       .and("be.visible")
