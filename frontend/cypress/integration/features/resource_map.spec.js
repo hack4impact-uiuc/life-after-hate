@@ -114,11 +114,12 @@ context("Resource Map", () => {
       .should("be.visible")
       .and("have.text", "Edit Resource");
     // Check that the words match up with what was clicked
-    cy.get(".modal-input-field")
-      .first()
-      .should("contain.value", "Best Western Old Mill Inn");
+    cy.get("[data-cy=modal-company-name]").should(
+      "contain.value",
+      "Best Western Old Mill Inn"
+    );
     // Test that it's editable
-    cy.get(".modal-input-field").first().type("Hello world!");
+    cy.get("[data-cy=modal-company-name]").type("Hello world!");
     cy.get(".close-button").click();
     // Ensure the popup is still open
     cy.get("[data-cy=popup-title]")

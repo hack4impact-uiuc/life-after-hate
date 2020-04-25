@@ -70,6 +70,7 @@ const ResourceModal = ({
         <textarea
           ref={register}
           name="skills"
+          data-cy="modal-skills"
           defaultValue={resource.skills}
           className="modal-input-field modal-input-textarea"
           rows="10"
@@ -82,6 +83,7 @@ const ResourceModal = ({
           ref={register}
           type="text"
           name="volunteerRoles"
+          data-cy="modal-roles"
           defaultValue={resource.volunteerRoles}
           className="modal-input-field"
           disabled={!editable}
@@ -93,6 +95,7 @@ const ResourceModal = ({
           ref={register}
           type="text"
           name="availability"
+          data-cy="modal-availability"
           defaultValue={resource.availability}
           className="modal-input-field"
           disabled={!editable}
@@ -104,6 +107,7 @@ const ResourceModal = ({
           ref={register}
           type="text"
           name="volunteerReason"
+          data-cy="modal-volunteer-reason"
           defaultValue={resource.volunteerReason}
           className="modal-input-field modal-input-textarea"
           disabled={!editable}
@@ -125,6 +129,7 @@ const ResourceModal = ({
               <select
                 ref={register({ required: true })}
                 name="type"
+                data-cy="modal-resource-type"
                 defaultValue={resource.type}
                 rows="5"
                 className={`modal-input-field ${errors.type ? "invalid" : ""}`}
@@ -143,6 +148,7 @@ const ResourceModal = ({
                   ref={register({ required: true })}
                   type="text"
                   name="companyName"
+                  data-cy="modal-company-name"
                   defaultValue={resource.companyName}
                   className={`modal-input-field ${
                     errors.contactName ? "invalid" : ""
@@ -157,6 +163,7 @@ const ResourceModal = ({
                 ref={register({ required: true })}
                 type="text"
                 name="contactName"
+                data-cy="modal-contact-name"
                 defaultValue={resource.contactName}
                 className={`modal-input-field ${
                   errors.contactName ? "invalid" : ""
@@ -170,6 +177,7 @@ const ResourceModal = ({
                 ref={register}
                 type="text"
                 name="contactPhone"
+                data-cy="modal-contact-phone"
                 defaultValue={resource.contactPhone}
                 className={`modal-input-field ${
                   errors.contactPhone ? "invalid" : ""
@@ -183,6 +191,7 @@ const ResourceModal = ({
                 ref={register({ required: true })}
                 type="text"
                 name="contactEmail"
+                data-cy="modal-contact-email"
                 defaultValue={resource.contactEmail}
                 className={`modal-input-field ${
                   errors.contactEmail ? "invalid" : ""
@@ -198,6 +207,7 @@ const ResourceModal = ({
                 <textarea
                   ref={register}
                   name="description"
+                  data-cy="modal-description"
                   defaultValue={resource.description}
                   rows="5"
                   className={`modal-input-field modal-input-textarea ${
@@ -213,6 +223,7 @@ const ResourceModal = ({
               <input
                 ref={register}
                 name="tags"
+                data-cy="modal-tags"
                 defaultValue={isAddingResource ? "" : resource.tags.join(", ")}
                 className={`modal-input-field ${errors.tags && "invalid"}`}
                 disabled={!editable}
@@ -223,6 +234,7 @@ const ResourceModal = ({
               <input
                 ref={register({ required: true })}
                 name="address"
+                data-cy="modal-address"
                 type="text"
                 defaultValue={resource.address}
                 className={`modal-input-field ${errors.address && "invalid"}`}
@@ -235,6 +247,7 @@ const ResourceModal = ({
               <textarea
                 ref={register}
                 name="notes"
+                data-cy="modal-notes"
                 defaultValue={resource.notes}
                 rows="5"
                 className="modal-input-field modal-input-textarea"

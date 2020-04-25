@@ -19,16 +19,20 @@ context("Directory View", () => {
   it("Adding an incomplete resource fails", () => {
     cy.get("#add-button").should("have.text", "Add Resource").click();
 
-    cy.get('[name="companyName"]').type("Test Resource");
+    cy.get("[data-cy=modal-resource-type]").select("GROUP");
+    cy.get("[data-cy=modal-company-name]").type("Test Resource");
 
     cy.get("#submit-form-button").click();
-    cy.get('[name="contactName"]').should("have.class", "invalid");
+    cy.get("[data-cy=modal-contact-name]").should("have.class", "invalid");
 
-    cy.get('[name="contactPhone"]').type("123-456-7890");
+    cy.get("[data-cy=modal-contact-phone]").type("123-456-7890");
 
     cy.get("#submit-form-button").click();
-    cy.get('[name="contactName"]').should("have.class", "invalid");
-    cy.get('[name="contactPhone"]').should("not.have.class", "invalid");
+    cy.get('[data-cy="modal-contact-name"]').should("have.class", "invalid");
+    cy.get('[data-cy="modal-contact-phone"]').should(
+      "not.have.class",
+      "invalid"
+    );
 
     // Don't close out of the modal on error
     cy.get(".modal-title").should("be.visible");
@@ -41,16 +45,17 @@ context("Directory View", () => {
   it("Allows us to add a resource and search for it", () => {
     cy.get("#add-button").click();
     cy.get(".modal-title").should("have.text", "Add Resource");
-    cy.get('[name="companyName"]').type("Test Resource");
-    cy.get('[name="contactName"]').type("Alan Fang");
-    cy.get('[name="contactPhone"]').type("1-234-567-8900");
-    cy.get('[name="contactEmail"]').type("alanfang@gmail.com");
-    cy.get('textarea[name="description"]').type(
+    cy.get("[data-cy=modal-resource-type]").select("GROUP");
+    cy.get("[data-cy=modal-company-name]").type("Test Resource");
+    cy.get("[data-cy=modal-contact-name]").type("Alan Fang");
+    cy.get("[data-cy=modal-contact-phone]").type("1-234-567-8900");
+    cy.get("[data-cy=modal-contact-email]").type("alanfang@gmail.com");
+    cy.get("[data-cy=modal-description").type(
       "This is a test description! This should show up in its entirety."
     );
-    cy.get('[name="tags"]').type("a,b,c");
-    cy.get('[name="address"]').type("1234 W. Main St. Urbana, IL 61801");
-    cy.get('[name="notes"]').type(
+    cy.get("[data-cy=modal-tags").type("a,b,c");
+    cy.get("[data-cy=modal-address").type("1234 W. Main St. Urbana, IL 61801");
+    cy.get("[data-cy=modal-notes").type(
       "This is a notes field! You can enter notes here."
     );
     cy.get("#submit-form-button").click();
