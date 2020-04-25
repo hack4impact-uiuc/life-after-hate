@@ -5,7 +5,7 @@ import StaticMap, {
 } from "react-map-gl";
 import DeckGL from "@deck.gl/react";
 import { connect } from "react-redux";
-import { resourceSelector } from "../../../redux/selectors/resource";
+import { tagFilteredResourceSelector } from "../../../redux/selectors/resource";
 import {
   selectMapResource,
   clearMapResource,
@@ -146,7 +146,7 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
 };
 
 const mapStateToProps = (state) => ({
-  resources: resourceSelector(state),
+  resources: tagFilteredResourceSelector(state),
   center: state.map.center,
 });
 
