@@ -1,6 +1,6 @@
 context("Pending", () => {
   beforeEach(() => {
-    // Set the current role to ADMIN
+    // Set the current role to PENDING
     cy.setRole("PENDING");
     cy.visit(Cypress.env("BASE_URI"));
   });
@@ -21,5 +21,18 @@ context("Pending", () => {
 
   it("Should not display any map", () => {
     cy.get("#deckgl-overlay").should("not.exist");
+  });
+
+  it("Visiting the URLs as a pending user shows pending", () => {
+    cy.visit(`${Cypress.env("BASE_URI")}/users`);
+
+    cy.get("[data-cy=pending]")
+      .should("be.visible")
+      .and("contain.text", "pending");
+
+    cy.visit(`${Cypress.env("BASE_URI")}/directory`);
+    cy.get("[data-cy=pending]")
+      .should("be.visible")
+      .and("contain.text", "pending");
   });
 });

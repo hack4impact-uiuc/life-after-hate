@@ -4,21 +4,21 @@ import { refreshAllUsers } from "../../utils/api";
 import { connect } from "react-redux";
 import {
   filteredUserSelector,
-  filterSelector
+  filterSelector,
 } from "../../redux/selectors/users";
 import { changeUserFilter } from "../../redux/actions/users";
 import { userFilterEnum } from "../../utils/enums";
 import UserCard from "./UserCard";
 import "./styles.scss";
 
-const UserManager = props => {
+const UserManager = (props) => {
   useEffect(() => {
     refreshAllUsers();
   }, []);
 
-  const renderCards = user => <UserCard key={user.id} user={user} />;
+  const renderCards = (user) => <UserCard key={user.id} user={user} />;
 
-  const onCategoryChange = event => {
+  const onCategoryChange = (event) => {
     console.log("filter changed");
     props.changeUserFilter(event.target.value);
   };
@@ -27,7 +27,11 @@ const UserManager = props => {
     <div className="directory">
       <div className="manager-header">
         <h1>User Directory</h1>
-        <select onChange={onCategoryChange} defaultValue={props.filter}>
+        <select
+          onChange={onCategoryChange}
+          defaultValue={props.filter}
+          data-cy="user-filter"
+        >
           <option value={userFilterEnum.ALL}>All Users</option>
           <option value={userFilterEnum.ACTIVE}>Active Users</option>
           <option value={userFilterEnum.PENDING}>Pending Users</option>
@@ -59,16 +63,13 @@ const UserManager = props => {
   );
 };
 
-const MapStateToProps = state => ({
+const MapStateToProps = (state) => ({
   users: filteredUserSelector(state),
-  filter: filterSelector(state)
+  filter: filterSelector(state),
 });
 
 const mapDispatchToProps = {
-  changeUserFilter
+  changeUserFilter,
 };
 
-export default connect(
-  MapStateToProps,
-  mapDispatchToProps
-)(UserManager);
+export default connect(MapStateToProps, mapDispatchToProps)(UserManager);

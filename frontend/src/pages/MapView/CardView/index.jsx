@@ -25,23 +25,6 @@ class CardView extends React.Component {
     };
   }
 
-  renderCard = (card) => {
-    // Prevent unnecessary prop changing by reusing ref if possible
-    let ref = this.state.cardRefs.get(card._id);
-    if (!ref) {
-      ref = React.createRef();
-      this.state.cardRefs.set(card._id, ref);
-    }
-    return (
-      <ResourceCard
-        key={card._id}
-        myRef={ref}
-        resource={card}
-        isSelected={card._id === this.props.selectedResource}
-      />
-    );
-  };
-
   componentDidUpdate(prevProps) {
     if (prevProps.selectedResource) {
       const prevResourceIdx = this.props.resources.findIndex(

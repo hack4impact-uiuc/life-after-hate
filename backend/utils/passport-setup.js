@@ -1,8 +1,9 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
 const User = require("../models/User");
+const { roleEnum } = require("../models/User");
 
-const DEFAULTROLE = "ADMIN";
+const DEFAULTROLE = roleEnum.PENDING;
 const DEFAULTLOC = "NORTH";
 
 passport.serializeUser((user, done) => {

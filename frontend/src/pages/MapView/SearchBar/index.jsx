@@ -40,6 +40,7 @@ const SearchBar = (props) => {
               close
               onClick={clearLocation}
               tabIndex="-1"
+              data-cy="clear-location"
             />
           </div>
         </div>
@@ -60,6 +61,7 @@ const SearchBar = (props) => {
               close
               onClick={clearSearch}
               tabIndex="-1"
+              data-cy="clear-search"
             />
           </div>
           <button className="submitSearch" type="submit">

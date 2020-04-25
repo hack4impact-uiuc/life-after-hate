@@ -52,7 +52,7 @@
     transition: all 0.2s;
     cursor: pointer;
     outline: none !important;
-    opacity: 0.2;
+    opacity: 0.3;
   }
 
   .collapsed .card-maximize {
@@ -188,8 +188,13 @@
     background-color: #f9ac61;
   }
 
-  .collapsed .card-close {
-    display: none;
+  .collapsed {
+    .card-close {
+      display: none;
+    }
+    .card-action {
+      display: none;
+    }
   }
 
   .expanded-button-icon {

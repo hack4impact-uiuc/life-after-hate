@@ -76,23 +76,6 @@ const geocodeAddress = R.memoizeWith(R.identity, async (address) => {
   return parseGeocodingResponse(response.data);
 });
 
-const latlongToAddress = async function (lat, long) {
-  const apiAddress = `${mapquestURI}reverse?key=${mapquestKey}&location=${lat},${long}&includeRoadMetadata=false&includeNearestIntersection=false`;
-
-  const response = await fetch(apiAddress, {});
-  const responseJson = await response.json();
-
-  const streetAddress = responseJson["results"][0]["locations"][0]["street"];
-  const city = responseJson["results"][0]["locations"][0]["adminArea5"];
-  const state = responseJson["results"][0]["locations"][0]["adminArea3"];
-  // country = responseJson["results"][0]["locations"][0]["adminArea1"];
-  const postalCode = responseJson["results"][0]["locations"][0][
-    "postalCode"
-  ].substring(0, 5);
-  const fullAddress = `${streetAddress} ${city} ${state} ${postalCode}`;
-  return fullAddress;
-};
-
 const addDistanceField = (lat, long) => (resource) => ({
   ...resource,
   distanceFromSearchLoc: computeDistance(
@@ -155,7 +138,6 @@ const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
 
 module.exports = {
   geocodeAddress,
-  latlongToAddress,
   filterResourcesWithinRadius,
   filterByOptions,
   resourceLatLens,
