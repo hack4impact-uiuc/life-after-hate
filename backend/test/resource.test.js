@@ -84,7 +84,7 @@ describe("GET /resources", () => {
     await createSampleResource();
     const res = await request(app).get(`/api/resources`).expect(200);
     expect(res.body.result).to.have.lengthOf(1);
-    expect(Object.keys(res.body.result[0])).to.have.lengthOf(12);
+    expect(Object.keys(res.body.result[0])).to.have.lengthOf(13);
     expect(didCheckIsVolunteer()).to.be.true;
   });
 });

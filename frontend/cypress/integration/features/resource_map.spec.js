@@ -142,20 +142,17 @@ context("Resource Map", () => {
     cy.get("[data-cy=card-resource-edit-btn]").first().click();
 
     // Clear name field
-    cy.get(".modal-input-field").first().clear();
+    cy.get("[data-cy=modal-contact-name]").clear();
     // Clear email field
-    cy.get(".modal-input-field").eq(3).clear();
-    // Clear description field
-    cy.get(".modal-input-field").eq(4).clear();
+    cy.get("[data-cy=modal-contact-name]").clear();
     cy.get("#submit-form-button").click();
 
     // Make sure they all have invalid class
-    cy.get(".modal-input-field")
+    cy.get("[data-cy=modal-contact-name]")
       .first()
       .should("have.class", "invalid")
       .and("be.visible");
-    cy.get(".modal-input-field").eq(3).should("have.class", "invalid");
-    cy.get(".modal-input-field").eq(4).should("have.class", "invalid");
+    cy.get("[data-cy=modal-contact-name]").should("have.class", "invalid");
 
     // Make sure that hitting delete will show confirm
 
@@ -177,7 +174,7 @@ context("Resource Map", () => {
       .should("be.visible")
       .and("have.text", "Edit Resource");
 
-    cy.get(".modal-input-field").first().type("Hello world!");
+    cy.get("[data-cy=modal-contact-name]").type("Hello world!");
     cy.get(".close-button").click();
     // Ensure the popup is still open
     cy.get("[data-cy=popup-title]")
