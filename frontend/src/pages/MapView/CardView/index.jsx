@@ -1,19 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { resourceSelector } from "../../../redux/selectors/resource";
+import { tagFilteredResourceSelector } from "../../../redux/selectors/resource";
 import ResourceCard from "../ResourceCard";
 import { mapResourceIdSelector } from "../../../redux/selectors/map";
 import {
   CellMeasurer,
   List,
   AutoSizer,
-  CellMeasurerCache
+  CellMeasurerCache,
 } from "react-virtualized";
 
 const cache = new CellMeasurerCache({
   fixedWidth: true,
   defaultWidth: 324,
-  defaultHeight: 130
+  defaultHeight: 130,
 });
 
 class CardView extends React.Component {
@@ -21,11 +21,11 @@ class CardView extends React.Component {
     super();
     this.state = {
       // Keep a mapping of resource IDs => DOM nodes to be able to scroll on click
-      cardRefs: new Map()
+      cardRefs: new Map(),
     };
   }
 
-  renderCard = card => {
+  renderCard = (card) => {
     // Prevent unnecessary prop changing by reusing ref if possible
     let ref = this.state.cardRefs.get(card._id);
     if (!ref) {
@@ -45,7 +45,7 @@ class CardView extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.selectedResource) {
       const prevResourceIdx = this.props.resources.findIndex(
-        r => r._id === prevProps.selectedResource
+        (r) => r._id === prevProps.selectedResource
       );
       cache.clear(prevResourceIdx, 0);
       this.list.recomputeRowHeights();
@@ -53,13 +53,13 @@ class CardView extends React.Component {
     }
     if (this.props.selectedResource) {
       const currResourceIdx = this.props.resources.findIndex(
-        r => r._id === this.props.selectedResource
+        (r) => r._id === this.props.selectedResource
       );
       cache.clear(currResourceIdx, 0);
       this.list.recomputeRowHeights();
       const firstOffset = this.list.getOffsetForRow({
         alignment: "start",
-        index: currResourceIdx
+        index: currResourceIdx,
       });
       this.list.scrollToPosition(firstOffset);
       setTimeout(() => {
@@ -67,7 +67,7 @@ class CardView extends React.Component {
         this.list.scrollToPosition(
           this.list.getOffsetForRow({
             alignment: "start",
-            index: currResourceIdx
+            index: currResourceIdx,
           })
         );
       }, 500);
@@ -93,7 +93,6 @@ class CardView extends React.Component {
             isSelected={
               this.props.resources[index]._id === this.props.selectedResource
             }
-            addTagToSearch={this.props.addTagToSearch}
             style={style}
           />
           // <div ref={registerChild} style={style}>
@@ -114,7 +113,7 @@ class CardView extends React.Component {
               <List
                 width={width}
                 height={height}
-                ref={list => {
+                ref={(list) => {
                   this.list = list;
                 }}
                 deferredMeasurementCache={cache}
@@ -130,14 +129,11 @@ class CardView extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  resources: resourceSelector(state),
-  selectedResource: mapResourceIdSelector(state)
+const mapStateToProps = (state) => ({
+  resources: tagFilteredResourceSelector(state),
+  selectedResource: mapResourceIdSelector(state),
 });
 
 const mapDispatchToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CardView);
+export default connect(mapStateToProps, mapDispatchToProps)(CardView);

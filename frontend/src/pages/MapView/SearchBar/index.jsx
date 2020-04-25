@@ -1,16 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { useForm } from "react-hook-form";
 import SearchIcon from "../../../assets/images/search.svg";
 import LocationIcon from "../../../assets/images/location-icon.svg";
-import { filterAndRefreshResource } from "../../../utils/api";
-
+import { filterAndRefreshResource, removeFilterTag } from "../../../utils/api";
+import { tagSelector } from "../../../redux/selectors/tags";
 import "./styles.scss";
 
-const SearchBar = ({
-  tags,
-  removeTag
-}) => {
+const SearchBar = (props) => {
   const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
     filterAndRefreshResource(data.keyword, data.location);
@@ -68,23 +66,29 @@ const SearchBar = ({
             Go
           </button>
         </div>
-        {tags.length > 0 && (<div className="card-tags-search">  
-          {tags.map(tag => (
-            <div className="card-tag-search" key={tag}>
-              <span className="search-tag">
-                {tag}
-              </span>
-              <Button
-                className="close-tag closeButtons"
-                close
-                onClick={() => removeTag(tag)}
-              />
-            </div>
-          ))}
-        </div>)}
+        {props.tags.length > 0 && (
+          <div className="card-tags-search">
+            {props.tags.map((tag) => (
+              <div className="card-tag-search" key={tag}>
+                <span className="search-tag">{tag}</span>
+                <Button
+                  className="close-tag closeButtons"
+                  close
+                  onClick={() => removeFilterTag(tag)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </form>
     </div>
   );
 }; //DONT OPEN CARD AND REMOVE SEARCG TAG CALLBACK
 
-export default SearchBar;
+const mapStateToProps = (state) => ({
+  tags: tagSelector(state),
+});
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

@@ -4,9 +4,10 @@ import Maximize from "../../../assets/images/maximize.svg";
 import WhiteMaximize from "../../../assets/images/maximize-white.svg";
 import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
+import { addFilterTag } from "../../../utils/api";
 import {
   selectMapResource,
-  clearMapResource
+  clearMapResource,
 } from "../../../redux/actions/map";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { roleEnum } from "../../../utils/enums";
@@ -19,17 +20,16 @@ const ResourceCard = ({
   selectMapResource,
   openResourceModalWithPayload,
   clearMapResource,
-  addTagToSearch,
   myRef,
-  style
+  style,
 }) => {
   const addSearchTag = (e, tag) => {
     e.stopPropagation();
-    addTagToSearch(tag);
-  }
+    addFilterTag(tag);
+  };
 
   const renderTags = (tag, idx) => (
-    <div className="card-tag" key={idx} onClick={e => addSearchTag(e, tag)}>
+    <div className="card-tag" key={idx} onClick={(e) => addSearchTag(e, tag)}>
       {tag}
     </div>
   );
@@ -129,17 +129,14 @@ const ResourceCard = ({
   );
 };
 
-const mapStateToProps = state => ({
-  role: state.auth.role
+const mapStateToProps = (state) => ({
+  role: state.auth.role,
 });
 
 const mapDispatchToProps = {
   selectMapResource,
   openResourceModalWithPayload,
-  clearMapResource
+  clearMapResource,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResourceCard);
+export default connect(mapStateToProps, mapDispatchToProps)(ResourceCard);
