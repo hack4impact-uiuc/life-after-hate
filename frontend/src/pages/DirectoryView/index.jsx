@@ -42,7 +42,7 @@ const ResourceManager = (props) => {
             <h3>Point of Contact</h3>
           </div>
           <div className="col">
-            <h3>Skills & Qualifications</h3>
+            <h3>Description</h3>
           </div>
           <div />
         </div>

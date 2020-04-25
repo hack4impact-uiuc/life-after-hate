@@ -78,7 +78,9 @@ const ResourceCard = ({
             </div>
           )}
 
-          <div className="card-desc">{resource.skills}</div>
+          <div className="card-desc">
+            {isIndividualResource ? resource.skills : resource.description}
+          </div>
 
           <div className="card-details">
             {resource.contactEmail && (

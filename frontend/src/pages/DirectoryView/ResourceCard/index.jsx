@@ -3,7 +3,7 @@ import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
-import { roleEnum } from "../../../utils/enums";
+import { resourceEnum, roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
 const ResourceCard = (props) => {
@@ -20,6 +20,7 @@ const ResourceCard = (props) => {
     });
   };
 
+  const isIndividualResource = props.resource.type === resourceEnum.INDIVIDUAL;
   return (
     <div
       className="card-click"
@@ -39,7 +40,11 @@ const ResourceCard = (props) => {
           <p>{props.resource.contactEmail}</p>
         </div>
         <div className="col col-desc col-desc-collapsed">
-          <p>{props.resource.skills}</p>
+          <p>
+            {isIndividualResource
+              ? props.resource.skills
+              : props.resource.description}
+          </p>
         </div>
         {props.role === roleEnum.ADMIN && (
           <div className="col col-edit">
