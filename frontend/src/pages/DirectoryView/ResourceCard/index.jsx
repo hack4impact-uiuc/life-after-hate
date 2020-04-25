@@ -31,7 +31,11 @@ const ResourceCard = (props) => {
     >
       <div className="card-wrapper">
         <div className="col">
-          <p data-cy="card-companyName">{props.resource.contactName}</p>
+          <p data-cy="card-companyName">
+            {isIndividualResource
+              ? props.resource.contactName
+              : props.resource.companyName}
+          </p>
         </div>
         <div className="col">
           <p data-cy="card-address">{props.resource.address}</p>

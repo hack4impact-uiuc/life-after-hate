@@ -33,7 +33,7 @@ const ResourceManager = (props) => {
         <SearchBar />
         <div className="resource-labels clearfix">
           <div className="col">
-            <h3>Name</h3>
+            <h3>Resource Name</h3>
           </div>
           <div className="col">
             <h3>Location</h3>

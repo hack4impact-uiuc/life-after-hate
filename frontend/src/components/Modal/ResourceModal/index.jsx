@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-onchange */
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -26,7 +27,7 @@ const ResourceModal = ({
 }) => {
   const { register, handleSubmit, errors } = useForm();
   const [deleteClicked, setDeleteClicked] = useState(false);
-
+  const [groupType, setGroupType] = useState(resourceEnum.INDIVIDUAL);
   const onSubmit = (data) => {
     isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
@@ -57,18 +58,20 @@ const ResourceModal = ({
     setDeleteClicked(false);
     return deleteAndRefreshResource(resource._id);
   };
-  const isIndividualResource = resource.type === resourceEnum.INDIVIDUAL;
+
+  // If a new resource, defer to the dropdown, else defer to the resource
+  const isIndividualResource = isAddingResource
+    ? groupType === resourceEnum.INDIVIDUAL
+    : resource.type === resourceEnum.INDIVIDUAL;
   const getIndividualResourceFields = () => (
     <React.Fragment>
       <label className="modal-lab">
         <p>Skills & Qualifications</p>
         <textarea
-          ref={register({ required: true })}
+          ref={register}
           name="skills"
           defaultValue={resource.skills}
-          className={`modal-input-field modal-input-textarea ${
-            errors.skills ? "invalid" : ""
-          }`}
+          className="modal-input-field modal-input-textarea"
           rows="10"
           disabled={!editable}
         />
@@ -76,39 +79,33 @@ const ResourceModal = ({
       <label className="modal-lab">
         <p>Volunteer Roles</p>
         <input
-          ref={register({ required: true })}
+          ref={register}
           type="text"
           name="volunteerRoles"
           defaultValue={resource.volunteerRoles}
-          className={`modal-input-field ${
-            errors.availability ? "invalid" : ""
-          }`}
+          className="modal-input-field"
           disabled={!editable}
         />
       </label>
       <label className="modal-lab">
         <p>Availability</p>
         <input
-          ref={register({ required: true })}
+          ref={register}
           type="text"
           name="availability"
           defaultValue={resource.availability}
-          className={`modal-input-field ${
-            errors.availability ? "invalid" : ""
-          }`}
+          className="modal-input-field"
           disabled={!editable}
         />
       </label>
       <label className="modal-lab">
         <p>Why Volunteer?</p>
         <textarea
-          ref={register({ required: true })}
+          ref={register}
           type="text"
           name="volunteerReason"
           defaultValue={resource.volunteerReason}
-          className={`modal-input-field modal-input-textarea ${
-            errors.volunteerReason ? "invalid" : ""
-          }`}
+          className="modal-input-field modal-input-textarea"
           disabled={!editable}
         />
       </label>
@@ -123,6 +120,22 @@ const ResourceModal = ({
             onSubmit={handleSubmit(onSubmit)}
             className="add-edit-resource-form"
           >
+            <label className="modal-lab">
+              <p>Resource Type</p>
+              <select
+                ref={register({ required: true })}
+                name="type"
+                defaultValue={resource.type}
+                rows="5"
+                className={`modal-input-field ${errors.type ? "invalid" : ""}`}
+                disabled={!isAddingResource}
+                onChange={(e) => setGroupType(e.target.value)}
+              >
+                <option>{resourceEnum.INDIVIDUAL}</option>
+                <option>{resourceEnum.GROUP}</option>
+              </select>
+            </label>
+
             {!isIndividualResource && (
               <label className="modal-lab">
                 <p>Company Name</p>
@@ -154,7 +167,7 @@ const ResourceModal = ({
             <label className="modal-lab">
               <p>Contact Phone</p>
               <input
-                ref={register({ required: true })}
+                ref={register}
                 type="text"
                 name="contactPhone"
                 defaultValue={resource.contactPhone}
@@ -177,20 +190,24 @@ const ResourceModal = ({
                 disabled={!editable}
               />
             </label>
-            {isIndividualResource && getIndividualResourceFields()}
-            <label className="modal-lab">
-              <p>Description</p>
-              <textarea
-                ref={register({ required: true })}
-                name="description"
-                defaultValue={resource.description}
-                rows="5"
-                className={`modal-input-field modal-input-textarea ${
-                  errors.description ? "invalid" : ""
-                }`}
-                disabled={!editable}
-              />
-            </label>
+            {isIndividualResource ? (
+              getIndividualResourceFields()
+            ) : (
+              <label className="modal-lab">
+                <p>Description</p>
+                <textarea
+                  ref={register}
+                  name="description"
+                  defaultValue={resource.description}
+                  rows="5"
+                  className={`modal-input-field modal-input-textarea ${
+                    errors.description ? "invalid" : ""
+                  }`}
+                  disabled={!editable}
+                />
+              </label>
+            )}
+
             <label className="modal-lab">
               <p>Tags</p>
               <input
@@ -212,42 +229,32 @@ const ResourceModal = ({
                 disabled={!editable}
               />
             </label>
+
             <label className="modal-lab">
-              <p>Resource Type</p>
-              <input
-                ref={register({ required: true })}
-                name="type"
-                defaultValue={resource.type}
+              <p>Notes</p>
+              <textarea
+                ref={register}
+                name="notes"
+                defaultValue={resource.notes}
                 rows="5"
-                className={`modal-input-field ${errors.notes ? "invalid" : ""}`}
-                disabled
+                className="modal-input-field modal-input-textarea"
+                disabled={!editable}
               />
-              <label className="modal-lab">
-                <p>Notes</p>
-                <textarea
-                  ref={register({ required: true })}
-                  name="notes"
-                  defaultValue={resource.notes}
-                  rows="5"
-                  className={`modal-input-field modal-input-textarea ${
-                    errors.notes ? "invalid" : ""
-                  }`}
-                  disabled={!editable}
-                />
-              </label>
             </label>
             {editable && (
               <div>
                 <Button id="submit-form-button" type="submit">
                   Save
                 </Button>
-                <Button
-                  id="delete-form-button"
-                  onClick={handleDeleteResource}
-                  onBlur={() => setDeleteClicked(false)}
-                >
-                  {deleteClicked ? "Confirm" : "Delete"}
-                </Button>
+                {!isAddingResource && (
+                  <Button
+                    id="delete-form-button"
+                    onClick={handleDeleteResource}
+                    onBlur={() => setDeleteClicked(false)}
+                  >
+                    {deleteClicked ? "Confirm" : "Delete"}
+                  </Button>
+                )}
               </div>
             )}
           </form>

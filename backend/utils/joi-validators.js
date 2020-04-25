@@ -22,7 +22,7 @@ const Joi = JoiOriginal.extend({
 
 const BASE_RESOURCE = Joi.object().keys({
   contactName: Joi.string().requiredAtFirst(),
-  contactPhone: Joi.string(),
+  contactPhone: Joi.string().allow(""),
   contactEmail: Joi.string().requiredAtFirst(),
   address: Joi.string().requiredAtFirst(),
   location: Joi.object({
@@ -37,15 +37,15 @@ const BASE_RESOURCE = Joi.object().keys({
 });
 
 const INDIVIDUAL_RESOURCE = BASE_RESOURCE.keys({
-  availability: Joi.string(),
-  howDiscovered: Joi.string(),
-  volunteerReason: Joi.string(),
-  skills: Joi.string(),
-  volunteerRoles: Joi.string(),
+  availability: Joi.string().allow(""),
+  howDiscovered: Joi.string().allow(""),
+  volunteerReason: Joi.string().allow(""),
+  skills: Joi.string().allow(""),
+  volunteerRoles: Joi.string().allow(""),
 });
 
 const GROUP_RESOURCE = BASE_RESOURCE.keys({
-  description: Joi.string().requiredAtFirst(),
+  description: Joi.string().allow(""),
   companyName: Joi.string().requiredAtFirst(),
 });
 
