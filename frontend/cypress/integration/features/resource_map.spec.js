@@ -3,10 +3,14 @@
 
 // Though waits are almost always discouraged, we have no choice but to wait
 // For the click event listener to attach to the map view pins
-const WAIT_DURATION = 800;
+const WAIT_DURATION = 3000;
 
 context("Resource Map", () => {
   beforeEach(() => {
+    cy.on("window:before:load", (win) => {
+      cy.spy(win.console, "log");
+      cy.spy(win.console, "error");
+    });
     // Set the current role to ADMIN
     cy.setRole("ADMIN");
     cy.visit(Cypress.env("BASE_URI"));
