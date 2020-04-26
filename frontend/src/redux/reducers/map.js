@@ -11,10 +11,14 @@ const map = (state = {}, action) => {
     case UPDATE_MAP_CENTER:
       return { ...state, center: action.payload };
     case SELECT_MAP_RESOURCE:
+      console.log("SELECTED MAP RESOURCE");
+      console.log(action.payload);
       return { ...state, selectedId: action.payload };
     case CLEAR_MAP_RESOURCE:
+      console.log("CLEARED MAP RESOURCE");
       return R.omit(["selectedId"], state);
     case UPDATE_RESOURCES:
+      console.log("UPDATE RESOURCES");
       // Check to see if the currently selected resource
       // is in the new resource list, and if not, remove it
       return R.find(R.propEq("_id", state.selectedId))(action.payload)
