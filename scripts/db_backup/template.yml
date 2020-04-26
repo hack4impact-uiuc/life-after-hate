@@ -14,21 +14,25 @@ Parameters:
 
 Resources:
   BackupFunction:
+    Description: Backup function which should get triggered once a day.
     Type: AWS::Serverless::Function
     Properties:
       Handler: backup.handler
       Runtime: nodejs12.x
       CodeUri: backup/
-      MemorySize: 1024
+      MemorySize: 2048
       Timeout: 30
+      ReservedConcurrentExecutions: 1 # not more than 1 backup at a time
       Policies:
         - S3FullAccessPolicy:
             BucketName: !Ref S3Bucket
       Environment:
         Variables:
           MONGO_URI: !Ref MongoURI
+          S3_BUCKET: !Ref S3Bucket
 
   ScheduledRule:
+    Description: In essence a cron job, but running on AWS.
     Type: AWS::Events::Rule
     Properties:
       ScheduleExpression: "cron(0 9 * * ? *)" # every day at 0900 UTC / 0400 CST
