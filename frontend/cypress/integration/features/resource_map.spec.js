@@ -18,7 +18,6 @@ context("Resource Map", () => {
     cy.get(".submitSearch").click();
     cy.get(".card-content").should("be.visible");
   });
-
   it("Clear search works as intended", () => {
     cy.get("#locationInput").type("hello location");
     cy.get("#searchInput").type("hello search");

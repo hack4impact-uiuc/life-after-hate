@@ -82,6 +82,8 @@ jobs:
       - name: Generate Full Stack Coverage Report
         run: bash scripts/get_coverage.sh
       
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v1
       - name: Upload FE Coverage Artifact
         uses: actions/upload-artifact@v1
         with:

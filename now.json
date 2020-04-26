@@ -38,7 +38,7 @@
       "dest": "frontend/service-worker.js"
     },
     { "src": "/(.*)", "dest": "frontend/index.html" }
-  ],
+  ],.
   "env": {
     "GOOGLE_CLIENT_ID": "@lah_google_client_id",
     "GOOGLE_CLIENT_SECRET": "@lah_google_client_secret",

@@ -117,12 +117,18 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   const handlePopupClick = (e) => {
     // Don't show a popup if hovering over the current (searched) location
     console.log("HANDLING POPUP CLICK");
+    console.log(`Click location (${e.x},${e.y})`);
+    console.log(`Lnglat: (${e.lngLat[0]}, ${e.lngLat[1]})`);
+    console.log(`Index: (${e.index})`);
+    console.log(`Num resources: ${resources.length}`);
+    console.log(e);
     if (e.object && e.object.location.type !== "Center") {
       console.log("has an object of index:");
       console.log(e.index);
       selectMapResource(resources[e.index]._id);
     } else {
       console.log("POPUP CLICK REGISTERED AS CLEAR");
+
       clearMapResource();
     }
   };
