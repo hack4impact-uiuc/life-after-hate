@@ -84,6 +84,8 @@ context("Resource Map", () => {
 
   it("Popup functionality works as expected", () => {
     cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
+    cy.wait(2000);
+    cy.get(".card-title").first().click();
     cy.get("[data-cy=popup-title]")
       .should("contain.text", "Best Western Old Mill Inn")
       .and("be.visible");

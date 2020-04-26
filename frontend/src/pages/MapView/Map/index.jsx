@@ -61,6 +61,7 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
   const handleCenterChange = () => {
+    console.log("CENTER CHANGE");
     if (center && center[0]) {
       // If we received a new center point, focus the map
       setViewport((prevState) => ({
@@ -77,6 +78,7 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   useEffect(handleCenterChange, [center]);
 
   const _onViewportChange = ({ viewState }) => {
+    console.log("VIEWPORT CHANGE");
     setViewport(viewState);
   };
 
