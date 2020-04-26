@@ -6,10 +6,7 @@ import StaticMap, {
 import DeckGL from "@deck.gl/react";
 import { connect } from "react-redux";
 import { mappableResourceSelector } from "../../../redux/selectors/map";
-import {
-  selectMapResource,
-  clearMapResource,
-} from "../../../redux/actions/map";
+import { selectMapResource } from "../../../redux/actions/map";
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../../assets/images/marker-atlas.png";
 import Popup from "../Popup";
@@ -56,7 +53,7 @@ const INITIAL_VIEW_STATE = {
 const ZOOMED_IN_CONSTANT = 5;
 const TRANSITION_LENGTH = 1500;
 
-const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
+const Map = ({ center, resources, selectMapResource }) => {
   console.log(`Num resources: ${resources.length}`);
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
@@ -130,8 +127,6 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
       selectMapResource(resources[e.index]._id);
     } else {
       console.log("POPUP CLICK REGISTERED AS CLEAR");
-
-      clearMapResource();
     }
   };
 
@@ -177,6 +172,5 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   selectMapResource,
-  clearMapResource,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Map);
