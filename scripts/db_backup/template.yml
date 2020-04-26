@@ -1,0 +1,38 @@
+Description: >-
+  Every day at 0400 CST, back up the database using a Lambda function which
+  dumps the result in an S3 bucket.
+
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  MongoURI:
+    Description: "Required; the MongoDB URI from the environment."
+    Type: "String"
+  S3Bucket:
+    Description: "Required; the bucket where backups should be stored."
+    Type: "String"
+
+Resources:
+  BackupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: backup.handler
+      Runtime: nodejs12.x
+      CodeUri: backup/
+      MemorySize: 1024
+      Timeout: 30
+      Policies:
+        - S3FullAccessPolicy:
+            BucketName: !Ref S3Bucket
+      Environment:
+        Variables:
+          MONGO_URI: !Ref MongoURI
+
+  ScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0 9 * * ? *)" # every day at 0900 UTC / 0400 CST
+      State: "ENABLED"
+      Targets:
+        - Arn: !GetAtt BackupFunction.Arn
+          Id: "TargetFunction"
