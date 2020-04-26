@@ -57,6 +57,7 @@ const ZOOMED_IN_CONSTANT = 5;
 const TRANSITION_LENGTH = 1500;
 
 const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
+  console.log(`Num resources: ${resources.length}`);
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
   const handleCenterChange = () => {

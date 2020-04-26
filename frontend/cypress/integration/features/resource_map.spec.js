@@ -218,6 +218,7 @@ context("Resource Map", () => {
   });
 
   it("Closes modal upon clicking away", () => {
+    cy.get("#view-default-view").wait(WAIT_DURATION).click(450, 288);
     cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
     cy.get("[data-cy=popup-title]").should("be.visible");
     // Click somewhere random...
