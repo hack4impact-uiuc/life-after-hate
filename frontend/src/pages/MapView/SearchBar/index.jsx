@@ -85,7 +85,7 @@ const SearchBar = (props) => {
       </form>
     </div>
   );
-}; //DONT OPEN CARD AND REMOVE SEARCG TAG CALLBACK
+};
 
 const mapStateToProps = (state) => ({
   tags: tagSelector(state),
