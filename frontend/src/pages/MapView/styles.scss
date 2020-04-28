@@ -3,18 +3,21 @@
 }
 
 .fixed-height-container {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   left: 12px;
   top: 72px;
   width: 342px;
-  height: auto;
+  height: calc(100vh - 72px);
   z-index: 2;
 }
 
 .card-content {
   margin-top: 4px;
+  margin-bottom: 30px;
   overflow: auto;
-  height: calc(100vh - 210px);
+  height: 100%;
   width: 100%;
   background-color: #f9f9f9;
   border-radius: 5px;
@@ -28,10 +31,12 @@
   max-height: 180px;
   overflow: hidden;
 }
+
 .mapboxgl-popup {
   z-index: 1;
   cursor: default;
 }
+
 .popup-title {
   font-weight: bold;
   color: #2a2a2a;
@@ -81,6 +86,7 @@
   width: 100%;
   margin: 0 3px;
   transition: all 0.2s;
+
   &.edit {
     background-color: rgb(239, 125, 48);
   }

@@ -21,6 +21,7 @@
   .card-wrap {
     outline: none !important;
   }
+
   .expanded .card-wrap {
     cursor: auto;
   }
@@ -57,6 +58,7 @@
   .collapsed .card-maximize {
     display: block;
   }
+
   .collapsed .top-card-close {
     display: none;
   }
@@ -64,6 +66,7 @@
   .expanded .card-maximize {
     display: none;
   }
+
   .expanded .top-card-close {
     display: block;
   }
@@ -158,6 +161,10 @@
     text-transform: uppercase;
     padding: 1px 7px 1px 7px;
     border-radius: 15px;
+  }
+
+  .card-tag:hover {
+    background-color: #f7923030;
   }
 
   .card-close {
