@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cypress/code-coverage": "^3.5.2",
+    "@cypress/code-coverage": "^3.6.0",
     "@hapi/boom": "^9.1.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
@@ -38,7 +38,7 @@
     "helmet": "^3.22.0",
     "joi-objectid": "^3.0.1",
     "keyword-extractor": "0.0.18",
-    "mocha": "^7.1.1",
+    "mocha": "^7.1.2",
     "mongoose": "^5.9.10",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
