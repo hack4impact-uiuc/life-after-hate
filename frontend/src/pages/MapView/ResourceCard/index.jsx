@@ -3,6 +3,7 @@ import "./styles.scss";
 import Maximize from "../../../assets/images/expand-black.svg";
 import Close from "../../../assets/images/close3.svg";
 import { connect } from "react-redux";
+import { addFilterTag } from "../../../utils/api";
 import {
   selectMapResource,
   clearMapResource,
@@ -21,8 +22,13 @@ const ResourceCard = ({
   myRef,
   style,
 }) => {
+  const addSearchTag = (e, tag) => {
+    e.stopPropagation();
+    addFilterTag(tag);
+  };
+
   const renderTags = (tag, idx) => (
-    <div className="card-tag" key={idx}>
+    <div className="card-tag" key={idx} onClick={(e) => addSearchTag(e, tag)}>
       {tag}
     </div>
   );

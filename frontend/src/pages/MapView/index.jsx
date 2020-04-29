@@ -6,17 +6,17 @@ import Map from "./Map";
 import "./styles.scss";
 
 const MapView = () => (
-    <div>
-      <div className="fixed-height-container">
-        <div className="search-content">
-          <div className="search-bar">
-            <SearchBar />
-          </div>
+  <div>
+    <div className="fixed-height-container">
+      <div className="search-content">
+        <div className="search-bar">
+          <SearchBar />
         </div>
-        <CardView></CardView>
       </div>
-      <Map></Map>
+      <CardView />
     </div>
-  );
+    <Map></Map>
+  </div>
+);
 
 export default MapView;
