@@ -16,11 +16,11 @@ exports.handler = (event, context) => {
 
   if (!mongoUri) {
     console.error("Did not receieve the MongoDB URI!");
-    return;
+    return 1;
   }
   if (!s3Bucket) {
     console.error("Could not create the S3 bucket!");
-    return;
+    return 1;
   }
 
   console.log(
@@ -36,21 +36,21 @@ exports.handler = (event, context) => {
     if (error) {
       console.error("Could not clear /tmp directory!");
       console.error(error);
-      return;
+      return 1;
     }
 
-    exec(`mongodump --uri=${mongoUri}`, (error) => {
+    exec(`./mongodump --uri=${mongoUri} --out=${folder}`, (error) => {
       if (error) {
         console.error("Mongodump failed!");
         console.error(error);
-        return;
+        return 1;
       }
 
       ZipFolder.zipFolder(folder, zipfile, (error) => {
         if (error) {
           console.error("ZIP failed!");
           console.error(error);
-          return;
+          return 1;
         }
 
         fs.readFile(zipfile, (error, data) => {
@@ -64,10 +64,11 @@ exports.handler = (event, context) => {
               if (error) {
                 console.error("Upload to S3 failed!");
                 console.error(error);
-                return;
+                return 1;
               }
 
               console.log("Backup completed successfully!");
+              return 0;
             }
           );
         });
