@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+source .env && \
 sam deploy \
   --template-file template.yml \
   --stack-name lah-dev-db-backup \
