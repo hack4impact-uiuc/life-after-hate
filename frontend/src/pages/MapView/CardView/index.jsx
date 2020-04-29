@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { mapResourceIdSelector } from "../../../redux/selectors/map";
-import { tagFilteredResourceSelector } from "../../../redux/selectors/resource";
+import { mapResourceIdSelector , tagFilteredResourceSelector } from "../../../redux/selectors/map";
+
 import ResourceCard from "../ResourceCard";
 
 import {

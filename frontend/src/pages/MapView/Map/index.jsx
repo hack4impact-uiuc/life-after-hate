@@ -5,7 +5,7 @@ import StaticMap, {
 } from "react-map-gl";
 import DeckGL from "@deck.gl/react";
 import { connect } from "react-redux";
-import { tagFilteredResourceSelector } from "../../../redux/selectors/resource";
+import { tagFilteredResourceSelector } from "../../../redux/selectors/map";
 import {
   selectMapResource,
   clearMapResource,
