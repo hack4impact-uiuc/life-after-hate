@@ -1,0 +1,22 @@
+{
+  "name": "backup",
+  "version": "1.0.0",
+  "description": "Modeule to do nightly backups of MongoDB to S3",
+  "main": "backup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.665.0",
+    "child_process": "^1.0.2",
+    "dayjs": "^1.8.25",
+    "fs": "0.0.1-security",
+    "zip-a-folder": "0.0.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hack4impact-uiuc/life-after-hate.git"
+  }
+}
