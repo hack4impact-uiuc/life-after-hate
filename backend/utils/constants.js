@@ -90,7 +90,7 @@ const DEFAULT_FILTER_OPTIONS = {
 
 const TAG_ONLY_OPTIONS = {
   shouldSort: true,
-  threshold: 0.0,
+  threshold: 0.4,
   findAllMatches: true,
   location: 0,
   distance: 100,
@@ -99,7 +99,7 @@ const TAG_ONLY_OPTIONS = {
   keys: [
     {
       name: "tags",
-      weight: 1.0,
+      weight: 0.99,
     },
   ],
 };

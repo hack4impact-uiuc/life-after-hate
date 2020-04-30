@@ -71,7 +71,9 @@ const parseGeocodingResponse = (resp) => {
 };
 
 const geocodeAddress = R.memoizeWith(R.identity, async (address) => {
-  const addressQuery = `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`;
+  const addressQuery = encodeURI(
+    `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`
+  );
   const response = await axios.get(addressQuery);
   return parseGeocodingResponse(response.data);
 });
@@ -124,12 +126,18 @@ const distanceFilter = R.curry((lat, long, radius) =>
   )
 );
 
+// Coerce to boolean
+const nullLocationFilter = R.filter(
+  (resource) =>
+    R.view(resourceLatLens, resource) && R.view(resourceLongLens, resource)
+);
 const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   if (!(lat && long && radius)) {
     // Do nothing if undefined
     return resources;
   }
   return R.pipe(
+    nullLocationFilter,
     distanceFilter(lat, long, radius),
     R.map(addDistanceField(lat, long)),
     R.sortBy(R.prop("distanceFromSearchLoc"))

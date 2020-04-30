@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-onchange */
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -7,97 +8,181 @@ import { modalEnum, resourceEnum } from "../../../utils/enums";
 import {
   editAndRefreshResource,
   addAndRefreshResource,
-  deleteAndRefreshResource
+  deleteAndRefreshResource,
 } from "../../../utils/api";
 import {
   currentResourceSelector,
-  isAddingResourceSelector
+  isAddingResourceSelector,
 } from "../../../redux/selectors/modal";
 import LAHModal from "../../Modal";
 import "../styles.scss";
 
-const ResourceModal = props => {
+const ResourceModal = ({
+  resource,
+  isAddingResource,
+  closeModal,
+  editable,
+  isOpen,
+  modalType,
+}) => {
   const { register, handleSubmit, errors } = useForm();
   const [deleteClicked, setDeleteClicked] = useState(false);
-
-  const onSubmit = data => {
-    props.isAddingResource ? handleAddResource(data) : handleEditResource(data);
+  const [groupType, setGroupType] = useState(resourceEnum.INDIVIDUAL);
+  const onSubmit = (data) => {
+    isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
 
-  const handleEditResource = async data => {
+  const handleEditResource = async (data) => {
     data.tags = data.tags
       .split(",")
-      .filter(t => t)
-      .map(tag => tag.trim());
-    await editAndRefreshResource(data, props.resource._id);
-    props.closeModal();
+      .filter((t) => t)
+      .map((tag) => tag.trim());
+    await editAndRefreshResource(data, resource._id);
+    closeModal();
   };
 
-  const handleAddResource = async data => {
+  const handleAddResource = async (data) => {
     data.tags = data.tags
       .split(",")
-      .filter(t => t)
-      .map(tag => tag.trim());
+      .filter((t) => t)
+      .map((tag) => tag.trim());
     await addAndRefreshResource(data);
-    props.closeModal();
+    closeModal();
   };
 
   const handleDeleteResource = () => {
     if (!deleteClicked) {
       return setDeleteClicked(true);
     }
-    props.closeModal();
+    closeModal();
     setDeleteClicked(false);
-    return deleteAndRefreshResource(props.resource._id);
+    return deleteAndRefreshResource(resource._id);
   };
 
-  const makeOption = option => <option>{option}</option>;
+  // If a new resource, defer to the dropdown, else defer to the resource
+  const isIndividualResource = isAddingResource
+    ? groupType === resourceEnum.INDIVIDUAL
+    : resource.type === resourceEnum.INDIVIDUAL;
+  const getIndividualResourceFields = () => (
+    <React.Fragment>
+      <label className="modal-lab">
+        <p>Skills & Qualifications</p>
+        <textarea
+          ref={register}
+          name="skills"
+          data-cy="modal-skills"
+          defaultValue={resource.skills}
+          className="modal-input-field modal-input-textarea"
+          rows="10"
+          disabled={!editable}
+        />
+      </label>
+      <label className="modal-lab">
+        <p>Volunteer Roles</p>
+        <input
+          ref={register}
+          type="text"
+          name="volunteerRoles"
+          data-cy="modal-roles"
+          defaultValue={resource.volunteerRoles}
+          className="modal-input-field"
+          disabled={!editable}
+        />
+      </label>
+      <label className="modal-lab">
+        <p>Availability</p>
+        <input
+          ref={register}
+          type="text"
+          name="availability"
+          data-cy="modal-availability"
+          defaultValue={resource.availability}
+          className="modal-input-field"
+          disabled={!editable}
+        />
+      </label>
+      <label className="modal-lab">
+        <p>Why Volunteer?</p>
+        <textarea
+          ref={register}
+          type="text"
+          name="volunteerReason"
+          data-cy="modal-volunteer-reason"
+          defaultValue={resource.volunteerReason}
+          className="modal-input-field modal-input-textarea"
+          disabled={!editable}
+        />
+      </label>
+    </React.Fragment>
+  );
 
   return (
     <div className="modal-wrap-ee">
-      {props.isOpen && props.modalType === modalEnum.RESOURCE && (
+      {isOpen && modalType === modalEnum.RESOURCE && (
         <LAHModal>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="add-edit-resource-form"
           >
             <label className="modal-lab">
-              <p>Resource Name</p>
-              <input
+              <p>Resource Type</p>
+              <select
                 ref={register({ required: true })}
-                type="text"
-                name="companyName"
-                defaultValue={props.resource.companyName}
-                className={`modal-input-field ${
-                  errors.companyName ? "invalid" : ""
-                }`}
-                disabled={!props.editable}
-              />
+                name="type"
+                data-cy="modal-resource-type"
+                defaultValue={resource.type}
+                rows="5"
+                className={`modal-input-field ${errors.type ? "invalid" : ""}`}
+                disabled={!isAddingResource}
+                onChange={(e) => setGroupType(e.target.value)}
+              >
+                <option>{resourceEnum.INDIVIDUAL}</option>
+                <option>{resourceEnum.GROUP}</option>
+              </select>
             </label>
+
+            {!isIndividualResource && (
+              <label className="modal-lab">
+                <p>Company Name</p>
+                <input
+                  ref={register({ required: true })}
+                  type="text"
+                  name="companyName"
+                  data-cy="modal-company-name"
+                  defaultValue={resource.companyName}
+                  className={`modal-input-field ${
+                    errors.contactName ? "invalid" : ""
+                  }`}
+                  disabled={!editable}
+                />
+              </label>
+            )}
             <label className="modal-lab">
               <p>Contact Name</p>
               <input
                 ref={register({ required: true })}
                 type="text"
                 name="contactName"
-                defaultValue={props.resource.contactName}
+                data-cy="modal-contact-name"
+                defaultValue={resource.contactName}
                 className={`modal-input-field ${
                   errors.contactName ? "invalid" : ""
                 }`}
-                disabled={!props.editable}
+                disabled={!editable}
               />
             </label>
             <label className="modal-lab">
               <p>Contact Phone</p>
               <input
-                ref={register({ required: true })}
+                ref={register}
                 type="text"
                 name="contactPhone"
-                defaultValue={props.resource.contactPhone}
+                data-cy="modal-contact-phone"
+                defaultValue={resource.contactPhone}
                 className={`modal-input-field ${
                   errors.contactPhone ? "invalid" : ""
                 }`}
-                disabled={!props.editable}
+                disabled={!editable}
               />
             </label>
             <label className="modal-lab">
@@ -106,88 +191,83 @@ const ResourceModal = props => {
                 ref={register({ required: true })}
                 type="text"
                 name="contactEmail"
-                defaultValue={props.resource.contactEmail}
+                data-cy="modal-contact-email"
+                defaultValue={resource.contactEmail}
                 className={`modal-input-field ${
                   errors.contactEmail ? "invalid" : ""
                 }`}
-                disabled={!props.editable}
+                disabled={!editable}
               />
             </label>
-            <label className="modal-lab">
-              <p>Description</p>
-              <textarea
-                ref={register({ required: true })}
-                name="description"
-                defaultValue={props.resource.description}
-                className={`modal-input-field modal-input-textarea ${
-                  errors.description ? "invalid" : ""
-                }`}
-                rows="10"
-                disabled={!props.editable}
-              />
-            </label>
+            {isIndividualResource ? (
+              getIndividualResourceFields()
+            ) : (
+              <label className="modal-lab">
+                <p>Description</p>
+                <textarea
+                  ref={register}
+                  name="description"
+                  data-cy="modal-description"
+                  defaultValue={resource.description}
+                  rows="5"
+                  className={`modal-input-field modal-input-textarea ${
+                    errors.description ? "invalid" : ""
+                  }`}
+                  disabled={!editable}
+                />
+              </label>
+            )}
+
             <label className="modal-lab">
               <p>Tags</p>
               <input
                 ref={register}
                 name="tags"
-                defaultValue={
-                  props.isAddingResource ? "" : props.resource.tags.join(", ")
-                }
+                data-cy="modal-tags"
+                defaultValue={isAddingResource ? "" : resource.tags.join(", ")}
                 className={`modal-input-field ${errors.tags && "invalid"}`}
-                disabled={!props.editable}
+                disabled={!editable}
               />
-            </label>
-            <label className="modal-lab">
-              <p>Type</p>
-              <select
-                ref={register}
-                name="type"
-                defaultValue={props.resource.type}
-                className="modal-select-field"
-                disabled={!props.editable}
-              >
-                {Object.values(resourceEnum).map(
-                  makeOption
-                ) /* Enum to options */}
-              </select>
             </label>
             <label className="modal-lab">
               <p>Address</p>
               <input
                 ref={register({ required: true })}
                 name="address"
+                data-cy="modal-address"
                 type="text"
-                defaultValue={props.resource.address}
+                defaultValue={resource.address}
                 className={`modal-input-field ${errors.address && "invalid"}`}
-                disabled={!props.editable}
+                disabled={!editable}
               />
             </label>
+
             <label className="modal-lab">
               <p>Notes</p>
               <textarea
-                ref={register({ required: true })}
+                ref={register}
                 name="notes"
-                defaultValue={props.resource.notes}
+                data-cy="modal-notes"
+                defaultValue={resource.notes}
                 rows="5"
-                className={`modal-input-field modal-input-textarea ${
-                  errors.notes ? "invalid" : ""
-                }`}
-                disabled={!props.editable}
+                className="modal-input-field modal-input-textarea"
+                disabled={!editable}
               />
             </label>
-            {props.editable && (
+            {editable && (
               <div>
                 <Button id="submit-form-button" type="submit">
                   Save
                 </Button>
-                <Button
-                  id="delete-form-button"
-                  onClick={handleDeleteResource}
-                  onBlur={() => setDeleteClicked(false)}
-                >
-                  {deleteClicked ? "Confirm" : "Delete"}
-                </Button>
+                {!isAddingResource && (
+                  <Button
+                    id="delete-form-button"
+                    onClick={handleDeleteResource}
+                    onBlur={() => setDeleteClicked(false)}
+                  >
+                    {deleteClicked ? "Confirm" : "Delete"}
+                  </Button>
+                )}
               </div>
             )}
           </form>
@@ -197,20 +277,17 @@ const ResourceModal = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isOpen: state.modal.isOpen,
   resource: currentResourceSelector(state),
   isAddingResource: isAddingResourceSelector(state),
   editable: state.modal.editable,
-  modalType: state.modal.modalType
+  modalType: state.modal.modalType,
 });
 
 const mapDispatchToProps = {
   openModal,
-  closeModal
+  closeModal,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResourceModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ResourceModal);

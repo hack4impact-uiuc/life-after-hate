@@ -42,7 +42,7 @@ const sampleResourceInfo2 = {
     coordinates: [40, 40],
   },
   tags: ["social"],
-  type: resourceEnum.INDIVIDUAL,
+  type: resourceEnum.GROUP,
 };
 
 const sampleResourceInfo3 = {
@@ -56,7 +56,7 @@ const sampleResourceInfo3 = {
     coordinates: [40, 40],
   },
   tags: ["social"],
-  type: resourceEnum.INDIVIDUAL,
+  type: resourceEnum.GROUP,
 };
 
 const createSampleResource = async (resourceInfo = sampleResourceInfo) => {
@@ -84,7 +84,7 @@ describe("GET /resources", () => {
     await createSampleResource();
     const res = await request(app).get(`/api/resources`).expect(200);
     expect(res.body.result).to.have.lengthOf(1);
-    expect(Object.keys(res.body.result[0])).to.have.lengthOf(12);
+    expect(Object.keys(res.body.result[0])).to.have.lengthOf(13);
     expect(didCheckIsVolunteer()).to.be.true;
   });
 });
@@ -167,6 +167,7 @@ describe("PUT /resources", () => {
       companyName: "new name",
       contactName: "new contact",
       description: "new description",
+      type: "GROUP",
     };
 
     const stub = sinon.stub(resourceUtils, "geocodeAddress").callsFake(() => ({
@@ -183,7 +184,6 @@ describe("PUT /resources", () => {
       .put(`/api/resources/${resourceId}`)
       .send(newData)
       .expect(200);
-
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
     expect(didCheckIsAdmin()).to.be.true;

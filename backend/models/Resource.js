@@ -1,5 +1,6 @@
 /** Schema representing a LAH resource
  */
+
 const mongoose = require("mongoose");
 
 const resourceEnum = {
@@ -7,31 +8,30 @@ const resourceEnum = {
   INDIVIDUAL: "INDIVIDUAL",
 };
 
-const Resource = new mongoose.Schema({
-  companyName: { type: String, default: "" },
-  contactName: { type: String, required: true },
-  contactPhone: { type: String, default: "" },
-  contactEmail: { type: String, default: "" },
-  description: { type: String, default: "" },
-  address: {
-    streetAddress: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    postalCode: { type: String, required: true },
-  },
-  location: {
-    type: { type: String, default: "Point" },
-    coordinates: { type: Array, default: [] },
-  },
-  federalRegion: { type: Number, default: 0 },
-  notes: { type: String },
-  tags: { type: Array, default: [] },
-  type: {
-    type: String,
-    enum: [resourceEnum.GROUP, resourceEnum.INDIVIDUAL],
-    default: resourceEnum.GROUP,
-  },
-});
+const options = { discriminatorKey: "type", collection: "resources" };
 
-module.exports = mongoose.model("Resource", Resource);
+const Resource = new mongoose.Schema(
+  {
+    contactName: { type: String, required: true },
+    contactPhone: { type: String, default: "" },
+    contactEmail: { type: String, default: "" },
+    address: {
+      streetAddress: { type: String, default: "" },
+      city: { type: String, default: "" },
+      state: { type: String, default: "" },
+      postalCode: { type: String, default: "" },
+    },
+    location: {
+      type: { type: String, default: "Point" },
+      coordinates: { type: Array, default: [] },
+    },
+    dateCreated: { type: Date, default: Date.now },
+    federalRegion: { type: Number, default: 0 },
+    notes: { type: String },
+    tags: { type: Array, default: [] },
+  },
+  options
+);
+
+module.exports = mongoose.model("BaseResource", Resource);
 module.exports.resourceEnum = resourceEnum;
