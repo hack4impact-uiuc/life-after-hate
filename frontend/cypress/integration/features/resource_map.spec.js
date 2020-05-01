@@ -65,10 +65,7 @@ context("Resource Map", () => {
   it("Search by only location works as intended", () => {
     cy.get("#locationInput").type("Chicago");
     cy.get(".submitSearch").click();
-    cy.get(".card-title")
-      .should("have.length.gt", 1)
-      .first()
-      .should("have.text", "Fairway Inn");
+    cy.get(".card-title").first().should("have.text", "Fairway Inn");
     cy.get(".card-distance")
       .should("have.length.gt", 1)
       .and("be.visible")
@@ -114,11 +111,12 @@ context("Resource Map", () => {
       .should("be.visible")
       .and("have.text", "Edit Resource");
     // Check that the words match up with what was clicked
-    cy.get(".modal-input-field")
-      .first()
-      .should("contain.value", "Best Western Old Mill Inn");
+    cy.get("[data-cy=modal-company-name]").should(
+      "contain.value",
+      "Best Western Old Mill Inn"
+    );
     // Test that it's editable
-    cy.get(".modal-input-field").first().type("Hello world!");
+    cy.get("[data-cy=modal-company-name]").type("Hello world!");
     cy.get(".close-button").click();
     // Ensure the popup is still open
     cy.get("[data-cy=popup-title]")
@@ -141,20 +139,17 @@ context("Resource Map", () => {
     cy.get("[data-cy=card-resource-edit-btn]").first().click();
 
     // Clear name field
-    cy.get(".modal-input-field").first().clear();
+    cy.get("[data-cy=modal-contact-name]").clear();
     // Clear email field
-    cy.get(".modal-input-field").eq(3).clear();
-    // Clear description field
-    cy.get(".modal-input-field").eq(4).clear();
+    cy.get("[data-cy=modal-contact-name]").clear();
     cy.get("#submit-form-button").click();
 
     // Make sure they all have invalid class
-    cy.get(".modal-input-field")
+    cy.get("[data-cy=modal-contact-name]")
       .first()
       .should("have.class", "invalid")
       .and("be.visible");
-    cy.get(".modal-input-field").eq(3).should("have.class", "invalid");
-    cy.get(".modal-input-field").eq(4).should("have.class", "invalid");
+    cy.get("[data-cy=modal-contact-name]").should("have.class", "invalid");
 
     // Make sure that hitting delete will show confirm
 
@@ -176,7 +171,7 @@ context("Resource Map", () => {
       .should("be.visible")
       .and("have.text", "Edit Resource");
 
-    cy.get(".modal-input-field").first().type("Hello world!");
+    cy.get("[data-cy=modal-contact-name]").type("Hello world!");
     cy.get(".close-button").click();
     // Ensure the popup is still open
     cy.get("[data-cy=popup-title]")

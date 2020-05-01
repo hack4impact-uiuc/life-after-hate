@@ -1,26 +1,16 @@
+/* eslint-disable no-unused-vars */
 // run `node utils/volunteer-sheet-parser.js <insert_spreadsheet_path>` from the `/backend` folder
 
 const XLSX = require("xlsx");
 const extractor = require("keyword-extractor");
 const resourceUtils = require("./resource-utils");
-const Resource = require("../models/Resource");
+const IndividualResource = require("../models/IndividualResource");
 const mongoose = require("mongoose");
 
 mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 });
-
-const formatNotes = ({
-  "Form Received": formReceived,
-  Availability: availability,
-  "How did you hear about LAH?": refer,
-  "Volunteer Roles": roles,
-}) =>
-  `Form Received: ${formReceived}\n\n` +
-  `Availability: ${availability}\n\n` +
-  `How they heard about LAH: ${refer}\n\n` +
-  `Volunteer Roles: ${roles}\n\n`;
 
 const createTags = ({
   "18 or Older?": eighteen,
@@ -30,17 +20,25 @@ const createTags = ({
   "Willing to travel?": travel,
 }) => [
   eighteen === "Yes" ? "18+" : null,
-  mentalHealth === "Yes" ? "Mental Health" : null,
-  travel === "Yes" ? "Able to travel" : null,
-  ...extractor.extract(`${skills} ${roles}`, {
-    language: "english",
-    remove_digits: true,
-    return_changed_case: true,
-    remove_duplicates: true,
-  }),
+  mentalHealth === "Yes" ? "Mental Health Certified" : null,
+  travel === "Yes" ? "Can Travel" : null,
+  // ...extractor.extract(`${skills} ${roles}`, {
+  //   language: "english",
+  //   remove_digits: true,
+  //   return_changed_case: true,
+  //   remove_duplicates: true,
+  // }),
 ];
 
 const getLocation = async (mailingAddress) => {
+  if (!mailingAddress) {
+    return {
+      location: {
+        coordinates: [null, null],
+      },
+      federalRegion: -1,
+    };
+  }
   try {
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       mailingAddress
@@ -54,16 +52,23 @@ const getLocation = async (mailingAddress) => {
     };
   } catch (err) {
     console.log(mailingAddress);
+    console.log(err);
     throw "Bad address";
-    // return {};
   }
 };
 
+const formatDate = (date) => new Date(date);
+
 const convertSchema = async (entry) => ({
   contactName: `${entry["First Name"]} ${entry["Last Name"]}`,
+  dateCreated: formatDate(entry["Form Received"]),
   contactEmail: entry["Email Address"],
-  description: entry["Skills, Qualifications, Current Occupation"],
-  notes: formatNotes(entry),
+  skills: entry["Skills, Qualifications, Current Occupation"],
+  availability: entry["Availability"],
+  volunteerRoles: entry["Volunteer Roles"],
+  volunteerReason: entry["Why would you like to volunteer with us?"],
+  howDiscovered: entry["How did you hear about Life After Hate?"],
+  notes: "",
   tags: createTags(entry).filter((tag) => tag !== null),
   ...(await getLocation(entry["Mailing Address"])),
 });
@@ -78,9 +83,14 @@ const main = async () => {
   );
   try {
     const mongoData = await Promise.all(json.map(convertSchema));
-    await Resource.collection.insert(mongoData);
+    const resources = mongoData.map(
+      (resource) => new IndividualResource(resource)
+    );
+    await Promise.all(resources.map((r) => r.save()));
   } catch (err) {
     console.log(err);
+  } finally {
+    mongoose.connection.close();
   }
 };
 

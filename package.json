@@ -4,7 +4,7 @@
   "description": "Package with the development tools for LAH (such as Prettier and Husky). Please see the individual frontend and backend sub-packages for the actual dependencies.",
   "main": "index.js",
   "dependencies": {
-    "@cypress/code-coverage": "^3.6.0",
+    "@cypress/code-coverage": "^3.7.0",
     "@cypress/commit-info": "^2.2.0",
     "chai": "^4.2.0",
     "colors": "^1.4.0",
@@ -21,11 +21,11 @@
   "devDependencies": {
     "@h4iuiuc/eslint-plugin": "^1.1.8",
     "@typescript-eslint/parser": "^2.30.0",
-    "cypress": "^4.4.1",
+    "cypress": "^4.5.0",
     "eslint": "^6.8.0",
     "eslint-plugin-cypress": "^2.10.3",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.0",
+    "lint-staged": "^10.2.2",
     "prettier": "^2.0.5",
     "typescript": "^3.8.3"
   },

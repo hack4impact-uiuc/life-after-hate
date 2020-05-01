@@ -1,7 +1,8 @@
 const fetch = require("node-fetch");
 const mongoose = require("mongoose");
 const colors = require("colors");
-const Resource = require("../models/Resource");
+const IndividualResource = require("../models/IndividualResource");
+const GroupResource = require("../models/GroupResource");
 const User = require("../models/User");
 const fs = require("fs");
 
@@ -33,8 +34,27 @@ const fetchJson = async (jsonLink) => {
 
 const fetchFromFile = (path) => JSON.parse(fs.readFileSync(path, "utf-8"));
 
+const addMockIndividualResources = async () => {
+  const names = ["Alan Fang", "Josh B."];
+  names.map((name) =>
+    new IndividualResource({
+      contactName: name,
+      contactEmail: "email@test.com",
+      availability: "My availability is...[insert availability]",
+      volunteerReason: "My reason for joining is...[insert reason]",
+      skills: "My skillset includes...[insert skillset]",
+      howDiscovered: "Discovered LAH through...[insert reason]",
+      address: "Champaign, IL",
+      location: { coordinates: [-90, 40] },
+    }).save()
+  );
+  await Promise.all(names);
+};
 const addSampleResource = (resource) => {
-  const newResource = new Resource(resource);
+  // Convert what was an group resource to an individual resource for sake of testing out the app
+  // TODO: Mix up individual and group resources
+  const newResource = new GroupResource(resource);
+
   return newResource.save();
 };
 
@@ -50,7 +70,8 @@ const main = async () => {
   await createConnection();
   try {
     console.log(colors.green("Clearing all existing resource data..."));
-    await Resource.deleteMany({});
+    await IndividualResource.deleteMany({});
+    await GroupResource.deleteMany({});
     await User.deleteMany({});
     const data = shouldUseLoremData
       ? await fetchJson(JSON_LINK_RESOURCES)
@@ -59,11 +80,12 @@ const main = async () => {
     const resources = resourceCountLimit
       ? data.slice(0, parseInt(args[0])).map(addSampleResource)
       : data.map(addSampleResource);
+    await addMockIndividualResources();
     const users = userData.map(addSampleUser);
     console.log(colors.green("Saving mock data in DB..."));
     await Promise.all(resources);
     console.log(
-      colors.green(`Added ${resources.length} mock resources to DB!`)
+      colors.green(`Added ${resources.length + 2} mock resources to DB!`)
     );
     await Promise.all(users);
     console.log(colors.green(`Added ${users.length} mock users to DB!`));

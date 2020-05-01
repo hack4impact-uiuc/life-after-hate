@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { resourceSelector } from "./resource";
-
+import { tagSelector } from "./tags";
 // Gets the ID of the selected resource for the map
 export const mapResourceIdSelector = (state) => state.map.selectedId;
 
@@ -13,4 +13,24 @@ export const currentResourceSelector = createSelector(
     }
     return resources.find((resource) => resource._id === id);
   }
+);
+
+export const tagFilteredResourceSelector = createSelector(
+  [tagSelector, resourceSelector],
+  (tags, resources) => {
+    if (!resources) {
+      return [];
+    }
+    const tagMatch = (resource) => tags.every((t) => resource.tags.includes(t));
+    return resources.filter(tagMatch);
+  }
+);
+
+// Filter out resources that don't have a location
+export const mappableResourceSelector = createSelector(
+  [tagFilteredResourceSelector],
+  (resources) =>
+    resources.filter(
+      (r) => r.location.coordinates[0] && r.location.coordinates[1]
+    )
 );

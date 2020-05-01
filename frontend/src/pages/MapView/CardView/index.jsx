@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { tagFilteredResourceSelector } from "../../../redux/selectors/resource";
+import { mapResourceIdSelector , tagFilteredResourceSelector } from "../../../redux/selectors/map";
+
 import ResourceCard from "../ResourceCard";
-import { mapResourceIdSelector } from "../../../redux/selectors/map";
+
 import {
   CellMeasurer,
   List,
@@ -25,21 +26,15 @@ class CardView extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.selectedResource) {
-      const prevResourceIdx = this.props.resources.findIndex(
-        (r) => r._id === prevProps.selectedResource
-      );
-      cache.clear(prevResourceIdx, 0);
+  componentDidUpdate() {
+    cache.clearAll();
+    if (this.list) {
       this.list.recomputeRowHeights();
-      console.log("CLEARED");
     }
     if (this.props.selectedResource) {
       const currResourceIdx = this.props.resources.findIndex(
         (r) => r._id === this.props.selectedResource
       );
-      cache.clear(currResourceIdx, 0);
-      this.list.recomputeRowHeights();
       const firstOffset = this.list.getOffsetForRow({
         alignment: "start",
         index: currResourceIdx,

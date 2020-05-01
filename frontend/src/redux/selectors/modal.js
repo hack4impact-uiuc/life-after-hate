@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { resourceSelector } from "./resource";
 import { userSelector } from "./users";
-import { modalEnum } from "../../utils/enums";
+import { modalEnum, resourceEnum } from "../../utils/enums";
 
 // Gets the ID of the selected resource/user for the modal to display
 export const modalResourceIdSelector = (state) => state.modal.resourceId;
@@ -44,7 +44,9 @@ export const titleSelector = createSelector(
       }
       if (!editable) {
         // View only, so just return the name
-        return resource.companyName;
+        return resource.type === resourceEnum.INDIVIDUAL
+          ? resource.contactName
+          : resource.companyName;
       }
       return "Edit Resource";
     } else if (modalType === modalEnum.USER) {
