@@ -5,6 +5,7 @@ const { celebrate, Joi } = require("celebrate");
 const extractor = require("keyword-extractor");
 Joi.objectId = require("joi-objectid")(Joi);
 
+const beeline = require("honeycomb-beeline");
 const IndividualResource = require("../../models/IndividualResource");
 const GroupResource = require("../../models/GroupResource");
 const Resource = require("../../models/Resource");
@@ -75,8 +76,9 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const { radius, address, keyword, customWeights, tag } = req.query;
+    const span = beeline.startSpan({ name: "Resource Fetch" });
     let resources = await Resource.find({}).lean();
-
+    beeline.finishSpan(span);
     const { lat, lng } = address
       ? await resourceUtils.geocodeAddress(address)
       : {};

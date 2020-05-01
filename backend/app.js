@@ -1,4 +1,12 @@
 require("dotenv").config();
+const beeline = require("honeycomb-beeline");
+beeline({
+  writeKey: process.env.BEELINE_KEY,
+  dataset: "LAH",
+  serviceName: "my-app-name",
+  // ... additional optional configuration ...
+});
+
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
