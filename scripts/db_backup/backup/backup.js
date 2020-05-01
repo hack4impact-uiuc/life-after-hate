@@ -1,5 +1,3 @@
-"use strict";
-
 const exec = require("child_process").exec;
 const AWS = require("aws-sdk");
 const fs = require("fs");
@@ -15,12 +13,10 @@ exports.handler = (event, context) => {
   console.log(`Backup triggered by event: ${event} with context: ${context}.`);
 
   if (!mongoUri) {
-    console.error("Did not receieve the MongoDB URI!");
-    return 1;
+    throw new Error("Did not receieve the MongoDB URI!");
   }
   if (!s3Bucket) {
-    console.error("Could not create the S3 bucket!");
-    return 1;
+    throw new Error("Could not create the S3 bucket!");
   }
 
   console.log(
@@ -35,22 +31,19 @@ exports.handler = (event, context) => {
   exec("rm -rf /tmp/*", (error) => {
     if (error) {
       console.error("Could not clear /tmp directory!");
-      console.error(error);
-      return 1;
+      throw new Error(error);
     }
 
     exec(`./mongodump --uri=${mongoUri} --out=${folder}`, (error) => {
       if (error) {
         console.error("Mongodump failed!");
-        console.error(error);
-        return 1;
+        throw new Error(error);
       }
 
       ZipFolder.zipFolder(folder, zipfile, (error) => {
         if (error) {
           console.error("ZIP failed!");
-          console.error(error);
-          return 1;
+          throw new Error(error);
         }
 
         fs.readFile(zipfile, (error, data) => {
@@ -63,12 +56,10 @@ exports.handler = (event, context) => {
             (error) => {
               if (error) {
                 console.error("Upload to S3 failed!");
-                console.error(error);
-                return 1;
+                throw new Error(error);
               }
 
               console.log("Backup completed successfully!");
-              return 0;
             }
           );
         });

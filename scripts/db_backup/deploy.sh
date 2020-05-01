@@ -7,4 +7,5 @@ sam deploy \
   --s3-bucket ${CLOUDFORMATION_BUCKET} \
   --parameter-overrides \
     S3Bucket=${MONGODB_BACKUP_BUCKET} \
-    MongoURI=${MONGODB_GLOBAL_URI}
+    MongoURI=${MONGODB_GLOBAL_URI} \
+    EmailAddress=${NOTIFICATION_EMAIL_ADDRESS}
