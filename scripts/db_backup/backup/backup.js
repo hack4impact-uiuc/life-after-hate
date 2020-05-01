@@ -34,7 +34,7 @@ exports.handler = (event, context) => {
       throw new Error(error);
     }
 
-    exec(`./mongodump --uri=${mongoUri} --out=${folder}`, (error) => {
+    exec(`./mongodump --gzip --uri=${mongoUri} --out=${folder}`, (error) => {
       if (error) {
         console.error("Mongodump failed!");
         throw new Error(error);
