@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "regions": ["cle1"],
+  "regions": ["iad1"],
   "name": "life-after-hate",
   "alias": "lah.now.sh",
   "builds": [
