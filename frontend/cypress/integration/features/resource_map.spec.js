@@ -3,7 +3,6 @@
 
 // Though waits are almost always discouraged, we have no choice but to wait
 // For the click event listener to attach to the map view pins
-const WAIT_DURATION = 800;
 
 context("Resource Map", () => {
   beforeEach(() => {
@@ -65,7 +64,7 @@ context("Resource Map", () => {
   it("Search by only location works as intended", () => {
     cy.get("#locationInput").type("Chicago");
     cy.get(".submitSearch").click();
-    cy.get(".card-title").first().should("have.text", "Fairway Inn");
+    cy.get(".card-title:first").should("have.text", "Fairway Inn");
     cy.get(".card-distance")
       .should("have.length.gt", 1)
       .and("be.visible")
@@ -79,30 +78,11 @@ context("Resource Map", () => {
       .and("have.text", "86 miles away");
   });
 
-  it("Popup functionality works as expected", () => {
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
-    cy.get("[data-cy=popup-title]")
-      .should("contain.text", "Best Western Old Mill Inn")
-      .and("be.visible");
-    cy.get(".mapboxgl-popup-close-button").click();
-    cy.get("[data-cy=popup-title]").should("not.be.visible");
-  });
+  it("View/edit modals behave differently", () => {
+    cy.get("#searchInput").type("Fairway Inn");
+    cy.get(".submitSearch").click();
 
-  it("Different popups when clicking between resources", () => {
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
-    cy.get("[data-cy=popup-title]").should(
-      "contain.text",
-      "Best Western Old Mill Inn"
-    );
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(625, 347);
-    cy.get("[data-cy=popup-title]").should(
-      "not.contain.text",
-      "Best Western Old Mill Inn"
-    );
-  });
-
-  it("Should show view/edit modals correctly on expanding popup", () => {
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
+    cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
     // Click the edit resource button
     cy.get(".expanded > .card-action > [data-cy=card-resource-edit-btn]")
       .should("be.visible")
@@ -110,17 +90,14 @@ context("Resource Map", () => {
     cy.get(".modal-title")
       .should("be.visible")
       .and("have.text", "Edit Resource");
-    // Check that the words match up with what was clicked
-    cy.get("[data-cy=modal-company-name]").should(
-      "contain.value",
-      "Best Western Old Mill Inn"
-    );
     // Test that it's editable
     cy.get("[data-cy=modal-company-name]").type("Hello world!");
+    cy.get("[data-cy=modal-notes]").scrollIntoView();
+    cy.get("#submit-form-button").should("be.visible");
     cy.get(".close-button").click();
     // Ensure the popup is still open
     cy.get("[data-cy=popup-title]")
-      .should("contain.text", "Best Western Old Mill Inn")
+      .should("contain.text", "Fairway Inn")
       .and("be.visible");
 
     // Test the equivalent view only button
@@ -130,6 +107,8 @@ context("Resource Map", () => {
     cy.get(".modal-title")
       .should("be.visible")
       .and("not.have.text", "Edit Resource");
+    cy.get("[data-cy=modal-notes]").scrollIntoView();
+    cy.get("#submit-form-button").should("not.be.visible");
     cy.get(".close-button").click();
   });
 
@@ -152,7 +131,6 @@ context("Resource Map", () => {
     cy.get("[data-cy=modal-contact-name]").should("have.class", "invalid");
 
     // Make sure that hitting delete will show confirm
-
     cy.get("#delete-form-button")
       .should("have.text", "Delete")
       .click()
@@ -161,8 +139,12 @@ context("Resource Map", () => {
       .should("have.text", "Delete");
   });
 
-  it("Popup button functionality should work", () => {
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
+  it("View/edit modal functionality should work when triggered by the popup", () => {
+    cy.get("#searchInput").type("Fairway Inn");
+    cy.get(".submitSearch").click();
+
+    cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
+
     // Click the edit resource button
     cy.get(".popup > .card-action > [data-cy=card-resource-edit-btn]")
       .should("be.visible")
@@ -175,7 +157,7 @@ context("Resource Map", () => {
     cy.get(".close-button").click();
     // Ensure the popup is still open
     cy.get("[data-cy=popup-title]")
-      .should("contain.text", "Best Western Old Mill Inn")
+      .should("contain.text", "Fairway Inn")
       .and("be.visible");
 
     // Test the equivalent view only button
@@ -183,11 +165,15 @@ context("Resource Map", () => {
     cy.get(".modal-title")
       .should("be.visible")
       .and("not.have.text", "Edit Resource");
+
     cy.get(".close-button").click();
   });
 
   it("Properly de-focuses resources on close", () => {
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
+    cy.get("#searchInput").type("Fairway Inn");
+    cy.get(".submitSearch").click();
+
+    cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
 
     // Make sure the popup is open
     cy.get("[data-cy=popup-title]").should("be.visible");
@@ -199,11 +185,14 @@ context("Resource Map", () => {
     cy.get("[data-cy=popup-title]").should("not.be.visible");
 
     // Try again, but this time using the popup close
-    cy.get("#view-default-view").click(536, 288);
-
+    cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
     cy.get("[data-cy=popup-title]").should("be.visible");
     cy.get(".mapboxgl-popup-close-button").should("be.visible").click();
     cy.get("[data-cy=popup-title]").should("not.be.visible");
+    // Make sure now that we closed using the popup that the sidebar no longer a the resource expanded
+    cy.get(".expanded .top-card-close > .top-close-icon").should(
+      "not.be.visible"
+    );
   });
 
   it("Opens with expand button properly", () => {
@@ -211,13 +200,5 @@ context("Resource Map", () => {
     cy.get(".modal-title").should("be.visible");
     // Should be view only modal
     cy.get(".modal-input-field").first().should("be.disabled");
-  });
-
-  it("Closes modal upon clicking away", () => {
-    cy.get("#view-default-view").wait(WAIT_DURATION).click(536, 288);
-    cy.get("[data-cy=popup-title]").should("be.visible");
-    // Click somewhere random...
-    cy.get("#view-default-view").click(900, 500);
-    cy.get("[data-cy=popup-title]").should("not.be.visible");
   });
 });

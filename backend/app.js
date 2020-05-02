@@ -3,7 +3,7 @@ const beeline = require("honeycomb-beeline");
 beeline({
   writeKey: process.env.BEELINE_KEY,
   dataset: "LAH",
-  serviceName: "my-app-name",
+  serviceName: "lah-backend",
   // ... additional optional configuration ...
 });
 
