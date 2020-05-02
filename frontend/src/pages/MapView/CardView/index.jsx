@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { mapResourceIdSelector , tagFilteredResourceSelector } from "../../../redux/selectors/map";
+import {
+  mapResourceIdSelector,
+  tagFilteredResourceSelector,
+} from "../../../redux/selectors/map";
 
 import ResourceCard from "../ResourceCard";
 
@@ -26,29 +29,44 @@ class CardView extends React.Component {
     };
   }
 
-  componentDidUpdate() {
+  getRowIdxById = (id) => this.props.resources.findIndex((r) => r._id === id);
+
+  purgeCache = () => {
     cache.clearAll();
     if (this.list) {
-      this.list.recomputeRowHeights();
+      this.list.forceUpdateGrid();
+      this.list.scrollToPosition(0);
     }
-    if (this.props.selectedResource) {
-      const currResourceIdx = this.props.resources.findIndex(
-        (r) => r._id === this.props.selectedResource
-      );
-      const firstOffset = this.list.getOffsetForRow({
-        alignment: "start",
-        index: currResourceIdx,
-      });
-      this.list.scrollToPosition(firstOffset);
-      setTimeout(() => {
-        console.log(this.list.Grid);
-        this.list.scrollToPosition(
-          this.list.getOffsetForRow({
-            alignment: "start",
-            index: currResourceIdx,
-          })
-        );
-      }, 500);
+  };
+
+  componentDidMount() {
+    this.purgeCache();
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log("Component did update being called");
+    const {
+      resources: currResourceList,
+      selectedResource: currSelectedResource,
+    } = this.props;
+    const {
+      resources: prevResourceList,
+      selectedResource: prevSelectedResource,
+    } = prevProps;
+
+    if (prevResourceList !== currResourceList) {
+      // Purge the cache and scroll to the top now that we've received a new list of resources
+      this.purgeCache();
+    }
+
+    if (prevSelectedResource !== currSelectedResource) {
+      const currResourceIdx = this.getRowIdxById(currSelectedResource);
+      const oldResourceIdx = this.getRowIdxById(prevSelectedResource);
+
+      cache.clear(currResourceIdx);
+      cache.clear(oldResourceIdx);
+
+      this.list.recomputeRowHeights(0);
     }
   }
 
@@ -83,8 +101,9 @@ class CardView extends React.Component {
   }
 
   render() {
+    const { resources } = this.props;
     return (
-      this.props.resources.length > 0 && (
+      resources.length > 0 && (
         <div className="card-content">
           <AutoSizer>
             {({ height, width }) => (
@@ -97,7 +116,7 @@ class CardView extends React.Component {
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
                 rowRenderer={this.rowRenderer.bind(this)}
-                rowCount={this.props.resources.length}
+                rowCount={resources.length}
               />
             )}
           </AutoSizer>
