@@ -201,4 +201,30 @@ context("Resource Map", () => {
     // Should be view only modal
     cy.get(".modal-input-field").first().should("be.disabled");
   });
+
+  it("Tag filtering test", () => {
+    cy.get("#searchInput").type("Fairway Inn");
+    cy.get(".submitSearch").click();
+    cy.get(".card-title:first").should("have.text", "Fairway Inn");
+
+    cy.get(".card-tag-search").should("have.length", 0);
+    cy.get(".card-tag").each(($el) => {
+      cy.wrap($el).click({ force: true });
+    });
+
+    // Tags in search should be length 3
+    cy.get(".card-tag-search").should("have.length", 3);
+    // Only one card there
+    cy.get(".card-title").should("have.length", 1);
+
+    // // Should persist across search, however this time eliminating tags should bring back resources
+    cy.get("#searchInput").clear();
+    cy.get(".submitSearch").click();
+    cy.get(".card-tag-search").should("have.length", 3);
+    cy.get(".card-title").should("have.text", "Fairway Inn");
+    cy.get(".close-tag").each(($el) => {
+      cy.wrap($el).click();
+    });
+    cy.get(".card-tag-search").should("have.length", 0);
+  });
 });
