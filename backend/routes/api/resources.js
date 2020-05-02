@@ -4,7 +4,6 @@ const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");
 const extractor = require("keyword-extractor");
 Joi.objectId = require("joi-objectid")(Joi);
-
 const beeline = require("honeycomb-beeline");
 const IndividualResource = require("../../models/IndividualResource");
 const GroupResource = require("../../models/GroupResource");
@@ -52,7 +51,9 @@ router.get(
   "/",
   requireVolunteerStatus,
   errorWrap(async (req, res) => {
+    const span = beeline.startSpan({ name: "Resource Fetch" });
     const resources = await Resource.find({}).lean();
+    beeline.finishSpan(span);
     res.json({
       code: 200,
       result: resources.map(concatAddress),
@@ -76,7 +77,7 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const { radius, address, keyword, customWeights, tag } = req.query;
-    const span = beeline.startSpan({ name: "Resource Fetch" });
+    let span = beeline.startSpan({ name: "Resource Fetch" });
     let resources = await Resource.find({}).lean();
     beeline.finishSpan(span);
     const { lat, lng } = address
@@ -88,11 +89,13 @@ router.get(
       ? { ...DEFAULT_FILTER_OPTIONS, keys: customWeights }
       : DEFAULT_FILTER_OPTIONS;
 
+    span = beeline.startSpan({ name: "Resource Filtering Computation" });
     resources = R.pipe(
       filterResourcesWithinRadius(lat, lng, radius),
       filterByOptions(filterOptions)(keyword),
       filterByOptions(TAG_ONLY_OPTIONS)(tag)
     )(resources);
+    beeline.finishSpan(span);
 
     res.json({
       code: 200,
@@ -117,9 +120,11 @@ router.post(
       remove_duplicates: true,
     });
 
+    const span = beeline.startSpan({ name: "Resource Create" });
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       data.address
     );
+    beeline.finishSpan(span);
 
     data = R.pipe(
       R.set(resourceLatLens, lat),
@@ -154,7 +159,9 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
+    const span = beeline.startSpan({ name: "Resource Fetch" });
     const resource = await Resource.findById(resourceId);
+    beeline.finishSpan(span);
     res.json({
       code: 200,
       result: concatAddress(resource),
@@ -177,9 +184,11 @@ router.put(
     let data = { ...req.body };
     const resourceId = req.params.resource_id;
 
+    let span = beeline.startSpan({ name: "Geocode Address" });
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       data.address
     );
+    beeline.finishSpan(span);
 
     data = R.pipe(
       R.set(resourceLatLens, lat),
@@ -192,11 +201,13 @@ router.put(
       data.type === resourceEnum.INDIVIDUAL
         ? IndividualResource
         : GroupResource;
+    span = beeline.startSpan({ name: "Resource Update" });
     const resource = await resourceType.findByIdAndUpdate(
       resourceId,
       { $set: data },
       { new: true }
     );
+    beeline.finishSpan(span);
 
     const ret = resource
       ? {
@@ -224,7 +235,9 @@ router.delete(
   }),
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
+    const span = beeline.startSpan({ name: "Resource Delete" });
     const resource = await Resource.findByIdAndRemove(resourceId);
+    beeline.finishSpan(span);
     const ret = resource
       ? {
           code: 200,

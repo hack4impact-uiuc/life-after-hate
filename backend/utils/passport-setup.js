@@ -2,7 +2,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const passport = require("passport");
 const User = require("../models/User");
 const { roleEnum } = require("../models/User");
-
+const beeline = require("honeycomb-beeline");
 const DEFAULTROLE = roleEnum.PENDING;
 const DEFAULTLOC = "NORTH";
 
@@ -11,10 +11,12 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
+  const span = beeline.startSpan({ name: "Deserialize User Query" });
   // Find in DB and return user
   User.findById(id, function (err, user) {
+    beeline.finishSpan(span);
     if (err) {
-      console.log("err");
+      console.error("err");
       done(err);
     }
     done(null, user);
@@ -30,6 +32,7 @@ passport.use(
     },
     function (accessToken, refreshToken, profile, cb) {
       // find the user in the database based on their facebook id
+      const span = beeline.startSpan({ name: "OAuth DB Fetch" });
       User.findOne({ oauthId: profile.id }, async function (err, user) {
         if (err) {
           return cb(err);
@@ -47,6 +50,7 @@ passport.use(
           location: DEFAULTLOC,
           email: profile.emails[0].value,
         }).save();
+        beeline.finishSpan(span);
 
         cb(null, newUser);
       });

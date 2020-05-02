@@ -1,4 +1,5 @@
 const express = require("express");
+const beeline = require("honeycomb-beeline");
 const { filterSensitiveInfo } = require("../../utils/user-utils");
 const router = express.Router();
 const User = require("../../models/User");
@@ -16,7 +17,9 @@ router.get(
   "/",
   requireAdminStatus,
   errorWrap(async (req, res) => {
+    const span = beeline.startSpan({ name: "User Fetch" });
     const users = await User.find({});
+    beeline.finishSpan(span);
     res.json({
       code: 200,
       result: users.map(filterSensitiveInfo),
@@ -49,7 +52,9 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const role = req.params.role.toUpperCase();
+    const span = beeline.startSpan({ name: "User Fetch" });
     const users = await User.find({ role: role });
+    beeline.finishSpan(span);
     res.json({
       code: 200,
       result: users.map(filterSensitiveInfo),
@@ -64,7 +69,9 @@ router.get(
   requireAdminStatus,
   errorWrap(async (req, res) => {
     const userId = req.params.user_id;
+    const span = beeline.startSpan({ name: "User Fetch" });
     const user = await User.findById(userId);
+    beeline.finishSpan(span);
     res.json({
       code: 200,
       result: filterSensitiveInfo(user),
@@ -91,6 +98,7 @@ router.post(
   }),
   errorWrap(async (req, res) => {
     const data = req.body;
+    const span = beeline.startSpan({ name: "User Create" });
     const newUser = new User({
       firstName: data.firstName,
       lastName: data.lastName,
@@ -102,6 +110,7 @@ router.post(
       email: data.email,
     });
     await newUser.save();
+    beeline.finishSpan(span);
     res.json({
       code: 200,
       message: "User Successfully Created",
@@ -124,11 +133,13 @@ router.patch(
     const data = req.body;
     const userId = req.params.user_id;
 
+    const span = beeline.startSpan({ name: "User Update" });
     const user = await User.findByIdAndUpdate(
       userId,
       { $set: { role: data.role, title: data.title } },
       { new: true }
     );
+    beeline.finishSpan(span);
     const ret = user
       ? {
           code: 200,
@@ -150,7 +161,9 @@ router.delete(
   requireAdminStatus,
   errorWrap(async (req, res) => {
     const userId = req.params.user_id;
+    const span = beeline.startSpan({ name: "User Delete" });
     const user = await User.findByIdAndRemove(userId);
+    beeline.finishSpan(span);
     const ret = user
       ? {
           code: 200,
