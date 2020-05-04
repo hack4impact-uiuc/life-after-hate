@@ -6,7 +6,10 @@ import "./styles.scss";
 const Pending = () => (
   <div className="pending">
     <img id="lah-logo" data-cy="logo" src={Logo} alt="LAH Logo" />
-    <p data-cy="pending">Your request is pending.</p>
+    <p data-cy="pending">
+      We have received your request to access the platform. <br /> Your request
+      is currently pending approval by a Life After Hate administrator.
+    </p>
   </div>
 );
 
