@@ -120,7 +120,7 @@ context("Directory View", () => {
   it("Can query for and delete a resource", () => {
     cy.get("#search-general").type("Best Western Dayton");
     cy.get("#search-button").click();
-    cy.get("[data-cy=card-address]").should("have.length.lt", 50);
+    cy.get("[data-cy=card-address]").should("have.length", 1);
 
     cy.get(".edit-button").click();
 
@@ -130,6 +130,8 @@ context("Directory View", () => {
       .should("have.text", "Confirm")
       .click();
 
+    // Wait until all the resources are retrieved again...
+    cy.get("[data-cy=card-address]").should("have.length.gt", 50);
     cy.get("#search-button").click();
 
     cy.get("[data-cy=card-address]").should("not.exist");
