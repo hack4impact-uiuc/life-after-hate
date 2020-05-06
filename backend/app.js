@@ -50,15 +50,19 @@ if (!isProd) {
   app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 }
 app.use(morgan("dev"));
-
-mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  bufferCommands: false,
-  bufferMaxEntries: 0,
-});
-// Silence deprecation warnings
-mongoose.set("useCreateIndex", true);
+console.time("Connection Time");
+mongoose
+  .connect(process.env.DB_URI, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    bufferCommands: false,
+    bufferMaxEntries: 0,
+    useCreateIndex: true,
+  })
+  .catch((err) => {
+    console.error(err);
+  })
+  .then(() => console.timeEnd("Connection Time"));
 console.log(
   `REACT_APP: ${process.env.REACT_APP_API_URI === "http://backend:5000/api/"}`
 );
