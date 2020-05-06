@@ -23,12 +23,20 @@
       "headers": { "cache-control": "s-maxage=31536000,immutable" },
       "dest": "frontend/static/$1"
     },
-    { "src": "/favicon.ico", "dest": "/frontend/favicon.ico" },
+    {
+      "src": "/favicon.ico",
+      "dest": "/frontend/favicon.ico",
+      "headers": { "cache-control": "s-maxage=31536000,immutable" }
+    },
     {
       "src": "/asset-manifest.json",
       "dest": "frontend/asset-manifest.json"
     },
-    { "src": "/manifest.json", "dest": "frontend/manifest.json" },
+    {
+      "src": "/manifest.json",
+      "dest": "frontend/manifest.json",
+      "headers": { "cache-control": "s-maxage=31536000,immutable" }
+    },
     {
       "src": "/precache-manifest.(.*)",
       "dest": "frontend/precache-manifest.$1"
