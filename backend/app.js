@@ -54,6 +54,8 @@ app.use(morgan("dev"));
 mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
+  bufferCommands: false,
+  bufferMaxEntries: 0,
 });
 // Silence deprecation warnings
 mongoose.set("useCreateIndex", true);
