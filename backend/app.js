@@ -59,9 +59,6 @@ mongoose
     bufferMaxEntries: 0,
     useCreateIndex: true,
   })
-  .catch((err) => {
-    console.error(err);
-  })
   .then(() => console.timeEnd("Connection Time"));
 console.log(
   `REACT_APP: ${process.env.REACT_APP_API_URI === "http://backend:5000/api/"}`
