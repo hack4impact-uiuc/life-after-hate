@@ -58,6 +58,7 @@ mongoose
     bufferCommands: false,
     bufferMaxEntries: 0,
     useCreateIndex: true,
+    socketTimeoutMS: 120000,
   })
   .then(() => console.timeEnd("Connection Time"));
 console.log(
