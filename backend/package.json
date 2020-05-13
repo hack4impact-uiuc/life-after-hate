@@ -38,7 +38,7 @@
     "helmet": "^3.22.0",
     "honeycomb-beeline": "^2.1.1",
     "joi-objectid": "^3.0.1",
-    "keyword-extractor": "0.0.18",
+    "keyword-extractor": "0.0.19",
     "mocha": "^7.1.2",
     "mongoose": "^5.9.13",
     "morgan": "^1.10.0",
