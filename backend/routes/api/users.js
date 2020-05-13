@@ -28,6 +28,16 @@ router.get(
   })
 );
 
+router.get(
+  "/test",
+  errorWrap(async (req, res) => {
+    console.log("Here");
+    const testQuery = await User.find({ role: "asdf" });
+    res.json({
+      result: testQuery,
+    });
+  })
+);
 // get current users (partial info only)
 router.get("/current", requirePendingStatus, (req, res) => {
   const user_info = req.user;

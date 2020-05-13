@@ -50,7 +50,9 @@ if (!isProd) {
   app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
 }
 app.use(morgan("dev"));
-console.time("Connection Time");
+mongoose.connection.on("connecting", () => {
+  console.log("Connecting!");
+});
 mongoose
   .connect(process.env.DB_URI, {
     useUnifiedTopology: true,
@@ -58,12 +60,13 @@ mongoose
     bufferCommands: false,
     bufferMaxEntries: 0,
     useCreateIndex: true,
-    socketTimeoutMS: 120000,
   })
-  .then(() => console.timeEnd("Connection Time"));
-console.log(
-  `REACT_APP: ${process.env.REACT_APP_API_URI === "http://backend:5000/api/"}`
-);
+  .catch((e) => console.error(e.reason.servers));
+mongoose.connection.on("disconnected", () => {
+  console.error("Disconnected!");
+});
+
+// console.log(mongoose.connection);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -96,7 +99,6 @@ if (!isProd && process.env.BYPASS_AUTH_ROLE) {
 }
 
 app.use(require("./routes"));
-
 // Error handle logging
 if (isProd) {
   app.use(errorLogger);
