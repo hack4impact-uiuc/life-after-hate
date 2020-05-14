@@ -54,6 +54,7 @@ app.use(morgan("dev"));
 mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
+  serverSelectionTimeoutMS: 2000000,
 });
 // Silence deprecation warnings
 mongoose.set("useCreateIndex", true);
