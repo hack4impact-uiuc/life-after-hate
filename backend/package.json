@@ -43,7 +43,7 @@
     "mongoose": "^5.9.14",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
-    "nodemon": "^2.0.3",
+    "nodemon": "^2.0.4",
     "nyc": "^15.0.1",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
