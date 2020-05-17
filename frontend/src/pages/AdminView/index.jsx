@@ -13,6 +13,7 @@ import "./styles.scss";
 
 const UserManager = (props) => {
   useEffect(() => {
+    document.title = "Account Management - Life After Hate";
     refreshAllUsers();
   }, []);
 
