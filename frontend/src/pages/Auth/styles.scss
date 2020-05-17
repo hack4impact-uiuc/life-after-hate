@@ -22,10 +22,10 @@
       display: block;
       margin: 20px auto;
       max-width: 75px;
-      opacity: 25%;
+      opacity: 0.25;
       transition: opacity 0.2s ease-in-out;
       &:hover {
-        opacity: 40%;
+        opacity: 0.4;
         transition: opacity 0.2s ease-in-out;
       }
     }
