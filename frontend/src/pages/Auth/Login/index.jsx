@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Logo from "../../assets/images/lah-logo-2.png";
-import Avatar from "../../assets/images/user-avatar.svg";
-import GoogleLogo from "../../assets/images/google_logo.svg";
-import { getURLForEndpoint } from "../../utils/apiHelpers.js";
+import Logo from "../../../assets/images/lah-logo-2.png";
+import Avatar from "../../../assets/images/user-avatar.svg";
+import GoogleLogo from "../../../assets/images/google_logo.svg";
+import { getURLForEndpoint } from "../../../utils/apiHelpers.js";
 
-import "./styles.scss";
+import "../styles.scss";
 import { Redirect } from "react-router-dom";
 
 const Login = (props) => {
