@@ -18,7 +18,10 @@ const Login = (props) => {
       <img id="lah-logo" src={Logo} alt="LAH Logo" />
       <div className="login-card">
         <img id="user-avatar" src={Avatar} alt="avatar" />
-        <a id="login-button" href={getURLForEndpoint("auth/login")}>
+        <a
+          className="action-button blue"
+          href={getURLForEndpoint("auth/login")}
+        >
           <img src={GoogleLogo} id="google-logo" alt="Google logo"></img>
           <span> Sign in with Google</span>
         </a>

@@ -13,7 +13,7 @@ const Pending = () => (
         Your request for access has been receieved. <br />
         An administrator will review it shortly.
       </p>
-      <button id="login-button" onClick={logout}>
+      <button className="action-button orange" onClick={logout}>
         <span>Sign Out</span>
       </button>
     </div>
