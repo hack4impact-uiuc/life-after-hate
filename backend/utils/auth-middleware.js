@@ -51,8 +51,7 @@ const mockUserMiddleware = (req, _, next) => {
     firstName: "John",
     lastName: "Doe",
     oauthId: "12345678",
-    propicUrl:
-      "https://theronmansondds.com/wp-content/uploads/2016/12/google-single-letter-logo.png",
+    propicUrl: "https://eus.wiki/images/f/f4/H4i_square_small.png",
     role: req.app.locals.mockRole,
     location: "SOUTH",
     email: "abc@def.xyz",

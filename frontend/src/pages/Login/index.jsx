@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
 
@@ -10,7 +10,10 @@ import { getURLForEndpoint } from "../../utils/apiHelpers.js";
 import "./styles.scss";
 import { Redirect } from "react-router-dom";
 
-const Login = props => {
+const Login = (props) => {
+  useEffect(() => {
+    document.title = "Login - Life After Hate";
+  }, []);
   if (props.authed) {
     return <Redirect to={{ pathname: "/" }} />;
   }
@@ -30,8 +33,8 @@ const Login = props => {
   );
 };
 
-const MapStateToProps = state => ({
-  authed: state.auth.authenticated
+const MapStateToProps = (state) => ({
+  authed: state.auth.authenticated,
 });
 
 export default connect(MapStateToProps)(Login);
