@@ -10,7 +10,7 @@ context("Navbar", () => {
 
   it("Page title is correct", () => {
     // https://on.cypress.io/title
-    cy.title().should("eq", "Life After Hate Resource Map");
+    cy.title().should("eq", "Map View - Life After Hate");
   });
 
   it("Has a navbar with 3 links", () => {
@@ -41,6 +41,7 @@ context("Navbar", () => {
       .click();
 
     cy.url().should("eq", `${Cypress.env("BASE_URI")}/directory`);
+    cy.title().should("eq", "Directory View - Life After Hate");
 
     cy.get("[data-cy=nav-links]")
       .children()
@@ -49,6 +50,7 @@ context("Navbar", () => {
       .click();
 
     cy.url().should("eq", `${Cypress.env("BASE_URI")}/users`);
+    cy.title().should("eq", "Account Management - Life After Hate");
 
     cy.get("[data-cy=nav-links]")
       .children()
@@ -57,6 +59,7 @@ context("Navbar", () => {
       .click();
 
     cy.url().should("eq", `${Cypress.env("BASE_URI")}/`);
+    cy.title().should("eq", "Map View - Life After Hate");
   });
 
   it("Clicking on the logo takes back to the map view", () => {

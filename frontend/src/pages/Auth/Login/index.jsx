@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
 import Logo from "../../../assets/images/lah-logo-2.png";
@@ -10,6 +10,9 @@ import "../styles.scss";
 import { Redirect } from "react-router-dom";
 
 const Login = (props) => {
+  useEffect(() => {
+    document.title = "Login - Life After Hate";
+  }, []);
   if (props.authed) {
     return <Redirect to={{ pathname: "/" }} />;
   }

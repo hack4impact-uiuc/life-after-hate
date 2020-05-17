@@ -104,6 +104,8 @@
   width: 19%;
   float: left;
   height: 100%;
+  // Fix floats collapsing the divs
+  min-height: 1px;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -1,22 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import CardView from "./CardView";
 import SearchBar from "./SearchBar";
 import Map from "./Map";
 import "./styles.scss";
 
-const MapView = () => (
-  <div>
-    <div className="fixed-height-container">
-      <div className="search-content">
-        <div className="search-bar">
-          <SearchBar />
+const MapView = () => {
+  useEffect(() => {
+    document.title = "Map View - Life After Hate";
+  }, []);
+
+  return (
+    <div>
+      <div className="fixed-height-container">
+        <div className="search-content">
+          <div className="search-bar">
+            <SearchBar />
+          </div>
         </div>
+        <CardView />
       </div>
-      <CardView />
+      <Map></Map>
     </div>
-    <Map></Map>
-  </div>
-);
+  );
+};
 
 export default MapView;

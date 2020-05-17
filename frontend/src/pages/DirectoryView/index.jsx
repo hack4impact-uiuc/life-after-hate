@@ -11,6 +11,8 @@ import { roleEnum } from "../../utils/enums";
 
 const ResourceManager = (props) => {
   useEffect(() => {
+    console.log("HERE");
+    document.title = "Directory View - Life After Hate";
     refreshAllResources();
   }, []);
 
