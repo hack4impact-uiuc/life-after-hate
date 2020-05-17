@@ -1,37 +1,34 @@
 import React from "react";
-import { Button } from "reactstrap";
 import { connect } from "react-redux";
 
-import Logo from "./images/lah-logo.png";
-import GoogleLogo from "./images/google-logo.png";
-import Signin from "./images/google-signin.png";
+import Logo from "../../assets/images/lah-logo-2.png";
+import Avatar from "../../assets/images/user-avatar.svg";
+import GoogleLogo from "../../assets/images/google_logo.svg";
 import { getURLForEndpoint } from "../../utils/apiHelpers.js";
 
 import "./styles.scss";
 import { Redirect } from "react-router-dom";
 
-const Login = props => {
+const Login = (props) => {
   if (props.authed) {
     return <Redirect to={{ pathname: "/" }} />;
   }
   return (
-    <div className="login">
+    <div className="login-wrapper">
       <img id="lah-logo" src={Logo} alt="LAH Logo" />
-      <img id="google-logo" src={GoogleLogo} alt="Google Logo" />
-      <p>Sign in to Life After Hate with Google</p>
-      <Button
-        className="login-button"
-        color="link"
-        href={getURLForEndpoint("auth/login")}
-      >
-        <img id="sign-in" src={Signin} alt="signin" />
-      </Button>
+      <div className="login-card">
+        <img id="user-avatar" src={Avatar} alt="avatar" />
+        <a id="login-button" href={getURLForEndpoint("auth/login")}>
+          <img src={GoogleLogo} id="google-logo" alt="Google logo"></img>
+          <span> Sign in with Google</span>
+        </a>
+      </div>
     </div>
   );
 };
 
-const MapStateToProps = state => ({
-  authed: state.auth.authenticated
+const MapStateToProps = (state) => ({
+  authed: state.auth.authenticated,
 });
 
 export default connect(MapStateToProps)(Login);
