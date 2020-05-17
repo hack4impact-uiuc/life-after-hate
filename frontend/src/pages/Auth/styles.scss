@@ -1,0 +1,76 @@
+.login-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f9f9f9;
+
+  #lah-logo {
+    width: 30em;
+  }
+  .login-card {
+    width: 30em;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    padding: 10px 10px;
+    border-radius: 0.25em;
+    #user-avatar {
+      display: block;
+      margin: 20px auto;
+      max-width: 75px;
+      opacity: 0.25;
+      transition: opacity 0.2s ease-in-out;
+      &:hover {
+        opacity: 0.4;
+        transition: opacity 0.2s ease-in-out;
+      }
+    }
+    .action-button {
+      position: relative;
+      width: 100%;
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 800;
+      padding: 0.5em 0.75em;
+      font-size: 1em;
+      line-height: 1.5;
+      border-radius: 0.25em;
+      border: 1px solid transparent;
+      color: #fff;
+    }
+
+    .blue {
+      background-color: #007bff;
+      transition: background-color 0.2s ease-in-out;
+      &:hover {
+        background-color: #0069d9;
+        transition: background-color 0.2s ease-in-out;
+      }
+    }
+    .orange {
+      background-color: rgb(239, 125, 48);
+      transition: background-color 0.2s ease-in-out;
+      &:hover {
+        background-color: #f79230;
+        transition: background-color 0.2s ease-in-out;
+      }
+    }
+    #google-logo {
+      height: 1.5em;
+      position: absolute;
+      left: 8px;
+    }
+
+    p {
+      font-family: "Roboto";
+      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: 18px;
+    }
+  }
+}

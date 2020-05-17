@@ -2,6 +2,8 @@
 
 context("Navbar", () => {
   beforeEach(() => {
+    // Since the toast hides the navigation buttons
+    Cypress.config("defaultCommandTimeout", 10000);
     cy.setRole("ADMIN");
     cy.visit(Cypress.env("BASE_URI"));
   });

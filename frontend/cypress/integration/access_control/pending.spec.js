@@ -10,9 +10,7 @@ context("Pending", () => {
   });
 
   it("Displays a pending message", () => {
-    cy.get("[data-cy=pending]")
-      .should("be.visible")
-      .and("contain.text", "pending");
+    cy.get("[data-cy=pending]").should("be.visible");
   });
 
   it("Should not have a navbar", () => {
@@ -26,13 +24,9 @@ context("Pending", () => {
   it("Visiting the URLs as a pending user shows pending", () => {
     cy.visit(`${Cypress.env("BASE_URI")}/users`);
 
-    cy.get("[data-cy=pending]")
-      .should("be.visible")
-      .and("contain.text", "pending");
+    cy.get("[data-cy=pending]").should("be.visible");
 
     cy.visit(`${Cypress.env("BASE_URI")}/directory`);
-    cy.get("[data-cy=pending]")
-      .should("be.visible")
-      .and("contain.text", "pending");
+    cy.get("[data-cy=pending]").should("be.visible");
   });
 });

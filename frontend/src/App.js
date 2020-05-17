@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import PrivateRoute from "./components/PrivateRoute";
-import Login from "./pages/Login";
+import Login from "./pages/Auth/Login";
 import MapView from "./pages/MapView";
 import DirectoryView from "./pages/DirectoryView";
 import AdminView from "./pages/AdminView";
