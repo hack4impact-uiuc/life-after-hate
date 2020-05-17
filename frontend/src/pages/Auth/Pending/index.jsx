@@ -6,10 +6,10 @@ import "../styles.scss";
 import { logout } from "../../../utils/api";
 const Pending = () => (
   <div className="login-wrapper">
-    <img id="lah-logo" src={Logo} alt="LAH Logo" />
+    <img id="lah-logo" src={Logo} alt="LAH Logo" data-cy="logo" />
     <div className="login-card">
       <img id="user-avatar" src={Check} alt="avatar" />
-      <p>
+      <p data-cy="pending">
         Your request for access has been receieved. <br />
         An administrator will review it shortly.
       </p>
