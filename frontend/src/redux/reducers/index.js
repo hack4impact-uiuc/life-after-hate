@@ -6,7 +6,7 @@ import modal from "./modal";
 import map from "./map";
 import users from "./users";
 import tags from "./tags";
-import search from "./search"
+import search from "./search";
 
 export default combineReducers({
   isLoading: loading,

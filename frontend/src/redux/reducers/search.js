@@ -1,17 +1,14 @@
-import {
-  UPDATE_SEARCH_PARAMS,
-  RESET_SEARCH,
-} from '../actions/search'
+import { UPDATE_SEARCH_PARAMS, RESET_SEARCH } from "../actions/search";
 
 const search = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_SEARCH_PARAMS:
-      return action.payload
+      return action.payload;
     case RESET_SEARCH:
-      return {}
+      return {};
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default search
+export default search;
