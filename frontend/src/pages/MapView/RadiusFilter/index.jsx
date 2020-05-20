@@ -1,28 +1,33 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux'
 import './styles.scss';
 import InputRange from 'react-input-range';
-import { updateSearchRadius } from '../../../utils/api'
+import { filterAndRefreshResource } from '../../../utils/api'
 
-const RadiusFilter = () => {
-  let [radius, setRadius] = useState(500);
-
-  const search = (newRadius) => {
-    setRadius(newRadius);
+const RadiusFilter = ({ hasCenter, search }) => {
+  let [searchRadius, updateSearchRadius] = useState(500);
+  const runSearch = (newRadius) => {
     updateSearchRadius(newRadius);
+    filterAndRefreshResource(search.keyword, search.address, search.tags, newRadius);
   }
 
   return (
-    <div className="radius-filter">
+    <div className={`radius-filter ${hasCenter ? "" : "radius-filter-hidden"}`}>
       <InputRange 
         minValue={10}
         maxValue={1000}
-        value={radius}
-        onChange={value => setRadius(value)}
-        onChangeComplete={value => search(value)}
+        value={searchRadius}
+        onChange={value => updateSearchRadius(value)}
+        onChangeComplete={value => runSearch(value)}
         formatLabel={value => `${value}mi`}
       />
     </div>
   )
 }
 
-export default RadiusFilter
+const mapStateToProps = state => ({
+  hasCenter: !!state.map.center,
+  search: state.search,
+})
+
+export default connect(mapStateToProps)(RadiusFilter)
