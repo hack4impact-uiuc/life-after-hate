@@ -1,13 +1,17 @@
 .radius-filter {
   background: #fff;
-  padding: 20px;
+  bottom: 30px;
+  right: 12px;
+  padding: 24px 24px 24px 24px;
   border-radius: 5px;
   position: absolute;
-  bottom: 16px;
-  width: 400px;
-  left: 50%;
-  transform: translateX(-200px);
+  width: 220px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.input-range__label-container {
+  font-size: 1.1em;
 }
 
 .radius-filter-hidden {
@@ -24,6 +28,6 @@
 }
 
 .input-range__label {
-  color: #555555;
+  color: #2a2a2a;
   font-size: 1rem;
 }
