@@ -10,6 +10,13 @@ import { updateUsers } from "../redux/actions/users";
 import { addTag, removeTag } from "../redux/actions/tags";
 import store from "../redux/store";
 
+let lastSearched = {
+  keyword: undefined,
+  address: undefined,
+  tag: undefined,
+  radius: 500,
+}
+
 async function getSearchResults(keyword, address, tag, radius = 500) {
   const endptStr = `resources/filter?`;
   const arglist = { keyword, address, tag, radius };
@@ -140,8 +147,19 @@ async function deleteAndRefreshResource(id) {
   await refreshAllResources();
 }
 
-async function filterAndRefreshResource(keyword, address, tag, radius) {
-  const results = await getSearchResults(keyword, address, tag, radius);
+async function filterAndRefreshResource(keyword, address, tag, withRadius = true) {
+  lastSearched = { keyword, address, tag, radius: withRadius ? lastSearched.radius : 500 }
+  const results = await getSearchResults(keyword, address, tag, withRadius ? lastSearched.radius : null);
+  store.dispatch(updateResources(results.resources));
+  if (results.center) {
+    store.dispatch(updateMapCenter(results.center));
+  }
+  return results;
+}
+
+async function updateSearchRadius(radius) {
+  lastSearched.radius = radius
+  const results = await getSearchResults(lastSearched.keyword, lastSearched.address, lastSearched.tag, lastSearched.radius);
   store.dispatch(updateResources(results.resources));
   if (results.center) {
     store.dispatch(updateMapCenter(results.center));
@@ -161,4 +179,5 @@ export {
   refreshAllUsers,
   editAndRefreshUser,
   editUser,
+  updateSearchRadius,
 };

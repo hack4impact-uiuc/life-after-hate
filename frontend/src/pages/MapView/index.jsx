@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import CardView from "./CardView";
 import SearchBar from "./SearchBar";
 import Map from "./Map";
+import RadiusFilter from "./RadiusFilter";
 import "./styles.scss";
 
 const MapView = () => {
@@ -21,6 +22,7 @@ const MapView = () => {
         <CardView />
       </div>
       <Map></Map>
+      <RadiusFilter />
     </div>
   );
 };

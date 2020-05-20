@@ -1,0 +1,25 @@
+.radius-filter {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  position: absolute;
+  bottom: 16px;
+  width: 400px;
+  left: 50%;
+  transform: translateX(-200px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.input-range__track--active {
+  background: #f79230;
+}
+
+.input-range__slider {
+  background: #f79230;
+  border: 1px solid #f79230;
+}
+
+.input-range__label {
+  color: #555555;
+  font-size: 1rem;
+}
