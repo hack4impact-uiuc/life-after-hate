@@ -26,7 +26,7 @@ const SearchBar = ({ isLoading }) => {
         <label>
           <input
             id="search-location"
-            type="text"
+            type="textas"
             name="location"
             ref={register}
           />
