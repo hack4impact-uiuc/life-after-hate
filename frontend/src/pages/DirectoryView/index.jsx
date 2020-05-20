@@ -4,16 +4,15 @@ import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
+import { clearResources } from "../../redux/actions/resources";
 import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
-import { refreshAllResources } from "../../utils/api";
 import { roleEnum } from "../../utils/enums";
 
 const ResourceManager = (props) => {
   useEffect(() => {
-    console.log("HERE");
     document.title = "Directory View - Life After Hate";
-    refreshAllResources();
+    props.clearResources();
   }, []);
 
   const renderCards = (resource) => (
@@ -61,6 +60,7 @@ const MapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   openResourceModal,
+  clearResources,
 };
 
 export default connect(MapStateToProps, mapDispatchToProps)(ResourceManager);

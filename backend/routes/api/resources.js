@@ -160,7 +160,7 @@ router.get(
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
     const span = beeline.startSpan({ name: "Resource Fetch" });
-    const resource = await Resource.findById(resourceId);
+    const resource = await Resource.findById(resourceId).lean();
     beeline.finishSpan(span);
     res.json({
       code: 200,

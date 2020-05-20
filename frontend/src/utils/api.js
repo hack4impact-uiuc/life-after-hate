@@ -4,7 +4,7 @@ import {
   purgeGlobalAuthState,
   toQueryString,
 } from "./apiHelpers";
-import { updateResources } from "../redux/actions/resources";
+import { updateResources, updateResource } from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
 import { updateUsers } from "../redux/actions/users";
 import { addTag, removeTag } from "../redux/actions/tags";
@@ -48,6 +48,15 @@ function addFilterTag(data) {
 
 function removeFilterTag(data) {
   store.dispatch(removeTag(data));
+}
+
+async function getResource(id) {
+  return (
+    await apiRequest({
+      endpoint: `resources/${id}`,
+      method: "GET",
+    })
+  ).result;
 }
 
 async function addResource(data) {
@@ -127,7 +136,8 @@ async function editUser(data, id) {
 
 async function editAndRefreshResource(data, id) {
   await editResource(data, id);
-  await refreshAllResources();
+  const newResourceData = await getResource(id);
+  store.dispatch(updateResource(newResourceData));
 }
 
 async function addAndRefreshResource(data) {
