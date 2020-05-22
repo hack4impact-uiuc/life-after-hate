@@ -8,7 +8,7 @@ const resources = (state = [], action) => {
   switch (action.type) {
     case UPDATE_RESOURCE:
       return state.map((resource) =>
-        resource._id === action.payload._id ? action.payload : resource[0]
+        resource._id === action.payload._id ? action.payload : resource
       );
     case UPDATE_RESOURCES:
       return action.payload;

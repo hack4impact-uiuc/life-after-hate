@@ -44,7 +44,6 @@ class CardView extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("Component did update being called");
     const {
       resources: currResourceList,
       selectedResource: currSelectedResource,
