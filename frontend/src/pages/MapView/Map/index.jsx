@@ -9,6 +9,7 @@ import { tagFilteredResourceSelector } from "../../../redux/selectors/map";
 import {
   selectMapResource,
   clearMapResource,
+  clearMapCenter,
 } from "../../../redux/actions/map";
 import { clearResources } from "../../../redux/actions/resources";
 import { IconLayer } from "@deck.gl/layers";
@@ -63,6 +64,7 @@ const Map = ({
   selectMapResource,
   clearMapResource,
   clearResources,
+  clearMapCenter,
 }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
@@ -80,7 +82,10 @@ const Map = ({
     }
   };
 
-  useEffect(clearResources, []);
+  useEffect(() => {
+    clearResources();
+    clearMapCenter();
+  }, [clearResources, clearMapCenter]);
   useEffect(handleCenterChange, [center]);
 
   const _onViewportChange = ({ viewState }) => {
@@ -174,5 +179,6 @@ const mapDispatchToProps = {
   selectMapResource,
   clearMapResource,
   clearResources,
+  clearMapCenter,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Map);

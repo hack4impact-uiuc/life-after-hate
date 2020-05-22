@@ -138,11 +138,12 @@ router.post(
         ? new IndividualResource(data)
         : new GroupResource(data);
     newResource.tags = createdTags;
-    await newResource.save();
+    const { _id } = await newResource.save();
 
     res.status(201).json({
       code: 201,
       message: "Resource Successfully Created",
+      id: _id,
       success: true,
     });
   })

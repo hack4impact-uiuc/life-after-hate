@@ -3,8 +3,14 @@ import {
   updateGlobalAuthState,
   purgeGlobalAuthState,
   toQueryString,
+  filterEmptyFields,
 } from "./apiHelpers";
-import { updateResources, updateResource } from "../redux/actions/resources";
+import {
+  replaceAllResources,
+  updateResource,
+  addResource as insertResource,
+  deleteResource as removeResource,
+} from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
 import { updateUsers } from "../redux/actions/users";
 import { addTag, removeTag } from "../redux/actions/tags";
@@ -42,14 +48,6 @@ const logout = async () => {
   purgeGlobalAuthState();
 };
 
-function addFilterTag(data) {
-  store.dispatch(addTag(data));
-}
-
-function removeFilterTag(data) {
-  store.dispatch(removeTag(data));
-}
-
 async function getResource(id) {
   return (
     await apiRequest({
@@ -60,27 +58,20 @@ async function getResource(id) {
 }
 
 async function addResource(data) {
-  return (
-    await apiRequest({
-      endpoint: `resources/`,
-      method: "POST",
-      data,
-      notification: {
-        successMessage: "Successfully added resource!",
-        failureMessage: "Failed to add resource.",
-      },
-    })
-  ).result;
+  return await apiRequest({
+    endpoint: `resources/`,
+    method: "POST",
+    data,
+    notification: {
+      successMessage: "Successfully added resource!",
+      failureMessage: "Failed to add resource.",
+    },
+  });
 }
 
 async function editResource(data, id) {
   // Remove non-empty string fields from the object
-  const filteredData = Object.keys(data).reduce((accum, key) => {
-    if (data[key] !== "") {
-      accum[key] = data[key];
-    }
-    return accum;
-  }, {});
+  const filteredData = filterEmptyFields(data);
   return (
     await apiRequest({
       endpoint: `/resources/${id}`,
@@ -106,21 +97,6 @@ async function deleteResource(id) {
   ).result;
 }
 
-async function refreshAllResources() {
-  const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
-  store.dispatch(updateResources(resourceList));
-}
-
-async function refreshAllUsers() {
-  const userList = (await apiRequest({ endpoint: `users/` })).result;
-  store.dispatch(updateUsers(userList));
-}
-
-async function editAndRefreshUser(data, id) {
-  await editUser(data, id);
-  await refreshAllUsers();
-}
-
 async function editUser(data, id) {
   return (
     await apiRequest({
@@ -134,6 +110,22 @@ async function editUser(data, id) {
   ).result;
 }
 
+// Redux dispatches for resources and users
+async function refreshAllUsers() {
+  const userList = (await apiRequest({ endpoint: `users/` })).result;
+  store.dispatch(updateUsers(userList));
+}
+
+async function editAndRefreshUser(data, id) {
+  await editUser(data, id);
+  await refreshAllUsers();
+}
+
+async function refreshAllResources() {
+  const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  store.dispatch(replaceAllResources(resourceList));
+}
+
 async function editAndRefreshResource(data, id) {
   await editResource(data, id);
   const newResourceData = await getResource(id);
@@ -141,23 +133,33 @@ async function editAndRefreshResource(data, id) {
 }
 
 async function addAndRefreshResource(data) {
-  await addResource(data);
-  await refreshAllResources();
+  const { id } = await addResource(data);
+  const processedData = await getResource(id);
+  await store.dispatch(insertResource(processedData));
 }
 
 async function deleteAndRefreshResource(id) {
   await deleteResource(id);
-  await refreshAllResources();
+  store.dispatch(removeResource(id));
+}
+
+function addFilterTag(data) {
+  store.dispatch(addTag(data));
+}
+
+function removeFilterTag(data) {
+  store.dispatch(removeTag(data));
 }
 
 async function filterAndRefreshResource(keyword, address, tag, radius) {
   const results = await getSearchResults(keyword, address, tag, radius);
-  store.dispatch(updateResources(results.resources));
+  store.dispatch(replaceAllResources(results.resources));
   if (results.center) {
     store.dispatch(updateMapCenter(results.center));
   }
   return results;
 }
+
 export {
   refreshGlobalAuth,
   logout,

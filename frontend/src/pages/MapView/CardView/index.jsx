@@ -65,7 +65,9 @@ class CardView extends React.Component {
       cache.clear(currResourceIdx);
       cache.clear(oldResourceIdx);
 
-      this.list.recomputeRowHeights(0);
+      if (this.list) {
+        this.list.recomputeRowHeights(0);
+      }
     }
   }
 
