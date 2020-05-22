@@ -7,6 +7,7 @@ import {
 import {
   REPLACE_ALL_RESOURCES,
   UPDATE_RESOURCE,
+  DELETE_RESOURCE,
   CLEAR_RESOURCES,
 } from "../actions/resources";
 const R = require("ramda");
@@ -21,6 +22,7 @@ const map = (state = {}, action) => {
       return { ...state, selectedId: action.payload };
     case CLEAR_MAP_RESOURCE:
     case CLEAR_RESOURCES:
+    case DELETE_RESOURCE:
     case UPDATE_RESOURCE:
       return R.omit(["selectedId"], state);
     case REPLACE_ALL_RESOURCES:

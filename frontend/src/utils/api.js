@@ -140,7 +140,7 @@ async function addAndRefreshResource(data) {
 
 async function deleteAndRefreshResource(id) {
   await deleteResource(id);
-  store.dispatch(removeResource(id));
+  store.dispatch(removeResource({ _id: id }));
 }
 
 function addFilterTag(data) {
