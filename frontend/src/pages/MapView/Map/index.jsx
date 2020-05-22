@@ -82,11 +82,12 @@ const Map = ({
     }
   };
 
+  useEffect(handleCenterChange, [center]);
   useEffect(() => {
     clearResources();
     clearMapCenter();
+    setViewport(INITIAL_VIEW_STATE);
   }, [clearResources, clearMapCenter]);
-  useEffect(handleCenterChange, [center]);
 
   const _onViewportChange = ({ viewState }) => {
     setViewport(viewState);

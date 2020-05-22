@@ -8,7 +8,7 @@ import "../styles.scss";
 
 const SearchBar = ({ isLoading }) => {
   const { register, handleSubmit } = useForm();
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     filterAndRefreshResource(data.keyword, data.location, data.tag);
   };
 
@@ -21,6 +21,7 @@ const SearchBar = ({ isLoading }) => {
             type="text"
             name="keyword"
             ref={register}
+            placeholder="Search"
           />
         </label>
         <label>
@@ -28,16 +29,23 @@ const SearchBar = ({ isLoading }) => {
             id="search-location"
             type="text"
             name="location"
+            placeholder="Location"
             ref={register}
           />
         </label>
         <label>
-          <input id="search-tag" type="text" name="tag" ref={register} />
+          <input
+            id="search-tag"
+            placeholder="Tags"
+            type="text"
+            name="tag"
+            ref={register}
+          />
         </label>
         <Button
           id="search-button"
           type="submit"
-          onSubmit={e => e.preventDefault()}
+          onSubmit={(e) => e.preventDefault()}
           disabled={isLoading}
         >
           SEARCH
@@ -47,8 +55,8 @@ const SearchBar = ({ isLoading }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  isLoading: state.isLoading
+const mapStateToProps = (state) => ({
+  isLoading: state.isLoading,
 });
 
 export default connect(mapStateToProps)(SearchBar);
