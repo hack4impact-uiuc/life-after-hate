@@ -44,7 +44,12 @@ const addMockIndividualResources = async () => {
       volunteerReason: "My reason for joining is...[insert reason]",
       skills: "My skillset includes...[insert skillset]",
       howDiscovered: "Discovered LAH through...[insert reason]",
-      address: "Champaign, IL",
+      address: {
+        streetAddress: "",
+        city: "Champaign",
+        state: "IL",
+        postalCode: "",
+      },
       location: { coordinates: [-90, 40] },
     }).save()
   );
