@@ -42,12 +42,7 @@ const SearchBar = ({ isLoading }) => {
             ref={register}
           />
         </label>
-        <Button
-          id="search-button"
-          type="submit"
-          onSubmit={(e) => e.preventDefault()}
-          disabled={isLoading}
-        >
+        <Button id="search-button" type="submit" disabled={isLoading}>
           SEARCH
         </Button>
       </form>

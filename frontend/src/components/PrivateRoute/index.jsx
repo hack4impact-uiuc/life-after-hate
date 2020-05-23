@@ -41,13 +41,11 @@ function PrivateRoute({
             }
             return <Pending {...props} />;
           }
-          if (authed === false) {
-            return (
-              <Redirect
-                to={{ pathname: "/login", state: { from: props.location } }}
-              />
-            );
-          }
+          return (
+            <Redirect
+              to={{ pathname: "/login", state: { from: props.location } }}
+            />
+          );
         }}
       />
     </div>

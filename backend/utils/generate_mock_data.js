@@ -50,6 +50,7 @@ const addMockIndividualResources = async () => {
         state: "IL",
         postalCode: "",
       },
+      tags: ["Individual", "Resource"],
       location: { coordinates: [-90, 40] },
     }).save()
   );

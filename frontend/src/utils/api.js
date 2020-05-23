@@ -121,11 +121,6 @@ async function editAndRefreshUser(data, id) {
   await refreshAllUsers();
 }
 
-async function refreshAllResources() {
-  const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
-  store.dispatch(replaceAllResources(resourceList));
-}
-
 async function editAndRefreshResource(data, id) {
   await editResource(data, id);
   const newResourceData = await getResource(id);
@@ -169,7 +164,6 @@ export {
   addAndRefreshResource,
   editAndRefreshResource,
   deleteAndRefreshResource,
-  refreshAllResources,
   refreshAllUsers,
   editAndRefreshUser,
   editUser,

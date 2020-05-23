@@ -43,7 +43,6 @@ const ResourceCard = ({
             role="button"
             tabIndex="0"
             onClick={() => selectMapResource(resource._id)}
-            onKeyPress={() => "noop"}
           >
             {isIndividualResource ? resource.contactName : resource.companyName}
           </div>
@@ -51,7 +50,6 @@ const ResourceCard = ({
             className="card-maximize"
             role="button"
             tabIndex="0"
-            onKeyPress={() => "noop"}
             onClick={() =>
               openResourceModalWithPayload({
                 resourceId: resource._id,
@@ -65,7 +63,6 @@ const ResourceCard = ({
             className="top-card-close"
             role="button"
             tabIndex="0"
-            onKeyPress={() => "noop"}
             onClick={() => clearMapResource({ resourceId: resource._id })}
           >
             <img src={Close} alt="Close" className="top-close-icon" />
@@ -75,7 +72,6 @@ const ResourceCard = ({
           role="button"
           tabIndex="0"
           onClick={() => selectMapResource(resource._id)}
-          onKeyPress={() => "noop"}
           className="card-wrap"
         >
           {"distanceFromSearchLoc" in resource && (
