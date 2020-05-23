@@ -15,7 +15,7 @@ console.log(`API URI is ${API_URI}`);
 export const toQueryString = R.pipe(
   Object.entries,
   R.filter(([, v]) => v),
-  R.map(([k, v]) => `${k}=${v}`),
+  R.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`),
   R.join("&")
 );
 
