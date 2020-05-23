@@ -18,13 +18,13 @@ context("User Panel", () => {
     cy.get(".card-wrapper > :nth-child(1)")
       .should("have.length", 30)
       .first()
-      .should("have.text", "Duke Curry")
+      .should("have.text", "Amanda Osborn")
       .click();
 
-    cy.get(".modal-title").should("have.text", "Duke Curry");
+    cy.get(".modal-title").should("have.text", "Amanda Osborn");
 
     cy.get("[data-cy=user-name-input-field]")
-      .should("have.value", "Duke Curry")
+      .should("have.value", "Amanda Osborn")
       .and("be.disabled");
     cy.get("[data-cy=modal-submit]").should("not.be.visible");
 
@@ -40,7 +40,7 @@ context("User Panel", () => {
 
     // Name should be un-editable
     cy.get("[data-cy=user-name-input-field]")
-      .should("have.value", "Duke Curry")
+      .should("have.value", "Amanda Osborn")
       .and("be.disabled");
 
     cy.get("[data-cy=role-input-field]").select("VOLUNTEER");
