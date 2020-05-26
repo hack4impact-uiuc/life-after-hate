@@ -38,36 +38,47 @@ context("Directory View", () => {
     cy.get(".modal-title").should("be.visible");
   });
 
-  it("Should display resources automatically on load", () => {
-    cy.get("[data-cy=card-companyName]").should("have.length.gt", 0);
+  it("Should clear resources when moving from directory view to map view & back", () => {
+    cy.get("#search-button").click();
+    cy.get("[data-cy=card-companyName]").should("have.length.gt", 50);
+    cy.get("[data-cy=nav-links]").children().eq(0).click();
+    cy.get(".card-content").should("not.be.visible");
+    cy.get("[data-cy=nav-links]").children().eq(1).click();
+    cy.get("[data-cy=card-companyName]").should("have.length", 0);
   });
 
-  it("Allows us to add a resource and search for it", () => {
+  it("Should show different fields depending on type of resource added", () => {
     cy.get("#add-button").click();
     cy.get(".modal-title").should("have.text", "Add Resource");
-    cy.get("[data-cy=modal-resource-type]").select("GROUP");
-    cy.get("[data-cy=modal-company-name]").type("Test Resource");
-    cy.get("[data-cy=modal-contact-name]").type("Alan Fang");
-    cy.get("[data-cy=modal-contact-phone]").type("1-234-567-8900");
-    cy.get("[data-cy=modal-contact-email]").type("alanfang@gmail.com");
-    cy.get("[data-cy=modal-description").type(
-      "This is a test description! This should show up in its entirety."
-    );
-    cy.get("[data-cy=modal-tags").type("a,b,c");
-    cy.get("[data-cy=modal-address").type("1234 W. Main St. Urbana, IL 61801");
-    cy.get("[data-cy=modal-notes").type(
-      "This is a notes field! You can enter notes here."
-    );
-    cy.get("#submit-form-button").click();
-    cy.get(".Toastify__toast-body").should("contain.text", "Success");
+    cy.get("[data-cy=modal-resource-type]").should("have.value", "INDIVIDUAL");
 
-    cy.get("#search-general").type("Test Resource");
+    cy.get("[data-cy=modal-skills]").should("exist");
+    cy.get("[data-cy=modal-resource-type]").select("GROUP");
+    cy.get("[data-cy=modal-skills]").should("not.exist");
+    cy.get("[data-cy=modal-description]").should("exist");
+  });
+
+  it("Allows us to add a resource then delete it", () => {
+    cy.createDirectoryViewResource("This is Test Resource");
+    cy.get("#search-general").type("This is Test Resource");
     cy.get("#search-button").click();
 
-    cy.get("[data-cy=card-companyName]")
-      .should("have.length.lt", 50)
-      .first()
-      .should("have.text", "Test Resource");
+    cy.get("[data-cy=card-companyName]").should(
+      "have.text",
+      "This is Test Resource"
+    );
+
+    cy.get("[data-cy=card-address]").should("have.length", 1);
+
+    cy.get(".edit-button").click();
+
+    cy.get("#delete-form-button")
+      .should("have.text", "Delete")
+      .click()
+      .should("have.text", "Confirm")
+      .click();
+
+    cy.get("[data-cy=card-address]").should("not.exist");
   });
 
   it("Shows a correct modal upon clicking a resource", () => {
@@ -92,19 +103,25 @@ context("Directory View", () => {
   });
 
   it("Allows and persists edits", () => {
+    cy.get("#search-general").type("Alan Fang");
+    cy.get("#search-button").click();
     cy.get(".edit-button").first().click();
     cy.get(".modal-title").should("have.text", "Edit Resource");
-    cy.get('[name="companyName"]').clear().type("Edited Resource!!");
+    cy.get("[data-cy=modal-contact-name]").clear().type("Edited Resource!!");
+    cy.get("[data-cy=modal-address]")
+      .clear()
+      .type("630 S 5th St, Champaign, IL");
     cy.get("#submit-form-button").click();
 
-    // Search for edited resource
-    cy.get("#search-general").type("Edited Resource!!");
-    cy.get("#search-button").click();
-
     cy.get("[data-cy=card-companyName]")
-      .should("have.length.lt", 50)
-      .first()
+      .should("have.length", 1)
       .should("have.text", "Edited Resource!!");
+
+    // Check if the geocode functionality works as we expect it - should fill in the ZIP code
+    cy.get("[data-cy=card-address]").should("contain.text", "61820");
+    cy.get(".edit-button").first().click();
+    cy.get("[data-cy=modal-contact-name]").clear().type("Alan Fang");
+    cy.get("#submit-form-button").click();
   });
 
   it("Search by location works", () => {
@@ -112,28 +129,7 @@ context("Directory View", () => {
     cy.get("#search-button").click();
 
     cy.get("[data-cy=card-address]")
-      .should("have.length.lt", 50)
       .first()
       .should("contain.text", "Saint Louis");
-  });
-
-  it("Can query for and delete a resource", () => {
-    cy.get("#search-general").type("Best Western Dayton");
-    cy.get("#search-button").click();
-    cy.get("[data-cy=card-address]").should("have.length", 1);
-
-    cy.get(".edit-button").click();
-
-    cy.get("#delete-form-button")
-      .should("have.text", "Delete")
-      .click()
-      .should("have.text", "Confirm")
-      .click();
-
-    // Wait until all the resources are retrieved again...
-    cy.get("[data-cy=card-address]").should("have.length.gt", 50);
-    cy.get("#search-button").click();
-
-    cy.get("[data-cy=card-address]").should("not.exist");
   });
 });

@@ -1,4 +1,4 @@
-import { MODAL_OPEN, MODAL_CLOSE, MODAL_TOGGLE } from "../actions/modal";
+import { MODAL_OPEN, MODAL_CLOSE } from "../actions/modal";
 import { modalEnum } from "../../utils/enums";
 
 const DEFAULT_STATE = {
@@ -18,8 +18,6 @@ const modal = (state = DEFAULT_STATE, action) => {
       };
     case MODAL_CLOSE:
       return DEFAULT_STATE;
-    case MODAL_TOGGLE:
-      return { ...state, isOpen: !state.isOpen };
     default:
       return state;
   }

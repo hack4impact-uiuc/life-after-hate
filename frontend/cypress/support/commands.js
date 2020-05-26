@@ -31,3 +31,23 @@ Cypress.Commands.add("setRole", (role) => {
     method: "GET",
   });
 });
+
+Cypress.Commands.add("createDirectoryViewResource", (name) => {
+  cy.get("#add-button").click();
+  cy.get(".modal-title").should("have.text", "Add Resource");
+  cy.get("[data-cy=modal-resource-type]").select("GROUP");
+  cy.get("[data-cy=modal-company-name]").type(name);
+  cy.get("[data-cy=modal-contact-name]").type("Testing");
+  cy.get("[data-cy=modal-contact-phone]").type("1-234-567-8900");
+  cy.get("[data-cy=modal-contact-email]").type("alanfang@gmail.com");
+  cy.get("[data-cy=modal-description").type(
+    "This is a test description! This should show up in its entirety."
+  );
+  cy.get("[data-cy=modal-tags").type("a,b,c");
+  cy.get("[data-cy=modal-address").type("1234 W. Main St. Urbana, IL 61801");
+  cy.get("[data-cy=modal-notes").type(
+    "This is a notes field! You can enter notes here."
+  );
+  cy.get("#submit-form-button").click();
+  cy.get(".Toastify__toast-body").should("contain.text", "Success");
+});

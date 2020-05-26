@@ -15,9 +15,18 @@ console.log(`API URI is ${API_URI}`);
 export const toQueryString = R.pipe(
   Object.entries,
   R.filter(([, v]) => v),
-  R.map(([k, v]) => `${k}=${v}`),
+  R.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`),
   R.join("&")
 );
+
+// Remove non-empty string fields from the object
+export const filterEmptyFields = (data) =>
+  Object.keys(data).reduce((accum, key) => {
+    if (data[key] !== "") {
+      accum[key] = data[key];
+    }
+    return accum;
+  }, {});
 
 export const getURLForEndpoint = (endpoint) => urljoin(API_URI, endpoint);
 /**

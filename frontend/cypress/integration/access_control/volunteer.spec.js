@@ -24,6 +24,7 @@ context("Volunteer User", () => {
 
   it("Should have no edit button on directory page", () => {
     cy.visit(`${Cypress.env("BASE_URI")}/directory`);
+    cy.get("#search-button").click();
 
     // Should display results
     cy.get("[data-cy=card-address]").should("have.length.gt", 50);

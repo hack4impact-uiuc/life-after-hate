@@ -9,7 +9,9 @@ import { tagFilteredResourceSelector } from "../../../redux/selectors/map";
 import {
   selectMapResource,
   clearMapResource,
+  clearMapCenter,
 } from "../../../redux/actions/map";
+import { clearResources } from "../../../redux/actions/resources";
 import { IconLayer } from "@deck.gl/layers";
 import MarkerImg from "../../../assets/images/marker-atlas.png";
 import Popup from "../Popup";
@@ -56,7 +58,14 @@ const INITIAL_VIEW_STATE = {
 const ZOOMED_IN_CONSTANT = 5;
 const TRANSITION_LENGTH = 1500;
 
-const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
+const Map = ({
+  center,
+  resources,
+  selectMapResource,
+  clearMapResource,
+  clearResources,
+  clearMapCenter,
+}) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
   const handleCenterChange = () => {
@@ -74,6 +83,11 @@ const Map = ({ center, resources, selectMapResource, clearMapResource }) => {
   };
 
   useEffect(handleCenterChange, [center]);
+  useEffect(() => {
+    clearResources();
+    clearMapCenter();
+    setViewport(INITIAL_VIEW_STATE);
+  }, [clearResources, clearMapCenter]);
 
   const _onViewportChange = ({ viewState }) => {
     setViewport(viewState);
@@ -165,5 +179,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   selectMapResource,
   clearMapResource,
+  clearResources,
+  clearMapCenter,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Map);
