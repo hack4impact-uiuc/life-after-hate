@@ -97,8 +97,40 @@ async function deleteResource(id) {
   ).result;
 }
 
+function spiderResources(resourceList) {
+  resourceList.forEach((resource) => {
+    // already has spidered coordinates, so continue
+    if (resource.location.spiderCoordinates) {
+      return;
+    }
+    const resourcePos = resource.location.coordinates;
+    const matchLoc = resourceList.filter(
+      (r) =>
+        r.location.coordinates[0] === resourcePos[0] &&
+        r.location.coordinates[1] === resourcePos[1]
+    );
+    // resources at same location
+    if (matchLoc.length > 0) {
+      console.log("same loc resources", matchLoc);
+      const numPoints = matchLoc.length;
+      const distance = 0.005; // radius of circle
+      let curAngle = 0;
+      const addAngle = (Math.PI * 2) / numPoints; // distribute new locations around a circle
+      matchLoc.forEach((matchResource) => {
+        const matchResourceLoc = matchResource.location.coordinates;
+        const newLoc0 = matchResourceLoc[0] + Math.cos(curAngle) * distance;
+        const newLoc1 = matchResourceLoc[1] + Math.sin(curAngle) * distance;
+        matchResource.location.spiderCoordinates = [newLoc0, newLoc1];
+        curAngle = curAngle + addAngle;
+      });
+    }
+  });
+  return resourceList;
+}
+
 async function refreshAllResources() {
-  const resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  let resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  resourceList = spiderResources(resourceList);
   store.dispatch(updateResources(resourceList));
 }
 
@@ -142,7 +174,8 @@ async function deleteAndRefreshResource(id) {
 
 async function filterAndRefreshResource(keyword, address, tag, radius) {
   const results = await getSearchResults(keyword, address, tag, radius);
-  store.dispatch(updateResources(results.resources));
+  const resourceList = spiderResources(results.resources);
+  store.dispatch(updateResources(resourceList));
   if (results.center) {
     store.dispatch(updateMapCenter(results.center));
   }
