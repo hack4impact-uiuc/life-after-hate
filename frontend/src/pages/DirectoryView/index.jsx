@@ -4,17 +4,21 @@ import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
+import { clearResources } from "../../redux/actions/resources";
 import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
-import { refreshAllResources } from "../../utils/api";
 import { roleEnum } from "../../utils/enums";
 
-const ResourceManager = (props) => {
+const ResourceManager = ({
+  role,
+  openResourceModal,
+  resources,
+  clearResources,
+}) => {
   useEffect(() => {
-    console.log("HERE");
     document.title = "Directory View - Life After Hate";
-    refreshAllResources();
-  }, []);
+    clearResources();
+  }, [clearResources]);
 
   const renderCards = (resource) => (
     <ResourceCard key={resource._id} resource={resource} />
@@ -24,8 +28,8 @@ const ResourceManager = (props) => {
     <div className="directory">
       <div className="manager-header">
         <h1>Resource Directory</h1>
-        {props.role === roleEnum.ADMIN && (
-          <Button onClick={props.openResourceModal} id="add-button">
+        {role === roleEnum.ADMIN && (
+          <Button onClick={openResourceModal} id="add-button">
             Add Resource
           </Button>
         )}
@@ -48,7 +52,7 @@ const ResourceManager = (props) => {
           </div>
           <div />
         </div>
-        {props.resources && props.resources.map(renderCards)}
+        {resources && resources.map(renderCards)}
       </div>
     </div>
   );
@@ -61,6 +65,7 @@ const MapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   openResourceModal,
+  clearResources,
 };
 
 export default connect(MapStateToProps, mapDispatchToProps)(ResourceManager);

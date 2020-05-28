@@ -2,7 +2,6 @@ import { modalEnum } from "../../utils/enums";
 
 export const MODAL_OPEN = "MODAL_OPEN";
 export const MODAL_CLOSE = "MODAL_CLOSE";
-export const MODAL_TOGGLE = "MODAL_TOGGLE";
 
 export const openModal = () => ({ type: MODAL_OPEN });
 export const openResourceModal = () => ({
@@ -20,4 +19,3 @@ export const openUserModalWithPayload = (payload) => ({
   payload,
 });
 export const closeModal = () => ({ type: MODAL_CLOSE });
-export const toggleModal = () => ({ type: MODAL_TOGGLE });

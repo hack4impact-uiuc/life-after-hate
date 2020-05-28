@@ -2,6 +2,7 @@ ignore:
   - "frontend/src/serviceWorker.js"
   - "backend/utils/logging-middleware.js"
   - "backend/utils/passport-setup.js"
+  - "backend/routes/api/auth/login.js"
 coverage:
   status:
     project:

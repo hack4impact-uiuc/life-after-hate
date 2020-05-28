@@ -18,7 +18,7 @@ router.get(
   requireAdminStatus,
   errorWrap(async (req, res) => {
     const span = beeline.startSpan({ name: "User Fetch" });
-    const users = await User.find({});
+    const users = await User.find({}).sort({ firstName: "asc" });
     beeline.finishSpan(span);
     res.json({
       code: 200,

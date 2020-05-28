@@ -3,8 +3,14 @@ import {
   updateGlobalAuthState,
   purgeGlobalAuthState,
   toQueryString,
+  filterEmptyFields,
 } from "./apiHelpers";
-import { updateResources } from "../redux/actions/resources";
+import {
+  replaceAllResources,
+  updateResource,
+  addResource as insertResource,
+  deleteResource as removeResource,
+} from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
 import { updateUsers } from "../redux/actions/users";
 import { addTag, removeTag } from "../redux/actions/tags";
@@ -42,36 +48,30 @@ const logout = async () => {
   purgeGlobalAuthState();
 };
 
-function addFilterTag(data) {
-  store.dispatch(addTag(data));
-}
-
-function removeFilterTag(data) {
-  store.dispatch(removeTag(data));
-}
-
-async function addResource(data) {
+async function getResource(id) {
   return (
     await apiRequest({
-      endpoint: `resources/`,
-      method: "POST",
-      data,
-      notification: {
-        successMessage: "Successfully added resource!",
-        failureMessage: "Failed to add resource.",
-      },
+      endpoint: `resources/${id}`,
+      method: "GET",
     })
   ).result;
 }
 
+async function addResource(data) {
+  return await apiRequest({
+    endpoint: `resources/`,
+    method: "POST",
+    data,
+    notification: {
+      successMessage: "Successfully added resource!",
+      failureMessage: "Failed to add resource.",
+    },
+  });
+}
+
 async function editResource(data, id) {
   // Remove non-empty string fields from the object
-  const filteredData = Object.keys(data).reduce((accum, key) => {
-    if (data[key] !== "") {
-      accum[key] = data[key];
-    }
-    return accum;
-  }, {});
+  const filteredData = filterEmptyFields(data);
   return (
     await apiRequest({
       endpoint: `/resources/${id}`,
@@ -103,45 +103,33 @@ function spiderResources(resourceList) {
     if (resource.location.spiderCoordinates) {
       return;
     }
-    const resourcePos = resource.location.coordinates;
-    const matchLoc = resourceList.filter(
-      (r) =>
-        r.location.coordinates[0] === resourcePos[0] &&
-        r.location.coordinates[1] === resourcePos[1]
-    );
-    // resources at same location
-    if (matchLoc.length > 0) {
-      console.log("same loc resources", matchLoc);
-      const numPoints = matchLoc.length;
-      const distance = 0.005; // radius of circle
-      let curAngle = 0;
-      const addAngle = (Math.PI * 2) / numPoints; // distribute new locations around a circle
-      matchLoc.forEach((matchResource) => {
-        const matchResourceLoc = matchResource.location.coordinates;
-        const newLoc0 = matchResourceLoc[0] + Math.cos(curAngle) * distance;
-        const newLoc1 = matchResourceLoc[1] + Math.sin(curAngle) * distance;
-        matchResource.location.spiderCoordinates = [newLoc0, newLoc1];
-        curAngle = curAngle + addAngle;
-      });
-    }
+    resourceList = computeSpideredCoordinates(resource, resourceList);
   });
   return resourceList;
 }
 
-async function refreshAllResources() {
-  let resourceList = (await apiRequest({ endpoint: `resources/` })).result;
-  resourceList = spiderResources(resourceList);
-  store.dispatch(updateResources(resourceList));
-}
-
-async function refreshAllUsers() {
-  const userList = (await apiRequest({ endpoint: `users/` })).result;
-  store.dispatch(updateUsers(userList));
-}
-
-async function editAndRefreshUser(data, id) {
-  await editUser(data, id);
-  await refreshAllUsers();
+function computeSpideredCoordinates(resource, resourceList) {
+  const resourcePos = resource.location.coordinates;
+  const matchLoc = resourceList.filter(
+    (r) =>
+      r.location.coordinates[0] === resourcePos[0] &&
+      r.location.coordinates[1] === resourcePos[1]
+  );
+  // resources at same location
+  if (matchLoc.length > 0) {
+    const numPoints = matchLoc.length;
+    const distance = 0.005; // radius of circle
+    let curAngle = 0;
+    const addAngle = (Math.PI * 2) / numPoints; // distribute new locations around a circle
+    matchLoc.forEach((matchResource) => {
+      const matchResourceLoc = matchResource.location.coordinates;
+      const newLoc0 = matchResourceLoc[0] + Math.cos(curAngle) * distance;
+      const newLoc1 = matchResourceLoc[1] + Math.sin(curAngle) * distance;
+      matchResource.location.spiderCoordinates = [newLoc0, newLoc1];
+      curAngle = curAngle + addAngle;
+    });
+  }
+  return resourceList;
 }
 
 async function editUser(data, id) {
@@ -157,30 +145,67 @@ async function editUser(data, id) {
   ).result;
 }
 
+// Redux dispatches for resources and users
+async function refreshResources(changedResource) {
+  let resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  resourceList = computeSpideredCoordinates(changedResource, resourceList);
+  store.dispatch(replaceAllResources(resourceList));
+}
+
+async function refreshAllResources() {
+  let resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  resourceList = spiderResources(resourceList);
+  store.dispatch(replaceAllResources(resourceList));
+}
+
+async function refreshAllUsers() {
+  const userList = (await apiRequest({ endpoint: `users/` })).result;
+  store.dispatch(updateUsers(userList));
+}
+
+async function editAndRefreshUser(data, id) {
+  await editUser(data, id);
+  await refreshAllUsers();
+}
+
 async function editAndRefreshResource(data, id) {
   await editResource(data, id);
-  await refreshAllResources();
+  const newResourceData = await getResource(id);
+  store.dispatch(updateResource(newResourceData));
+  refreshResources(newResourceData);
 }
 
 async function addAndRefreshResource(data) {
-  await addResource(data);
-  await refreshAllResources();
+  const { id } = await addResource(data);
+  const processedData = await getResource(id);
+  await store.dispatch(insertResource(processedData));
+  refreshResources(processedData);
 }
 
 async function deleteAndRefreshResource(id) {
   await deleteResource(id);
-  await refreshAllResources();
+  store.dispatch(removeResource({ _id: id }));
+  refreshAllResources();
+}
+
+function addFilterTag(data) {
+  store.dispatch(addTag(data));
+}
+
+function removeFilterTag(data) {
+  store.dispatch(removeTag(data));
 }
 
 async function filterAndRefreshResource(keyword, address, tag, radius) {
   const results = await getSearchResults(keyword, address, tag, radius);
   const resourceList = spiderResources(results.resources);
-  store.dispatch(updateResources(resourceList));
+  store.dispatch(replaceAllResources(resourceList));
   if (results.center) {
     store.dispatch(updateMapCenter(results.center));
   }
   return results;
 }
+
 export {
   refreshGlobalAuth,
   logout,
@@ -190,7 +215,6 @@ export {
   addAndRefreshResource,
   editAndRefreshResource,
   deleteAndRefreshResource,
-  refreshAllResources,
   refreshAllUsers,
   editAndRefreshUser,
   editUser,
