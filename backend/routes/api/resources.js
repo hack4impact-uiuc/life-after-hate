@@ -138,11 +138,12 @@ router.post(
         ? new IndividualResource(data)
         : new GroupResource(data);
     newResource.tags = createdTags;
-    await newResource.save();
+    const { _id } = await newResource.save();
 
     res.status(201).json({
       code: 201,
       message: "Resource Successfully Created",
+      id: _id,
       success: true,
     });
   })
@@ -160,7 +161,7 @@ router.get(
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
     const span = beeline.startSpan({ name: "Resource Fetch" });
-    const resource = await Resource.findById(resourceId);
+    const resource = await Resource.findById(resourceId).lean();
     beeline.finishSpan(span);
     res.json({
       code: 200,

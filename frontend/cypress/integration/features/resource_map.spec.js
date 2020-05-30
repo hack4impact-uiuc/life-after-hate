@@ -212,6 +212,11 @@ context("Resource Map", () => {
       cy.wrap($el).click({ force: true });
     });
 
+    // Do it again to make sure we're not adding duplicates
+    cy.get(".card-tag").each(($el) => {
+      cy.wrap($el).click({ force: true });
+    });
+
     // Tags in search should be length 3
     cy.get(".card-tag-search").should("have.length", 3);
     // Only one card there

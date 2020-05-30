@@ -1,9 +1,15 @@
 export const UPDATE_MAP_CENTER = "UPDATE_MAP_CENTER";
+export const CLEAR_MAP_CENTER = "CLEAR_MAP_CENTER";
 export const SELECT_MAP_RESOURCE = "SELECT_MAP_RESOURCE";
 export const CLEAR_MAP_RESOURCE = "CLEAR_MAP_RESOURCE";
 
 export const updateMapCenter = (payload) => ({
   type: UPDATE_MAP_CENTER,
+  payload,
+});
+
+export const clearMapCenter = (payload) => ({
+  type: CLEAR_MAP_CENTER,
   payload,
 });
 

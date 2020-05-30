@@ -44,7 +44,6 @@ class CardView extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("Component did update being called");
     const {
       resources: currResourceList,
       selectedResource: currSelectedResource,
@@ -66,7 +65,9 @@ class CardView extends React.Component {
       cache.clear(currResourceIdx);
       cache.clear(oldResourceIdx);
 
-      this.list.recomputeRowHeights(0);
+      if (this.list) {
+        this.list.recomputeRowHeights(0);
+      }
     }
   }
 
