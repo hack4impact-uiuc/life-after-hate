@@ -1,6 +1,10 @@
 {
-  "plugins": ["@h4iuiuc"],
-  "extends": ["plugin:@h4iuiuc/recommended", "plugin:cypress/recommended"],
+  "plugins": ["@hack4impact-uiuc"],
+  "extends": [
+    "plugin:@hack4impact-uiuc/base",
+    "plugin:@hack4impact-uiuc/react",
+    "plugin:cypress/recommended"
+  ],
   "rules": {
     "import/no-unresolved": "off",
     "no-magic-numbers": "off",
