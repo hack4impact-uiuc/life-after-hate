@@ -39,9 +39,7 @@ class CardView extends React.Component {
     }
   };
 
-  componentDidMount() {
-    this.purgeCache();
-  }
+  componentDidMount = () => this.purgeCache();
 
   componentDidUpdate(prevProps) {
     const {

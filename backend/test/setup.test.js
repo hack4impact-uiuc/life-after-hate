@@ -7,6 +7,4 @@ beforeEach(async () => {
   stubOutAuth();
 });
 
-afterEach(() => {
-  unstubAuth();
-});
+afterEach(unstubAuth);

@@ -12,7 +12,7 @@ import "../styles.scss";
 const UserModal = (props) => {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (data) => handleEditUser(data);
+  const onSubmit = handleEditUser;
 
   const handleEditUser = async (data) => {
     const reqBody = {

@@ -10,9 +10,7 @@ const stubOutAuth = (fn = () => true) => {
   return stub;
 };
 
-const unstubAuth = () => {
-  authValidator.validateRequestForRole.restore();
-};
+const unstubAuth = () => authValidator.validateRequestForRole.restore();
 
 // Assrets that the validator was called on a specific type of user
 const authValidatorCalled = (type) =>
