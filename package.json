@@ -15,7 +15,7 @@
     "joi-objectid": "^3.0.1",
     "mocha": "^7.2.0",
     "node-fetch": "^2.6.0",
-    "nyc": "^15.0.1",
+    "nyc": "^15.1.0",
     "sinon": "^9.0.2"
   },
   "devDependencies": {
