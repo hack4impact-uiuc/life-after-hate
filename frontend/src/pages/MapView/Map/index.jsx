@@ -10,6 +10,8 @@ import {
   selectMapResource,
   clearMapResource,
   clearMapCenter,
+  updateSearchLocation,
+  updateSearchQuery,
 } from "../../../redux/actions/map";
 import { clearResources } from "../../../redux/actions/resources";
 import { IconLayer } from "@deck.gl/layers";
@@ -86,6 +88,8 @@ const Map = ({
   useEffect(() => {
     clearResources();
     clearMapCenter();
+    updateSearchLocation("");
+    updateSearchQuery("");
     setViewport(INITIAL_VIEW_STATE);
   }, [clearResources, clearMapCenter]);
 

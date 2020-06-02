@@ -12,6 +12,7 @@ import { clearResources } from "../../redux/actions/resources";
 import {
   updateSearchLocation,
   updateSearchQuery,
+  clearMapCenter,
 } from "../../redux/actions/map";
 
 import Logo from "../../assets/images/lah-logo-2.png";
@@ -20,18 +21,20 @@ import "./styles.scss";
 import { roleEnum } from "../../utils/enums";
 
 const Navbar = ({
-  clearResources,
   role,
   profilePic,
   firstName,
   lastName,
   updateSearchLocation,
   updateSearchQuery,
+  clearResources,
+  clearMapCenter,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const onLogoClick = () => {
     clearResources();
+    clearMapCenter();
     updateSearchLocation("");
     updateSearchQuery("");
   };
@@ -80,6 +83,7 @@ const mapDispatchToProps = {
   clearResources,
   updateSearchLocation,
   updateSearchQuery,
+  clearMapCenter,
 };
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));
