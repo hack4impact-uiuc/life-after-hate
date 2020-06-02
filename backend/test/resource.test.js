@@ -69,7 +69,7 @@ const createSampleResource2 = async (resourceInfo = sampleResourceInfo2) => {
   await newResource.save();
 };
 
-beforeEach(() => createSampleResource());
+beforeEach(createSampleResource);
 afterEach(() => Resource.remove({}));
 
 describe("GET /resources", () => {

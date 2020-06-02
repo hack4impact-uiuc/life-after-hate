@@ -12,8 +12,6 @@ import "../styles.scss";
 const UserModal = (props) => {
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = (data) => handleEditUser(data);
-
   const handleEditUser = async (data) => {
     const reqBody = {
       role: data.role,
@@ -23,6 +21,7 @@ const UserModal = (props) => {
     props.closeModal();
   };
 
+  const onSubmit = handleEditUser;
   const makeOption = (option) => <option>{option}</option>;
 
   return (
