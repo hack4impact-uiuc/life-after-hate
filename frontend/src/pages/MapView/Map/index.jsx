@@ -93,6 +93,14 @@ const Map = ({
     setViewport(viewState);
   };
 
+  const getPosition = (resource) => {
+    // if resource has a spider coord (recomputed location) then display marker at that position
+    if (resource.location.spiderCoordinates) {
+      return resource.location.spiderCoordinates;
+    }
+    return resource.location.coordinates;
+  };
+
   const getMarkerPoints = () => {
     // If the location information came back correct, display on the map
     if (center && center[0]) {
@@ -110,7 +118,7 @@ const Map = ({
       data,
       pickable: true,
       wrapLongitude: true,
-      getPosition: (d) => d.location.coordinates,
+      getPosition: (d) => getPosition(d),
       iconAtlas: MarkerImg,
       iconMapping: mapping,
     };

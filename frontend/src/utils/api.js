@@ -97,6 +97,41 @@ async function deleteResource(id) {
   ).result;
 }
 
+function spiderResources(resourceList) {
+  resourceList.forEach((resource) => {
+    // already has spidered coordinates, so continue
+    if (resource.location.spiderCoordinates) {
+      return;
+    }
+    resourceList = computeSpideredCoordinates(resource, resourceList);
+  });
+  return resourceList;
+}
+
+function computeSpideredCoordinates(resource, resourceList) {
+  const resourcePos = resource.location.coordinates;
+  const matchLoc = resourceList.filter(
+    (r) =>
+      r.location.coordinates[0] === resourcePos[0] &&
+      r.location.coordinates[1] === resourcePos[1]
+  );
+  // resources at same location
+  if (matchLoc.length > 0) {
+    const numPoints = matchLoc.length;
+    const distance = 0.005; // radius of circle
+    let curAngle = 0;
+    const addAngle = (Math.PI * 2) / numPoints; // distribute new locations around a circle
+    matchLoc.forEach((matchResource) => {
+      const matchResourceLoc = matchResource.location.coordinates;
+      const newLoc0 = matchResourceLoc[0] + Math.cos(curAngle) * distance;
+      const newLoc1 = matchResourceLoc[1] + Math.sin(curAngle) * distance;
+      matchResource.location.spiderCoordinates = [newLoc0, newLoc1];
+      curAngle = curAngle + addAngle;
+    });
+  }
+  return resourceList;
+}
+
 async function editUser(data, id) {
   return (
     await apiRequest({
@@ -111,6 +146,18 @@ async function editUser(data, id) {
 }
 
 // Redux dispatches for resources and users
+async function refreshResources(changedResource) {
+  let resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  resourceList = computeSpideredCoordinates(changedResource, resourceList);
+  store.dispatch(replaceAllResources(resourceList));
+}
+
+async function refreshAllResources() {
+  let resourceList = (await apiRequest({ endpoint: `resources/` })).result;
+  resourceList = spiderResources(resourceList);
+  store.dispatch(replaceAllResources(resourceList));
+}
+
 async function refreshAllUsers() {
   const userList = (await apiRequest({ endpoint: `users/` })).result;
   store.dispatch(updateUsers(userList));
@@ -125,17 +172,20 @@ async function editAndRefreshResource(data, id) {
   await editResource(data, id);
   const newResourceData = await getResource(id);
   store.dispatch(updateResource(newResourceData));
+  refreshResources(newResourceData);
 }
 
 async function addAndRefreshResource(data) {
   const { id } = await addResource(data);
   const processedData = await getResource(id);
   await store.dispatch(insertResource(processedData));
+  refreshResources(processedData);
 }
 
 async function deleteAndRefreshResource(id) {
   await deleteResource(id);
   store.dispatch(removeResource({ _id: id }));
+  refreshAllResources();
 }
 
 function addFilterTag(data) {
@@ -148,7 +198,8 @@ function removeFilterTag(data) {
 
 async function filterAndRefreshResource(keyword, address, tag, radius) {
   const results = await getSearchResults(keyword, address, tag, radius);
-  store.dispatch(replaceAllResources(results.resources));
+  const resourceList = spiderResources(results.resources);
+  store.dispatch(replaceAllResources(resourceList));
   if (results.center) {
     store.dispatch(updateMapCenter(results.center));
   }
