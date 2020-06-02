@@ -6,7 +6,7 @@ import { openModal, closeModal } from "../../redux/actions/modal";
 import { titleSelector } from "../../redux/selectors/modal";
 import "./styles.scss";
 
-const LAHModal = props => (
+const LAHModal = (props) => (
   <Modal fade={false} isOpen={props.isOpen} toggle={props.closeModal}>
     <ModalHeader>
       {props.title}
@@ -17,7 +17,7 @@ const LAHModal = props => (
     <ModalBody
       style={{
         maxHeight: "calc(100vh - 210px)",
-        overflowY: "auto"
+        overflowY: "auto",
       }}
     >
       {props.children}
@@ -25,17 +25,14 @@ const LAHModal = props => (
   </Modal>
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   isOpen: state.modal.isOpen,
-  title: titleSelector(state)
+  title: titleSelector(state),
 });
 
 const mapDispatchToProps = {
   openModal,
-  closeModal
+  closeModal,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LAHModal);
+export default connect(mapStateToProps, mapDispatchToProps)(LAHModal);
