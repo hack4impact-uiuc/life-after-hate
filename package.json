@@ -30,8 +30,8 @@
     "typescript": "^3.9.3"
   },
   "scripts": {
-    "prettier": "prettier --write '{frontend/**/*.{js,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
-    "prettier-check": "prettier --check '{frontend/**/*.{js,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
+    "prettier": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
+    "prettier-check": "prettier --check '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
     "lint": "eslint '{frontend/**/*.{js,jsx},backend/**/*.{js,jsx}}'",
     "lint:fe": "eslint 'frontend/**/*.{js,jsx}'",
     "lint:be": "eslint 'backend/**/*.{js,jsx}'"

@@ -16,8 +16,8 @@ const MiniLoader = ({ shouldShowLoader }) => {
 
   return null;
 };
-const MapStateToProps = state => ({
-  shouldShowLoader: state.isLoading
+const MapStateToProps = (state) => ({
+  shouldShowLoader: state.isLoading,
 });
 
 export default connect(MapStateToProps)(MiniLoader);
