@@ -1,39 +1,43 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import { useForm } from "react-hook-form";
 import SearchIcon from "../../../assets/images/search.svg";
 import LocationIcon from "../../../assets/images/location-icon.svg";
 import { filterAndRefreshResource, removeFilterTag } from "../../../utils/api";
+import {
+  updateSearchLocation,
+  updateSearchQuery,
+} from "../../../redux/actions/map";
 import { tagSelector } from "../../../redux/selectors/tags";
+import {
+  searchLocationSelector,
+  searchQuerySelector,
+} from "../../../redux/selectors/map";
 import "./styles.scss";
 
 const SearchBar = (props) => {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => {
-    filterAndRefreshResource(data.keyword, data.location);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    filterAndRefreshResource(props.query, props.location);
   };
 
-  function clearLocation() {
-    document.getElementById("locationInput").value = "";
-  }
-  function clearSearch() {
-    document.getElementById("searchInput").value = "";
-  }
+  const clearLocation = () => props.updateSearchLocation("");
+  const clearSearch = () => props.updateSearchQuery("");
 
   return (
     <div className="search">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <div className="searchLocation">
           <img className="locationIcon" src={LocationIcon} alt="Location" />
           <div className="underlineField" id="underlineLocation">
             <input
               id="locationInput"
               name="location"
-              ref={register}
               type="text"
               placeholder="Location"
               tabIndex="0"
+              value={props.location}
+              onChange={(e) => props.updateSearchLocation(e.target.value)}
             />
             <Button
               className="closeButtons"
@@ -51,10 +55,11 @@ const SearchBar = (props) => {
               id="searchInput"
               type="text"
               name="keyword"
-              ref={register}
               list="suggestionsList"
               placeholder="Search"
               tabIndex="0"
+              value={props.query}
+              onChange={(e) => props.updateSearchQuery(e.target.value)}
             />
             <Button
               className="closeButtons"
@@ -89,8 +94,10 @@ const SearchBar = (props) => {
 
 const mapStateToProps = (state) => ({
   tags: tagSelector(state),
+  query: searchQuerySelector(state),
+  location: searchLocationSelector(state),
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateSearchLocation, updateSearchQuery };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

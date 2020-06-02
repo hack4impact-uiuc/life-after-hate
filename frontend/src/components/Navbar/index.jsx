@@ -9,14 +9,32 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { clearResources } from "../../redux/actions/resources";
+import {
+  updateSearchLocation,
+  updateSearchQuery,
+} from "../../redux/actions/map";
 
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
 import { roleEnum } from "../../utils/enums";
 
-const Navbar = ({ clearResources, role, profilePic, firstName, lastName }) => {
+const Navbar = ({
+  clearResources,
+  role,
+  profilePic,
+  firstName,
+  lastName,
+  updateSearchLocation,
+  updateSearchQuery,
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const onLogoClick = () => {
+    clearResources();
+    updateSearchLocation("");
+    updateSearchQuery("");
+  };
 
   const toggleUserDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
@@ -24,7 +42,7 @@ const Navbar = ({ clearResources, role, profilePic, firstName, lastName }) => {
 
   return (
     <div className="lah_navbar" data-cy="navbar">
-      <Link to="/" onClick={clearResources}>
+      <Link to="/" onClick={onLogoClick}>
         <img src={Logo} alt="LAH Logo" id="logo" />
       </Link>
       <div className="spacing" />
@@ -60,6 +78,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   clearResources,
+  updateSearchLocation,
+  updateSearchQuery,
 };
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));
