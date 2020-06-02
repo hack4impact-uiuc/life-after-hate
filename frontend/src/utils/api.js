@@ -12,6 +12,7 @@ import {
   deleteResource as removeResource,
 } from "../redux/actions/resources";
 import { updateMapCenter } from "../redux/actions/map";
+import { updateSearchParams } from "../redux/actions/search";
 import { updateUsers } from "../redux/actions/users";
 import { addTag, removeTag } from "../redux/actions/tags";
 import store from "../redux/store";
@@ -147,10 +148,13 @@ function removeFilterTag(data) {
 }
 
 async function filterAndRefreshResource(keyword, address, tag, radius) {
+  store.dispatch(updateSearchParams({ keyword, address, tag }));
   const results = await getSearchResults(keyword, address, tag, radius);
   store.dispatch(replaceAllResources(results.resources));
-  if (results.center) {
+  if (results.center && results.center[0]) {
     store.dispatch(updateMapCenter(results.center));
+  } else {
+    store.dispatch(updateMapCenter(null));
   }
   return results;
 }
