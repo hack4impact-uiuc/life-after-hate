@@ -55,6 +55,10 @@
   padding-bottom: 10px;
 }
 
+.resource-labels > div {
+  cursor: pointer;
+}
+
 .card-click {
   outline: none;
   position: relative;

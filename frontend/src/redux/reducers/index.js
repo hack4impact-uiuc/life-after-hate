@@ -7,6 +7,7 @@ import map from "./map";
 import users from "./users";
 import tags from "./tags";
 import search from "./search";
+import sort from "./sort";
 
 export default combineReducers({
   isLoading: loading,
@@ -17,4 +18,5 @@ export default combineReducers({
   users,
   tags,
   search,
+  sort,
 });
