@@ -1,6 +1,10 @@
 import { createSelector } from "reselect";
 import { resourceSelector } from "./resource";
 import { tagSelector } from "./tags";
+
+export const searchQuerySelector = (state) => state.map.search.query;
+export const searchLocationSelector = (state) => state.map.search.location;
+
 // Gets the ID of the selected resource for the map
 export const mapResourceIdSelector = (state) => state.map.selectedId;
 

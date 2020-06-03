@@ -3,6 +3,8 @@ import {
   SELECT_MAP_RESOURCE,
   CLEAR_MAP_RESOURCE,
   CLEAR_MAP_CENTER,
+  UPDATE_SEARCH_LOCATION,
+  UPDATE_SEARCH_QUERY,
 } from "../actions/map";
 import {
   REPLACE_ALL_RESOURCES,
@@ -12,7 +14,7 @@ import {
 } from "../actions/resources";
 const R = require("ramda");
 
-const map = (state = {}, action) => {
+const map = (state = { search: { location: "", query: "" } }, action) => {
   switch (action.type) {
     case UPDATE_MAP_CENTER:
       return { ...state, center: action.payload };
@@ -31,6 +33,13 @@ const map = (state = {}, action) => {
       return R.find(R.propEq("_id", state.selectedId))(action.payload)
         ? state
         : R.omit(["selectedId"], state);
+    case UPDATE_SEARCH_LOCATION:
+      return {
+        ...state,
+        search: { ...state.search, location: action.payload },
+      };
+    case UPDATE_SEARCH_QUERY:
+      return { ...state, search: { ...state.search, query: action.payload } };
     default:
       return state;
   }

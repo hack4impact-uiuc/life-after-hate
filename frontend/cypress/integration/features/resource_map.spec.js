@@ -202,6 +202,19 @@ context("Resource Map", () => {
     cy.get(".modal-input-field").first().should("be.disabled");
   });
 
+  it("Clicking on the logo clears state properly", () => {
+    cy.get(".submitSearch").click();
+    cy.get(".card-title").should("have.length.gt", 1);
+
+    cy.get("#locationInput").type("Hello World");
+    cy.get("#searchInput").type("Hello World");
+    cy.get("#logo").click();
+
+    cy.get(".card-title").should("have.length", 0);
+    cy.get("#locationInput").should("have.text", "");
+    cy.get("#searchInput").should("have.text", "");
+  });
+
   it("Tag filtering test", () => {
     cy.get("#searchInput").type("Fairway Inn");
     cy.get(".submitSearch").click();
