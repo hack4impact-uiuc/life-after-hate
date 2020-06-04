@@ -15,7 +15,7 @@ const resourceDescription = (resource) =>
     : resource.description) || "";
 
 export const resourceSelector = (state) => {
-  const resources = state.resources;
+  const resources = [...state.resources];
   resources.sort((resource1, resource2) => {
     const order = state.sort.order === "asc" ? 1 : -1;
     switch (state.sort.field) {
@@ -42,11 +42,6 @@ export const resourceSelector = (state) => {
           ) * order
         );
       default:
-        if ("distanceFromSearchLoc" in resource1) {
-          return (
-            resource1.distanceFromSearchLoc - resource2.distanceFromSearchLoc
-          );
-        }
         return 0;
     }
   });
