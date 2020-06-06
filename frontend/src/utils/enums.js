@@ -22,7 +22,15 @@ const modalEnum = {
   USER: "USER",
 };
 
+const sortFieldEnum = {
+  RESOURCE_NAME: "RESOURCE NAME",
+  LOCATION: "LOCATION",
+  POINT_OF_CONTACT: "POINT OF CONTACT",
+  DESCRIPTION: "DESCRIPTION",
+};
+
 module.exports.roleEnum = roleEnum;
 module.exports.resourceEnum = resourceEnum;
 module.exports.userFilterEnum = userFilterEnum;
 module.exports.modalEnum = modalEnum;
+module.exports.sortFieldEnum = sortFieldEnum;
