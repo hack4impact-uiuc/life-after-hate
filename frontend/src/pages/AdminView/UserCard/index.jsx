@@ -6,16 +6,16 @@ import Edit from "../../../assets/images/pencil-edit-button-black.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const UserCard = (props) => {
+const UserCard = ({ user, role }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
-    props.openUserModalWithPayload({ userId: props.user.id });
+    openUserModalWithPayload({ userId: user.id });
   };
 
   const toggleViewOnlyModal = (event) => {
     event.stopPropagation();
-    props.openUserModalWithPayload({
-      userId: props.user.id,
+    openUserModalWithPayload({
+      userId: user.id,
       editable: false,
     });
   };
@@ -30,18 +30,18 @@ const UserCard = (props) => {
     >
       <div className="card-wrapper">
         <div className="col">
-          <p>{`${props.user.firstName} ${props.user.lastName}`}</p>
+          <p>{`${user.firstName} ${user.lastName}`}</p>
         </div>
         <div className="col">
-          <p>{props.user.email}</p>
+          <p>{user.email}</p>
         </div>
         <div className="col">
-          <p>{props.user.role}</p>
+          <p>{user.role}</p>
         </div>
         <div className="col">
-          <p>{props.user.title}</p>
+          <p>{user.title}</p>
         </div>
-        {props.role === roleEnum.ADMIN && (
+        {role === roleEnum.ADMIN && (
           <div className="col col-edit">
             <Button onClick={toggleModal} className="edit-button">
               <img id="edit-icon" src={Edit} alt="edit icon" />

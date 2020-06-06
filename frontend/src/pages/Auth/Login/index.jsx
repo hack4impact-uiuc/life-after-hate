@@ -9,11 +9,11 @@ import { getURLForEndpoint } from "../../../utils/apiHelpers.js";
 import "../styles.scss";
 import { Redirect } from "react-router-dom";
 
-const Login = (props) => {
+const Login = ({ authed }) => {
   useEffect(() => {
     document.title = "Login - Life After Hate";
   }, []);
-  if (props.authed) {
+  if (authed) {
     return <Redirect to={{ pathname: "/" }} />;
   }
   return (

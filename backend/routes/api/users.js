@@ -30,10 +30,10 @@ router.get(
 
 // get current users (partial info only)
 router.get("/current", requirePendingStatus, (req, res) => {
-  const user_info = req.user;
+  const userInfo = req.user;
   res.json({
     code: 200,
-    result: filterSensitiveInfo(user_info),
+    result: filterSensitiveInfo(userInfo),
     success: true,
   });
 });

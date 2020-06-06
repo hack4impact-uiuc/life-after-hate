@@ -15,14 +15,20 @@ import {
 } from "../../../redux/selectors/map";
 import "./styles.scss";
 
-const SearchBar = (props) => {
+const SearchBar = ({
+  query,
+  location,
+  updateSearchLocation,
+  updateSearchQuery,
+  tags,
+}) => {
   const onSubmit = (e) => {
     e.preventDefault();
-    filterAndRefreshResource(props.query, props.location);
+    filterAndRefreshResource(query, location);
   };
 
-  const clearLocation = () => props.updateSearchLocation("");
-  const clearSearch = () => props.updateSearchQuery("");
+  const clearLocation = () => updateSearchLocation("");
+  const clearSearch = () => updateSearchQuery("");
 
   return (
     <div className="search">
@@ -36,8 +42,8 @@ const SearchBar = (props) => {
               type="text"
               placeholder="Location"
               tabIndex="0"
-              value={props.location}
-              onChange={(e) => props.updateSearchLocation(e.target.value)}
+              value={location}
+              onChange={(e) => updateSearchLocation(e.target.value)}
             />
             <Button
               className="closeButtons"
@@ -58,8 +64,8 @@ const SearchBar = (props) => {
               list="suggestionsList"
               placeholder="Search"
               tabIndex="0"
-              value={props.query}
-              onChange={(e) => props.updateSearchQuery(e.target.value)}
+              value={query}
+              onChange={(e) => updateSearchQuery(e.target.value)}
             />
             <Button
               className="closeButtons"
@@ -73,9 +79,9 @@ const SearchBar = (props) => {
             Go
           </button>
         </div>
-        {props.tags.length > 0 && (
+        {tags.length > 0 && (
           <div className="card-tags-search">
-            {props.tags.map((tag) => (
+            {tags.map((tag) => (
               <div className="card-tag-search" key={tag}>
                 <span className="search-tag">{tag}</span>
                 <Button

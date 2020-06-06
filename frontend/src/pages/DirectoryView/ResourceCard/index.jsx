@@ -6,21 +6,21 @@ import Edit from "../../../assets/images/pencil-edit-button-black.svg";
 import { resourceEnum, roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const ResourceCard = (props) => {
+const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
-    props.openResourceModalWithPayload({ resourceId: props.resource._id });
+    openResourceModalWithPayload({ resourceId: resource._id });
   };
 
   const toggleViewOnlyModal = (event) => {
     event.stopPropagation();
-    props.openResourceModalWithPayload({
-      resourceId: props.resource._id,
+    openResourceModalWithPayload({
+      resourceId: resource._id,
       editable: false,
     });
   };
 
-  const isIndividualResource = props.resource.type === resourceEnum.INDIVIDUAL;
+  const isIndividualResource = resource.type === resourceEnum.INDIVIDUAL;
   return (
     <div
       className="card-click"
@@ -32,25 +32,19 @@ const ResourceCard = (props) => {
       <div className="card-wrapper">
         <div className="col">
           <p data-cy="card-companyName">
-            {isIndividualResource
-              ? props.resource.contactName
-              : props.resource.companyName}
+            {isIndividualResource ? resource.contactName : resource.companyName}
           </p>
         </div>
         <div className="col">
-          <p data-cy="card-address">{props.resource.address}</p>
+          <p data-cy="card-address">{resource.address}</p>
         </div>
         <div className="col">
-          <p>{props.resource.contactEmail}</p>
+          <p>{resource.contactEmail}</p>
         </div>
         <div className="col col-desc col-desc-collapsed">
-          <p>
-            {isIndividualResource
-              ? props.resource.skills
-              : props.resource.description}
-          </p>
+          <p>{isIndividualResource ? resource.skills : resource.description}</p>
         </div>
-        {props.role === roleEnum.ADMIN && (
+        {role === roleEnum.ADMIN && (
           <div className="col col-edit">
             <Button onClick={toggleModal} className="edit-button">
               <img id="edit-icon" src={Edit} alt="edit icon" />
