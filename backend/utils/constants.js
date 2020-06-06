@@ -61,29 +61,31 @@ const DEFAULT_FILTER_OPTIONS = {
   shouldSort: true,
   threshold: 0.2,
   location: 0,
-  distance: 100,
-  maxPatternLength: 32,
-  minMatchCharLength: 1,
+  distance: 10000000,
+  findAllMatches: true,
   keys: [
     {
       name: "contactName",
-      weight: 0.35,
+      weight: 0.5,
     },
     {
       name: "companyName",
+      weight: 0.5,
+    },
+    { name: "skills", weight: 0.3 },
+    { name: "volunteerRoles", weight: 0.3 },
+    { name: "howDiscovered", weight: 0.3 },
+    {
+      name: "notes",
+      weight: 0.3,
+    },
+    {
+      name: "description",
       weight: 0.3,
     },
     {
       name: "tags",
-      weight: 0.15,
-    },
-    {
-      name: "description",
-      weight: 0.1,
-    },
-    {
-      name: "notes",
-      weight: 0.1,
+      weight: 0.2,
     },
   ],
 };
