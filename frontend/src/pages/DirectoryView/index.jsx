@@ -62,12 +62,6 @@ const ResourceManager = ({
           </div>
           <div
             className="col"
-            onClick={() => updateSort(sortFieldEnum.POINT_OF_CONTACT)}
-          >
-            <h3>Point of Contact {sortIcon(sortFieldEnum.POINT_OF_CONTACT)}</h3>
-          </div>
-          <div
-            className="col"
             onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
           >
             <h3>Description {sortIcon(sortFieldEnum.DESCRIPTION)}</h3>

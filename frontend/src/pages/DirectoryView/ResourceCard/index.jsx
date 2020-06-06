@@ -40,15 +40,15 @@ const ResourceCard = (props) => {
         <div className="col">
           <p data-cy="card-address">{props.resource.address}</p>
         </div>
-        <div className="col">
-          <p>{props.resource.contactEmail}</p>
-        </div>
         <div className="col col-desc col-desc-collapsed">
           <p>
             {isIndividualResource
               ? props.resource.skills
               : props.resource.description}
           </p>
+        </div>
+        <div className="col">
+          <p>{props.resource.tags.join(", ")}</p>
         </div>
         {props.role === roleEnum.ADMIN && (
           <div className="col col-edit">
