@@ -16,7 +16,7 @@ const resourceDescription = (resource) =>
 
 const sortComparatorDict = {
   [sortFieldEnum.RESOURCE_NAME]: resourceName,
-  [sortFieldEnum.RESOURCE_LOCATION]: resourceLocation,
+  [sortFieldEnum.LOCATION]: resourceLocation,
   [sortFieldEnum.POINT_OF_CONTACT]: resourcePointOfContact,
   [sortFieldEnum.DESCRIPTION]: resourceDescription,
 };
