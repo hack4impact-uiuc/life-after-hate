@@ -6,7 +6,7 @@ import Edit from "../../../assets/images/pencil-edit-button-black.svg";
 import { roleEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const UserCard = ({ user, role }) => {
+const UserCard = ({ user, role, openUserModalWithPayload }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openUserModalWithPayload({ userId: user.id });
