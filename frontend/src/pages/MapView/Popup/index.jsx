@@ -13,38 +13,37 @@ import ActionButtons from "../ActionButtons";
 
 const isIndividualResource = (resource) =>
   resource.type === resourceEnum.INDIVIDUAL;
-const MapPopup = (props) => (
+const MapPopup = ({ isResourceSelected, resource, clearMapResource }) => (
   <div>
-    {props.isResourceSelected && (
+    {isResourceSelected && (
       <Popup
-        latitude={props.resource.location.coordinates[1]}
-        longitude={props.resource.location.coordinates[0]}
+        latitude={resource.location.coordinates[1]}
+        longitude={resource.location.coordinates[0]}
         tipSize={5}
         closeOnClick={false}
         dynamicPosition
         offsetTop={-27}
         captureScroll={false}
-        onClose={props.clearMapResource}
+        onClose={clearMapResource}
       >
         <div className="popup">
           <div data-cy="popup-title" className="popup-title">
-            {isIndividualResource(props.resource)
-              ? props.resource.contactName
-              : props.resource.companyName}
+            {isIndividualResource(resource)
+              ? resource.contactName
+              : resource.companyName}
           </div>
-          {"distanceFromSearchLoc" in props.resource && (
+          {"distanceFromSearchLoc" in resource && (
             <div className="popup-distance">
-              {Math.round(props.resource.distanceFromSearchLoc * 10) / 10} miles
-              away
+              {Math.round(resource.distanceFromSearchLoc * 10) / 10} miles away
             </div>
           )}
           <div className="popup-desc">
-            {isIndividualResource(props.resource)
-              ? props.resource.skills
-              : props.resource.description}
+            {isIndividualResource(resource)
+              ? resource.skills
+              : resource.description}
           </div>
 
-          <ActionButtons resource={props.resource}></ActionButtons>
+          <ActionButtons resource={resource}></ActionButtons>
         </div>
       </Popup>
     )}

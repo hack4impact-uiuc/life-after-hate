@@ -11,7 +11,7 @@ import { userFilterEnum } from "../../utils/enums";
 import UserCard from "./UserCard";
 import "./styles.scss";
 
-const UserManager = (props) => {
+const UserManager = ({ users, filter, changeUserFilter }) => {
   useEffect(() => {
     document.title = "Account Management - Life After Hate";
     refreshAllUsers();
@@ -21,7 +21,7 @@ const UserManager = (props) => {
 
   const onCategoryChange = (event) => {
     console.log("filter changed");
-    props.changeUserFilter(event.target.value);
+    changeUserFilter(event.target.value);
   };
 
   return (
@@ -30,7 +30,7 @@ const UserManager = (props) => {
         <h1>User Directory</h1>
         <select
           onChange={onCategoryChange}
-          defaultValue={props.filter}
+          defaultValue={filter}
           data-cy="user-filter"
         >
           <option value={userFilterEnum.ALL}>All Users</option>
@@ -58,7 +58,7 @@ const UserManager = (props) => {
           </div>
           <div />
         </div>
-        {props.users && props.users.map(renderCards)}
+        {users && users.map(renderCards)}
       </div>
     </div>
   );

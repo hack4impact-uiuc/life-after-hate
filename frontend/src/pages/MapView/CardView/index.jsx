@@ -29,7 +29,10 @@ class CardView extends React.Component {
     };
   }
 
-  getRowIdxById = (id) => this.props.resources.findIndex((r) => r._id === id);
+  getRowIdxById = (id) => {
+    const { resources } = this.props;
+    return resources.findIndex((r) => r._id === id);
+  };
 
   purgeCache = () => {
     cache.clearAll();
@@ -71,6 +74,8 @@ class CardView extends React.Component {
 
   rowRenderer({ index, key, parent, style }) {
     // const source // This comes from your list data
+
+    const { resources, selectedResource } = this.props;
     return (
       <CellMeasurer
         cache={cache}
@@ -82,12 +87,10 @@ class CardView extends React.Component {
         {({ registerChild }) => (
           // 'style' attribute required to position cell (within parent List)
           <ResourceCard
-            key={this.props.resources[index]._id}
+            key={resources[index]._id}
             ref={registerChild}
-            resource={this.props.resources[index]}
-            isSelected={
-              this.props.resources[index]._id === this.props.selectedResource
-            }
+            resource={resources[index]}
+            isSelected={resources[index]._id === selectedResource}
             style={style}
           />
           // <div ref={registerChild} style={style}>

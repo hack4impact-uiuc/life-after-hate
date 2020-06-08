@@ -9,7 +9,7 @@ import { currentUserSelector } from "../../../redux/selectors/modal";
 import LAHModal from "../../Modal";
 import "../styles.scss";
 
-const UserModal = (props) => {
+const UserModal = ({ isOpen, modalType, user, editable }) => {
   const { register, handleSubmit } = useForm();
 
   const handleEditUser = async (data) => {
@@ -17,8 +17,8 @@ const UserModal = (props) => {
       role: data.role,
       title: data.title,
     };
-    await editAndRefreshUser(reqBody, props.user.id);
-    props.closeModal();
+    await editAndRefreshUser(reqBody, user.id);
+    closeModal();
   };
 
   const onSubmit = handleEditUser;
@@ -26,7 +26,7 @@ const UserModal = (props) => {
 
   return (
     <div className="modal-wrap-ee">
-      {props.isOpen && props.modalType === modalEnum.USER && (
+      {isOpen && modalType === modalEnum.USER && (
         <LAHModal>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -38,7 +38,7 @@ const UserModal = (props) => {
                 ref={register}
                 type="text"
                 name="name"
-                defaultValue={`${props.user.firstName} ${props.user.lastName}`}
+                defaultValue={`${user.firstName} ${user.lastName}`}
                 className="modal-input-field"
                 data-cy="user-name-input-field"
                 disabled
@@ -50,7 +50,7 @@ const UserModal = (props) => {
                 ref={register}
                 type="text"
                 name="email"
-                defaultValue={props.user.email}
+                defaultValue={user.email}
                 className="modal-input-field"
                 data-cy="email-input-field"
                 disabled
@@ -62,9 +62,9 @@ const UserModal = (props) => {
                 ref={register}
                 name="role"
                 data-cy="role-input-field"
-                defaultValue={props.user.role}
+                defaultValue={user.role}
                 className="modal-select-field"
-                disabled={!props.editable}
+                disabled={!editable}
               >
                 {Object.values(roleEnum).map(makeOption) /* Enum to options */}
               </select>
@@ -74,14 +74,14 @@ const UserModal = (props) => {
               <textarea
                 ref={register}
                 name="title"
-                defaultValue={props.user.title}
+                defaultValue={user.title}
                 className="modal-input-field modal-input-textarea"
                 data-cy="title-input-field"
                 rows="3"
-                disabled={!props.editable}
+                disabled={!editable}
               />
             </label>
-            {props.editable && (
+            {editable && (
               <div>
                 <Button
                   id="submit-form-button"

@@ -6,11 +6,11 @@ import { openModal, closeModal } from "../../redux/actions/modal";
 import { titleSelector } from "../../redux/selectors/modal";
 import "./styles.scss";
 
-const LAHModal = (props) => (
-  <Modal fade={false} isOpen={props.isOpen} toggle={props.closeModal}>
+const LAHModal = ({ isOpen, closeModal, title, children }) => (
+  <Modal fade={false} isOpen={isOpen} toggle={closeModal}>
     <ModalHeader>
-      {props.title}
-      <Button color="link" className="close-button" onClick={props.closeModal}>
+      {title}
+      <Button color="link" className="close-button" onClick={closeModal}>
         <img id="close-image" src={Close} alt="close" />
       </Button>
     </ModalHeader>
@@ -20,7 +20,7 @@ const LAHModal = (props) => (
         overflowY: "auto",
       }}
     >
-      {props.children}
+      {children}
     </ModalBody>
   </Modal>
 );
