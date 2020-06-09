@@ -35,11 +35,11 @@ Cypress.Commands.add("setRole", (role) => {
 Cypress.Commands.add("createDirectoryViewResource", (name) => {
   cy.get("#add-button").click();
   cy.get(".modal-title").should("have.text", "Add Resource");
-  cy.get("[data-cy=modal-resource-type]").select("GROUP");
-  cy.get("[data-cy=modal-company-name]").type(name);
-  cy.get("[data-cy=modal-contact-name]").type("Testing");
-  cy.get("[data-cy=modal-contact-phone]").type("1-234-567-8900");
-  cy.get("[data-cy=modal-contact-email]").type("alanfang@gmail.com");
+  cy.get("[data-cy=modal-resourceType]").select("GROUP");
+  cy.get("[data-cy=modal-companyName]").type(name);
+  cy.get("[data-cy=modal-contactName]").type("Testing");
+  cy.get("[data-cy=modal-contactPhone]").type("1-234-567-8900");
+  cy.get("[data-cy=modal-contactEmail]").type("alanfang@gmail.com");
   cy.get("[data-cy=modal-description").type(
     "This is a test description! This should show up in its entirety."
   );

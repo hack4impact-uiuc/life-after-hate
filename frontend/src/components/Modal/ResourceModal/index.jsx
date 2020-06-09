@@ -64,7 +64,6 @@ const ResourceModal = ({
     resource.type ?? resourceEnum.INDIVIDUAL
   );
   const onSubmit = (data) => {
-    console.log(data);
     isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
 
@@ -95,13 +94,14 @@ const ResourceModal = ({
     return deleteAndRefreshResource(resource._id);
   };
 
-  const createLabel = ({ required, ...props }) => (
+  const createLabel = ({ required, shortName, ...props }) => (
     <ModalInput
       componentRef={register({ required: required ?? false })}
       resource={resource}
       errors={errors}
       disabled={!editable}
-      {...props}
+      key={shortName}
+      {...{ required, shortName, ...props }}
     ></ModalInput>
   );
 
@@ -125,7 +125,7 @@ const ResourceModal = ({
           <select
             ref={register({ required: true })}
             name="type"
-            data-cy="modal-resource-type"
+            data-cy="modal-resourceType"
             value={groupType}
             rows="5"
             className={`modal-input-field ${errors.type ? "invalid" : ""}`}
@@ -145,7 +145,7 @@ const ResourceModal = ({
           defaultValue: isAddingResource ? "" : resource.tags.join(", "),
         })}
         {editable && (
-          <div>
+          <div style={{ marginTop: "20px" }}>
             <Button id="submit-form-button" type="submit">
               Save
             </Button>
