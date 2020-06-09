@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
-import { modalEnum, resourceEnum } from "../../../utils/enums";
+import { resourceEnum } from "../../../utils/enums";
 import {
   editAndRefreshResource,
   addAndRefreshResource,
@@ -22,12 +22,12 @@ const ResourceModal = ({
   isAddingResource,
   closeModal,
   editable,
-  isOpen,
-  modalType,
 }) => {
   const { register, handleSubmit, errors } = useForm();
   const [deleteClicked, setDeleteClicked] = useState(false);
-  const [groupType, setGroupType] = useState(resourceEnum.INDIVIDUAL);
+  const [groupType, setGroupType] = useState(
+    resource.type ?? resourceEnum.INDIVIDUAL
+  );
   const onSubmit = (data) => {
     isAddingResource ? handleAddResource(data) : handleEditResource(data);
   };
@@ -117,172 +117,166 @@ const ResourceModal = ({
   );
 
   return (
-    <div className="modal-wrap-ee">
-      {isOpen && modalType === modalEnum.RESOURCE && (
-        <LAHModal>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="add-edit-resource-form"
+    <LAHModal>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="add-edit-resource-form"
+      >
+        <label className="modal-lab">
+          <p>Resource Type</p>
+          <select
+            ref={register({ required: true })}
+            name="type"
+            data-cy="modal-resource-type"
+            value={groupType}
+            rows="5"
+            className={`modal-input-field ${errors.type ? "invalid" : ""}`}
+            disabled={!isAddingResource}
+            onChange={(e) => setGroupType(e.target.value)}
           >
-            <label className="modal-lab">
-              <p>Resource Type</p>
-              <select
-                ref={register({ required: true })}
-                name="type"
-                data-cy="modal-resource-type"
-                value={groupType}
-                rows="5"
-                className={`modal-input-field ${errors.type ? "invalid" : ""}`}
-                disabled={!isAddingResource}
-                onChange={(e) => setGroupType(e.target.value)}
+            <option>{resourceEnum.INDIVIDUAL}</option>
+            <option>{resourceEnum.GROUP}</option>
+          </select>
+        </label>
+
+        {!isIndividualResource && (
+          <label className="modal-lab">
+            <p>Company Name</p>
+            <input
+              ref={register({ required: true })}
+              type="text"
+              name="companyName"
+              data-cy="modal-company-name"
+              defaultValue={resource.companyName}
+              className={`modal-input-field ${
+                errors.contactName ? "invalid" : ""
+              }`}
+              disabled={!editable}
+            />
+          </label>
+        )}
+        <label className="modal-lab">
+          <p>Contact Name</p>
+          <input
+            ref={register({ required: true })}
+            type="text"
+            name="contactName"
+            data-cy="modal-contact-name"
+            defaultValue={resource.contactName}
+            className={`modal-input-field ${
+              errors.contactName ? "invalid" : ""
+            }`}
+            disabled={!editable}
+          />
+        </label>
+        <label className="modal-lab">
+          <p>Contact Phone</p>
+          <input
+            ref={register}
+            type="text"
+            name="contactPhone"
+            data-cy="modal-contact-phone"
+            defaultValue={resource.contactPhone}
+            className={`modal-input-field ${
+              errors.contactPhone ? "invalid" : ""
+            }`}
+            disabled={!editable}
+          />
+        </label>
+        <label className="modal-lab">
+          <p>Contact Email</p>
+          <input
+            ref={register({ required: true })}
+            type="text"
+            name="contactEmail"
+            data-cy="modal-contact-email"
+            defaultValue={resource.contactEmail}
+            className={`modal-input-field ${
+              errors.contactEmail ? "invalid" : ""
+            }`}
+            disabled={!editable}
+          />
+        </label>
+        {isIndividualResource ? (
+          getIndividualResourceFields()
+        ) : (
+          <label className="modal-lab">
+            <p>Description</p>
+            <textarea
+              ref={register}
+              name="description"
+              data-cy="modal-description"
+              defaultValue={resource.description}
+              rows="5"
+              className={`modal-input-field modal-input-textarea ${
+                errors.description ? "invalid" : ""
+              }`}
+              disabled={!editable}
+            />
+          </label>
+        )}
+
+        <label className="modal-lab">
+          <p>Tags</p>
+          <input
+            ref={register}
+            name="tags"
+            data-cy="modal-tags"
+            defaultValue={isAddingResource ? "" : resource.tags.join(", ")}
+            className={`modal-input-field ${errors.tags && "invalid"}`}
+            disabled={!editable}
+          />
+        </label>
+        <label className="modal-lab">
+          <p>Address</p>
+          <input
+            ref={register({ required: true })}
+            name="address"
+            data-cy="modal-address"
+            type="text"
+            defaultValue={resource.address}
+            className={`modal-input-field ${errors.address && "invalid"}`}
+            disabled={!editable}
+          />
+        </label>
+
+        <label className="modal-lab">
+          <p>Notes</p>
+          <textarea
+            ref={register}
+            name="notes"
+            data-cy="modal-notes"
+            defaultValue={resource.notes}
+            rows="5"
+            className="modal-input-field modal-input-textarea"
+            disabled={!editable}
+          />
+        </label>
+        {editable && (
+          <div>
+            <Button id="submit-form-button" type="submit">
+              Save
+            </Button>
+            {!isAddingResource && (
+              <Button
+                id="delete-form-button"
+                onClick={handleDeleteResource}
+                onBlur={() => setDeleteClicked(false)}
               >
-                <option>{resourceEnum.INDIVIDUAL}</option>
-                <option>{resourceEnum.GROUP}</option>
-              </select>
-            </label>
-
-            {!isIndividualResource && (
-              <label className="modal-lab">
-                <p>Company Name</p>
-                <input
-                  ref={register({ required: true })}
-                  type="text"
-                  name="companyName"
-                  data-cy="modal-company-name"
-                  defaultValue={resource.companyName}
-                  className={`modal-input-field ${
-                    errors.contactName ? "invalid" : ""
-                  }`}
-                  disabled={!editable}
-                />
-              </label>
+                {deleteClicked ? "Confirm" : "Delete"}
+              </Button>
             )}
-            <label className="modal-lab">
-              <p>Contact Name</p>
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="contactName"
-                data-cy="modal-contact-name"
-                defaultValue={resource.contactName}
-                className={`modal-input-field ${
-                  errors.contactName ? "invalid" : ""
-                }`}
-                disabled={!editable}
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Contact Phone</p>
-              <input
-                ref={register}
-                type="text"
-                name="contactPhone"
-                data-cy="modal-contact-phone"
-                defaultValue={resource.contactPhone}
-                className={`modal-input-field ${
-                  errors.contactPhone ? "invalid" : ""
-                }`}
-                disabled={!editable}
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Contact Email</p>
-              <input
-                ref={register({ required: true })}
-                type="text"
-                name="contactEmail"
-                data-cy="modal-contact-email"
-                defaultValue={resource.contactEmail}
-                className={`modal-input-field ${
-                  errors.contactEmail ? "invalid" : ""
-                }`}
-                disabled={!editable}
-              />
-            </label>
-            {isIndividualResource ? (
-              getIndividualResourceFields()
-            ) : (
-              <label className="modal-lab">
-                <p>Description</p>
-                <textarea
-                  ref={register}
-                  name="description"
-                  data-cy="modal-description"
-                  defaultValue={resource.description}
-                  rows="5"
-                  className={`modal-input-field modal-input-textarea ${
-                    errors.description ? "invalid" : ""
-                  }`}
-                  disabled={!editable}
-                />
-              </label>
-            )}
-
-            <label className="modal-lab">
-              <p>Tags</p>
-              <input
-                ref={register}
-                name="tags"
-                data-cy="modal-tags"
-                defaultValue={isAddingResource ? "" : resource.tags.join(", ")}
-                className={`modal-input-field ${errors.tags && "invalid"}`}
-                disabled={!editable}
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Address</p>
-              <input
-                ref={register({ required: true })}
-                name="address"
-                data-cy="modal-address"
-                type="text"
-                defaultValue={resource.address}
-                className={`modal-input-field ${errors.address && "invalid"}`}
-                disabled={!editable}
-              />
-            </label>
-
-            <label className="modal-lab">
-              <p>Notes</p>
-              <textarea
-                ref={register}
-                name="notes"
-                data-cy="modal-notes"
-                defaultValue={resource.notes}
-                rows="5"
-                className="modal-input-field modal-input-textarea"
-                disabled={!editable}
-              />
-            </label>
-            {editable && (
-              <div>
-                <Button id="submit-form-button" type="submit">
-                  Save
-                </Button>
-                {!isAddingResource && (
-                  <Button
-                    id="delete-form-button"
-                    onClick={handleDeleteResource}
-                    onBlur={() => setDeleteClicked(false)}
-                  >
-                    {deleteClicked ? "Confirm" : "Delete"}
-                  </Button>
-                )}
-              </div>
-            )}
-          </form>
-        </LAHModal>
-      )}
-    </div>
+          </div>
+        )}
+      </form>
+    </LAHModal>
   );
 };
 
 const mapStateToProps = (state) => ({
-  isOpen: state.modal.isOpen,
   resource: currentResourceSelector(state),
   isAddingResource: isAddingResourceSelector(state),
   editable: state.modal.editable,
-  modalType: state.modal.modalType,
 });
 
 const mapDispatchToProps = {
