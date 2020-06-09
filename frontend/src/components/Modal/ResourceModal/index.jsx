@@ -94,7 +94,7 @@ const ResourceModal = ({
     return deleteAndRefreshResource(resource._id);
   };
 
-  const createLabel = ({ required, shortName, ...props }) => (
+  const createInput = ({ required, shortName, ...props }) => (
     <ModalInput
       componentRef={register({ required: required ?? false })}
       resource={resource}
@@ -106,8 +106,8 @@ const ResourceModal = ({
   );
 
   const getIndividualResourceFields = () =>
-    IndividualResourceFields.map(createLabel);
-  const getGroupResourceFields = () => GroupResourceFields.map(createLabel);
+    IndividualResourceFields.map(createInput);
+  const getGroupResourceFields = () => GroupResourceFields.map(createInput);
 
   // If a new resource, defer to the dropdown, else defer to the resource
   const isIndividualResource = isAddingResource
@@ -139,7 +139,7 @@ const ResourceModal = ({
         {isIndividualResource
           ? getIndividualResourceFields()
           : getGroupResourceFields()}
-        {createLabel({
+        {createInput({
           labelText: "Tags",
           shortName: "tags",
           defaultValue: isAddingResource ? "" : resource.tags.join(", "),
