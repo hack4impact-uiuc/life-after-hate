@@ -59,6 +59,27 @@ const ResourceModal = ({
     return deleteAndRefreshResource(resource._id);
   };
 
+  const createInput = ({ labelText, shortName, required, isTextArea }) => {
+    const props = {
+      ref: register,
+      type: "text",
+      name: shortName,
+      "data-cy": `modal-${shortName}`,
+      defaultValue: resource[shortName],
+      className: `modal-input-field ${
+        required && errors[shortName] ? "invalid" : ""
+      }`,
+      disabled: !editable,
+    };
+
+    return (
+      <label className="modal-lab">
+        <p>{labelText}</p>
+        {isTextArea ? <input {...props} /> : <textarea {...props} />}
+      </label>
+    );
+  };
+
   // If a new resource, defer to the dropdown, else defer to the resource
   const isIndividualResource = isAddingResource
     ? groupType === resourceEnum.INDIVIDUAL
