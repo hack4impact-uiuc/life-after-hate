@@ -25,7 +25,7 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
   };
 
   return (
-    <div className="directory">
+    <div className="user-directory">
       <div className="manager-header">
         <h1>User Directory</h1>
         <select
@@ -41,9 +41,8 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
           </option>
         </select>
       </div>
-
-      <div className="users">
-        <div className="user-labels clearfix">
+      <div className="container-fluid users">
+        <div className="user-labels row">
           <div className="col">
             <h3>Name</h3>
           </div>
@@ -56,6 +55,7 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
           <div className="col">
             <h3>Title</h3>
           </div>
+          <div className="col-2" />
           <div />
         </div>
         {users && users.map(renderCards)}

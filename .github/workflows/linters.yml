@@ -14,7 +14,7 @@ jobs:
         node-version: 12.x
     - name: Prettier check
       run: |
-        npm install
+        npm ci
         npm run prettier-check
       env:
         CI: true
@@ -29,7 +29,7 @@ jobs:
           node-version: 12.x
       - name: Lint frontend
         run: |
-         npm install
+         npm ci
          npm run lint:fe
 
   lint-backend:
@@ -42,5 +42,5 @@ jobs:
           node-version: 12.x
       - name: Lint backend
         run: |
-         npm install
+         npm ci
          npm run lint:be

@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: 12.x
       - name: npm installation
-        run: npm install
+        run: npm ci
       - name: Setup CI Script
         run: bash scripts/setup_ci.sh
         env:

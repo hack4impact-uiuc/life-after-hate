@@ -1,4 +1,4 @@
-.directory {
+.user-directory {
   width: 100%;
   height: 100vh;
   padding: 70px 40px 20px 40px;
@@ -8,7 +8,7 @@
     background-color: #f9f9f9;
     margin-top: 8px;
     margin-bottom: 40px;
-    padding: 10px 12px 12px 12px;
+    padding: 10px 12px;
     border-radius: 6px;
     box-shadow: 0 0px 4px rgba(0, 0, 0, 0.15);
   }
@@ -24,38 +24,24 @@
     text-transform: uppercase;
     font-weight: bold;
   }
-}
 
-.user-labels {
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-bottom: 10px;
-}
+  .user-labels {
+    padding-bottom: 10px;
+  }
 
-.card-click {
-  outline: none;
-  position: relative;
-  top: 0px;
-  transition: all 0.2s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0);
-}
+  .card-click {
+    outline: none;
+    position: relative;
+    top: 0px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0);
+  }
 
-.card-click:hover {
-  top: -2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+  .card-click:hover {
+    top: -2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
 
-.card-wrapper {
-  background-color: white;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  padding: 14px;
-  margin-bottom: 8px;
-  display: table;
-  width: 100%;
   #edit-icon {
     height: 18px;
     padding-right: 5px;
@@ -73,43 +59,45 @@
   .edit-button:hover {
     background-color: #f6f6f6;
   }
-  p {
-    margin: 0;
+
+  .card-wrapper {
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    padding: 14px;
+    margin-bottom: 8px;
+    width: 100%;
+
+    p {
+      margin: 0;
+    }
   }
-}
 
-.col {
-  width: 19%;
-  float: left;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 1%;
-}
+  .col p {
+    opacity: 0.8;
+  }
 
-.col p {
-  opacity: 0.8;
-}
+  .card-wrapper .col-desc {
+    width: 35%;
+  }
 
-.card-wrapper .col-desc {
-  width: 35%;
-}
+  .col-desc-collapsed {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
 
-.col-desc-collapsed {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
+  .col-edit {
+    width: 8%;
+  }
 
-.col-edit {
-  width: 8%;
-}
-
-.clearfix:after {
-  content: " ";
-  display: block;
-  height: 0;
-  clear: both;
+  .clearfix:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+  }
 }
