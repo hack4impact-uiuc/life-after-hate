@@ -58,7 +58,7 @@ context("Directory View", () => {
     cy.get("[data-cy=modal-description]").should("exist");
   });
 
-  it.only("Allows us to add a resource then delete it", () => {
+  it("Allows us to add a resource then delete it", () => {
     cy.createDirectoryViewResource("This is Test Resource");
     cy.get("#search-general").type("This is Test Resource");
     cy.get("#search-button").click();
