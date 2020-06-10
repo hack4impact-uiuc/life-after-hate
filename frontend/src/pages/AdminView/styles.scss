@@ -90,14 +90,7 @@
     -webkit-box-orient: vertical;
   }
 
-  .col-edit {
-    width: 8%;
-  }
-
-  .clearfix:after {
-    content: " ";
-    display: block;
-    height: 0;
-    clear: both;
+  .manager-header {
+    align-items: center;
   }
 }

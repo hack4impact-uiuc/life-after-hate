@@ -26,20 +26,24 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
 
   return (
     <div className="user-directory">
-      <div className="manager-header">
-        <h1>User Directory</h1>
-        <select
-          onChange={onCategoryChange}
-          defaultValue={filter}
-          data-cy="user-filter"
-        >
-          <option value={userFilterEnum.ALL}>All Users</option>
-          <option value={userFilterEnum.ACTIVE}>Active Users</option>
-          <option value={userFilterEnum.PENDING}>Pending Users</option>
-          <option value={userFilterEnum.REJECTED}>
-            Rejected/Deactivated Users
-          </option>
-        </select>
+      <div className="container-fluid">
+        <div className="manager-header row">
+          <div className="col">
+            <h1>User Directory</h1>
+          </div>
+          <select
+            onChange={onCategoryChange}
+            defaultValue={filter}
+            data-cy="user-filter"
+          >
+            <option value={userFilterEnum.ALL}>All Users</option>
+            <option value={userFilterEnum.ACTIVE}>Active Users</option>
+            <option value={userFilterEnum.PENDING}>Pending Users</option>
+            <option value={userFilterEnum.REJECTED}>
+              Rejected/Deactivated Users
+            </option>
+          </select>
+        </div>
       </div>
       <div className="users">
         <div className="container-fluid">
