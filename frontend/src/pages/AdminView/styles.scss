@@ -96,17 +96,18 @@
     outline: none;
     padding: 11px 32px 11px 32px;
     box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
-    transition: all 0.2s;
+    transition: all 0.5s;
     border-radius: 4px;
   }
   .btn-custom:hover {
     background-color: #f9ac61;
     color: white;
-    transition: all 0.2s;
+    transition: all 0.5s;
   }
 
   .btn-custom:focus {
     background-color: #f9ac61;
+    box-shadow: 0 0 0 0.2rem rgba(249, 172, 97, 0.25);
   }
   .col-desc-collapsed {
     overflow: hidden;
