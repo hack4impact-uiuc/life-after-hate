@@ -54,7 +54,11 @@ const Navbar = ({
         <Link to="/directory">Directory</Link>
         {role === roleEnum.ADMIN && <Link to="/users">Account Management</Link>}
       </div>
-      <Dropdown isOpen={dropdownOpen} toggle={toggleUserDropdown}>
+      <Dropdown
+        isOpen={dropdownOpen}
+        toggle={toggleUserDropdown}
+        className="navbar-dropdown"
+      >
         <DropdownToggle id="dropdown-button">
           <img src={profilePic} alt="User icon" id="user" />
           <span className="caret"></span>

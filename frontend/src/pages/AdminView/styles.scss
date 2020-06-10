@@ -4,6 +4,9 @@
   padding: 70px 40px 20px 40px;
   font-family: "Roboto";
 
+  #page-title {
+    margin-bottom: 0;
+  }
   .users {
     background-color: #f9f9f9;
     margin-top: 8px;
@@ -83,6 +86,28 @@
     width: 35%;
   }
 
+  .btn-custom {
+    background-color: #f7922f;
+    color: white;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    padding: 11px 32px 11px 32px;
+    box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s;
+    border-radius: 4px;
+  }
+  .btn-custom:hover {
+    background-color: #f9ac61;
+    color: white;
+    transition: all 0.2s;
+  }
+
+  .btn-custom:focus {
+    background-color: #f9ac61;
+  }
   .col-desc-collapsed {
     overflow: hidden;
     display: -webkit-box;
@@ -92,5 +117,7 @@
 
   .manager-header {
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
   }
 }

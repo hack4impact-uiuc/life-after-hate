@@ -36,7 +36,7 @@ const UserCard = ({ user, role, openUserModalWithPayload }) => {
       <div className="col">
         <p>{user.role}</p>
       </div>
-      <div className="col">
+      <div className="col d-none d-md-block">
         <p>{user.title}</p>
       </div>
       {role === roleEnum.ADMIN && (

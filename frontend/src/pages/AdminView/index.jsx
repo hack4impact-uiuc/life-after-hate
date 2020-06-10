@@ -1,7 +1,13 @@
 /* eslint-disable jsx-a11y/no-onchange */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { refreshAllUsers } from "../../utils/api";
 import { connect } from "react-redux";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 import {
   filteredUserSelector,
   filterSelector,
@@ -17,6 +23,9 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
     refreshAllUsers();
   }, []);
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
+
   const renderCards = (user) => <UserCard key={user.id} user={user} />;
 
   const onCategoryChange = (event) => {
@@ -29,20 +38,39 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
       <div className="container-fluid">
         <div className="manager-header row">
           <div className="col">
-            <h1>User Directory</h1>
+            <h1 id="page-title">User Directory</h1>
           </div>
-          <select
+          <Dropdown
+            isOpen={dropdownOpen}
+            toggle={toggle}
             onChange={onCategoryChange}
-            defaultValue={filter}
+            // defaultValue={filter}
             data-cy="user-filter"
           >
-            <option value={userFilterEnum.ALL}>All Users</option>
-            <option value={userFilterEnum.ACTIVE}>Active Users</option>
-            <option value={userFilterEnum.PENDING}>Pending Users</option>
-            <option value={userFilterEnum.REJECTED}>
-              Rejected/Deactivated Users
-            </option>
-          </select>
+            <DropdownToggle caret color="custom">
+              {filter} Users
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem
+                value={userFilterEnum.ALL}
+                onClick={onCategoryChange}
+              >
+                All Users
+              </DropdownItem>
+              <DropdownItem
+                value={userFilterEnum.PENDING}
+                onClick={onCategoryChange}
+              >
+                Pending Users
+              </DropdownItem>
+              <DropdownItem
+                value={userFilterEnum.REJECTED}
+                onClick={onCategoryChange}
+              >
+                Rejected/Deactivated Users
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
       </div>
       <div className="users">
@@ -57,7 +85,7 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
             <div className="col">
               <h3>Account Type</h3>
             </div>
-            <div className="col">
+            <div className="col d-none d-md-block">
               <h3>Title</h3>
             </div>
             <div className="col-2" />
