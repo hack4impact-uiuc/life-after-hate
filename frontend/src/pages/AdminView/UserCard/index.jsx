@@ -31,7 +31,7 @@ const UserCard = ({ user, role, openUserModalWithPayload }) => {
         <p>{`${user.firstName} ${user.lastName}`}</p>
       </div>
       <div className="col">
-        <p>{user.email}</p>
+        <p className="text-truncate">{user.email}</p>
       </div>
       <div className="col">
         <p>{user.role}</p>
@@ -40,8 +40,12 @@ const UserCard = ({ user, role, openUserModalWithPayload }) => {
         <p>{user.title}</p>
       </div>
       {role === roleEnum.ADMIN && (
-        <div className="col-md-2 col-edit">
-          <Button onClick={toggleModal} className="edit-button">
+        <div className="col-2 col-edit">
+          <Button
+            onClick={toggleModal}
+            className="edit-button"
+            color="transparent"
+          >
             <img id="edit-icon" src={Edit} alt="edit icon" />
             Edit
           </Button>

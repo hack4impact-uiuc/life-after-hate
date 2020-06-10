@@ -41,24 +41,27 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
           </option>
         </select>
       </div>
-      <div className="container-fluid users">
-        <div className="user-labels row">
-          <div className="col">
-            <h3>Name</h3>
+      <div className="users">
+        <div className="container-fluid">
+          <div className="user-labels row">
+            <div className="col">
+              <h3>Name</h3>
+            </div>
+            <div className="col">
+              <h3>Email</h3>
+            </div>
+            <div className="col">
+              <h3>Account Type</h3>
+            </div>
+            <div className="col">
+              <h3>Title</h3>
+            </div>
+            <div className="col-2" />
+            <div />
           </div>
-          <div className="col">
-            <h3>Email</h3>
-          </div>
-          <div className="col">
-            <h3>Account Type</h3>
-          </div>
-          <div className="col">
-            <h3>Title</h3>
-          </div>
-          <div className="col-2" />
-          <div />
+
+          {users && users.map(renderCards)}
         </div>
-        {users && users.map(renderCards)}
       </div>
     </div>
   );

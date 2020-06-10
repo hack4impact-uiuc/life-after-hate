@@ -66,15 +66,15 @@
     justify-content: center;
     border-radius: 4px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    padding: 14px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 14px;
     margin-bottom: 8px;
-    width: 100%;
 
     p {
       margin: 0;
     }
   }
-
   .col p {
     opacity: 0.8;
   }
