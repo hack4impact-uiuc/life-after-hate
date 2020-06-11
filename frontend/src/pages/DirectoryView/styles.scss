@@ -15,6 +15,8 @@
     margin-top: 10px;
     margin-bottom: 20px;
     #add-button {
+      height: 36px;
+      width: 100%;
       background-color: #f7922f;
       color: white;
       font-size: 13px;
@@ -22,11 +24,9 @@
       font-weight: bold;
       border: none;
       outline: none;
-      padding: 11px 32px 11px 32px;
       box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
       transition: all 0.2s;
       border-radius: 4px;
-      margin-top: 10px;
     }
     #add-button:hover {
       background-color: #f9ac61;

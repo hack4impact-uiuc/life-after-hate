@@ -38,13 +38,16 @@ const ResourceManager = ({
     <div className="directory">
       <div className="container-fluid">
         <div className="manager-header row">
-          <div className="col">
+          <div className="col mb-3 mb-sm-0">
             <h1 id="page-title">Resource Directory</h1>
           </div>
+
           {role === roleEnum.ADMIN && (
-            <Button onClick={openResourceModal} id="add-button">
-              Add Resource
-            </Button>
+            <div className="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+              <Button onClick={openResourceModal} id="add-button">
+                Add Resource
+              </Button>
+            </div>
           )}
         </div>
       </div>
