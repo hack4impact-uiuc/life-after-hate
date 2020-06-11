@@ -12,7 +12,7 @@
     "bootstrap": "^4.5.0",
     "deck.gl": "^8.1.9",
     "istanbul-lib-coverage": "^3.0.0",
-    "mapbox-gl": "^1.10.1",
+    "mapbox-gl": "^1.10.2",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.14.1",
     "nprogress": "^0.2.0",

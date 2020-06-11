@@ -3,13 +3,14 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
-import { modalEnum, roleEnum } from "../../../utils/enums";
+import { roleEnum } from "../../../utils/enums";
 import { editAndRefreshUser } from "../../../utils/api";
 import { currentUserSelector } from "../../../redux/selectors/modal";
+import ModalInput from "../ModalInput";
 import LAHModal from "../../Modal";
 import "../styles.scss";
 
-const UserModal = ({ isOpen, modalType, user, editable }) => {
+const UserModal = ({ closeModal, user, editable }) => {
   const { register, handleSubmit } = useForm();
 
   const handleEditUser = async (data) => {
@@ -21,89 +22,72 @@ const UserModal = ({ isOpen, modalType, user, editable }) => {
     closeModal();
   };
 
+  const createInput = ({ required, shortName, ...props }) => (
+    <ModalInput
+      componentRef={register({ required: required ?? false })}
+      resource={user}
+      disabled={!editable}
+      key={shortName}
+      {...{ required, shortName, ...props }}
+    ></ModalInput>
+  );
+
   const onSubmit = handleEditUser;
-  const makeOption = (option) => <option>{option}</option>;
+  const makeOption = (option, idx) => <option key={idx}>{option}</option>;
 
   return (
-    <div className="modal-wrap-ee">
-      {isOpen && modalType === modalEnum.USER && (
-        <LAHModal>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="add-edit-resource-form"
+    <LAHModal>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="add-edit-resource-form"
+      >
+        {createInput({
+          labelText: "User Name",
+          shortName: "name",
+          disabled: true,
+          defaultValue: `${user.firstName} ${user.lastName}`,
+        })}
+        {createInput({
+          labelText: "Email",
+          shortName: "email",
+          disabled: true,
+        })}
+        <label className="modal-lab">
+          <p>Role</p>
+          <select
+            ref={register}
+            name="role"
+            data-cy="modal-role"
+            defaultValue={user.role}
+            className="modal-select-field"
+            disabled={!editable}
           >
-            <label className="modal-lab">
-              <p>User Name</p>
-              <input
-                ref={register}
-                type="text"
-                name="name"
-                defaultValue={`${user.firstName} ${user.lastName}`}
-                className="modal-input-field"
-                data-cy="user-name-input-field"
-                disabled
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Email</p>
-              <input
-                ref={register}
-                type="text"
-                name="email"
-                defaultValue={user.email}
-                className="modal-input-field"
-                data-cy="email-input-field"
-                disabled
-              />
-            </label>
-            <label className="modal-lab">
-              <p>Role</p>
-              <select
-                ref={register}
-                name="role"
-                data-cy="role-input-field"
-                defaultValue={user.role}
-                className="modal-select-field"
-                disabled={!editable}
-              >
-                {Object.values(roleEnum).map(makeOption) /* Enum to options */}
-              </select>
-            </label>
-            <label className="modal-lab">
-              <p>Title</p>
-              <textarea
-                ref={register}
-                name="title"
-                defaultValue={user.title}
-                className="modal-input-field modal-input-textarea"
-                data-cy="title-input-field"
-                rows="3"
-                disabled={!editable}
-              />
-            </label>
-            {editable && (
-              <div>
-                <Button
-                  id="submit-form-button"
-                  type="submit"
-                  data-cy="modal-submit"
-                >
-                  Save
-                </Button>
-              </div>
-            )}
-          </form>
-        </LAHModal>
-      )}
-    </div>
+            {Object.values(roleEnum).map(makeOption) /* Enum to options */}
+          </select>
+        </label>
+        {createInput({
+          labelText: "Title",
+          shortName: "title",
+        })}
+        {editable && (
+          <div>
+            <Button
+              id="submit-form-button"
+              type="submit"
+              data-cy="modal-submit"
+            >
+              Save
+            </Button>
+          </div>
+        )}
+      </form>
+    </LAHModal>
   );
 };
 
 const mapStateToProps = (state) => ({
-  isOpen: state.modal.isOpen,
   user: currentUserSelector(state),
   editable: state.modal.editable,
-  modalType: state.modal.modalType,
 });
 
 const mapDispatchToProps = {

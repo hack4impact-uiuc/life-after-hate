@@ -8,8 +8,7 @@ import MapView from "./pages/MapView";
 import DirectoryView from "./pages/DirectoryView";
 import AdminView from "./pages/AdminView";
 import MiniLoader from "./components/Loader/mini-loader";
-import ResourceModal from "./components/Modal/ResourceModal";
-import UserModal from "./components/Modal/UserModal";
+import ModalManager from "./components/Modal/ModalManager";
 import { roleEnum } from "./utils/enums";
 import store from "./redux/store";
 import { refreshGlobalAuth } from "./utils/api";
@@ -25,8 +24,7 @@ class App extends Component {
         <div className="App">
           <MiniLoader />
           <ToastContainer />
-          <ResourceModal />
-          <UserModal />
+          <ModalManager />
           <Router>
             <Route path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MapView} />
