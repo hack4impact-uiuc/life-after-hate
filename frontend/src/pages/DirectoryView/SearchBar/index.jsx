@@ -43,7 +43,7 @@ const SearchBar = ({ isLoading }) => {
           />
         </label>
 
-        <div className="col-xs-12 mx-auto col-sm-6 col-md-2 pl-md-0">
+        <div className="col-6 mx-auto col-sm-6 col-md-2 pl-md-0">
           <Button id="search-button" type="submit" disabled={isLoading}>
             SEARCH
           </Button>
