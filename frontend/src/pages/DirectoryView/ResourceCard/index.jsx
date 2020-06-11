@@ -34,11 +34,11 @@ const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
           {isIndividualResource ? resource.contactName : resource.companyName}
         </p>
       </div>
-      <div className="col">
+      <div className="col d-none d-md-block">
         <p data-cy="card-address">{resource.address}</p>
       </div>
       <div className="col">
-        <p>{resource.contactEmail}</p>
+        <p>{resource.volunteerRoles}</p>
       </div>
       <div className="col col-desc col-desc-collapsed">
         <p>{isIndividualResource ? resource.skills : resource.description}</p>

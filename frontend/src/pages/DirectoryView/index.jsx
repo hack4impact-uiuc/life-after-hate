@@ -56,30 +56,36 @@ const ResourceManager = ({
           <SearchBar />
           <div className="resource-labels row">
             <div
-              className="col"
+              className="col label"
               onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
             >
-              <h3>Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}</h3>
-            </div>
-            <div
-              className="col"
-              onClick={() => updateSort(sortFieldEnum.LOCATION)}
-            >
-              <h3>Location {sortIcon(sortFieldEnum.LOCATION)}</h3>
-            </div>
-            <div
-              className="col"
-              onClick={() => updateSort(sortFieldEnum.POINT_OF_CONTACT)}
-            >
-              <h3>
-                Point of Contact {sortIcon(sortFieldEnum.POINT_OF_CONTACT)}
+              <h3 className="resource-label">
+                Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}
               </h3>
             </div>
             <div
-              className="col"
+              className="col d-none d-md-block"
+              onClick={() => updateSort(sortFieldEnum.LOCATION)}
+            >
+              <h3 className="resource-label">
+                Location {sortIcon(sortFieldEnum.LOCATION)}
+              </h3>
+            </div>
+            <div
+              className="col label"
+              onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
+            >
+              <h3 className="resource-label">
+                Volunteer Role {sortIcon(sortFieldEnum.VOLUNTEER_ROLE)}
+              </h3>
+            </div>
+            <div
+              className="col label"
               onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
             >
-              <h3>Description {sortIcon(sortFieldEnum.DESCRIPTION)}</h3>
+              <h3 className="resource-label">
+                Description {sortIcon(sortFieldEnum.DESCRIPTION)}
+              </h3>
             </div>
 
             <div className="col" />

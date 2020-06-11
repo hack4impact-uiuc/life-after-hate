@@ -7,7 +7,7 @@ const resourceName = (resource) =>
 
 const resourceLocation = (resource) => resource.address ?? "";
 
-const resourcePointOfContact = (resource) => resource.contactEmail ?? "";
+const volunteerRole = (resource) => resource.volunteerRoles ?? "";
 
 const resourceDescription = (resource) =>
   (resource.type === resourceEnum.INDIVIDUAL
@@ -17,7 +17,7 @@ const resourceDescription = (resource) =>
 const sortComparatorDict = {
   [sortFieldEnum.RESOURCE_NAME]: resourceName,
   [sortFieldEnum.LOCATION]: resourceLocation,
-  [sortFieldEnum.POINT_OF_CONTACT]: resourcePointOfContact,
+  [sortFieldEnum.VOLUNTEER_ROLE]: volunteerRole,
   [sortFieldEnum.DESCRIPTION]: resourceDescription,
 };
 
