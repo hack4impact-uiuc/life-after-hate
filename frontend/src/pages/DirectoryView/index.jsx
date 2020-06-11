@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import ResourceCard from "./ResourceCard";
+import AdminView from "../../components/Auth/AdminView";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
 import { clearResources } from "../../redux/actions/resources";
 import { updateSort } from "../../redux/actions/sort";
 import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
-import { roleEnum, sortFieldEnum } from "../../utils/enums";
+import { sortFieldEnum } from "../../utils/enums";
 
 const ResourceManager = ({
-  role,
   openResourceModal,
   resources,
   clearResources,
@@ -42,13 +42,13 @@ const ResourceManager = ({
             <h1 id="page-title">Resource Directory</h1>
           </div>
 
-          {role === roleEnum.ADMIN && (
+          <AdminView>
             <div className="col-12 col-sm-4 col-md-3 col-lg-2 pl-0 pr-0">
               <Button onClick={openResourceModal} id="add-button">
                 Add Resource
               </Button>
             </div>
-          )}
+          </AdminView>
         </div>
       </div>
       <div className="resources">
@@ -88,7 +88,9 @@ const ResourceManager = ({
               </h3>
             </div>
 
-            <div className="col" />
+            <AdminView>
+              <div className="col" />
+            </AdminView>
           </div>
           {resources && resources.map(renderCards)}
         </div>
@@ -99,7 +101,6 @@ const ResourceManager = ({
 
 const MapStateToProps = (state) => ({
   resources: resourceSelector(state),
-  role: state.auth.role,
   sort: state.sort,
 });
 

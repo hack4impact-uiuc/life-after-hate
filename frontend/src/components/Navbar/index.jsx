@@ -21,7 +21,7 @@ import {
   updateSearchQuery,
   clearMapCenter,
 } from "../../redux/actions/map";
-
+import AdminView from "../Auth/AdminView";
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
@@ -69,12 +69,13 @@ const LAHNavbar = ({
                 Directory
               </NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink tag={Link} to="/users" className="hover-orange">
-                Account Management
-              </NavLink>
-            </NavItem>
-
+            <AdminView>
+              <NavItem>
+                <NavLink tag={Link} to="/users" className="hover-orange">
+                  Account Management
+                </NavLink>
+              </NavItem>
+            </AdminView>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 <img src={profilePic} alt="User icon" id="user-icon" />

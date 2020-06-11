@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
+import AdminView from "../../../components/Auth/AdminView";
 import { openUserModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
-import { roleEnum } from "../../../utils/enums";
 
-const UserCard = ({ user, role, openUserModalWithPayload }) => {
+const UserCard = ({ user, openUserModalWithPayload }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openUserModalWithPayload({ userId: user.id });
@@ -39,7 +39,7 @@ const UserCard = ({ user, role, openUserModalWithPayload }) => {
       <div className="col d-none d-md-block">
         <p>{user.title}</p>
       </div>
-      {role === roleEnum.ADMIN && (
+      <AdminView>
         <div className="col col-edit">
           <Button
             onClick={toggleModal}
@@ -50,17 +50,13 @@ const UserCard = ({ user, role, openUserModalWithPayload }) => {
             Edit
           </Button>
         </div>
-      )}
+      </AdminView>
     </div>
   );
 };
-
-const mapStateToProps = (state) => ({
-  role: state.auth.role,
-});
 
 const mapDispatchToProps = {
   openUserModalWithPayload,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserCard);
+export default connect(null, mapDispatchToProps)(UserCard);

@@ -1,12 +1,13 @@
 import React from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
+import AdminView from "../../../components/Auth/AdminView";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
-import { resourceEnum, roleEnum } from "../../../utils/enums";
+import { resourceEnum } from "../../../utils/enums";
 import "../styles.scss";
 
-const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
+const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openResourceModalWithPayload({ resourceId: resource._id });
@@ -43,7 +44,7 @@ const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
       <div className="col col-desc col-desc-collapsed">
         <p>{isIndividualResource ? resource.skills : resource.description}</p>
       </div>
-      {role === roleEnum.ADMIN && (
+      <AdminView>
         <div className="col col-edit">
           <Button
             onClick={toggleModal}
@@ -54,17 +55,13 @@ const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
             Edit
           </Button>
         </div>
-      )}
+      </AdminView>
     </div>
   );
 };
-
-const mapStateToProps = (state) => ({
-  role: state.auth.role,
-});
 
 const mapDispatchToProps = {
   openResourceModalWithPayload,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ResourceCard);
+export default connect(null, mapDispatchToProps)(ResourceCard);
