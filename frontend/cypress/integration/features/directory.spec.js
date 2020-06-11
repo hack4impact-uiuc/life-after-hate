@@ -19,17 +19,17 @@ context("Directory View", () => {
   it("Adding an incomplete resource fails", () => {
     cy.get("#add-button").should("have.text", "Add Resource").click();
 
-    cy.get("[data-cy=modal-resource-type]").select("GROUP");
-    cy.get("[data-cy=modal-company-name]").type("Test Resource");
+    cy.get("[data-cy=modal-resourceType]").select("GROUP");
+    cy.get("[data-cy=modal-companyName]").type("Test Resource");
 
     cy.get("#submit-form-button").click();
-    cy.get("[data-cy=modal-contact-name]").should("have.class", "invalid");
+    cy.get("[data-cy=modal-contactName]").should("have.class", "invalid");
 
-    cy.get("[data-cy=modal-contact-phone]").type("123-456-7890");
+    cy.get("[data-cy=modal-contactPhone]").type("123-456-7890");
 
     cy.get("#submit-form-button").click();
-    cy.get('[data-cy="modal-contact-name"]').should("have.class", "invalid");
-    cy.get('[data-cy="modal-contact-phone"]').should(
+    cy.get('[data-cy="modal-contactName"]').should("have.class", "invalid");
+    cy.get('[data-cy="modal-contactPhone"]').should(
       "not.have.class",
       "invalid"
     );
@@ -50,10 +50,10 @@ context("Directory View", () => {
   it("Should show different fields depending on type of resource added", () => {
     cy.get("#add-button").click();
     cy.get(".modal-title").should("have.text", "Add Resource");
-    cy.get("[data-cy=modal-resource-type]").should("have.value", "INDIVIDUAL");
+    cy.get("[data-cy=modal-resourceType]").should("have.value", "INDIVIDUAL");
 
     cy.get("[data-cy=modal-skills]").should("exist");
-    cy.get("[data-cy=modal-resource-type]").select("GROUP");
+    cy.get("[data-cy=modal-resourceType]").select("GROUP");
     cy.get("[data-cy=modal-skills]").should("not.exist");
     cy.get("[data-cy=modal-description]").should("exist");
   });
@@ -107,7 +107,7 @@ context("Directory View", () => {
     cy.get("#search-button").click();
     cy.get(".edit-button").first().click();
     cy.get(".modal-title").should("have.text", "Edit Resource");
-    cy.get("[data-cy=modal-contact-name]").clear().type("Edited Resource!!");
+    cy.get("[data-cy=modal-contactName]").clear().type("Edited Resource!!");
     cy.get("[data-cy=modal-address]")
       .clear()
       .type("630 S 5th St, Champaign, IL");
@@ -120,7 +120,7 @@ context("Directory View", () => {
     // Check if the geocode functionality works as we expect it - should fill in the ZIP code
     cy.get("[data-cy=card-address]").should("contain.text", "61820");
     cy.get(".edit-button").first().click();
-    cy.get("[data-cy=modal-contact-name]").clear().type("Alan Fang");
+    cy.get("[data-cy=modal-contactName]").clear().type("Alan Fang");
     cy.get("#submit-form-button").click();
   });
 
