@@ -40,7 +40,7 @@ const UserCard = ({ user, role, openUserModalWithPayload }) => {
         <p>{user.title}</p>
       </div>
       {role === roleEnum.ADMIN && (
-        <div className="col-2 col-edit">
+        <div className="col col-edit">
           <Button
             onClick={toggleModal}
             className="edit-button"

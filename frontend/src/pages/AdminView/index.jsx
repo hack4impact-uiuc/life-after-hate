@@ -88,7 +88,7 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
             <div className="col d-none d-md-block">
               <h3>Title</h3>
             </div>
-            <div className="col-2" />
+            <div className="col" />
             <div />
           </div>
 

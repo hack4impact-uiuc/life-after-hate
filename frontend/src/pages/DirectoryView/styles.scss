@@ -90,6 +90,9 @@
       padding-right: 5px;
     }
     .edit-button {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
       background-color: transparent;
       transition: all 0.2s;
       text-transform: uppercase;

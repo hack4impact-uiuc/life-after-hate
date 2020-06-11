@@ -43,7 +43,7 @@ const ResourceManager = ({
           </div>
 
           {role === roleEnum.ADMIN && (
-            <div className="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+            <div className="col-xs-12 col-sm-4 col-md-3 col-lg-2 pl-0 pr-0">
               <Button onClick={openResourceModal} id="add-button">
                 Add Resource
               </Button>
@@ -82,8 +82,8 @@ const ResourceManager = ({
               <h3>Description {sortIcon(sortFieldEnum.DESCRIPTION)}</h3>
             </div>
 
-            <div className="col-2" />
-          </div>{" "}
+            <div className="col" />
+          </div>
           {resources && resources.map(renderCards)}
         </div>
       </div>

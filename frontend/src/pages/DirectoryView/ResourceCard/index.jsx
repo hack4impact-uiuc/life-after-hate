@@ -44,7 +44,7 @@ const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
         <p>{isIndividualResource ? resource.skills : resource.description}</p>
       </div>
       {role === roleEnum.ADMIN && (
-        <div className="col-2 col-edit">
+        <div className="col col-edit">
           <Button
             onClick={toggleModal}
             className="edit-button"
