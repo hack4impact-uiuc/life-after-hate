@@ -15,7 +15,7 @@ const SearchBar = ({ isLoading }) => {
   return (
     <div className="searchbar-wrapper">
       <form className="search row" onSubmit={handleSubmit(onSubmit)}>
-        <label className="col">
+        <label className="col-md mt-2 mb-3 mb-md-0 mt-md-0">
           <input
             id="search-general"
             type="text"
@@ -24,7 +24,7 @@ const SearchBar = ({ isLoading }) => {
             placeholder="Search"
           />
         </label>
-        <label className="col">
+        <label className="col-md mb-3 mb-md-0 ">
           <input
             id="search-location"
             type="text"
@@ -33,7 +33,7 @@ const SearchBar = ({ isLoading }) => {
             ref={register}
           />
         </label>
-        <label className="col">
+        <label className="col-md mb-3 mb-md-0">
           <input
             id="search-tag"
             placeholder="Tags"
@@ -43,7 +43,7 @@ const SearchBar = ({ isLoading }) => {
           />
         </label>
 
-        <div className="col-2">
+        <div className="col-xs-12 mx-auto col-sm-6 col-md-2">
           <Button id="search-button" type="submit" disabled={isLoading}>
             SEARCH
           </Button>
