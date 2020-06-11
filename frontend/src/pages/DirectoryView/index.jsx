@@ -49,8 +49,8 @@ const ResourceManager = ({
         </div>
       </div>
       <div className="resources">
-        <SearchBar />
         <div className="container-fluid">
+          <SearchBar />
           <div className="resource-labels row">
             <div
               className="col"
