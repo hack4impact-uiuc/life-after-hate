@@ -56,7 +56,7 @@ const ResourceManager = ({
           <SearchBar />
           <div className="resource-labels row">
             <div
-              className="col label"
+              className="col"
               onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
             >
               <h3 className="resource-label">
@@ -72,7 +72,7 @@ const ResourceManager = ({
               </h3>
             </div>
             <div
-              className="col label"
+              className="col d-none d-sm-block"
               onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
             >
               <h3 className="resource-label">
@@ -80,7 +80,7 @@ const ResourceManager = ({
               </h3>
             </div>
             <div
-              className="col label"
+              className="col"
               onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
             >
               <h3 className="resource-label">

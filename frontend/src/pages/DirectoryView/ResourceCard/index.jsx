@@ -37,8 +37,13 @@ const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
       </div>
       <div className="col d-none d-md-block">
         <p data-cy="card-address">{resource.address}</p>
+        {resource.distanceFromSearchLoc && (
+          <p data-cy="card-distance" className="card-distance">
+            {Math.round(resource.distanceFromSearchLoc)} miles away
+          </p>
+        )}
       </div>
-      <div className="col">
+      <div className="col d-none d-sm-block">
         <p>{resource.volunteerRoles}</p>
       </div>
       <div className="col col-desc col-desc-collapsed">

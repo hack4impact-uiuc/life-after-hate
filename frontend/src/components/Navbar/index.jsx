@@ -51,10 +51,8 @@ const LAHNavbar = ({
   return (
     <div>
       <Navbar light expand="md" className="lah_navbar">
-        <NavbarBrand onClick={onLogoClick}>
-          <Link to="/">
-            <img src={Logo} alt="LAH Logo" id="logo" />
-          </Link>
+        <NavbarBrand tag={Link} to="/" onClick={onLogoClick}>
+          <img src={Logo} alt="LAH Logo" id="logo" />
         </NavbarBrand>
         <NavbarToggler onClick={toggleUserDropdown} />
         <Collapse isOpen={dropdownOpen} navbar>
