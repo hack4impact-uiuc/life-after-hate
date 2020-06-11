@@ -4,10 +4,13 @@
   padding: 70px 40px 20px 40px;
   font-family: "Roboto";
 
+  #page-title {
+    margin-bottom: 0;
+  }
   .manager-header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
     #add-button {
       background-color: #f7922f;
       color: white;
@@ -49,8 +52,6 @@
   }
 
   .resource-labels {
-    padding-left: 12px;
-    padding-right: 12px;
     padding-bottom: 10px;
   }
 
@@ -77,10 +78,10 @@
     justify-content: center;
     border-radius: 4px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    padding: 14px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    font-size: 14px;
     margin-bottom: 8px;
-    display: table;
-    width: 100%;
     #edit-icon {
       height: 18px;
       padding-right: 5px;
@@ -102,24 +103,8 @@
     }
   }
 
-  .col {
-    width: 19%;
-    float: left;
-    height: 100%;
-    // Fix floats collapsing the divs
-    min-height: 1px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 1%;
-  }
-
   .col p {
     opacity: 0.8;
-  }
-
-  .card-wrapper .col-desc {
-    width: 35%;
   }
 
   .col-desc-collapsed {
@@ -133,84 +118,77 @@
     width: 8%;
   }
 
-  .clearfix:after {
-    content: " ";
-    display: block;
-    height: 0;
-    clear: both;
-  }
-}
+  .searchbar-wrapper {
+    padding: 0;
+    margin-bottom: 36px;
 
-.searchbar-wrapper {
-  padding: 0;
-  margin-bottom: 36px;
-
-  .search {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 9px 12px 9px 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    label {
-      margin: 0;
-      display: block;
+    .search {
+      display: flex;
+      align-items: center;
       width: 100%;
+      padding: 9px 12px 9px 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      label {
+        margin: 0;
+        display: block;
+        width: 100%;
+      }
     }
-  }
-  #search-button {
-    background-color: #f7922f;
-    color: white;
-    font-size: 13px;
-    text-transform: uppercase;
-    font-weight: bold;
-    border: none;
-    outline: none;
-    padding: 10px 32px 10px 32px;
-    box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
-    transition: all 0.2s;
-    border-radius: 4px;
-    &:hover,
-    &:focus {
-      background-color: #f9ac61;
+    #search-button {
+      background-color: #f7922f;
+      color: white;
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: bold;
+      border: none;
+      outline: none;
+      padding: 10px 32px 10px 32px;
+      box-shadow: 0 2px 4px 0px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s;
+      border-radius: 4px;
+      &:hover,
+      &:focus {
+        background-color: #f9ac61;
+      }
     }
-  }
 
-  input {
-    background-color: #f6f6f6;
-    width: 98%;
-    height: 38px;
-    border-radius: 4px;
-    transition: all 0.2s;
-    font-size: 14px;
-    font-weight: 400;
-    border-radius: 4px;
-    outline: none;
-    border: solid #f6f6f6 1.5px;
-  }
+    input {
+      background-color: #f6f6f6;
+      width: 98%;
+      height: 38px;
+      border-radius: 4px;
+      transition: all 0.2s;
+      font-size: 14px;
+      font-weight: 400;
+      border-radius: 4px;
+      outline: none;
+      border: solid #f6f6f6 1.5px;
+    }
 
-  input:focus {
-    border: solid #f7922f 1.5px;
-  }
+    input:focus {
+      border: solid #f7922f 1.5px;
+    }
 
-  #search-general {
-    background-image: url("../../assets/images/search-directory.svg");
-    background-repeat: no-repeat;
-    background-size: 19px;
-    background-position: 8px 8px;
-    text-indent: 35px;
-  }
-  #search-location {
-    background-image: url("../../assets/images/location-directory.svg");
-    background-repeat: no-repeat;
-    background-size: 21px;
-    background-position: 6px 7px;
-    text-indent: 32px;
-  }
-  #search-tag {
-    background-image: url("../../assets/images/tag-directory.svg");
-    background-repeat: no-repeat;
-    background-size: 19px;
-    background-position: 8px 9px;
-    text-indent: 34px;
+    #search-general {
+      background-image: url("../../assets/images/search-directory.svg");
+      background-repeat: no-repeat;
+      background-size: 19px;
+      background-position: 8px 8px;
+      text-indent: 35px;
+    }
+    #search-location {
+      background-image: url("../../assets/images/location-directory.svg");
+      background-repeat: no-repeat;
+      background-size: 21px;
+      background-position: 6px 7px;
+      text-indent: 32px;
+    }
+    #search-tag {
+      background-image: url("../../assets/images/tag-directory.svg");
+      background-repeat: no-repeat;
+      background-size: 19px;
+      background-position: 8px 9px;
+      text-indent: 34px;
+    }
   }
 }

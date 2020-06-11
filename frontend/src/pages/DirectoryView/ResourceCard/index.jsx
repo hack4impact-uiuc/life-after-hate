@@ -23,36 +23,38 @@ const ResourceCard = ({ resource, role, openResourceModalWithPayload }) => {
   const isIndividualResource = resource.type === resourceEnum.INDIVIDUAL;
   return (
     <div
-      className="card-click"
+      className="card-click row card-wrapper"
       role="button"
       tabIndex="0"
       onClick={toggleViewOnlyModal}
       onKeyPress={toggleViewOnlyModal}
     >
-      <div className="card-wrapper">
-        <div className="col">
-          <p data-cy="card-companyName">
-            {isIndividualResource ? resource.contactName : resource.companyName}
-          </p>
-        </div>
-        <div className="col">
-          <p data-cy="card-address">{resource.address}</p>
-        </div>
-        <div className="col">
-          <p>{resource.contactEmail}</p>
-        </div>
-        <div className="col col-desc col-desc-collapsed">
-          <p>{isIndividualResource ? resource.skills : resource.description}</p>
-        </div>
-        {role === roleEnum.ADMIN && (
-          <div className="col col-edit">
-            <Button onClick={toggleModal} className="edit-button">
-              <img id="edit-icon" src={Edit} alt="edit icon" />
-              Edit
-            </Button>
-          </div>
-        )}
+      <div className="col">
+        <p data-cy="card-companyName">
+          {isIndividualResource ? resource.contactName : resource.companyName}
+        </p>
       </div>
+      <div className="col">
+        <p data-cy="card-address">{resource.address}</p>
+      </div>
+      <div className="col">
+        <p>{resource.contactEmail}</p>
+      </div>
+      <div className="col col-desc col-desc-collapsed">
+        <p>{isIndividualResource ? resource.skills : resource.description}</p>
+      </div>
+      {role === roleEnum.ADMIN && (
+        <div className="col-2 col-edit">
+          <Button
+            onClick={toggleModal}
+            className="edit-button"
+            color="transparent"
+          >
+            <img id="edit-icon" src={Edit} alt="edit icon" />
+            Edit
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

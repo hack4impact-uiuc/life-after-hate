@@ -36,45 +36,53 @@ const ResourceManager = ({
 
   return (
     <div className="directory">
-      <div className="manager-header">
-        <h1>Resource Directory</h1>
-        {role === roleEnum.ADMIN && (
-          <Button onClick={openResourceModal} id="add-button">
-            Add Resource
-          </Button>
-        )}
+      <div className="container-fluid">
+        <div className="manager-header row">
+          <div className="col">
+            <h1 id="page-title">Resource Directory</h1>
+          </div>
+          {role === roleEnum.ADMIN && (
+            <Button onClick={openResourceModal} id="add-button">
+              Add Resource
+            </Button>
+          )}
+        </div>
       </div>
-
       <div className="resources">
         <SearchBar />
-        <div className="resource-labels clearfix">
-          <div
-            className="col"
-            onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
-          >
-            <h3>Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}</h3>
-          </div>
-          <div
-            className="col"
-            onClick={() => updateSort(sortFieldEnum.LOCATION)}
-          >
-            <h3>Location {sortIcon(sortFieldEnum.LOCATION)}</h3>
-          </div>
-          <div
-            className="col"
-            onClick={() => updateSort(sortFieldEnum.POINT_OF_CONTACT)}
-          >
-            <h3>Point of Contact {sortIcon(sortFieldEnum.POINT_OF_CONTACT)}</h3>
-          </div>
-          <div
-            className="col"
-            onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
-          >
-            <h3>Description {sortIcon(sortFieldEnum.DESCRIPTION)}</h3>
-          </div>
-          <div />
+        <div className="container-fluid">
+          <div className="resource-labels row">
+            <div
+              className="col"
+              onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
+            >
+              <h3>Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}</h3>
+            </div>
+            <div
+              className="col"
+              onClick={() => updateSort(sortFieldEnum.LOCATION)}
+            >
+              <h3>Location {sortIcon(sortFieldEnum.LOCATION)}</h3>
+            </div>
+            <div
+              className="col"
+              onClick={() => updateSort(sortFieldEnum.POINT_OF_CONTACT)}
+            >
+              <h3>
+                Point of Contact {sortIcon(sortFieldEnum.POINT_OF_CONTACT)}
+              </h3>
+            </div>
+            <div
+              className="col"
+              onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
+            >
+              <h3>Description {sortIcon(sortFieldEnum.DESCRIPTION)}</h3>
+            </div>
+
+            <div className="col-2" />
+          </div>{" "}
+          {resources && resources.map(renderCards)}
         </div>
-        {resources && resources.map(renderCards)}
       </div>
     </div>
   );
