@@ -3,6 +3,7 @@ const express = require("express");
 const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");
 const extractor = require("keyword-extractor");
+const json2csv = require("json2csv");
 Joi.objectId = require("joi-objectid")(Joi);
 const beeline = require("honeycomb-beeline");
 const IndividualResource = require("../../models/IndividualResource");
@@ -31,21 +32,31 @@ const validators = require("../../utils/joi-validators");
 const router = express.Router();
 
 const concatAddress = (resource) => {
+  const address = R.view(resourceAddressLens, resource);
   if (!resource.address) {
-    resource.address = "";
-  } else {
-    const { streetAddress, city, state, postalCode } = resource.address;
-    resource.address = [
-      streetAddress,
-      city,
-      [state, postalCode].filter(Boolean).join(" "),
-    ]
-      .filter(Boolean)
-      .join(", ");
+    return resource;
   }
-  return resource;
+  const { streetAddress, city, state, postalCode } = address;
+  const formattedAddress = [
+    streetAddress,
+    city,
+    [state, postalCode].filter(Boolean).join(" "),
+  ]
+    .filter(Boolean)
+    .join(", ");
+  return { ...resource, address: formattedAddress };
 };
 
+const getAllFields = (arr) =>
+  arr.reduce((fields, item) => {
+    Object.keys(item).forEach((field) => {
+      if (!fields.includes(field)) {
+        fields.push(field);
+      }
+    });
+
+    return fields;
+  }, []);
 // get all resources
 router.get(
   "/",
@@ -59,6 +70,35 @@ router.get(
       result: resources.map(concatAddress),
       success: true,
     });
+  })
+);
+
+router.get(
+  "/csv",
+  requireAdminStatus,
+  errorWrap(async (req, res) => {
+    const resources = await Resource.find({}).lean();
+    const allFields = getAllFields(resources);
+
+    const filteredFields = R.without(
+      ["__v", "_id", "federalRegion", "location", "contactName"],
+      allFields
+    );
+    // Exclude some extra fields as well and add to beginning
+    filteredFields.unshift("contactName");
+
+    const formatTags = R.map((r) => ({
+      ...r,
+      tags: R.join(" ", r.tags),
+    }));
+    const formatAddr = R.map(concatAddress);
+    const formattedResources = R.pipe(formatTags, formatAddr)(resources);
+
+    const csv = json2csv.parse(formattedResources, {
+      fields: filteredFields,
+    });
+    res.attachment("resources.csv");
+    res.send(csv);
   })
 );
 
