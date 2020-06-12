@@ -50,7 +50,7 @@ const LAHNavbar = ({
 
   return (
     <div>
-      <Navbar light expand="md" className="lah_navbar">
+      <Navbar light expand="md" className="lah_navbar pl-5 pr-5">
         <NavbarBrand tag={Link} to="/" onClick={onLogoClick}>
           <img src={Logo} alt="LAH Logo" id="logo" />
         </NavbarBrand>
@@ -58,18 +58,26 @@ const LAHNavbar = ({
         <Collapse isOpen={dropdownOpen} navbar>
           <Nav className="ml-auto align-items-md-center" navbar>
             <NavItem>
-              <NavLink tag={Link} to="/" className="hover-orange">
+              <NavLink tag={Link} to="/" className="hover-orange pr-md-3">
                 Map
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink tag={Link} to="/directory" className="hover-orange">
+              <NavLink
+                tag={Link}
+                to="/directory"
+                className="hover-orange pr-md-3"
+              >
                 Directory
               </NavLink>
             </NavItem>
             <AdminView>
               <NavItem>
-                <NavLink tag={Link} to="/users" className="hover-orange">
+                <NavLink
+                  tag={Link}
+                  to="/users"
+                  className="hover-orange pr-md-3"
+                >
                   Account Management
                 </NavLink>
               </NavItem>
