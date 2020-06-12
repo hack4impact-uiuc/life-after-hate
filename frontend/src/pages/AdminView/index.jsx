@@ -58,6 +58,12 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
                 All Users
               </DropdownItem>
               <DropdownItem
+                value={userFilterEnum.ACTIVE}
+                onClick={onCategoryChange}
+              >
+                Active Users
+              </DropdownItem>
+              <DropdownItem
                 value={userFilterEnum.PENDING}
                 onClick={onCategoryChange}
               >

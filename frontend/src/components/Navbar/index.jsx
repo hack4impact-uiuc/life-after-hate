@@ -56,7 +56,11 @@ const LAHNavbar = ({
         </NavbarBrand>
         <NavbarToggler onClick={toggleUserDropdown} />
         <Collapse isOpen={dropdownOpen} navbar>
-          <Nav className="ml-auto align-items-md-center" navbar>
+          <Nav
+            className="ml-auto align-items-md-center"
+            data-cy="nav-links"
+            navbar
+          >
             <NavItem>
               <NavLink tag={Link} to="/" className="hover-orange pr-md-3">
                 Map

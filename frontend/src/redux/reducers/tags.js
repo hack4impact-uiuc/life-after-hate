@@ -11,7 +11,7 @@ const tags = (state = [], action) => {
       if (state.indexOf(action.payload) !== -1) {
         const newState = [...state];
         const ind = state.indexOf(action.payload);
-        newState.splice(ind, ind + 1);
+        newState.splice(ind, 1);
         return newState;
       }
       return state;
