@@ -18,16 +18,26 @@ const Login = ({ authed }) => {
   }
   return (
     <div className="login-wrapper">
-      <img id="lah-logo" src={Logo} alt="LAH Logo" />
-      <div className="login-card">
-        <img id="user-avatar" src={Avatar} alt="avatar" />
-        <a
-          className="action-button blue"
-          href={getURLForEndpoint("auth/login")}
-        >
-          <img src={GoogleLogo} id="google-logo" alt="Google logo"></img>
-          <span> Sign in with Google</span>
-        </a>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col col-sm-9 col-md-6 mx-auto">
+            <img id="lah-logo" src={Logo} alt="LAH Logo" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col col-sm-9 col-md-6 mx-auto">
+            <div className="login-card">
+              <img id="user-avatar" src={Avatar} alt="avatar" />
+              <a
+                className="action-button blue"
+                href={getURLForEndpoint("auth/login")}
+              >
+                <img src={GoogleLogo} id="google-logo" alt="Google logo"></img>
+                <span> Sign in with Google</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

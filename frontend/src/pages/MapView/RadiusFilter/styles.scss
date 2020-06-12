@@ -10,8 +10,11 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.input-range__label--value {
+  top: -2em;
+}
 .input-range__label-container {
-  font-size: 1.1em;
+  font-size: 0.8em;
 }
 
 .radius-filter-hidden {

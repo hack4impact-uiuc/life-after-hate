@@ -10,7 +10,7 @@ context("Volunteer User", () => {
   it("Shows a navbar without user management", () => {
     cy.get("[data-cy=nav-links]")
       .children()
-      .should("have.length", 2)
+      .should("have.length", 3)
       .should("contain.text", "Directory")
       .and("contain.text", "Map")
       .and("not.contain.text", "Account Management");

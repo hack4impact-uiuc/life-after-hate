@@ -17,19 +17,20 @@ context("Navbar", () => {
     cy.get("[data-cy=nav-links]").children().eq(0).should("have.text", "Map");
     cy.get("[data-cy=nav-links]")
       .children()
-      .should("have.length", 3)
+      // Should be up to 4 since the dropdown counts as a nav child
+      .should("have.length", 4)
       .should("contain.text", "Directory")
       .and("contain.text", "Map")
       .and("contain.text", "Account Management");
   });
 
   it("Dropdown functionality with logout works as expected", () => {
-    cy.get(".caret").click();
+    cy.get(".dropdown-toggle").click();
     cy.get(".dropdown-header")
       .should("be.visible")
       .and("contain.text", "John Doe");
 
-    cy.get(".signout-button").click();
+    cy.get("#signout-button").click();
     cy.url().should("eq", `${Cypress.env("BASE_URI")}/login`); // tests won't fail in case the port changes
   });
 

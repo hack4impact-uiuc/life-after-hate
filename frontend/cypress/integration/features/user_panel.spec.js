@@ -59,23 +59,22 @@ context("User Panel", () => {
   });
 
   it("Properly filters by role", () => {
-    cy.get("[data-cy=user-filter]")
-      .find(":selected")
-      .should("have.text", "All Users");
-
-    cy.get("[data-cy=user-filter]").select("Pending Users");
+    cy.get("[data-cy=user-filter]").click();
+    cy.get('[value="PENDING"]').click();
 
     cy.get(".card-wrapper > :nth-child(3)").each(($el) => {
       cy.wrap($el).should("have.text", "PENDING");
     });
 
-    cy.get("[data-cy=user-filter]").select("Rejected/Deactivated Users");
+    cy.get("[data-cy=user-filter]").click();
+    cy.get('[value="REJECTED"]').click();
 
     cy.get(".card-wrapper > :nth-child(3)").each(($el) => {
       cy.wrap($el).should("have.text", "REJECTED");
     });
 
-    cy.get("[data-cy=user-filter]").select("Active Users");
+    cy.get("[data-cy=user-filter]").click();
+    cy.get('[value="ACTIVE"]').click();
 
     cy.get(".card-wrapper > :nth-child(3)").each(($el) => {
       cy.wrap($el).contains(/ADMIN|VOLUNTEER/g);

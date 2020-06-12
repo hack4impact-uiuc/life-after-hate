@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import {
-  Dropdown,
+  NavbarBrand,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  NavbarToggler,
+  Navbar,
+  Collapse,
+  NavItem,
+  Nav,
+  NavLink,
+  UncontrolledDropdown,
   Button,
 } from "reactstrap";
 import { connect } from "react-redux";
@@ -14,14 +21,12 @@ import {
   updateSearchQuery,
   clearMapCenter,
 } from "../../redux/actions/map";
-
+import AdminView from "../Auth/AdminView";
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
-import { roleEnum } from "../../utils/enums";
 
-const Navbar = ({
-  role,
+const LAHNavbar = ({
   profilePic,
   firstName,
   lastName,
@@ -44,30 +49,60 @@ const Navbar = ({
   };
 
   return (
-    <div className="lah_navbar" data-cy="navbar">
-      <Link to="/" onClick={onLogoClick}>
-        <img src={Logo} alt="LAH Logo" id="logo" />
-      </Link>
-      <div className="spacing" />
-      <div className="nav-links" data-cy="nav-links">
-        <Link to="/">Map</Link>
-        <Link to="/directory">Directory</Link>
-        {role === roleEnum.ADMIN && <Link to="/users">Account Management</Link>}
-      </div>
-      <Dropdown isOpen={dropdownOpen} toggle={toggleUserDropdown}>
-        <DropdownToggle id="dropdown-button">
-          <img src={profilePic} alt="User icon" id="user" />
-          <span className="caret"></span>
-        </DropdownToggle>
-        <DropdownMenu>
-          <DropdownItem header>
-            <p>{`${firstName} ${lastName}`}</p>
-            <Button className="signout-button" onClick={logout}>
-              Sign Out
-            </Button>
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+    <div>
+      <Navbar light expand="md" className="lah_navbar pl-5 pr-5">
+        <NavbarBrand tag={Link} to="/" onClick={onLogoClick}>
+          <img src={Logo} alt="LAH Logo" id="logo" />
+        </NavbarBrand>
+        <NavbarToggler onClick={toggleUserDropdown} />
+        <Collapse isOpen={dropdownOpen} navbar>
+          <Nav
+            className="ml-auto align-items-md-center"
+            data-cy="nav-links"
+            navbar
+          >
+            <NavItem>
+              <NavLink tag={Link} to="/" className="hover-orange pr-md-3">
+                Map
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                tag={Link}
+                to="/directory"
+                className="hover-orange pr-md-3"
+              >
+                Directory
+              </NavLink>
+            </NavItem>
+            <AdminView>
+              <NavItem>
+                <NavLink
+                  tag={Link}
+                  to="/users"
+                  className="hover-orange pr-md-3"
+                >
+                  Account Management
+                </NavLink>
+              </NavItem>
+            </AdminView>
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav caret>
+                <img src={profilePic} alt="User icon" id="user-icon" />
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem header>{`${firstName} ${lastName}`}</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem header>
+                  <Button id="signout-button" onClick={logout}>
+                    Sign Out
+                  </Button>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </Nav>
+        </Collapse>
+      </Navbar>
     </div>
   );
 };
@@ -76,7 +111,6 @@ const mapStateToProps = (state) => ({
   profilePic: state.auth.propicUrl,
   firstName: state.auth.firstName,
   lastName: state.auth.lastName,
-  role: state.auth.role,
 });
 
 const mapDispatchToProps = {
@@ -86,4 +120,7 @@ const mapDispatchToProps = {
   clearMapCenter,
 };
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Navbar));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(LAHNavbar));

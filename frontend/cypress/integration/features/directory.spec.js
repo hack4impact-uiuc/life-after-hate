@@ -12,7 +12,7 @@ context("Directory View", () => {
     cy.get(".resource-labels")
       .should("contain.text", "Resource Name")
       .and("contain.text", "Location")
-      .and("contain.text", "Point of Contact")
+      .and("contain.text", "Volunteer Role")
       .and("contain.text", "Description");
   });
 
