@@ -10,6 +10,7 @@ import { updateSort } from "../../redux/actions/sort";
 import { resourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { sortFieldEnum } from "../../utils/enums";
+import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
 
 const ResourceManager = ({
   openResourceModal,
@@ -56,7 +57,7 @@ const ResourceManager = ({
           <SearchBar />
           <div className="resource-labels row">
             <div
-              className="col"
+              className="col my-auto"
               onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
             >
               <h3 className="resource-label">
@@ -64,7 +65,7 @@ const ResourceManager = ({
               </h3>
             </div>
             <div
-              className="col d-none d-md-block"
+              className="col d-none d-md-block my-auto"
               onClick={() => updateSort(sortFieldEnum.LOCATION)}
             >
               <h3 className="resource-label">
@@ -72,7 +73,7 @@ const ResourceManager = ({
               </h3>
             </div>
             <div
-              className="col d-none d-sm-block"
+              className="col d-none d-sm-block my-auto"
               onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
             >
               <h3 className="resource-label">
@@ -80,7 +81,7 @@ const ResourceManager = ({
               </h3>
             </div>
             <div
-              className="col"
+              className="col my-auto"
               onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
             >
               <h3 className="resource-label">
@@ -89,7 +90,9 @@ const ResourceManager = ({
             </div>
 
             <AdminView>
-              <div className="col" />
+              <div className="col">
+                <CSVExporter data={resources}></CSVExporter>
+              </div>
             </AdminView>
           </div>
           {resources && resources.map(renderCards)}

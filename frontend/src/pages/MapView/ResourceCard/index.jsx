@@ -11,6 +11,7 @@ import {
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import ActionButtons from "../ActionButtons";
 import { resourceEnum } from "../../../utils/enums";
+import { distanceToString } from "../../../utils/formatters";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
@@ -76,7 +77,7 @@ const ResourceCard = ({
         >
           {"distanceFromSearchLoc" in resource && (
             <div className="card-distance">
-              {Math.round(resource.distanceFromSearchLoc * 10) / 10} miles away
+              {distanceToString(resource.distanceFromSearchLoc)}
             </div>
           )}
 
