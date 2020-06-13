@@ -57,7 +57,7 @@ context("Resource Map", () => {
     cy.get("#searchInput").type("Fairway Inn");
     cy.get(".submitSearch").click();
 
-    cy.get(".card-title").should("have.length", 1);
+    cy.get(".card-title", { timeout: 10000 }).should("have.length", 1);
     cy.get(".card-distance").should("not.exist");
   });
 

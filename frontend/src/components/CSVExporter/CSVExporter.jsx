@@ -14,7 +14,7 @@ export const CSVExporter = ({ data, name }) => {
     data.length > 0 && (
       <Button
         color="transparent"
-        className="edit-button mx-auto"
+        className="mx-auto"
         id="csv-download-btn"
         onClick={downloadFile}
       >

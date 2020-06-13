@@ -68,7 +68,10 @@ context("Directory View", () => {
       "This is Test Resource"
     );
 
-    cy.get("[data-cy=card-address]").should("have.length", 1);
+    cy.get("[data-cy=card-address]", { timeout: 10000 }).should(
+      "have.length",
+      1
+    );
 
     cy.get(".edit-button").click();
 
@@ -113,7 +116,7 @@ context("Directory View", () => {
       .type("630 S 5th St, Champaign, IL");
     cy.get("#submit-form-button").click();
 
-    cy.get("[data-cy=card-companyName]")
+    cy.get("[data-cy=card-companyName]", { timeout: 10000 })
       .should("have.length", 1)
       .should("have.text", "Edited Resource!!");
 
