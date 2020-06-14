@@ -5,6 +5,7 @@ import AdminView from "../../../components/Auth/AdminView";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
 import { resourceEnum } from "../../../utils/enums";
+import { distanceToString } from "../../../utils/formatters";
 import "../styles.scss";
 
 const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
@@ -37,9 +38,9 @@ const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
       </div>
       <div className="col d-none d-md-block">
         <p data-cy="card-address">{resource.address}</p>
-        {resource.distanceFromSearchLoc && (
+        {"distanceFromSearchLoc" in resource && (
           <p data-cy="card-distance" className="card-distance">
-            {Math.round(resource.distanceFromSearchLoc)} miles away
+            {distanceToString(resource.distanceFromSearchLoc)}
           </p>
         )}
       </div>

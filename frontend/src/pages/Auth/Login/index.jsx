@@ -20,12 +20,12 @@ const Login = ({ authed }) => {
     <div className="login-wrapper">
       <div className="container-fluid">
         <div className="row">
-          <div className="col col-sm-9 col-md-6 mx-auto">
+          <div className="col col-sm-9 col-md-6 col-lg-4 mx-auto">
             <img id="lah-logo" src={Logo} alt="LAH Logo" />
           </div>
         </div>
         <div className="row">
-          <div className="col col-sm-9 col-md-6 mx-auto">
+          <div className="col col-sm-9 col-md-6 col-lg-4 mx-auto">
             <div className="login-card">
               <img id="user-avatar" src={Avatar} alt="avatar" />
               <a

@@ -1,0 +1,11 @@
+#csv-download-btn {
+  padding: 0;
+  img {
+    height: 1.2em;
+    opacity: 0.5;
+    transition: all 0.2s;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

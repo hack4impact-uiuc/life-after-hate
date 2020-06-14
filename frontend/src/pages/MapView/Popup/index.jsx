@@ -8,7 +8,7 @@ import {
   currentResourceSelector,
   mapResourceIdSelector,
 } from "../../../redux/selectors/map";
-
+import { distanceToString } from "../../../utils/formatters";
 import ActionButtons from "../ActionButtons";
 
 const isIndividualResource = (resource) =>
@@ -34,7 +34,7 @@ const MapPopup = ({ isResourceSelected, resource, clearMapResource }) => (
           </div>
           {"distanceFromSearchLoc" in resource && (
             <div className="popup-distance">
-              {Math.round(resource.distanceFromSearchLoc * 10) / 10} miles away
+              {distanceToString(resource.distanceFromSearchLoc)}
             </div>
           )}
           <div className="popup-desc">

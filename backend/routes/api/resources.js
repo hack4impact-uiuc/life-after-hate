@@ -31,19 +31,19 @@ const validators = require("../../utils/joi-validators");
 const router = express.Router();
 
 const concatAddress = (resource) => {
+  const address = R.view(resourceAddressLens, resource);
   if (!resource.address) {
-    resource.address = "";
-  } else {
-    const { streetAddress, city, state, postalCode } = resource.address;
-    resource.address = [
-      streetAddress,
-      city,
-      [state, postalCode].filter(Boolean).join(" "),
-    ]
-      .filter(Boolean)
-      .join(", ");
+    return resource;
   }
-  return resource;
+  const { streetAddress, city, state, postalCode } = address;
+  const formattedAddress = [
+    streetAddress,
+    city,
+    [state, postalCode].filter(Boolean).join(" "),
+  ]
+    .filter(Boolean)
+    .join(", ");
+  return { ...resource, address: formattedAddress };
 };
 
 // get all resources
