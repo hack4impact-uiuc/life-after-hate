@@ -12,14 +12,17 @@ export const CSVExporter = ({ data, name }) => {
   };
   return (
     data.length > 0 && (
-      <Button
-        color="transparent"
-        className="mx-auto"
-        id="csv-download-btn"
-        onClick={downloadFile}
-      >
-        <img src={Download} alt="Download Results as CSV"></img>
-      </Button>
+      <div className="text-center">
+        <Button
+          color="transparent"
+          className="mx-auto"
+          id="csv-download-btn"
+          onClick={downloadFile}
+        >
+          <img src={Download} alt="Download Results as CSV"></img>
+        </Button>
+        <h3 className="d-none d-md-inline pl-2">Download CSV</h3>
+      </div>
     )
   );
 };
