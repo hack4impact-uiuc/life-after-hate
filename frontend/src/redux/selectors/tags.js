@@ -1,1 +1,2 @@
-export const tagSelector = (state) => state.tags;
+export const tagSelector = (state) => state.tags.selected;
+export const globalTagListSelector = (state) => state.tags.all;

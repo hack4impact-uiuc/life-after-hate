@@ -14,7 +14,7 @@ import {
 import { updateMapCenter } from "../redux/actions/map";
 import { updateSearchParams } from "../redux/actions/search";
 import { updateUsers } from "../redux/actions/users";
-import { addTag, removeTag } from "../redux/actions/tags";
+import { addTag, removeTag, refreshTagList } from "../redux/actions/tags";
 import store from "../redux/store";
 
 async function getSearchResults(keyword, address, tag, radius = 500) {
@@ -56,6 +56,16 @@ async function getResource(id) {
       method: "GET",
     })
   ).result;
+}
+
+async function getTags() {
+  const tags = (
+    await apiRequest({
+      endpoint: `resources/tags`,
+      method: "GET",
+    })
+  ).result;
+  store.dispatch(refreshTagList(tags));
 }
 
 async function addResource(data) {
@@ -164,6 +174,7 @@ export {
   logout,
   addFilterTag,
   removeFilterTag,
+  getTags,
   filterAndRefreshResource,
   addAndRefreshResource,
   editAndRefreshResource,

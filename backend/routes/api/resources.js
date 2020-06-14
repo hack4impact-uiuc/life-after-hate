@@ -62,6 +62,14 @@ router.get(
   })
 );
 
+router.get(
+  "/tags",
+  requireVolunteerStatus,
+  errorWrap(async (req, res) => {
+    const tags = await Resource.distinct("tags").lean();
+    res.json({ code: 200, result: tags, success: true });
+  })
+);
 // get list of resources filtered by location radius
 router.get(
   "/filter",
