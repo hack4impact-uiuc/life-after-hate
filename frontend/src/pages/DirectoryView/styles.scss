@@ -163,7 +163,7 @@
       }
     }
 
-    input {
+    .search-input {
       background-color: #f6f6f6;
       width: 100%;
       height: 38px;
@@ -176,7 +176,7 @@
       border: solid #f6f6f6 1.5px;
     }
 
-    input:focus {
+    .search-input:focus {
       border: solid #f7922f 1.5px;
     }
 

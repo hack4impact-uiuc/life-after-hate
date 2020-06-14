@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { filterAndRefreshResource } from "../../../utils/api";
-
+import TagAutocomplete from "../TagAutocomplete";
 import "../styles.scss";
 
 const SearchBar = ({ isLoading }) => {
@@ -21,6 +21,7 @@ const SearchBar = ({ isLoading }) => {
             type="text"
             name="keyword"
             ref={register}
+            className="search-input"
             placeholder="Search"
           />
         </label>
@@ -30,18 +31,13 @@ const SearchBar = ({ isLoading }) => {
             type="text"
             name="location"
             placeholder="Location"
+            className="search-input"
             ref={register}
           />
         </label>
-        <label className="col-md mb-3 mb-md-0 pl-md-0">
-          <input
-            id="search-tag"
-            placeholder="Tags"
-            type="text"
-            name="tag"
-            ref={register}
-          />
-        </label>
+        <div className="col-md mb-3 mb-md-0 pl-md-0">
+          <TagAutocomplete></TagAutocomplete>
+        </div>
 
         <div className="col-6 mx-auto col-sm-6 col-md-2 pl-md-0">
           <Button id="search-button" type="submit" disabled={isLoading}>

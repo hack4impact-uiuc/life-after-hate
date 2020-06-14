@@ -1,4 +1,4 @@
-import { ADD_TAG, REMOVE_TAG } from "../actions/tags";
+import { ADD_TAG, REMOVE_TAG, REPLACE_TAGS } from "../actions/tags";
 
 const tags = (state = [], action) => {
   switch (action.type) {
@@ -15,6 +15,8 @@ const tags = (state = [], action) => {
         return newState;
       }
       return state;
+    case REPLACE_TAGS:
+      return action.payload;
     default:
       return state;
   }
