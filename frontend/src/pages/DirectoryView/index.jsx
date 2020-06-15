@@ -5,7 +5,6 @@ import ResourceCard from "./ResourceCard";
 import AdminView from "../../components/Auth/AdminView";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
-import { clearResources } from "../../redux/actions/resources";
 import { updateSort } from "../../redux/actions/sort";
 import { tagFilteredResourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
@@ -16,15 +15,13 @@ import { getTags } from "../../utils/api";
 const ResourceManager = ({
   openResourceModal,
   resources,
-  clearResources,
   sort,
   updateSort,
 }) => {
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
     getTags();
-    clearResources();
-  }, [clearResources]);
+  }, []);
 
   const renderCards = (resource) => (
     <ResourceCard key={resource._id} resource={resource} />
@@ -111,7 +108,6 @@ const MapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   openResourceModal,
-  clearResources,
   updateSort,
 };
 

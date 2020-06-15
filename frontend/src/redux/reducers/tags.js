@@ -6,8 +6,11 @@ import {
   REPLACE_TAGS,
   REFRESH_TAG_LIST,
 } from "../actions/tags";
+import { CHANGE_PAGE } from "../actions/nav";
 
-const selected = (state = [], action) => {
+const INITIAL_STATE = [];
+
+const selected = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ADD_TAG:
       if (state.indexOf(action.payload) !== -1) {
@@ -24,6 +27,8 @@ const selected = (state = [], action) => {
       return state;
     case REPLACE_TAGS:
       return action.payload;
+    case CHANGE_PAGE:
+      return [...INITIAL_STATE];
     default:
       return state;
   }

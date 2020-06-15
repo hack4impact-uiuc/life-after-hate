@@ -62,6 +62,7 @@ async function getTags() {
   const tags = (
     await apiRequest({
       endpoint: `resources/tags`,
+      withLoader: false,
       method: "GET",
     })
   ).result;

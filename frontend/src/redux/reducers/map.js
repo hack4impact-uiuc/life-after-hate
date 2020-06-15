@@ -12,9 +12,12 @@ import {
   DELETE_RESOURCE,
   CLEAR_RESOURCES,
 } from "../actions/resources";
+import { CHANGE_PAGE } from "../actions/nav";
 const R = require("ramda");
 
-const map = (state = { search: { location: "", query: "" } }, action) => {
+const INITIAL_STATE = { search: { location: "", query: "" } };
+
+const map = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case UPDATE_MAP_CENTER:
       return { ...state, center: action.payload };
@@ -40,6 +43,8 @@ const map = (state = { search: { location: "", query: "" } }, action) => {
       };
     case UPDATE_SEARCH_QUERY:
       return { ...state, search: { ...state.search, query: action.payload } };
+    case CHANGE_PAGE:
+      return { ...INITIAL_STATE };
     default:
       return state;
   }

@@ -15,34 +15,13 @@ import {
   Button,
 } from "reactstrap";
 import { connect } from "react-redux";
-import { clearResources } from "../../redux/actions/resources";
-import {
-  updateSearchLocation,
-  updateSearchQuery,
-  clearMapCenter,
-} from "../../redux/actions/map";
 import AdminView from "../Auth/AdminView";
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
-
-const LAHNavbar = ({
-  profilePic,
-  firstName,
-  lastName,
-  updateSearchLocation,
-  updateSearchQuery,
-  clearResources,
-  clearMapCenter,
-}) => {
+import { changePage } from "../../redux/actions/nav";
+const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const onLogoClick = () => {
-    clearResources();
-    clearMapCenter();
-    updateSearchLocation("");
-    updateSearchQuery("");
-  };
 
   const toggleUserDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
@@ -51,7 +30,7 @@ const LAHNavbar = ({
   return (
     <div>
       <Navbar light expand="md" className="lah_navbar pl-5 pr-5">
-        <NavbarBrand tag={Link} to="/" onClick={onLogoClick}>
+        <NavbarBrand tag={Link} to="/" onClick={changePage}>
           <img src={Logo} alt="LAH Logo" id="logo" />
         </NavbarBrand>
         <NavbarToggler onClick={toggleUserDropdown} />
@@ -62,13 +41,19 @@ const LAHNavbar = ({
             navbar
           >
             <NavItem>
-              <NavLink tag={Link} to="/" className="hover-orange pr-md-3">
+              <NavLink
+                tag={Link}
+                onClick={changePage}
+                to="/"
+                className="hover-orange pr-md-3"
+              >
                 Map
               </NavLink>
             </NavItem>
             <NavItem>
               <NavLink
                 tag={Link}
+                onClick={changePage}
                 to="/directory"
                 className="hover-orange pr-md-3"
               >
@@ -79,6 +64,7 @@ const LAHNavbar = ({
               <NavItem>
                 <NavLink
                   tag={Link}
+                  onClick={changePage}
                   to="/users"
                   className="hover-orange pr-md-3"
                 >
@@ -114,10 +100,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  clearResources,
-  updateSearchLocation,
-  updateSearchQuery,
-  clearMapCenter,
+  changePage,
 };
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
 export default connect(
