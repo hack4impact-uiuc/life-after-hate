@@ -11,6 +11,7 @@ import { tagFilteredResourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { sortFieldEnum } from "../../utils/enums";
 import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
+import { getTags } from "../../utils/api";
 
 const ResourceManager = ({
   openResourceModal,
@@ -21,6 +22,7 @@ const ResourceManager = ({
 }) => {
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
+    getTags();
     clearResources();
   }, [clearResources]);
 

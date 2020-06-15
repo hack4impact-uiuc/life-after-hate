@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -12,7 +12,6 @@ import {
   globalTagListSelector,
 } from "../../../redux/selectors/tags";
 import { replaceTags } from "../../../redux/actions/tags";
-import { getTags } from "../../../utils/api";
 
 const theme = createMuiTheme({
   overrides: {
@@ -32,18 +31,18 @@ const theme = createMuiTheme({
         "&&&:before": {
           borderBottom: "none",
         },
+
+        "&&&:after": {
+          borderBottom: "2px solid #f79230",
+        },
       },
     },
     MuiChip: {
-      root: {
-        "&&&": {
-          border: "2px solid #f79230",
-        },
-      },
       label: {
         "&&&": {
-          color: "#f79230",
-          fontWeight: 600,
+          // color: "#f79230",
+          color: "rgba(0, 0, 0, 0.7)",
+          // fontWeight: 600,
           textTransform: "uppercase",
         },
       },
@@ -52,10 +51,6 @@ const theme = createMuiTheme({
 });
 
 export const TagAutocomplete = ({ replaceTags, tags, globalTagList }) => {
-  // eslint-disable-next-line @hack4impact-uiuc/no-redundant-functions
-  useEffect(() => {
-    getTags();
-  }, []);
   const handleSelectionChange = (_, value) => {
     replaceTags(value);
   };
