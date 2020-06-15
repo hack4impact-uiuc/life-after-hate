@@ -11,7 +11,6 @@ import { tagFilteredResourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { sortFieldEnum } from "../../utils/enums";
 import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
-import { getTags } from "../../utils/api";
 
 const ResourceManager = ({
   openResourceModal,

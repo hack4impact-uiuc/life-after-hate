@@ -19,7 +19,32 @@ const theme = createMuiTheme({
     MuiInputBase: {
       root: {
         "&&&": {
-          padding: "1px",
+          paddingTop: 0,
+          paddingBottom: 0,
+          paddingRight: 0,
+          borderRadius: "4px",
+          backgroundColor: "#f6f6f6",
+        },
+      },
+    },
+    MuiFilledInput: {
+      underline: {
+        "&&&:before": {
+          borderBottom: "none",
+        },
+      },
+    },
+    MuiChip: {
+      root: {
+        "&&&": {
+          border: "2px solid #f79230",
+        },
+      },
+      label: {
+        "&&&": {
+          color: "#f79230",
+          fontWeight: 600,
+          textTransform: "uppercase",
         },
       },
     },
@@ -27,6 +52,7 @@ const theme = createMuiTheme({
 });
 
 export const TagAutocomplete = ({ replaceTags, tags, globalTagList }) => {
+  // eslint-disable-next-line @hack4impact-uiuc/no-redundant-functions
   useEffect(() => {
     getTags();
   }, []);
