@@ -45,29 +45,29 @@ const theme = createMuiTheme({
 });
 
 const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
-    <MuiThemeProvider theme={theme}>
-      <Autocomplete
-        multiple
-        id="tags-filled"
-        onChange={onChange}
-        options={tagOptions}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              key={option}
-              variant="outlined"
-              label={option}
-              {...getTagProps({ index })}
-            />
-          ))
-        }
-        {...props}
-        value={tags}
-        renderInput={(params) => (
-          <TextField {...params} variant="filled" placeholder="Tags" />
-        )}
-      />
-    </MuiThemeProvider>
-  );
+  <MuiThemeProvider theme={theme}>
+    <Autocomplete
+      multiple
+      id="tags-filled"
+      onChange={onChange}
+      options={tagOptions}
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
+          <Chip
+            key={option}
+            variant="outlined"
+            label={option}
+            {...getTagProps({ index })}
+          />
+        ))
+      }
+      {...props}
+      value={tags}
+      renderInput={(params) => (
+        <TextField {...params} variant="filled" placeholder="Tags" />
+      )}
+    />
+  </MuiThemeProvider>
+);
 
 export default TagAutocomplete;

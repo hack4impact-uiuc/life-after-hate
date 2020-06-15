@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/no-onchange */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { openModal, closeModal } from "../../../redux/actions/modal";
+import ModalTagComplete from "../ModalTagComplete";
 import { resourceEnum } from "../../../utils/enums";
 import {
   editAndRefreshResource,
@@ -58,7 +59,11 @@ const ResourceModal = ({
   closeModal,
   editable,
 }) => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, setValue, watch, errors } = useForm();
+  useEffect(() => {
+    register({ name: "tags" });
+  }, [register]);
+
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [groupType, setGroupType] = useState(
     resource.type ?? resourceEnum.INDIVIDUAL
@@ -68,19 +73,11 @@ const ResourceModal = ({
   };
 
   const handleEditResource = async (data) => {
-    data.tags = data.tags
-      .split(",")
-      .filter((t) => t)
-      .map((tag) => tag.trim());
     await editAndRefreshResource(data, resource._id);
     closeModal();
   };
 
   const handleAddResource = async (data) => {
-    data.tags = data.tags
-      .split(",")
-      .filter((t) => t)
-      .map((tag) => tag.trim());
     await addAndRefreshResource(data);
     closeModal();
   };
@@ -113,7 +110,7 @@ const ResourceModal = ({
   const isIndividualResource = isAddingResource
     ? groupType === resourceEnum.INDIVIDUAL
     : resource.type === resourceEnum.INDIVIDUAL;
-
+  console.log("Rerender");
   return (
     <LAHModal>
       <form
@@ -139,11 +136,15 @@ const ResourceModal = ({
         {isIndividualResource
           ? getIndividualResourceFields()
           : getGroupResourceFields()}
-        {createInput({
-          labelText: "Tags",
-          shortName: "tags",
-          defaultValue: isAddingResource ? "" : resource.tags.join(", "),
-        })}
+        <label className="modal-lab">
+          <p>{"Tags"}</p>
+          <ModalTagComplete
+            onChange={(_, value) => {
+              setValue("tags", value);
+            }}
+            tags={watch("tags") ?? resource.tags ?? []}
+          ></ModalTagComplete>
+        </label>
         {editable && (
           <div style={{ marginTop: "20px" }}>
             <Button id="submit-form-button" type="submit">
