@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { filterAndRefreshResource } from "../../../utils/api";
-import TagAutocomplete from "../TagAutocomplete";
+import DirectoryTagSearch from "../DirectoryTagSearch";
 import "../styles.scss";
 
 const SearchBar = ({ isLoading }) => {
@@ -36,7 +36,7 @@ const SearchBar = ({ isLoading }) => {
           />
         </label>
         <div className="col-md mb-3 mb-md-0 pl-md-0">
-          <TagAutocomplete></TagAutocomplete>
+          <DirectoryTagSearch></DirectoryTagSearch>
         </div>
 
         <div className="col-6 mx-auto col-sm-6 col-md-2 pl-md-0">

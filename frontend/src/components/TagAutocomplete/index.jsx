@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -7,11 +6,6 @@ import {
   ThemeProvider as MuiThemeProvider,
 } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import {
-  tagSelector,
-  globalTagListSelector,
-} from "../../../redux/selectors/tags";
-import { replaceTags } from "../../../redux/actions/tags";
 
 const theme = createMuiTheme({
   overrides: {
@@ -50,19 +44,13 @@ const theme = createMuiTheme({
   },
 });
 
-export const TagAutocomplete = ({ replaceTags, tags, globalTagList }) => {
-  const handleSelectionChange = (_, value) => {
-    replaceTags(value);
-  };
-
-  return (
+const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
     <MuiThemeProvider theme={theme}>
       <Autocomplete
         multiple
         id="tags-filled"
-        onChange={handleSelectionChange}
-        options={globalTagList}
-        freeSolo
+        onChange={onChange}
+        options={tagOptions}
         renderTags={(value, getTagProps) =>
           value.map((option, index) => (
             <Chip
@@ -73,6 +61,7 @@ export const TagAutocomplete = ({ replaceTags, tags, globalTagList }) => {
             />
           ))
         }
+        {...props}
         value={tags}
         renderInput={(params) => (
           <TextField {...params} variant="filled" placeholder="Tags" />
@@ -80,13 +69,5 @@ export const TagAutocomplete = ({ replaceTags, tags, globalTagList }) => {
       />
     </MuiThemeProvider>
   );
-};
 
-const mapStateToProps = (state) => ({
-  tags: tagSelector(state),
-  globalTagList: globalTagListSelector(state),
-});
-
-const mapDispatchToProps = { replaceTags };
-
-export default connect(mapStateToProps, mapDispatchToProps)(TagAutocomplete);
+export default TagAutocomplete;
