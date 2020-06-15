@@ -1,3 +1,5 @@
+import { combineReducers } from "redux";
+
 import {
   ADD_TAG,
   REMOVE_TAG,
@@ -5,28 +7,35 @@ import {
   REFRESH_TAG_LIST,
 } from "../actions/tags";
 
-const tags = (state = { selected: [], all: [] }, action) => {
+const selected = (state = [], action) => {
   switch (action.type) {
     case ADD_TAG:
-      if (state.selected.indexOf(action.payload) !== -1) {
+      if (state.indexOf(action.payload) !== -1) {
         return state;
       }
-      return { ...state, selected: [...state.selected, action.payload] };
+      return [...state, action.payload];
     case REMOVE_TAG:
-      if (state.selected.indexOf(action.payload) !== -1) {
-        const newState = [...state.selected];
-        const ind = state.selected.indexOf(action.payload);
+      if (state.indexOf(action.payload) !== -1) {
+        const newState = [...state];
+        const ind = state.indexOf(action.payload);
         newState.splice(ind, 1);
-        return { ...state, selected: newState };
+        return newState;
       }
       return state;
     case REPLACE_TAGS:
-      return { ...state, selected: action.payload };
-    case REFRESH_TAG_LIST:
-      return { ...state, all: action.payload };
+      return action.payload;
     default:
       return state;
   }
 };
 
-export default tags;
+const all = (state = [], action) => {
+  switch (action.type) {
+    case REFRESH_TAG_LIST:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({ selected, all });
