@@ -81,21 +81,21 @@ const MapSearchAutocomplete = ({
   addTag,
   resources,
 }) => {
-  const onChange = (_, value, reason) => {
-    if (reason !== "clear" && globalTagList.indexOf(value) !== -1) {
-      addTag(value);
-      updateSearchQuery("");
-    }
-  };
   const onInputChange = (_, value, reason) => {
-    if (reason !== "reset") {
+    if (reason === "reset") {
+      // Guard against adding the empty string, since that sends a reset event
+      if (value) {
+        addTag(value);
+        updateSearchQuery("");
+      }
+    } else {
       updateSearchQuery(value);
     }
   };
+
   return (
     <MuiThemeProvider theme={theme}>
       <Autocomplete
-        onChange={onChange}
         getOptionSelected={() => false}
         freeSolo
         onInputChange={onInputChange}

@@ -9,7 +9,10 @@ import {
   updateSearchQuery,
 } from "../../../redux/actions/map";
 import { tagSelector } from "../../../redux/selectors/tags";
-import { searchLocationSelector } from "../../../redux/selectors/map";
+import {
+  searchLocationSelector,
+  searchQuerySelector,
+} from "../../../redux/selectors/map";
 import "./styles.scss";
 import MapSearchAutocomplete from "./MapSearchAutocomplete";
 
@@ -73,6 +76,7 @@ const SearchBar = ({ query, location, updateSearchLocation, tags }) => {
 
 const mapStateToProps = (state) => ({
   tags: tagSelector(state),
+  query: searchQuerySelector(state),
   location: searchLocationSelector(state),
 });
 
