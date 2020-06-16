@@ -22,25 +22,52 @@ const theme = createMuiTheme({
           paddingBottom: 0,
           paddingRight: 0,
           borderRadius: "4px",
-          backgroundColor: "#f6f6f6",
+          backgroundColor: "#fff",
         },
       },
     },
-    MuiFilledInput: {
+    MuiFormControl: {
+      root: {
+        "&&&": {
+          marginTop: 0,
+          marginBottom: 0,
+          borderRadius: "4px",
+          backgroundColor: "#fff",
+        },
+      },
+    },
+    MuiInput: {
       underline: {
         "&&&:before": {
-          borderBottom: "none",
+          borderBottom: "1px solid rgba(0,0,0,0.2)",
         },
 
         "&&&:after": {
-          borderBottom: "2px solid #f79230",
+          borderBottom: "1px solid #f79230",
         },
       },
     },
     MuiAutocomplete: {
+      root: {
+        "&&&": {
+          marginRight: "5px",
+          marginLeft: "4px",
+        },
+      },
       noOptions: {
         "&&&": {
           display: "none",
+        },
+      },
+      input: {
+        "&&&": {
+          width: "252px",
+          fontSize: "14px",
+          textIndent: "2px",
+          color: "#2a2a2a",
+        },
+        "&&&::placeholder": {
+          color: "#000",
         },
       },
     },
@@ -73,8 +100,11 @@ const MapSearchAutocomplete = ({
         freeSolo
         onInputChange={onInputChange}
         forcePopupIcon={query !== ""}
+        // Only present suggestions when there are resources!
         options={resources.length > 0 ? globalTagList ?? [] : []}
-        renderInput={(params) => <TextField {...params} margin="normal" />}
+        renderInput={(params) => (
+          <TextField {...params} margin="normal" placeholder="Search" />
+        )}
         inputValue={query}
       />
     </MuiThemeProvider>

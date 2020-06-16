@@ -9,27 +9,17 @@ import {
   updateSearchQuery,
 } from "../../../redux/actions/map";
 import { tagSelector } from "../../../redux/selectors/tags";
-import {
-  searchLocationSelector,
-  searchQuerySelector,
-} from "../../../redux/selectors/map";
+import { searchLocationSelector } from "../../../redux/selectors/map";
 import "./styles.scss";
 import MapSearchAutocomplete from "./MapSearchAutocomplete";
 
-const SearchBar = ({
-  query,
-  location,
-  updateSearchLocation,
-  updateSearchQuery,
-  tags,
-}) => {
+const SearchBar = ({ query, location, updateSearchLocation, tags }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     filterAndRefreshResource(query, location);
   };
 
   const clearLocation = () => updateSearchLocation("");
-  const clearSearch = () => updateSearchQuery("");
 
   return (
     <div className="search">
@@ -57,30 +47,11 @@ const SearchBar = ({
         </div>
         <div className="searchKeyword">
           <img className="searchIcon" src={SearchIcon} alt="Search" />
-          <div className="underlineField">
-            <input
-              id="searchInput"
-              type="text"
-              name="keyword"
-              list="suggestionsList"
-              placeholder="Search"
-              tabIndex="0"
-              value={query}
-              onChange={(e) => updateSearchQuery(e.target.value)}
-            />
-            <Button
-              className="closeButtons"
-              close
-              onClick={clearSearch}
-              tabIndex="-1"
-              data-cy="clear-search"
-            />
-          </div>
+          <MapSearchAutocomplete></MapSearchAutocomplete>
           <button className="submitSearch" type="submit">
             Go
           </button>
         </div>
-        <MapSearchAutocomplete></MapSearchAutocomplete>
         {tags.length > 0 && (
           <div className="card-tags-search">
             {tags.map((tag) => (
@@ -102,7 +73,6 @@ const SearchBar = ({
 
 const mapStateToProps = (state) => ({
   tags: tagSelector(state),
-  query: searchQuerySelector(state),
   location: searchLocationSelector(state),
 });
 
