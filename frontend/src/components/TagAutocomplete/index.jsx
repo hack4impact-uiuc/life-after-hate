@@ -34,10 +34,24 @@ const theme = createMuiTheme({
     MuiChip: {
       label: {
         "&&&": {
-          // color: "#f79230",
-          color: "rgba(0, 0, 0, 0.7)",
-          // fontWeight: 600,
+          color: "#f79230",
+          fontWeight: 700,
+          fontSize: "12px",
           textTransform: "uppercase",
+        },
+      },
+      deleteIcon: {
+        "&": {
+          color: "#f79230",
+        },
+        "&:hover": {
+          color: "#f9ac61",
+        },
+      },
+      outlined: {
+        "&&&": {
+          border: "1px solid #f79230",
+          backgroundColor: "transparent",
         },
       },
     },
