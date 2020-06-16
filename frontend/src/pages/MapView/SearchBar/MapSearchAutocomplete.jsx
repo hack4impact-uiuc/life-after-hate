@@ -6,6 +6,7 @@ import { globalTagListSelector } from "../../../redux/selectors/tags";
 import { updateSearchQuery } from "../../../redux/actions/map";
 import { addTag } from "../../../redux/actions/tags";
 import { searchQuerySelector } from "../../../redux/selectors/map";
+import { resourceSelector } from "../../../redux/selectors/resource";
 
 import {
   createMuiTheme,
@@ -51,9 +52,10 @@ const MapSearchAutocomplete = ({
   query,
   updateSearchQuery,
   addTag,
+  resources,
 }) => {
   const onChange = (_, value, reason) => {
-    if (reason !== "clear") {
+    if (reason !== "clear" && globalTagList.indexOf(value) !== -1) {
       addTag(value);
       updateSearchQuery("");
     }
@@ -67,12 +69,11 @@ const MapSearchAutocomplete = ({
     <MuiThemeProvider theme={theme}>
       <Autocomplete
         onChange={onChange}
-        disableClearable
-        open={query !== ""}
+        getOptionSelected={() => false}
+        freeSolo
         onInputChange={onInputChange}
-        noOptionsText={null}
         forcePopupIcon={query !== ""}
-        options={globalTagList ?? []}
+        options={resources.length > 0 ? globalTagList ?? [] : []}
         renderInput={(params) => <TextField {...params} margin="normal" />}
         inputValue={query}
       />
@@ -81,9 +82,10 @@ const MapSearchAutocomplete = ({
 };
 
 const mapStateToProps = (state) => ({
-    globalTagList: globalTagListSelector(state),
-    query: searchQuerySelector(state),
-  });
+  globalTagList: globalTagListSelector(state),
+  resources: resourceSelector(state),
+  query: searchQuerySelector(state),
+});
 
 const mapDispatchToProps = {
   updateSearchQuery,
