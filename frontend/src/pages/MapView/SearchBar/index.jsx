@@ -14,6 +14,7 @@ import {
   searchQuerySelector,
 } from "../../../redux/selectors/map";
 import "./styles.scss";
+import MapSearchAutocomplete from "./MapSearchAutocomplete";
 
 const SearchBar = ({
   query,
@@ -79,6 +80,7 @@ const SearchBar = ({
             Go
           </button>
         </div>
+        <MapSearchAutocomplete></MapSearchAutocomplete>
         {tags.length > 0 && (
           <div className="card-tags-search">
             {tags.map((tag) => (
