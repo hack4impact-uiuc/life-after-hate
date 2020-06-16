@@ -110,7 +110,8 @@ const ResourceModal = ({
   const isIndividualResource = isAddingResource
     ? groupType === resourceEnum.INDIVIDUAL
     : resource.type === resourceEnum.INDIVIDUAL;
-  console.log("Rerender");
+
+  const isEditing = !isAddingResource;
   return (
     <LAHModal>
       <form
@@ -126,7 +127,7 @@ const ResourceModal = ({
             value={groupType}
             rows="5"
             className={`modal-input-field ${errors.type ? "invalid" : ""}`}
-            disabled={!isAddingResource}
+            disabled={isEditing}
             onChange={(e) => setGroupType(e.target.value)}
           >
             <option>{resourceEnum.INDIVIDUAL}</option>
@@ -143,6 +144,7 @@ const ResourceModal = ({
               setValue("tags", value);
             }}
             tags={watch("tags") ?? resource.tags ?? []}
+            disabled={!editable}
           ></ModalTagComplete>
         </label>
         {editable && (

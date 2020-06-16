@@ -8,6 +8,7 @@ export const ModalTagComplete = ({
   onChange,
   globalTagList,
   defaultValue,
+  disabled,
 }) => (
     <TagAutocomplete
       autoHighlight
@@ -16,6 +17,7 @@ export const ModalTagComplete = ({
       tagOptions={globalTagList}
       onChange={onChange}
       defaultValue={defaultValue}
+      disabled={disabled}
     ></TagAutocomplete>
   );
 

@@ -29,7 +29,7 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
 
   return (
     <div>
-      <Navbar light expand="md" className="lah_navbar pl-5 pr-5">
+      <Navbar light expand="md" className="lah_navbar pl-sm-5 pr-sm-5">
         <NavbarBrand tag={Link} to="/" onClick={changePage}>
           <img src={Logo} alt="LAH Logo" id="logo" />
         </NavbarBrand>
