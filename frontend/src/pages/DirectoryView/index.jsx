@@ -36,6 +36,11 @@ const ResourceManager = ({ openResourceModal, resources }) => {
       <div className="resources">
         <div className="container-fluid">
           <SearchBar />
+          {resources.length > 0 && (
+            <label id="result-count" className="mb-2">
+              {resources.length} result{resources.length !== 1 && `s`}
+            </label>
+          )}
           <ResourceLabels resources={resources} />
           <ResourceList resources={resources} />
         </div>
