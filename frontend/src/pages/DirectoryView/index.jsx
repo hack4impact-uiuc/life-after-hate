@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import ResourceCard from "./ResourceCard";
 import AdminView from "../../components/Auth/AdminView";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
@@ -9,16 +8,13 @@ import { tagFilteredResourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { getTags } from "../../utils/api";
 import ResourceLabels from "./ResourceLabels";
+import ResourceList from "./ResourceList";
 
 const ResourceManager = ({ openResourceModal, resources }) => {
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
     getTags();
   }, []);
-
-  const renderCards = (resource) => (
-    <ResourceCard key={resource._id} resource={resource} />
-  );
 
   return (
     <div className="directory">
@@ -41,7 +37,7 @@ const ResourceManager = ({ openResourceModal, resources }) => {
         <div className="container-fluid">
           <SearchBar />
           <ResourceLabels resources={resources} />
-          {resources && resources.map(renderCards)}
+          <ResourceList resources={resources} />
         </div>
       </div>
     </div>

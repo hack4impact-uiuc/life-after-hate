@@ -8,7 +8,7 @@ import { resourceEnum } from "../../../utils/enums";
 import { distanceToString } from "../../../utils/formatters";
 import "../styles.scss";
 
-const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
+const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openResourceModalWithPayload({ resourceId: resource._id });
@@ -24,47 +24,49 @@ const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
 
   const isIndividualResource = resource.type === resourceEnum.INDIVIDUAL;
   return (
-    <div
-      className="card-click row card-wrapper"
-      role="button"
-      tabIndex="0"
-      onClick={toggleViewOnlyModal}
-      onKeyPress={toggleViewOnlyModal}
-    >
-      <div className="col">
-        <p data-cy="card-companyName">
-          {isIndividualResource ? resource.contactName : resource.companyName}
-        </p>
-      </div>
-      <div className="col d-none d-md-block">
-        <p data-cy="card-address">{resource.address}</p>
-        {"distanceFromSearchLoc" in resource && (
-          <p data-cy="card-distance" className="card-distance">
-            {distanceToString(resource.distanceFromSearchLoc)}
+    <div className="card-wrap" style={style}>
+      <div
+        className="card-click row card-wrapper"
+        role="button"
+        tabIndex="0"
+        onClick={toggleViewOnlyModal}
+        onKeyPress={toggleViewOnlyModal}
+      >
+        <div className="col">
+          <p data-cy="card-companyName">
+            {isIndividualResource ? resource.contactName : resource.companyName}
           </p>
-        )}
-      </div>
-      <div className="col d-none d-sm-block">
-        <p>{resource.volunteerRoles}</p>
-      </div>
-      <div className="col col-desc col-desc-collapsed">
-        <p>{isIndividualResource ? resource.skills : resource.description}</p>
-      </div>
-      <div className="col col-desc col-desc-collapsed d-none d-sm-block">
-        <p>{isIndividualResource && resource.availability}</p>
-      </div>
-      <AdminView>
-        <div className="col col-edit">
-          <Button
-            onClick={toggleModal}
-            className="edit-button"
-            color="transparent"
-          >
-            <img id="edit-icon" src={Edit} alt="edit icon" />
-            Edit
-          </Button>
         </div>
-      </AdminView>
+        <div className="col d-none d-md-block">
+          <p data-cy="card-address">{resource.address}</p>
+          {"distanceFromSearchLoc" in resource && (
+            <p data-cy="card-distance" className="card-distance">
+              {distanceToString(resource.distanceFromSearchLoc)}
+            </p>
+          )}
+        </div>
+        <div className="col d-none d-sm-block">
+          <p>{resource.volunteerRoles}</p>
+        </div>
+        <div className="col col-desc col-desc-collapsed">
+          <p>{isIndividualResource ? resource.skills : resource.description}</p>
+        </div>
+        <div className="col col-desc col-desc-collapsed d-none d-sm-block">
+          <p>{isIndividualResource && resource.availability}</p>
+        </div>
+        <AdminView>
+          <div className="col col-edit">
+            <Button
+              onClick={toggleModal}
+              className="edit-button"
+              color="transparent"
+            >
+              <img id="edit-icon" src={Edit} alt="edit icon" />
+              Edit
+            </Button>
+          </div>
+        </AdminView>
+      </div>
     </div>
   );
 };

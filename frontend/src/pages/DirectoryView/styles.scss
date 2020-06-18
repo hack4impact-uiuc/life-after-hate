@@ -34,6 +34,7 @@
   }
 
   .resources {
+    height: 100%;
     background-color: #f9f9f9;
     margin-top: 8px;
     margin-bottom: 40px;
@@ -56,6 +57,8 @@
 
   .resource-labels {
     padding-bottom: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
   }
 
   .resource-label {
@@ -89,6 +92,8 @@
       height: 18px;
       padding-right: 5px;
     }
+    margin-left: 2px;
+    margin-right: 2px;
     .edit-button {
       display: block;
       margin-left: auto;
