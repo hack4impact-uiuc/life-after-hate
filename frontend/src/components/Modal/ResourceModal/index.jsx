@@ -18,6 +18,7 @@ import {
 import LAHModal from "../../Modal";
 import ModalInput from "../ModalInput";
 import "../styles.scss";
+import LastModifiedInfo from "../LastModifiedInfo";
 
 const IndividualResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
@@ -111,13 +112,16 @@ const ResourceModal = ({
     ? groupType === resourceEnum.INDIVIDUAL
     : resource.type === resourceEnum.INDIVIDUAL;
 
-  const isEditing = !isAddingResource;
+  const isExistingResource = !isAddingResource;
   return (
     <LAHModal>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="add-edit-resource-form"
       >
+        {isExistingResource && (
+          <LastModifiedInfo resource={resource}></LastModifiedInfo>
+        )}
         <label className="modal-lab">
           <p>Resource Type</p>
           <select
@@ -127,7 +131,7 @@ const ResourceModal = ({
             value={groupType}
             rows="5"
             className={`modal-input-field ${errors.type ? "invalid" : ""}`}
-            disabled={isEditing}
+            disabled={isExistingResource}
             onChange={(e) => setGroupType(e.target.value)}
           >
             <option>{resourceEnum.INDIVIDUAL}</option>

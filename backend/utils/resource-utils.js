@@ -116,6 +116,8 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
       "__v",
       "address",
       "location",
+      "dateLastModified",
+      "lastModifiedUser",
     ]),
     (r) => Object.values(r),
     R.join(" ")
@@ -155,6 +157,13 @@ const nullLocationFilter = R.filter(
   (resource) =>
     R.view(resourceLatLens, resource) && R.view(resourceLongLens, resource)
 );
+
+const touchResourceModification = (data, user) => {
+  const { firstName, lastName } = user;
+  data.lastModifiedUser = `${firstName} ${lastName}`;
+  data.dateLastModified = Date.now();
+};
+
 const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   if (!(lat && long && radius)) {
     // Do nothing if undefined
@@ -176,4 +185,5 @@ module.exports = {
   resourceLongLens,
   resourceRegionLens,
   resourceAddressLens,
+  touchResourceModification,
 };
