@@ -65,27 +65,8 @@ const DEFAULT_FILTER_OPTIONS = {
   findAllMatches: true,
   keys: [
     {
-      name: "contactName",
-      weight: 0.5,
-    },
-    {
-      name: "companyName",
-      weight: 0.5,
-    },
-    { name: "skills", weight: 0.3 },
-    { name: "volunteerRoles", weight: 0.3 },
-    { name: "howDiscovered", weight: 0.3 },
-    {
-      name: "notes",
-      weight: 0.3,
-    },
-    {
-      name: "description",
-      weight: 0.3,
-    },
-    {
-      name: "tags",
-      weight: 0.2,
+      name: "allText",
+      weight: 0.99,
     },
   ],
 };
