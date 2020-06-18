@@ -1,5 +1,6 @@
 import { resourceEnum, sortFieldEnum } from "../../utils/enums";
 import { createSelector } from "reselect";
+import { tagSelector } from "./tags";
 const resourceName = (resource) =>
   (resource.type === resourceEnum.INDIVIDUAL
     ? resource.contactName
@@ -64,5 +65,16 @@ export const resourceSelector = createSelector(
         comparator(getter(resource1), getter(resource2)) * numericalOrder
     );
     return resourceCopy;
+  }
+);
+
+export const tagFilteredResourceSelector = createSelector(
+  [tagSelector, resourceSelector],
+  (tags, resources) => {
+    if (!resources) {
+      return [];
+    }
+    const tagMatch = (resource) => tags.every((t) => resource.tags.includes(t));
+    return resources.filter(tagMatch);
   }
 );

@@ -5,8 +5,11 @@ import {
   CLEAR_RESOURCES,
   DELETE_RESOURCE,
 } from "../actions/resources";
+import { CHANGE_PAGE } from "../actions/nav";
 
-const resources = (state = [], action) => {
+const INITIAL_STATE = [];
+
+const resources = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ADD_RESOURCE:
       return [action.payload, ...state];
@@ -18,8 +21,9 @@ const resources = (state = [], action) => {
       return state.filter((item) => item._id !== action.payload._id);
     case REPLACE_ALL_RESOURCES:
       return action.payload;
+    case CHANGE_PAGE:
     case CLEAR_RESOURCES:
-      return [];
+      return [...INITIAL_STATE];
     default:
       return state;
   }

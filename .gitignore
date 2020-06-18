@@ -3,6 +3,8 @@
 .AppleDouble
 .LSOverride  
 
+
+.vercel
 # Logs
 logs
 *.log

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   mapResourceIdSelector,
-  tagFilteredResourceSelector,
+  mappableResourceSelector,
 } from "../../../redux/selectors/map";
 
 import ResourceCard from "../ResourceCard";
@@ -129,7 +129,7 @@ class CardView extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  resources: tagFilteredResourceSelector(state),
+  resources: mappableResourceSelector(state),
   selectedResource: mapResourceIdSelector(state),
 });
 

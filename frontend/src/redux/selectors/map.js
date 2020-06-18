@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
-import { resourceSelector } from "./resource";
-import { tagSelector } from "./tags";
+import { resourceSelector, tagFilteredResourceSelector } from "./resource";
 
 export const searchQuerySelector = (state) => state.map.search.query;
 export const searchLocationSelector = (state) => state.map.search.location;
@@ -21,20 +20,9 @@ export const currentResourceSelector = createSelector(
 
 // Filter out resources that don't have a location
 export const mappableResourceSelector = createSelector(
-  [resourceSelector],
+  [tagFilteredResourceSelector],
   (resources) =>
     resources.filter(
       (r) => r.location.coordinates[0] && r.location.coordinates[1]
     )
-);
-
-export const tagFilteredResourceSelector = createSelector(
-  [tagSelector, mappableResourceSelector],
-  (tags, resources) => {
-    if (!resources) {
-      return [];
-    }
-    const tagMatch = (resource) => tags.every((t) => resource.tags.includes(t));
-    return resources.filter(tagMatch);
-  }
 );

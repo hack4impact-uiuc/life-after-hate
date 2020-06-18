@@ -2,7 +2,6 @@
 const express = require("express");
 const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");
-const extractor = require("keyword-extractor");
 Joi.objectId = require("joi-objectid")(Joi);
 const beeline = require("honeycomb-beeline");
 const IndividualResource = require("../../models/IndividualResource");
@@ -62,6 +61,14 @@ router.get(
   })
 );
 
+router.get(
+  "/tags",
+  requireVolunteerStatus,
+  errorWrap(async (req, res) => {
+    const tags = await Resource.distinct("tags").lean();
+    res.json({ code: 200, result: tags, success: true });
+  })
+);
 // get list of resources filtered by location radius
 router.get(
   "/filter",
@@ -113,12 +120,6 @@ router.post(
   errorWrap(async (req, res) => {
     // Copy the object and add an empty coordinate array
     let data = { ...req.body };
-    const createdTags = extractor.extract(data.notes, {
-      language: "english",
-      remove_digits: true,
-      return_changed_case: true,
-      remove_duplicates: true,
-    });
 
     const span = beeline.startSpan({ name: "Resource Create" });
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
@@ -137,7 +138,6 @@ router.post(
       data.type === resourceEnum.INDIVIDUAL
         ? new IndividualResource(data)
         : new GroupResource(data);
-    newResource.tags = createdTags;
     const { _id } = await newResource.save();
 
     res.status(201).json({

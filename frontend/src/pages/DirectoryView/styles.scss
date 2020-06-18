@@ -146,8 +146,8 @@
     }
     #search-button {
       width: 100%;
-      height: 100%;
       background-color: #f7922f;
+      height: 40px;
       color: white;
       font-size: 13px;
       text-transform: uppercase;
@@ -163,7 +163,7 @@
       }
     }
 
-    input {
+    .search-input {
       background-color: #f6f6f6;
       width: 100%;
       height: 38px;
@@ -176,7 +176,7 @@
       border: solid #f6f6f6 1.5px;
     }
 
-    input:focus {
+    .search-input:focus {
       border: solid #f7922f 1.5px;
     }
 

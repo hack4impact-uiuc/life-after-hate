@@ -5,24 +5,23 @@ import ResourceCard from "./ResourceCard";
 import AdminView from "../../components/Auth/AdminView";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
-import { clearResources } from "../../redux/actions/resources";
 import { updateSort } from "../../redux/actions/sort";
-import { resourceSelector } from "../../redux/selectors/resource";
+import { tagFilteredResourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
 import { sortFieldEnum } from "../../utils/enums";
 import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
+import { getTags } from "../../utils/api";
 
 const ResourceManager = ({
   openResourceModal,
   resources,
-  clearResources,
   sort,
   updateSort,
 }) => {
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
-    clearResources();
-  }, [clearResources]);
+    getTags();
+  }, []);
 
   const renderCards = (resource) => (
     <ResourceCard key={resource._id} resource={resource} />
@@ -103,13 +102,12 @@ const ResourceManager = ({
 };
 
 const MapStateToProps = (state) => ({
-  resources: resourceSelector(state),
+  resources: tagFilteredResourceSelector(state),
   sort: state.sort,
 });
 
 const mapDispatchToProps = {
   openResourceModal,
-  clearResources,
   updateSort,
 };
 

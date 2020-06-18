@@ -16,22 +16,22 @@ context("Resource Map", () => {
 
   it("Clear search works as intended", () => {
     cy.get("#locationInput").type("hello location");
-    cy.get("#searchInput").type("hello search");
+    cy.get("[data-cy=searchInput] > > input").type("hello search");
 
     cy.get("#locationInput").should("have.value", "hello location");
 
     cy.get("[data-cy=clear-location]").click();
 
     cy.get("#locationInput").should("have.value", "");
-    cy.get("#searchInput").should("have.value", "hello search");
-
-    cy.get("[data-cy=clear-search]").click();
-    cy.get("#searchInput").should("have.value", "");
+    cy.get("[data-cy=searchInput] > > input").should(
+      "have.value",
+      "hello search"
+    );
   });
 
   it("Search by both name and location works as intended", () => {
     cy.get("#locationInput").type("Chicago");
-    cy.get("#searchInput").type("Fairway");
+    cy.get("[data-cy=searchInput] > > input").type("Fairway");
 
     cy.get(".submitSearch").click();
 
@@ -45,7 +45,7 @@ context("Resource Map", () => {
 
     // Try again with an empty search, but this time making sure that more than one resource is displayed
     cy.get("[data-cy=clear-location]").click();
-    cy.get("[data-cy=clear-search]").click();
+    cy.get("[data-cy=searchInput] > > input").clear();
     cy.get(".submitSearch").click();
 
     cy.get(".card-title").should("have.length.gt", 1);
@@ -54,7 +54,7 @@ context("Resource Map", () => {
   });
 
   it("Search by only name works as intended", () => {
-    cy.get("#searchInput").type("Fairway Inn");
+    cy.get("[data-cy=searchInput] > > input").type("Fairway Inn");
     cy.get(".submitSearch").click();
 
     cy.get(".card-title", { timeout: 10000 }).should("have.length", 1);
@@ -79,7 +79,7 @@ context("Resource Map", () => {
   });
 
   it("View/edit modals behave differently", () => {
-    cy.get("#searchInput").type("Fairway Inn");
+    cy.get("[data-cy=searchInput] > > input").type("Fairway Inn");
     cy.get(".submitSearch").click();
 
     cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
@@ -140,7 +140,7 @@ context("Resource Map", () => {
   });
 
   it("View/edit modal functionality should work when triggered by the popup", () => {
-    cy.get("#searchInput").type("Fairway Inn");
+    cy.get("[data-cy=searchInput] > > input").type("Fairway Inn");
     cy.get(".submitSearch").click();
 
     cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
@@ -170,7 +170,7 @@ context("Resource Map", () => {
   });
 
   it("Properly de-focuses resources on close", () => {
-    cy.get("#searchInput").type("Fairway Inn");
+    cy.get("[data-cy=searchInput] > > input").type("Fairway Inn");
     cy.get(".submitSearch").click();
 
     cy.get(".card-title:first").should("have.text", "Fairway Inn").click();
@@ -207,16 +207,16 @@ context("Resource Map", () => {
     cy.get(".card-title").should("have.length.gt", 1);
 
     cy.get("#locationInput").type("Hello World");
-    cy.get("#searchInput").type("Hello World");
+    cy.get("[data-cy=searchInput] > > input").type("Hello World");
     cy.get("#logo").click();
 
     cy.get(".card-title").should("have.length", 0);
     cy.get("#locationInput").should("have.text", "");
-    cy.get("#searchInput").should("have.text", "");
+    cy.get("[data-cy=searchInput] > > input").should("have.text", "");
   });
 
   it("Tag filtering test", () => {
-    cy.get("#searchInput").type("Fairway Inn");
+    cy.get("[data-cy=searchInput] > > input").type("Fairway Inn");
     cy.get(".submitSearch").click();
     cy.get(".card-title:first").should("have.text", "Fairway Inn");
 
@@ -236,7 +236,7 @@ context("Resource Map", () => {
     cy.get(".card-title").should("have.length", 1);
 
     // // Should persist across search, however this time eliminating tags should bring back resources
-    cy.get("#searchInput").clear();
+    cy.get("[data-cy=searchInput] > > input").clear();
     cy.get(".submitSearch").click();
     cy.get(".card-tag-search").should("have.length", 3);
     cy.get(".card-title").should("have.text", "Fairway Inn");
