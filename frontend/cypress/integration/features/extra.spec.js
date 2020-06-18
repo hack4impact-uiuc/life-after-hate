@@ -15,7 +15,7 @@ context("Extra Tests", () => {
     cy.server();
     cy.route({
       method: "GET",
-      url: "**/api/resources/**",
+      url: "**/api/resources/filter**",
       status: 401,
       response: [],
     });
