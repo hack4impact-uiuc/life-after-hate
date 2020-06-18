@@ -43,7 +43,9 @@ Cypress.Commands.add("createDirectoryViewResource", (name) => {
   cy.get("[data-cy=modal-description").type(
     "This is a test description! This should show up in its entirety."
   );
-  cy.get("[data-cy=modal-tags").type("a,b,c");
+  cy.get(".add-edit-resource-form > > [data-cy=tag-autocomplete]")
+    .type("Sample Tag{enter}")
+    .type("c{enter}");
   cy.get("[data-cy=modal-address").type("1234 W. Main St. Urbana, IL 61801");
   cy.get("[data-cy=modal-notes").type(
     "This is a notes field! You can enter notes here."

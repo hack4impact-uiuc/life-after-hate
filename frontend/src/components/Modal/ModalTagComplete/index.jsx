@@ -10,16 +10,15 @@ export const ModalTagComplete = ({
   defaultValue,
   disabled,
 }) => (
-    <TagAutocomplete
-      autoHighlight
-      freeSolo
-      tags={tags}
-      tagOptions={globalTagList}
-      onChange={onChange}
-      defaultValue={defaultValue}
-      disabled={disabled}
-    ></TagAutocomplete>
-  );
+  <TagAutocomplete
+    freeSolo
+    tags={tags}
+    tagOptions={globalTagList}
+    onChange={onChange}
+    defaultValue={defaultValue}
+    disabled={disabled}
+  ></TagAutocomplete>
+);
 
 const mapStateToProps = (state) => ({
   globalTagList: globalTagListSelector(state),

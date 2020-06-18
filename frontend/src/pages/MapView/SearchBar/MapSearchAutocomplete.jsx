@@ -103,7 +103,12 @@ const MapSearchAutocomplete = ({
         // Only present suggestions when there are resources!
         options={resources.length > 0 ? globalTagList ?? [] : []}
         renderInput={(params) => (
-          <TextField {...params} margin="normal" placeholder="Search" />
+          <TextField
+            {...params}
+            data-cy="searchInput"
+            margin="normal"
+            placeholder="Search"
+          />
         )}
         inputValue={query}
       />

@@ -62,12 +62,15 @@ const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
   <MuiThemeProvider theme={theme}>
     <Autocomplete
       multiple
+      freeSolo
       id="tags-filled"
+      data-cy="tag-autocomplete"
       onChange={onChange}
       options={tagOptions}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
           <Chip
+            data-cy="tag-chip"
             key={option}
             variant="outlined"
             label={option}

@@ -75,6 +75,8 @@ context("Directory View", () => {
 
     cy.get(".edit-button").click();
 
+    // Check tag persistence
+    cy.get("[data-cy=tag-chip]").first().should("have.text", "Sample Tag");
     cy.get("#delete-form-button")
       .should("have.text", "Delete")
       .click()
