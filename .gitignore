@@ -111,3 +111,5 @@ frontend/cypress/screenshots
 
 # DynamoDB Local files
 .dynamodb/
+
+.vercel

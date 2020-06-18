@@ -4,7 +4,7 @@ import FileSaver from "file-saver";
 import { getCSV } from "../../utils/csv";
 import Download from "../../assets/images/download.svg";
 import "./styles.scss";
-export const CSVExporter = ({ data, name }) => {
+export const CSVExporter = ({ data, name = "resources.csv" }) => {
   const downloadFile = () => {
     const csv = getCSV(data);
     const csvBlob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
