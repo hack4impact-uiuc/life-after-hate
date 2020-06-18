@@ -16,7 +16,19 @@ const resourceDescription = (resource) =>
     ? resource.skills
     : resource.description) ?? "";
 
-const strCompare = (a, b) => a.localeCompare(b);
+const strCompare = (a, b) => {
+  if (a === "" || a === null) {
+    return 1;
+  }
+  if (b === "" || b === null) {
+    return -1;
+  }
+  if (a === b) {
+    return 0;
+  }
+  return a.localeCompare(b);
+};
+
 const numCompare = (a, b) => {
   if (a < b) {
     return -1;
