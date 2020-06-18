@@ -1,13 +1,12 @@
 import React from "react";
 import ResourceCard from "../ResourceCard";
-
 import {
   CellMeasurer,
   List,
   AutoSizer,
   CellMeasurerCache,
 } from "react-virtualized";
-
+import "./styles.scss";
 const cache = new CellMeasurerCache({
   fixedWidth: true,
   defaultWidth: 324,
@@ -62,7 +61,7 @@ class ResourceList extends React.Component {
     const { resources } = this.props;
     return (
       resources.length > 0 && (
-        <div style={{ minHeight: "500px" }}>
+        <div className="resource-list">
           <AutoSizer>
             {({ height, width }) => (
               <List
