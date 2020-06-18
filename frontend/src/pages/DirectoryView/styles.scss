@@ -1,6 +1,5 @@
 .directory {
   width: 100%;
-  height: 100vh;
   padding: 20px 40px 20px 40px;
   font-family: "Roboto";
 
@@ -56,6 +55,8 @@
 
   .resource-labels {
     padding-bottom: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
   }
 
   .resource-label {
@@ -89,6 +90,8 @@
       height: 18px;
       padding-right: 5px;
     }
+    margin-left: 2px;
+    margin-right: 2px;
     .edit-button {
       display: block;
       margin-left: auto;

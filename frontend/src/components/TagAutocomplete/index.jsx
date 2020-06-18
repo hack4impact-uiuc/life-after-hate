@@ -62,7 +62,6 @@ const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
   <MuiThemeProvider theme={theme}>
     <Autocomplete
       multiple
-      freeSolo
       id="tags-filled"
       data-cy="tag-autocomplete"
       onChange={onChange}

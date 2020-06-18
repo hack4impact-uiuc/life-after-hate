@@ -27,7 +27,7 @@ context("Volunteer User", () => {
     cy.get("#search-button").click();
 
     // Should display results
-    cy.get("[data-cy=card-address]").should("have.length.gt", 50);
+    cy.get("[data-cy=card-address]").should("have.length.gt", 10);
 
     cy.get(".edit-button").should("not.exist");
   });

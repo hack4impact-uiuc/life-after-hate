@@ -1,38 +1,20 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import ResourceCard from "./ResourceCard";
 import AdminView from "../../components/Auth/AdminView";
 import SearchBar from "./SearchBar";
 import { openResourceModal } from "../../redux/actions/modal";
-import { updateSort } from "../../redux/actions/sort";
 import { tagFilteredResourceSelector } from "../../redux/selectors/resource";
 import "./styles.scss";
-import { sortFieldEnum } from "../../utils/enums";
-import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
 import { getTags } from "../../utils/api";
+import ResourceLabels from "./ResourceLabels";
+import ResourceList from "./ResourceList";
 
-const ResourceManager = ({
-  openResourceModal,
-  resources,
-  sort,
-  updateSort,
-}) => {
+const ResourceManager = ({ openResourceModal, resources }) => {
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
     getTags();
   }, []);
-
-  const renderCards = (resource) => (
-    <ResourceCard key={resource._id} resource={resource} />
-  );
-
-  const sortIcon = (field) => {
-    if (field === sort.field) {
-      return sort.order === "asc" ? <>&#9660;</> : <>&#9650;</>;
-    }
-    return null;
-  };
 
   return (
     <div className="directory">
@@ -54,47 +36,8 @@ const ResourceManager = ({
       <div className="resources">
         <div className="container-fluid">
           <SearchBar />
-          <div className="resource-labels row">
-            <div
-              className="col my-auto"
-              onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
-            >
-              <h3 className="resource-label">
-                Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}
-              </h3>
-            </div>
-            <div
-              className="col d-none d-md-block my-auto"
-              onClick={() => updateSort(sortFieldEnum.LOCATION)}
-            >
-              <h3 className="resource-label">
-                Location {sortIcon(sortFieldEnum.LOCATION)}
-              </h3>
-            </div>
-            <div
-              className="col d-none d-sm-block my-auto"
-              onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
-            >
-              <h3 className="resource-label">
-                Volunteer Role {sortIcon(sortFieldEnum.VOLUNTEER_ROLE)}
-              </h3>
-            </div>
-            <div
-              className="col my-auto"
-              onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
-            >
-              <h3 className="resource-label">
-                Description {sortIcon(sortFieldEnum.DESCRIPTION)}
-              </h3>
-            </div>
-
-            <AdminView>
-              <div className="col">
-                <CSVExporter data={resources}></CSVExporter>
-              </div>
-            </AdminView>
-          </div>
-          {resources && resources.map(renderCards)}
+          <ResourceLabels resources={resources} />
+          <ResourceList resources={resources} />
         </div>
       </div>
     </div>
@@ -103,12 +46,10 @@ const ResourceManager = ({
 
 const MapStateToProps = (state) => ({
   resources: tagFilteredResourceSelector(state),
-  sort: state.sort,
 });
 
 const mapDispatchToProps = {
   openResourceModal,
-  updateSort,
 };
 
 export default connect(MapStateToProps, mapDispatchToProps)(ResourceManager);

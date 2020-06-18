@@ -14,7 +14,6 @@ export const DirectoryTagSearch = ({ tags, replaceTags, globalTagList }) => {
   return (
     <TagAutocomplete
       autoHighlight
-      freeSolo
       tags={tags}
       tagOptions={globalTagList}
       onChange={handleSelectionChange}

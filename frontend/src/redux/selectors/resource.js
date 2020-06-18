@@ -44,6 +44,10 @@ const comparatorDict = {
     getter: resourceDescription,
     comparator: strCompare,
   },
+  [sortFieldEnum.AVAILABILITY]: {
+    getter: (r) => r.availability ?? "",
+    comparator: strCompare,
+  },
 };
 
 // Memoize sort selector to avoid extra computation
