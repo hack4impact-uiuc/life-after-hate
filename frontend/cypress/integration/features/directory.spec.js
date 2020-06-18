@@ -137,4 +137,45 @@ context("Directory View", () => {
       .first()
       .should("contain.text", "Saint Louis");
   });
+
+  it("Should live filter by tags", () => {
+    cy.get("#search-button").click();
+    cy.get("[data-cy=card-address]").should("have.length.gt", 1);
+    cy.get("#tags-filled").type("Air{enter}");
+    cy.get("[data-cy=card-address]").should("have.length", 6);
+    cy.get("#tags-filled").type("Meet{enter}");
+    cy.get("[data-cy=card-address]").should("have.length", 1);
+    cy.get("[data-cy=card-companyName]").should(
+      "have.text",
+      "Golden North Motel"
+    );
+    cy.get("#tags-filled").type("{backspace}{backspace}");
+    cy.get("[data-cy=card-address]").should("have.length.gt", 1);
+  });
+
+  it("Should sort by label and have card distances", () => {
+    cy.get("#search-location").type("Chicago");
+    cy.get("#search-button").click();
+    cy.get("[data-cy=card-companyName]").should("have.length.gt", 1);
+    cy.get(".resource-label").first().click();
+    cy.get("[data-cy=card-companyName]")
+      .first()
+      .should("have.text", "Alan Fang");
+    cy.get(".resource-label").first().click();
+    cy.get("[data-cy=card-companyName]")
+      .first()
+      .should("not.contain.text", "Alan Fang");
+
+    // Search by location
+    cy.get(".resource-label").eq(1).click();
+    cy.get("[data-cy=card-distance]").first().should("contain.text", "86");
+    cy.get(".resource-label").eq(1).click();
+    cy.get("[data-cy=card-distance]").first().should("contain.text", "488");
+  });
+
+  it("Should show a CSV download option", () => {
+    cy.get("#csv-download-btn").should("not.be.visible");
+    cy.get("#search-button").click();
+    cy.get("#csv-download-btn").should("be.visible");
+  });
 });
