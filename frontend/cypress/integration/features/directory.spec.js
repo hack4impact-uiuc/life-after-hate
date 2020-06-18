@@ -42,7 +42,7 @@ context("Directory View", () => {
 
   it("Should clear resources when moving from directory view to map view & back", () => {
     cy.get("#search-button").click();
-    cy.get("[data-cy=card-companyName]").should("have.length.gt", 50);
+    cy.get("[data-cy=card-companyName]").should("have.length.gt", 10);
     cy.get("[data-cy=nav-links]").children().eq(0).click();
     cy.get(".card-content").should("not.be.visible");
     cy.get("[data-cy=nav-links]").children().eq(1).click();

@@ -15,11 +15,15 @@ const cache = new CellMeasurerCache({
 });
 
 class ResourceList extends React.Component {
-  constructor() {
-    super();
-    window.addEventListener("resize", () => cache.clearAll());
+  componentDidMount() {
+    window.addEventListener("resize", this.handleResize);
   }
 
+  handleResize = () => cache.clearAll();
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleResize);
+  }
   purgeCache = () => {
     cache.clearAll();
     if (this.list) {
@@ -58,21 +62,23 @@ class ResourceList extends React.Component {
     const { resources } = this.props;
     return (
       resources.length > 0 && (
-        <AutoSizer>
-          {({ width }) => (
-            <List
-              width={width}
-              height={500}
-              ref={(list) => {
-                this.list = list;
-              }}
-              deferredMeasurementCache={cache}
-              rowHeight={cache.rowHeight}
-              rowRenderer={this.rowRenderer.bind(this)}
-              rowCount={resources.length}
-            />
-          )}
-        </AutoSizer>
+        <div style={{ minHeight: "500px" }}>
+          <AutoSizer>
+            {({ height, width }) => (
+              <List
+                width={width}
+                height={height}
+                ref={(list) => {
+                  this.list = list;
+                }}
+                deferredMeasurementCache={cache}
+                rowHeight={cache.rowHeight}
+                rowRenderer={this.rowRenderer.bind(this)}
+                rowCount={resources.length}
+              />
+            )}
+          </AutoSizer>
+        </div>
       )
     );
   }
