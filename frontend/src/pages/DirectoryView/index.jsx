@@ -87,7 +87,14 @@ const ResourceManager = ({
                 Description {sortIcon(sortFieldEnum.DESCRIPTION)}
               </h3>
             </div>
-
+            <div
+              className="col my-auto d-none d-sm-block"
+              onClick={() => updateSort(sortFieldEnum.AVAILABILITY)}
+            >
+              <h3 className="resource-label">
+                Availability {sortIcon(sortFieldEnum.AVAILABILITY)}
+              </h3>
+            </div>
             <AdminView>
               <div className="col">
                 <CSVExporter data={resources}></CSVExporter>

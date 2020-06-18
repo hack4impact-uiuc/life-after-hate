@@ -50,6 +50,9 @@ const ResourceCard = ({ resource, openResourceModalWithPayload }) => {
       <div className="col col-desc col-desc-collapsed">
         <p>{isIndividualResource ? resource.skills : resource.description}</p>
       </div>
+      <div className="col col-desc col-desc-collapsed d-none d-sm-block">
+        <p>{isIndividualResource && resource.availability}</p>
+      </div>
       <AdminView>
         <div className="col col-edit">
           <Button
