@@ -8,12 +8,14 @@ context("Directory View", () => {
   });
 
   it("Displays proper sections", () => {
+    cy.get("#search-button").click();
     cy.get(".manager-header").should("contain.text", "Resource Directory");
     cy.get(".resource-labels")
       .should("contain.text", "Resource Name")
       .and("contain.text", "Location")
       .and("contain.text", "Volunteer Role")
-      .and("contain.text", "Description");
+      .and("contain.text", "Description")
+      .and("contain.text", "Availability");
   });
 
   it("Adding an incomplete resource fails", () => {
