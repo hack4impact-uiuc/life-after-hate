@@ -71,6 +71,7 @@ app.use(
     }),
     saveUninitialized: false, // don't create session until something stored
     resave: false, //don't save session if unmodified
+    maxAge: 10080000, // 1 week long
   })
 );
 
