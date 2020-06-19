@@ -17,6 +17,7 @@
     "file-saver": "^2.0.2",
     "istanbul-lib-coverage": "^3.0.0",
     "json2csv": "^5.0.1",
+    "logrocket": "^1.0.8",
     "mapbox-gl": "^1.11.0",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.14.1",

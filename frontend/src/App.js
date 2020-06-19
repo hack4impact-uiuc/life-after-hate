@@ -14,7 +14,7 @@ import store from "./redux/store";
 import { refreshGlobalAuth } from "./utils/api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Analytics from "./components/Analytics";
 class App extends Component {
   componentDidMount = refreshGlobalAuth;
 
@@ -22,6 +22,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div className="App">
+          <Analytics />
           <MiniLoader />
           <ToastContainer />
           <ModalManager />
