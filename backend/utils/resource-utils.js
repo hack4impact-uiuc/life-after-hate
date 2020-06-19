@@ -159,9 +159,13 @@ const nullLocationFilter = R.filter(
 );
 
 const touchResourceModification = (data, user) => {
+  if (!user) {
+    return data;
+  }
   const { firstName, lastName } = user;
   data.lastModifiedUser = `${firstName} ${lastName}`;
   data.dateLastModified = Date.now();
+  return data;
 };
 
 const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
