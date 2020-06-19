@@ -105,8 +105,34 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
   if (!(filterOptions && query && resources)) {
     return resources;
   }
-  const fuse = new Fuse(resources, filterOptions);
-  return fuse.search(query).map((i) => i.item);
+
+  // Take the entire object and put all the different fields together to fuzzy search on
+  const getAllText = R.pipe(
+    R.omit([
+      "dateCreated",
+      "_id",
+      "type",
+      "federalRegion",
+      "__v",
+      "address",
+      "location",
+      "dateLastModified",
+      "lastModifiedUser",
+    ]),
+    (r) => Object.values(r),
+    R.join(" ")
+  );
+
+  const preparedResources = R.map(
+    R.over(R.lens(R.identity, R.assoc("allText")), getAllText)
+  )(resources);
+
+  const fuse = new Fuse(preparedResources, filterOptions);
+  const results = fuse
+    .search(query)
+    .map((i) => i.item)
+    .map(R.omit("allText"));
+  return results;
 });
 
 const resourceLatLens = R.lensPath(["location", "coordinates", 1]);
@@ -131,6 +157,17 @@ const nullLocationFilter = R.filter(
   (resource) =>
     R.view(resourceLatLens, resource) && R.view(resourceLongLens, resource)
 );
+
+const touchResourceModification = (data, user) => {
+  if (!user) {
+    return data;
+  }
+  const { firstName, lastName } = user;
+  data.lastModifiedUser = `${firstName} ${lastName}`;
+  data.dateLastModified = Date.now();
+  return data;
+};
+
 const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   if (!(lat && long && radius)) {
     // Do nothing if undefined
@@ -152,4 +189,5 @@ module.exports = {
   resourceLongLens,
   resourceRegionLens,
   resourceAddressLens,
+  touchResourceModification,
 };

@@ -26,6 +26,8 @@ const Resource = new mongoose.Schema(
       coordinates: { type: Array, default: [] },
     },
     dateCreated: { type: Date, default: Date.now },
+    dateLastModified: { type: Date },
+    lastModifiedUser: { type: String },
     federalRegion: { type: Number, default: 0 },
     notes: { type: String },
     tags: { type: Array, default: [] },

@@ -91,6 +91,7 @@ async function editResource(data, id) {
       data: filteredData,
       notification: {
         successMessage: "Successfully edited resource!",
+        failureMessage: "Failed to edit resource.",
       },
     })
   ).result;
@@ -117,6 +118,7 @@ async function editUser(data, id) {
       data: data,
       notification: {
         successMessage: "Successfully edited user!",
+        failureMessage: "Failed to edit user.",
       },
     })
   ).result;

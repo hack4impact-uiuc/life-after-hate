@@ -16,6 +16,7 @@ const {
   resourceAddressLens,
   filterResourcesWithinRadius,
   filterByOptions,
+  touchResourceModification,
 } = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
@@ -134,6 +135,8 @@ router.post(
       R.set(resourceAddressLens, address)
     )(data);
 
+    touchResourceModification(data, req.user);
+
     const newResource =
       data.type === resourceEnum.INDIVIDUAL
         ? new IndividualResource(data)
@@ -197,6 +200,8 @@ router.put(
       R.set(resourceRegionLens, region),
       R.set(resourceAddressLens, address)
     )(data);
+
+    touchResourceModification(data, req.user);
 
     const resourceType =
       data.type === resourceEnum.INDIVIDUAL
