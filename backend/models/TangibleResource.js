@@ -7,7 +7,7 @@ const TangibleResource = BaseResource.discriminator(
   new mongoose.Schema({
     resourceName: { type: String, default: "", required: true },
     description: { type: String, default: "" },
-    quantity: { type: Number, default: 0 },
+    quantity: { type: String, default: "" },
   })
 );
 

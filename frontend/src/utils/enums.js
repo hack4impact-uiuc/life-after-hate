@@ -8,6 +8,7 @@ const roleEnum = {
 const resourceEnum = {
   GROUP: "GROUP",
   INDIVIDUAL: "INDIVIDUAL",
+  TANGIBLE: "TANGIBLE",
 };
 
 const userFilterEnum = {
@@ -20,7 +21,6 @@ const userFilterEnum = {
 const modalEnum = {
   RESOURCE: "RESOURCE",
   USER: "USER",
-  TANGIBLE: "TANGIBLE",
 };
 
 const sortFieldEnum = {

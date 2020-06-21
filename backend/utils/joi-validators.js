@@ -51,7 +51,7 @@ const GROUP_RESOURCE = BASE_RESOURCE.keys({
 
 const TANGIBLE_RESOURCE = BASE_RESOURCE.keys({
   description: Joi.string().allow(""),
-  quantity: Joi.number(),
+  quantity: Joi.string().allow(""),
   resourceName: Joi.string().requiredAtFirst(),
 });
 

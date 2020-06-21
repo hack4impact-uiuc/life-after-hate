@@ -20,6 +20,29 @@ import "../styles.scss";
 import LastModifiedInfo from "../LastModifiedInfo";
 import IndividualResourceForm from "./IndividualResourceForm";
 import GroupResourceForm from "./GroupResourceForm";
+import TangibleResourceForm from "./TangibleResourceForm";
+import ModalInput from "../ModalInput";
+
+export const createInput = ({
+  register,
+  errors,
+  editable,
+  resource,
+  required,
+  shortName,
+  tag,
+  ...props
+}) => (
+  <ModalInput
+    componentRef={register({ required: required ?? false })}
+    resource={resource}
+    errors={errors}
+    disabled={!editable}
+    key={shortName}
+    tag={tag ?? "input"}
+    {...{ required, shortName, ...props }}
+  ></ModalInput>
+);
 
 const ResourceModal = ({
   resource,
@@ -74,7 +97,7 @@ const ResourceModal = ({
       case resourceEnum.GROUP:
         return GroupResourceForm;
       case resourceEnum.TANGIBLE:
-        return <div>Tangible</div>;
+        return TangibleResourceForm;
     }
   };
 
@@ -104,6 +127,7 @@ const ResourceModal = ({
           >
             <option>{resourceEnum.INDIVIDUAL}</option>
             <option>{resourceEnum.GROUP}</option>
+            <option>{resourceEnum.TANGIBLE}</option>
           </select>
         </label>
         {

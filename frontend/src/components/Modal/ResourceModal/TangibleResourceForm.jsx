@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/no-onchange */
 import { createInput } from "./index";
 
-const GroupResourceFields = [
+const TangibleResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
-  { labelText: "Company Name", shortName: "companyName", required: true },
+  { labelText: "Name of Resource", shortName: "resourceName", required: true },
   { labelText: "Contact Phone", shortName: "contactPhone" },
   { labelText: "Contact Email", shortName: "contactEmail" },
   {
@@ -12,11 +12,15 @@ const GroupResourceFields = [
     tag: "textarea",
     rows: 10,
   },
+  {
+    labelText: "Resource Quantity",
+    shortName: "quantity",
+    tag: "input",
+  },
   { labelText: "Address", shortName: "address", required: true },
   { labelText: "Notes", shortName: "notes" },
 ];
 
-const GroupResourceForm = (props) =>
-  GroupResourceFields.map((field) => createInput({ ...field, ...props }));
-
-export default GroupResourceForm;
+const TangibleResourceForm = (props) =>
+  TangibleResourceFields.map((field) => createInput({ ...field, ...props }));
+export default TangibleResourceForm;

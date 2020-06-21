@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-onchange */
-import React from "react";
-import ModalInput from "../ModalInput";
+import { createInput } from "./index";
 
 const IndividualResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
@@ -22,20 +21,6 @@ const IndividualResourceFields = [
   { labelText: "Notes", shortName: "notes" },
 ];
 
-const IndividualResourceForm = ({ resource, register, errors, editable }) => {
-  const createInput = ({ required, shortName, tag, ...props }) => (
-    <ModalInput
-      componentRef={register({ required: required ?? false })}
-      resource={resource}
-      errors={errors}
-      disabled={!editable}
-      key={shortName}
-      tag={tag ?? "input"}
-      {...{ required, shortName, ...props }}
-    ></ModalInput>
-  );
-
-  return IndividualResourceFields.map(createInput);
-};
-
+const IndividualResourceForm = (props) =>
+  IndividualResourceFields.map((field) => createInput({ ...field, ...props }));
 export default IndividualResourceForm;
