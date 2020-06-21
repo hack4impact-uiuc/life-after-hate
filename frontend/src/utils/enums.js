@@ -20,6 +20,7 @@ const userFilterEnum = {
 const modalEnum = {
   RESOURCE: "RESOURCE",
   USER: "USER",
+  TANGIBLE: "TANGIBLE",
 };
 
 const sortFieldEnum = {

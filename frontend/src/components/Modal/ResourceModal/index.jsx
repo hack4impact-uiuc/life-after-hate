@@ -16,43 +16,10 @@ import {
   isAddingResourceSelector,
 } from "../../../redux/selectors/modal";
 import LAHModal from "../../Modal";
-import ModalInput from "../ModalInput";
 import "../styles.scss";
 import LastModifiedInfo from "../LastModifiedInfo";
-
-const IndividualResourceFields = [
-  { labelText: "Contact Name", shortName: "contactName", required: true },
-  { labelText: "Contact Phone", shortName: "contactPhone" },
-  { labelText: "Contact Email", shortName: "contactEmail" },
-  {
-    labelText: "Skills & Qualifications",
-    shortName: "skills",
-    isTextArea: true,
-  },
-  { labelText: "Volunteer Roles", shortName: "volunteerRoles" },
-  { labelText: "Availability", shortName: "availability" },
-  {
-    labelText: "Why Volunteer?",
-    shortName: "volunteerReason",
-    isTextArea: true,
-  },
-  { labelText: "Address", shortName: "address" },
-  { labelText: "Notes", shortName: "notes" },
-];
-
-const GroupResourceFields = [
-  { labelText: "Contact Name", shortName: "contactName", required: true },
-  { labelText: "Company Name", shortName: "companyName", required: true },
-  { labelText: "Contact Phone", shortName: "contactPhone" },
-  { labelText: "Contact Email", shortName: "contactEmail" },
-  {
-    labelText: "Description",
-    shortName: "description",
-    isTextArea: true,
-  },
-  { labelText: "Address", shortName: "address" },
-  { labelText: "Notes", shortName: "notes" },
-];
+import IndividualResourceForm from "./IndividualResourceForm";
+import GroupResourceForm from "./GroupResourceForm";
 
 const ResourceModal = ({
   resource,
@@ -92,27 +59,28 @@ const ResourceModal = ({
     return deleteAndRefreshResource(resource._id);
   };
 
-  const createInput = ({ required, shortName, ...props }) => (
-    <ModalInput
-      componentRef={register({ required: required ?? false })}
-      resource={resource}
-      errors={errors}
-      disabled={!editable}
-      key={shortName}
-      {...{ required, shortName, ...props }}
-    ></ModalInput>
-  );
-
-  const getIndividualResourceFields = () =>
-    IndividualResourceFields.map(createInput);
-  const getGroupResourceFields = () => GroupResourceFields.map(createInput);
-
   // If a new resource, defer to the dropdown, else defer to the resource
-  const isIndividualResource = isAddingResource
-    ? groupType === resourceEnum.INDIVIDUAL
-    : resource.type === resourceEnum.INDIVIDUAL;
+  const getResourceType = () => {
+    if (isAddingResource) {
+      return groupType;
+    }
+    return resource.type;
+  };
 
+  const getFormForType = () => {
+    switch (getResourceType()) {
+      case resourceEnum.INDIVIDUAL:
+        return IndividualResourceForm;
+      case resourceEnum.GROUP:
+        return GroupResourceForm;
+      case resourceEnum.TANGIBLE:
+        return <div>Tangible</div>;
+    }
+  };
+
+  const FormComponent = getFormForType();
   const isExistingResource = !isAddingResource;
+
   return (
     <LAHModal>
       <form
@@ -138,9 +106,14 @@ const ResourceModal = ({
             <option>{resourceEnum.GROUP}</option>
           </select>
         </label>
-        {isIndividualResource
-          ? getIndividualResourceFields()
-          : getGroupResourceFields()}
+        {
+          <FormComponent
+            register={register}
+            resource={resource}
+            errors={errors}
+            editable={editable}
+          ></FormComponent>
+        }
         <label className="modal-lab">
           <p>{"Tags"}</p>
           <ModalTagComplete

@@ -23,7 +23,7 @@ const Joi = JoiOriginal.extend({
 const BASE_RESOURCE = Joi.object().keys({
   contactName: Joi.string().requiredAtFirst(),
   contactPhone: Joi.string().allow(""),
-  contactEmail: Joi.string().requiredAtFirst(),
+  contactEmail: Joi.string().allow(""),
   address: Joi.string().requiredAtFirst(),
   location: Joi.object({
     type: Joi.string().default("Point"),
