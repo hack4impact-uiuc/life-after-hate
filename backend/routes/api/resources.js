@@ -4,8 +4,6 @@ const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");
 Joi.objectId = require("joi-objectid")(Joi);
 const beeline = require("honeycomb-beeline");
-const IndividualResource = require("../../models/IndividualResource");
-const GroupResource = require("../../models/GroupResource");
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const resourceUtils = require("../../utils/resource-utils");
@@ -17,6 +15,7 @@ const {
   filterResourcesWithinRadius,
   filterByOptions,
   touchResourceModification,
+  getModelForType,
 } = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
@@ -26,7 +25,6 @@ const {
   requireAdminStatus,
   requireVolunteerStatus,
 } = require("../../utils/auth-middleware");
-const { resourceEnum } = require("../../models/Resource");
 const validators = require("../../utils/joi-validators");
 const router = express.Router();
 
@@ -137,10 +135,8 @@ router.post(
 
     touchResourceModification(data, req.user);
 
-    const newResource =
-      data.type === resourceEnum.INDIVIDUAL
-        ? new IndividualResource(data)
-        : new GroupResource(data);
+    const ResourceModel = getModelForType(data.type);
+    const newResource = new ResourceModel(data);
     const { _id } = await newResource.save();
 
     res.status(201).json({
@@ -203,12 +199,9 @@ router.put(
 
     touchResourceModification(data, req.user);
 
-    const resourceType =
-      data.type === resourceEnum.INDIVIDUAL
-        ? IndividualResource
-        : GroupResource;
+    const ResourceModel = getModelForType(data.type);
     span = beeline.startSpan({ name: "Resource Update" });
-    const resource = await resourceType.findByIdAndUpdate(
+    const resource = await ResourceModel.findByIdAndUpdate(
       resourceId,
       { $set: data },
       { new: true }

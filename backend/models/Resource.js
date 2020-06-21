@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const resourceEnum = {
   GROUP: "GROUP",
   INDIVIDUAL: "INDIVIDUAL",
+  TANGIBLE: "TANGIBLE",
 };
 
 const options = { discriminatorKey: "type", collection: "resources" };

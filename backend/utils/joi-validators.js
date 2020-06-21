@@ -49,10 +49,17 @@ const GROUP_RESOURCE = BASE_RESOURCE.keys({
   companyName: Joi.string().requiredAtFirst(),
 });
 
+const TANGIBLE_RESOURCE = BASE_RESOURCE.keys({
+  description: Joi.string().allow(""),
+  quantity: Joi.number(),
+  resourceName: Joi.string().requiredAtFirst(),
+});
+
 const RESOURCE_SCHEMA = Joi.alternatives().conditional(".type", {
   switch: [
     { is: resourceEnum.INDIVIDUAL, then: INDIVIDUAL_RESOURCE },
     { is: resourceEnum.GROUP, then: GROUP_RESOURCE },
+    { is: resourceEnum.TANGIBLE, then: TANGIBLE_RESOURCE },
   ],
 });
 
