@@ -28,6 +28,7 @@ const UserModal = ({ closeModal, user, editable }) => {
       resource={user}
       disabled={!editable}
       key={shortName}
+      tag={"input"}
       {...{ required, shortName, ...props }}
     ></ModalInput>
   );
