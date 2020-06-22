@@ -181,7 +181,7 @@ context("Directory View", () => {
     cy.get("#csv-download-btn").should("be.visible");
   });
 
-  it.only("should work for tangible resources", () => {
+  it("should work for tangible resources", () => {
     cy.get("#add-button").click();
     cy.get(".modal-title").should("have.text", "Add Resource");
     cy.get("[data-cy=modal-resourceType]").select("TANGIBLE");

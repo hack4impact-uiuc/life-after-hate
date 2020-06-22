@@ -204,13 +204,18 @@ const toTitleCase = (str) =>
     return t.toUpperCase();
   });
 
+// Apply fn only if path exists
+const updatePath = R.curry((pth, fn, obj) =>
+  R.hasPath(pth, obj) ? R.assocPath(pth, fn(R.path(pth, obj)), obj) : obj
+);
+
 const formatIncomingData = ({ lat, lng, region, address }) =>
   R.pipe(
     R.set(resourceLatLens, lat),
     R.set(resourceLongLens, lng),
     R.set(resourceRegionLens, region),
     R.set(resourceAddressLens, address),
-    R.over(R.lensProp(["tags"]), R.map(toTitleCase))
+    updatePath(["tags"], R.map(toTitleCase))
   );
 
 module.exports = {
