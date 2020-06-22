@@ -51,7 +51,7 @@
     "ramda-adjunct": "^2.27.0",
     "sinon": "^9.0.2",
     "supertest": "^4.0.2",
-    "winston": "^3.3.1",
+    "winston": "^3.3.2",
     "winston-loggly-bulk": "^3.1.0",
     "xlsx": "^0.16.2"
   }
