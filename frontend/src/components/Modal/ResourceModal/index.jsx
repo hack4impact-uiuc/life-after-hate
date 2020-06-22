@@ -96,7 +96,7 @@ const ResourceModal = ({
         return IndividualResourceForm;
       case resourceEnum.GROUP:
         return GroupResourceForm;
-      case resourceEnum.TANGIBLE:
+      default:
         return TangibleResourceForm;
     }
   };

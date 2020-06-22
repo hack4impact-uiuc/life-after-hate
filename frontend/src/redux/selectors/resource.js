@@ -9,6 +9,8 @@ export const resourceName = (resource) => {
       return resource.companyName;
     case resourceEnum.TANGIBLE:
       return resource.resourceName;
+    default:
+      return "";
   }
 };
 
