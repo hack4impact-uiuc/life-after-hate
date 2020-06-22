@@ -8,14 +8,12 @@ const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const resourceUtils = require("../../utils/resource-utils");
 const {
-  resourceLatLens,
-  resourceLongLens,
-  resourceRegionLens,
   resourceAddressLens,
   filterResourcesWithinRadius,
   filterByOptions,
   touchResourceModification,
   getModelForType,
+  formatIncomingData,
 } = require("../../utils/resource-utils");
 const {
   DEFAULT_FILTER_OPTIONS,
@@ -126,13 +124,7 @@ router.post(
     );
     beeline.finishSpan(span);
 
-    data = R.pipe(
-      R.set(resourceLatLens, lat),
-      R.set(resourceLongLens, lng),
-      R.set(resourceRegionLens, region),
-      R.set(resourceAddressLens, address)
-    )(data);
-
+    data = formatIncomingData({ lat, lng, region, address })(data);
     touchResourceModification(data, req.user);
 
     const ResourceModel = getModelForType(data.type);
@@ -190,13 +182,7 @@ router.put(
     );
     beeline.finishSpan(span);
 
-    data = R.pipe(
-      R.set(resourceLatLens, lat),
-      R.set(resourceLongLens, lng),
-      R.set(resourceRegionLens, region),
-      R.set(resourceAddressLens, address)
-    )(data);
-
+    data = formatIncomingData({ lat, lng, region, address })(data);
     touchResourceModification(data, req.user);
 
     const ResourceModel = getModelForType(data.type);

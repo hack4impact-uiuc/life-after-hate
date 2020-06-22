@@ -199,6 +199,20 @@ const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   )(resources);
 });
 
+const toTitleCase = (str) =>
+  str.replace(/(^|\s)\S/g, function (t) {
+    return t.toUpperCase();
+  });
+
+const formatIncomingData = ({ lat, lng, region, address }) =>
+  R.pipe(
+    R.set(resourceLatLens, lat),
+    R.set(resourceLongLens, lng),
+    R.set(resourceRegionLens, region),
+    R.set(resourceAddressLens, address),
+    R.over(R.lensProp(["tags"]), R.map(toTitleCase))
+  );
+
 module.exports = {
   getModelForType,
   geocodeAddress,
@@ -209,4 +223,6 @@ module.exports = {
   resourceRegionLens,
   resourceAddressLens,
   touchResourceModification,
+  toTitleCase,
+  formatIncomingData,
 };
