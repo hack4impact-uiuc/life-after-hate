@@ -32,7 +32,7 @@ const BASE_RESOURCE = Joi.object().keys({
   notes: Joi.string().allow(""),
   tags: Joi.array().items(Joi.string()),
   type: Joi.string()
-    .valid(resourceEnum.INDIVIDUAL, resourceEnum.GROUP)
+    .valid(resourceEnum.INDIVIDUAL, resourceEnum.GROUP, resourceEnum.TANGIBLE)
     .default(resourceEnum.INDIVIDUAL),
 });
 

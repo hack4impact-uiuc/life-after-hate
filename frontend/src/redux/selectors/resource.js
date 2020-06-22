@@ -1,20 +1,26 @@
 import { resourceEnum, sortFieldEnum } from "../../utils/enums";
 import { createSelector } from "reselect";
 import { tagSelector } from "./tags";
-const resourceName = (resource) =>
-  (resource.type === resourceEnum.INDIVIDUAL
-    ? resource.contactName
-    : resource.companyName) ?? "";
+export const resourceName = (resource) => {
+  switch (resource.type) {
+    case resourceEnum.INDIVIDUAL:
+      return resource.contactName;
+    case resourceEnum.GROUP:
+      return resource.companyName;
+    case resourceEnum.TANGIBLE:
+      return resource.resourceName;
+  }
+};
 
 const resourceLocation = (resource) =>
   resource.distanceFromSearchLoc ?? Number.MAX_VALUE;
 
-const volunteerRole = (resource) => resource.volunteerRoles ?? "";
+const volunteerRole = (resource) => resource.volunteerRoles;
 
-const resourceDescription = (resource) =>
-  (resource.type === resourceEnum.INDIVIDUAL
+export const resourceDescription = (resource) =>
+  resource.type === resourceEnum.INDIVIDUAL
     ? resource.skills
-    : resource.description) ?? "";
+    : resource.description;
 
 const strCompare = (a, b) => {
   if (a === "" || a === null) {
