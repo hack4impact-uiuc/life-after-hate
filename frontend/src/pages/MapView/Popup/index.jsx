@@ -1,7 +1,6 @@
 import React from "react";
 import { Popup } from "react-map-gl";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
-import { resourceEnum } from "../../../utils/enums";
 import { clearMapResource } from "../../../redux/actions/map";
 import { connect } from "react-redux";
 import {
@@ -9,10 +8,12 @@ import {
   mapResourceIdSelector,
 } from "../../../redux/selectors/map";
 import { distanceToString } from "../../../utils/formatters";
+import {
+  resourceName,
+  resourceDescription,
+} from "../../../redux/selectors/resource";
 import ActionButtons from "../ActionButtons";
 
-const isIndividualResource = (resource) =>
-  resource.type === resourceEnum.INDIVIDUAL;
 const MapPopup = ({ isResourceSelected, resource, clearMapResource }) => (
   <div>
     {isResourceSelected && (
@@ -28,21 +29,14 @@ const MapPopup = ({ isResourceSelected, resource, clearMapResource }) => (
       >
         <div className="popup">
           <div data-cy="popup-title" className="popup-title">
-            {isIndividualResource(resource)
-              ? resource.contactName
-              : resource.companyName}
+            {resourceName(resource)}
           </div>
           {"distanceFromSearchLoc" in resource && (
             <div className="popup-distance">
               {distanceToString(resource.distanceFromSearchLoc)}
             </div>
           )}
-          <div className="popup-desc">
-            {isIndividualResource(resource)
-              ? resource.skills
-              : resource.description}
-          </div>
-
+          <div className="popup-desc">{resourceDescription(resource)}</div>
           <ActionButtons resource={resource}></ActionButtons>
         </div>
       </Popup>
