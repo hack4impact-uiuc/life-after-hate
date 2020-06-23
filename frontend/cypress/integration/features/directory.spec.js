@@ -180,4 +180,32 @@ context("Directory View", () => {
     cy.get("#search-button").click();
     cy.get("#csv-download-btn").should("be.visible");
   });
+
+  it("should work for tangible resources", () => {
+    cy.get("#add-button").click();
+    cy.get(".modal-title").should("have.text", "Add Resource");
+    cy.get("[data-cy=modal-resourceType]").select("TANGIBLE");
+    cy.get("[data-cy=modal-resourceName]").type("Test Resource Name");
+    cy.get("[data-cy=modal-contactName]").type("Testing");
+    cy.get("[data-cy=modal-contactPhone]").type("1-234-567-8900");
+    cy.get("[data-cy=modal-contactEmail]").type("josh@gmail.com");
+    cy.get("[data-cy=modal-quantity]").type("5");
+    cy.get("[data-cy=modal-description").type(
+      "This is a test description! This should show up in its entirety."
+    );
+    cy.get(".add-edit-resource-form > > [data-cy=tag-autocomplete]")
+      .type("Sample Tag{enter}")
+      .type("c{enter}");
+    cy.get("[data-cy=modal-address").type("1234 W. Main St. Urbana, IL 61801");
+    cy.get("[data-cy=modal-notes").type(
+      "This is a notes field! You can enter notes here."
+    );
+    cy.get("#submit-form-button").click();
+    cy.get(".Toastify__toast-body").should("contain.text", "Success");
+
+    cy.get("[data-cy=card-companyName]").should(
+      "have.text",
+      "Test Resource Name"
+    );
+  });
 });

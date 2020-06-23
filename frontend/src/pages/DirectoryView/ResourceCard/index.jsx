@@ -4,8 +4,11 @@ import { connect } from "react-redux";
 import AdminView from "../../../components/Auth/AdminView";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
-import { resourceEnum } from "../../../utils/enums";
 import { distanceToString } from "../../../utils/formatters";
+import {
+  resourceName,
+  resourceDescription,
+} from "../../../redux/selectors/resource";
 import "../styles.scss";
 
 const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
@@ -22,7 +25,6 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
     });
   };
 
-  const isIndividualResource = resource.type === resourceEnum.INDIVIDUAL;
   return (
     <div className="card-wrap" style={style}>
       <div
@@ -33,9 +35,7 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
         onKeyPress={toggleViewOnlyModal}
       >
         <div className="col">
-          <p data-cy="card-companyName">
-            {isIndividualResource ? resource.contactName : resource.companyName}
-          </p>
+          <p data-cy="card-companyName">{resourceName(resource)}</p>
         </div>
         <div className="col d-none d-md-block">
           <p data-cy="card-address">{resource.address}</p>
@@ -49,10 +49,10 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
           <p>{resource.volunteerRoles}</p>
         </div>
         <div className="col col-desc col-desc-collapsed">
-          <p>{isIndividualResource ? resource.skills : resource.description}</p>
+          <p>{resourceDescription(resource)}</p>
         </div>
         <div className="col col-desc col-desc-collapsed d-none d-sm-block">
-          <p>{isIndividualResource && resource.availability}</p>
+          <p>{resource.availability}</p>
         </div>
         <AdminView>
           <div className="col col-edit">

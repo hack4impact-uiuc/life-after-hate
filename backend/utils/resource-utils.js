@@ -5,6 +5,11 @@ const mapquestURI = process.env.MAPQUEST_URI;
 const { STATE_REGION_MAP } = require("./constants");
 const Fuse = require("fuse.js");
 const geolib = require("geolib");
+const { resourceEnum } = require("../models/Resource");
+const GroupResource = require("../models/GroupResource");
+const IndividualResource = require("../models/IndividualResource");
+const TangibleResource = require("../models/TangibleResource");
+
 const parseGeocodingResponse = (resp) => {
   // Grab the lat/lng object within the result JSON
   const getLocationFromResults = R.path([
@@ -68,6 +73,19 @@ const parseGeocodingResponse = (resp) => {
     state: getStateFromResults(resp),
     postalCode: getPostalCodeFromResults(resp),
   };
+};
+
+const getModelForType = (type) => {
+  switch (type) {
+    case resourceEnum.TANGIBLE:
+      return TangibleResource;
+    case resourceEnum.GROUP:
+      return GroupResource;
+    case resourceEnum.INDIVIDUAL:
+      return IndividualResource;
+    default:
+      throw new Error(`Cannot find corresponding model for type ${type}!`);
+  }
 };
 
 const geocodeAddress = R.memoizeWith(R.identity, async (address) => {
@@ -181,7 +199,27 @@ const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
   )(resources);
 });
 
+const toTitleCase = (str) =>
+  str.replace(/(^|\s)\S/g, function (t) {
+    return t.toUpperCase();
+  });
+
+// Apply fn only if path exists
+const updatePath = R.curry((pth, fn, obj) =>
+  R.hasPath(pth, obj) ? R.assocPath(pth, fn(R.path(pth, obj)), obj) : obj
+);
+
+const formatIncomingData = ({ lat, lng, region, address }) =>
+  R.pipe(
+    R.set(resourceLatLens, lat),
+    R.set(resourceLongLens, lng),
+    R.set(resourceRegionLens, region),
+    R.set(resourceAddressLens, address),
+    updatePath(["tags"], R.map(toTitleCase))
+  );
+
 module.exports = {
+  getModelForType,
   geocodeAddress,
   filterResourcesWithinRadius,
   filterByOptions,
@@ -190,4 +228,6 @@ module.exports = {
   resourceRegionLens,
   resourceAddressLens,
   touchResourceModification,
+  toTitleCase,
+  formatIncomingData,
 };

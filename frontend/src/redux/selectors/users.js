@@ -7,7 +7,6 @@ export const filterSelector = (state) => state.users.userFilterType;
 export const filteredUserSelector = createSelector(
   [filterSelector, userSelector],
   (filter, users) => {
-    console.log(users);
     if (!users) {
       return [];
     }

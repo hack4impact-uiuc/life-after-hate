@@ -10,8 +10,11 @@ import {
 } from "../../../redux/actions/map";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import ActionButtons from "../ActionButtons";
-import { resourceEnum } from "../../../utils/enums";
 import { distanceToString } from "../../../utils/formatters";
+import {
+  resourceName,
+  resourceDescription,
+} from "../../../redux/selectors/resource";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
 const ResourceCard = ({
@@ -34,7 +37,6 @@ const ResourceCard = ({
     </div>
   );
 
-  const isIndividualResource = resource.type === resourceEnum.INDIVIDUAL;
   return (
     <div className="resource-card" ref={myRef} style={style}>
       <div className={isSelected ? "expanded" : "collapsed"}>
@@ -45,7 +47,7 @@ const ResourceCard = ({
             tabIndex="0"
             onClick={() => selectMapResource(resource._id)}
           >
-            {isIndividualResource ? resource.contactName : resource.companyName}
+            {resourceName(resource)}
           </div>
           <div
             className="card-maximize"
@@ -81,9 +83,7 @@ const ResourceCard = ({
             </div>
           )}
 
-          <div className="card-desc">
-            {isIndividualResource ? resource.skills : resource.description}
-          </div>
+          <div className="card-desc">{resourceDescription(resource)}</div>
 
           <div className="card-details">
             {resource.contactEmail && (

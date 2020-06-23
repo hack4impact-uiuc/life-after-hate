@@ -8,6 +8,7 @@ const roleEnum = {
 const resourceEnum = {
   GROUP: "GROUP",
   INDIVIDUAL: "INDIVIDUAL",
+  TANGIBLE: "TANGIBLE",
 };
 
 const userFilterEnum = {

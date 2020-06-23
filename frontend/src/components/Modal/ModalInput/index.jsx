@@ -7,8 +7,8 @@ const ModalInput = ({
   errors,
   required,
   disabled,
-  isTextArea,
   labelText,
+  tag,
   ...passedInProps
 }) => {
   const props = {
@@ -24,10 +24,11 @@ const ModalInput = ({
     ...passedInProps,
   };
 
+  const Tag = tag;
   return (
     <label className="modal-lab">
       <p>{labelText}</p>
-      {isTextArea ? <textarea rows={6} {...props} /> : <input {...props} />}
+      <Tag {...props}></Tag>
     </label>
   );
 };

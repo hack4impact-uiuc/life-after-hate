@@ -23,7 +23,7 @@ const Joi = JoiOriginal.extend({
 const BASE_RESOURCE = Joi.object().keys({
   contactName: Joi.string().requiredAtFirst(),
   contactPhone: Joi.string().allow(""),
-  contactEmail: Joi.string().requiredAtFirst(),
+  contactEmail: Joi.string().allow(""),
   address: Joi.string().requiredAtFirst(),
   location: Joi.object({
     type: Joi.string().default("Point"),
@@ -32,7 +32,7 @@ const BASE_RESOURCE = Joi.object().keys({
   notes: Joi.string().allow(""),
   tags: Joi.array().items(Joi.string()),
   type: Joi.string()
-    .valid(resourceEnum.INDIVIDUAL, resourceEnum.GROUP)
+    .valid(resourceEnum.INDIVIDUAL, resourceEnum.GROUP, resourceEnum.TANGIBLE)
     .default(resourceEnum.INDIVIDUAL),
 });
 
@@ -49,10 +49,17 @@ const GROUP_RESOURCE = BASE_RESOURCE.keys({
   companyName: Joi.string().requiredAtFirst(),
 });
 
+const TANGIBLE_RESOURCE = BASE_RESOURCE.keys({
+  description: Joi.string().allow(""),
+  quantity: Joi.string().allow(""),
+  resourceName: Joi.string().requiredAtFirst(),
+});
+
 const RESOURCE_SCHEMA = Joi.alternatives().conditional(".type", {
   switch: [
     { is: resourceEnum.INDIVIDUAL, then: INDIVIDUAL_RESOURCE },
     { is: resourceEnum.GROUP, then: GROUP_RESOURCE },
+    { is: resourceEnum.TANGIBLE, then: TANGIBLE_RESOURCE },
   ],
 });
 
