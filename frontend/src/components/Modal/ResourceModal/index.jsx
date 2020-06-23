@@ -127,7 +127,7 @@ const ResourceModal = ({
           >
             <option>{resourceEnum.INDIVIDUAL}</option>
             <option>{resourceEnum.GROUP}</option>
-            <option>{resourceEnum.TANGIBLE}</option>
+            <option value={resourceEnum.TANGIBLE}>RESOURCE</option>
           </select>
         </label>
         {

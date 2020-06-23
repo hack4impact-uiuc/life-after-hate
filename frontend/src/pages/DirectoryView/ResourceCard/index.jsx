@@ -4,14 +4,22 @@ import { connect } from "react-redux";
 import AdminView from "../../../components/Auth/AdminView";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
+import GroupResourceImg from "../../../assets/images/business-resource.svg";
+import IndividualResourceImg from "../../../assets/images/individual-resource.svg";
 import { distanceToString } from "../../../utils/formatters";
+import { resourceEnum } from "../../../utils/enums";
 import {
   resourceName,
   resourceDescription,
 } from "../../../redux/selectors/resource";
 import "../styles.scss";
-
-const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
+import "./styles.scss";
+const ResourceCard = ({
+  resource,
+  openResourceModalWithPayload,
+  style,
+  measure,
+}) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openResourceModalWithPayload({ resourceId: resource._id });
@@ -25,6 +33,16 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
     });
   };
 
+  const resourceLogo = (type) => {
+    switch (type) {
+      case resourceEnum.INDIVIDUAL:
+        return IndividualResourceImg;
+      case resourceEnum.GROUP:
+        return GroupResourceImg;
+      default:
+        return GroupResourceImg;
+    }
+  };
   return (
     <div className="card-wrap" style={style}>
       <div
@@ -34,6 +52,9 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
         onClick={toggleViewOnlyModal}
         onKeyPress={toggleViewOnlyModal}
       >
+        <div className="resource-type-logo">
+          <img src={resourceLogo(resource.type)} onLoad={measure} alt=""></img>
+        </div>
         <div className="col">
           <p data-cy="card-companyName">{resourceName(resource)}</p>
         </div>
