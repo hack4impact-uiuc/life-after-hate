@@ -10,7 +10,7 @@ import "./styles.scss";
 const cache = new CellMeasurerCache({
   fixedWidth: true,
   defaultWidth: 324,
-  defaultHeight: 150,
+  defaultHeight: 300,
 });
 
 class ResourceList extends React.Component {
@@ -44,13 +44,14 @@ class ResourceList extends React.Component {
         parent={parent}
         rowIndex={index}
       >
-        {({ registerChild }) => (
+        {({ registerChild, measure }) => (
           // 'style' attribute required to position cell (within parent List)
           <ResourceCard
             key={resources[index]._id}
             ref={registerChild}
             resource={resources[index]}
             style={style}
+            measure={measure}
           />
         )}
       </CellMeasurer>

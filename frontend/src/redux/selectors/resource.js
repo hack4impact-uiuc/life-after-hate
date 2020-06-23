@@ -1,6 +1,9 @@
 import { resourceEnum, sortFieldEnum } from "../../utils/enums";
 import { createSelector } from "reselect";
 import { tagSelector } from "./tags";
+import GroupResourceImg from "../../assets/images/business-resource.svg";
+import IndividualResourceImg from "../../assets/images/individual-resource.svg";
+
 export const resourceName = (resource) => {
   switch (resource.type) {
     case resourceEnum.INDIVIDUAL:
@@ -23,6 +26,17 @@ export const resourceDescription = (resource) =>
   resource.type === resourceEnum.INDIVIDUAL
     ? resource.skills
     : resource.description;
+
+export const resourceLogo = (type) => {
+  switch (type) {
+    case resourceEnum.INDIVIDUAL:
+      return IndividualResourceImg;
+    case resourceEnum.GROUP:
+      return GroupResourceImg;
+    default:
+      return GroupResourceImg;
+  }
+};
 
 const strCompare = (a, b) => {
   if (a === "" || a === null) {
