@@ -4,13 +4,12 @@ import { connect } from "react-redux";
 import AdminView from "../../../components/Auth/AdminView";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
-import GroupResourceImg from "../../../assets/images/business-resource.svg";
-import IndividualResourceImg from "../../../assets/images/individual-resource.svg";
+
 import { distanceToString } from "../../../utils/formatters";
-import { resourceEnum } from "../../../utils/enums";
 import {
   resourceName,
   resourceDescription,
+  resourceLogo,
 } from "../../../redux/selectors/resource";
 import "../styles.scss";
 import "./styles.scss";
@@ -33,16 +32,6 @@ const ResourceCard = ({
     });
   };
 
-  const resourceLogo = (type) => {
-    switch (type) {
-      case resourceEnum.INDIVIDUAL:
-        return IndividualResourceImg;
-      case resourceEnum.GROUP:
-        return GroupResourceImg;
-      default:
-        return GroupResourceImg;
-    }
-  };
   return (
     <div className="card-wrap" style={style}>
       <div

@@ -14,6 +14,7 @@ import { distanceToString } from "../../../utils/formatters";
 import {
   resourceName,
   resourceDescription,
+  resourceLogo,
 } from "../../../redux/selectors/resource";
 
 // Using PureComponent to reduce re-rendering since this is a pure function
@@ -40,7 +41,12 @@ const ResourceCard = ({
   return (
     <div className="resource-card" ref={myRef} style={style}>
       <div className={isSelected ? "expanded" : "collapsed"}>
-        <div className="clearfix">
+        <div className="card-top">
+          <img
+            src={resourceLogo(resource.type)}
+            alt=""
+            className="resource-type-logo"
+          ></img>
           <div
             className="card-title"
             role="button"

@@ -19,11 +19,14 @@
     }
   }
 
-  .clearfix:after {
-    content: " ";
-    display: block;
-    height: 0;
-    clear: both;
+  // For display in the map view
+  .card-top {
+    display: flex;
+    .resource-type-logo {
+      width: 16px;
+      margin-right: 8px;
+      opacity: 0.6;
+    }
   }
 
   .card-wrap {
@@ -55,8 +58,7 @@
 
   .card-maximize,
   .top-card-close {
-    float: left;
-    width: 6%;
+    width: 20px;
     transition: all 0.2s;
     cursor: pointer;
     outline: none !important;
