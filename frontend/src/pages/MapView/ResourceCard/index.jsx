@@ -41,30 +41,29 @@ const ResourceCard = ({
   return (
     <div className="resource-card" ref={myRef} style={style}>
       <div className={isSelected ? "expanded" : "collapsed"}>
-        <div className="card-top">
+        <div
+          className="card-top"
+          onClick={() => {
+            selectMapResource(resource._id);
+          }}
+        >
           <img
             src={resourceLogo(resource.type)}
             alt=""
             className="resource-type-logo"
           ></img>
-          <div
-            className="card-title"
-            role="button"
-            tabIndex="0"
-            onClick={() => selectMapResource(resource._id)}
-          >
-            {resourceName(resource)}
-          </div>
+          <div className="card-title">{resourceName(resource)}</div>
           <div
             className="card-maximize"
             role="button"
             tabIndex="0"
-            onClick={() =>
+            onClick={(e) => {
+              e.stopPropagation();
               openResourceModalWithPayload({
                 resourceId: resource._id,
                 editable: false,
-              })
-            }
+              });
+            }}
           >
             <img src={Maximize} alt="Maximize" className="maximize-icon" />
           </div>
@@ -72,7 +71,10 @@ const ResourceCard = ({
             className="top-card-close"
             role="button"
             tabIndex="0"
-            onClick={() => clearMapResource({ resourceId: resource._id })}
+            onClick={(e) => {
+              e.stopPropagation();
+              clearMapResource({ resourceId: resource._id });
+            }}
           >
             <img src={Close} alt="Close" className="top-close-icon" />
           </div>

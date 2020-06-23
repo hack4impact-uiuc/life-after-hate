@@ -115,6 +115,8 @@ class CardView extends React.Component {
                 ref={(list) => {
                   this.list = list;
                 }}
+                // Stops focus outline clicking within the list
+                style={{ outline: "none" }}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
                 rowRenderer={this.rowRenderer.bind(this)}
