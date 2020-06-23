@@ -28,7 +28,7 @@ export const getCSV = (resources) => {
   const allFields = getAllFields(resources);
 
   const filteredFields = R.without(
-    ["__v", "_id", "federalRegion", "location"],
+    ["__v", "_id", "federalRegion", "location", "allText"],
     allFields
   );
   // Move some of the items to the beginning in the CSV file
