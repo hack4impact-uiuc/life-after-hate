@@ -39,10 +39,10 @@ export const resourceLogo = (type) => {
 };
 
 const strCompare = (a, b) => {
-  if (a === "" || a === null) {
+  if (!a) {
     return 1;
   }
-  if (b === "" || b === null) {
+  if (!b) {
     return -1;
   }
   if (a === b) {
