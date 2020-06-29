@@ -115,9 +115,9 @@ const mapDispatchToProps = {
 };
 
 UserManager.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.object),
+  users: PropTypes.arrayOf(PropTypes.object).isRequired,
   filter: PropTypes.oneOf(Object.values(userFilterEnum)),
-  changeUserFilter: PropTypes.func,
+  changeUserFilter: PropTypes.func.isRequired,
 };
 
 export default connect(MapStateToProps, mapDispatchToProps)(UserManager);

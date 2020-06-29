@@ -86,7 +86,7 @@ class ResourceList extends React.Component {
 }
 
 ResourceList.propTypes = {
-  resources: PropTypes.arrayOf(PropTypes.object),
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ResourceList;

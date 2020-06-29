@@ -66,7 +66,7 @@ UserCard.propTypes = {
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     email: PropTypes.string,
-    role: PropTypes.oneOf(Object.values(roleEnum)),
+    role: PropTypes.oneOf(Object.values(roleEnum)).isRequired,
     title: PropTypes.string,
   }),
 };

@@ -89,9 +89,9 @@ const mapDispatchToProps = {
 
 ResourceCard.propTypes = {
   resource: PropTypes.object.isRequired,
-  openResourceModalWithPayload: PropTypes.func,
+  openResourceModalWithPayload: PropTypes.func.isRequired,
   style: PropTypes.object,
-  measure: PropTypes.func,
+  measure: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(ResourceCard);

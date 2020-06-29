@@ -88,9 +88,9 @@ const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
 );
 
 TagAutocomplete.propTypes = {
-  onChange: PropTypes.func,
-  tags: PropTypes.arrayOf(PropTypes.string),
-  tagOptions: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  tagOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default TagAutocomplete;

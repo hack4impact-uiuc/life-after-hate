@@ -185,9 +185,9 @@ ResourceModal.propTypes = {
     type: PropTypes.oneOf(Object.values(resourceEnum)),
     _id: PropTypes.string,
     tags: PropTypes.arrayOf(PropTypes.string),
-  }),
-  isAddingResource: PropTypes.bool,
-  closeModal: PropTypes.func,
+  }).isRequired,
+  isAddingResource: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceModal);

@@ -48,6 +48,6 @@ const MapStateToProps = (state) => ({
 });
 
 Login.propTypes = {
-  authed: PropTypes.bool,
+  authed: PropTypes.bool.isRequired,
 };
 export default connect(MapStateToProps)(Login);

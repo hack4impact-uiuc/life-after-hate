@@ -59,10 +59,10 @@ const mapStateToProps = (state) => ({
 });
 
 PrivateRoute.propTypes = {
-  component: PropTypes.elementType,
-  authed: PropTypes.bool,
+  component: PropTypes.elementType.isRequired,
+  authed: PropTypes.bool.isRequired,
   role: PropTypes.oneOf(Object.values(roleEnum)),
-  showLoader: PropTypes.bool,
+  showLoader: PropTypes.bool.isRequired,
   roleRequired: PropTypes.oneOf(Object.values(roleEnum)),
 };
 

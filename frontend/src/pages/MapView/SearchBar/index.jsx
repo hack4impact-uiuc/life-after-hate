@@ -86,7 +86,7 @@ const mapDispatchToProps = { updateSearchLocation, updateSearchQuery };
 SearchBar.propTypes = {
   query: PropTypes.string,
   location: PropTypes.string,
-  updateSearchLocation: PropTypes.func,
+  updateSearchLocation: PropTypes.func.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string),
 };
 

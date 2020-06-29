@@ -31,7 +31,7 @@ const mapDispatchToProps = { replaceTags };
 
 DirectoryTagSearch.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.string),
-  replaceTags: PropTypes.func,
+  replaceTags: PropTypes.func.isRequired,
   globalTagList: PropTypes.arrayOf(PropTypes.string),
 };
 

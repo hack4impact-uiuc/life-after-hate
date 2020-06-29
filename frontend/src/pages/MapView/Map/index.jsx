@@ -190,11 +190,11 @@ const mapDispatchToProps = {
 
 Map.propTypes = {
   center: PropTypes.arrayOf(PropTypes.number),
-  resources: PropTypes.arrayOf(PropTypes.object),
-  selectMapResource: PropTypes.func,
-  clearMapResource: PropTypes.func,
-  clearResources: PropTypes.func,
-  clearMapCenter: PropTypes.func,
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectMapResource: PropTypes.func.isRequired,
+  clearMapResource: PropTypes.func.isRequired,
+  clearResources: PropTypes.func.isRequired,
+  clearMapCenter: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Map);

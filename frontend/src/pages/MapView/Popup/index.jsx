@@ -55,11 +55,11 @@ MapPopup.propTypes = {
   isResourceSelected: PropTypes.bool,
   resource: PropTypes.shape({
     location: PropTypes.PropTypes.shape({
-      coordinates: PropTypes.arrayOf(PropTypes.number),
+      coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
     }),
     distanceFromSearchLoc: PropTypes.number,
-  }),
-  clearMapResource: PropTypes.func,
+  }).isRequired,
+  clearMapResource: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = { openResourceModalWithPayload, clearMapResource };

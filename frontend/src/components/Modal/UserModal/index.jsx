@@ -97,14 +97,15 @@ const mapDispatchToProps = {
 };
 
 UserModal.propTypes = {
-  closeModal: PropTypes.func,
+  closeModal: PropTypes.func.isRequired,
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     email: PropTypes.string,
     role: PropTypes.oneOf(Object.values(roleEnum)),
-  }),
+  }).isRequired,
+  editable: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserModal);

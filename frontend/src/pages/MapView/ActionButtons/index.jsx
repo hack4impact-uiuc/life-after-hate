@@ -41,17 +41,15 @@ const ActionButtons = ({ resource, openResourceModalWithPayload }) => (
   </div>
 );
 
-const mapStateToProps = (state) => ({
-  role: state.auth.role,
-});
-
 const mapDispatchToProps = {
   openResourceModalWithPayload,
 };
 
 ActionButtons.propTypes = {
-  resource: PropTypes.arrayOf(PropTypes.object),
+  resource: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }),
   openResourceModalWithPayload: PropTypes.func,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActionButtons);
+export default connect(null, mapDispatchToProps)(ActionButtons);

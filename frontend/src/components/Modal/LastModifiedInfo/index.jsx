@@ -25,7 +25,7 @@ LastModifiedInfo.propTypes = {
     dateLastModified: PropTypes.string,
     lastModifiedUser: PropTypes.string,
     dateCreated: PropTypes.string,
-  }),
+  }).isRequired,
 };
 
 export default LastModifiedInfo;

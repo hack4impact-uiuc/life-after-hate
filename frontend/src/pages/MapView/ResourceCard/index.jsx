@@ -137,11 +137,11 @@ const mapDispatchToProps = {
 };
 
 ResourceCard.propTypes = {
-  resource: PropTypes.object,
+  resource: PropTypes.object.isRequired,
   isSelected: PropTypes.bool,
-  selectMapResource: PropTypes.func,
-  openResourceModalWithPayload: PropTypes.func,
-  clearMapResource: PropTypes.func,
+  selectMapResource: PropTypes.func.isRequired,
+  openResourceModalWithPayload: PropTypes.func.isRequired,
+  clearMapResource: PropTypes.func.isRequired,
   myRef: PropTypes.elementType,
   style: PropTypes.object,
 };

@@ -35,9 +35,9 @@ const ModalInput = ({
 };
 
 ModalInput.propTypes = {
-  componentRef: PropTypes.elementType,
-  shortName: PropTypes.string,
-  resource: PropTypes.object,
+  componentRef: PropTypes.elementType.isRequired,
+  shortName: PropTypes.string.isRequired,
+  resource: PropTypes.object.isRequired,
   errors: PropTypes.object,
   required: PropTypes.bool,
   disabled: PropTypes.bool,

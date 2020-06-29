@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 });
 
 AdminView.propTypes = {
-  role: PropTypes.oneOf(Object.values(roleEnum)),
+  role: PropTypes.oneOf(Object.values(roleEnum)).isRequired,
 };
 
 export default connect(mapStateToProps)(AdminView);

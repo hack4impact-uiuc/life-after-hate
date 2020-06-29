@@ -106,10 +106,10 @@ const mapDispatchToProps = {
 };
 
 LAHNavbar.propTypes = {
-  profilePic: PropTypes.string,
+  profilePic: PropTypes.string.isRequired,
   firstName: PropTypes.string,
   lastName: PropTypes.string,
-  changePage: PropTypes.func,
+  changePage: PropTypes.func.isRequired,
 };
 
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout

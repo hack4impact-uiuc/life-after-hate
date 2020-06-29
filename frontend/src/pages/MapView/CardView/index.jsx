@@ -139,7 +139,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {};
 
 CardView.propTypes = {
-  resources: PropTypes.arrayOf(PropTypes.object),
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedResource: PropTypes.string,
 };
 

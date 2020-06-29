@@ -26,7 +26,7 @@ const mapStateToProps = (state) => ({
 });
 
 ModalManager.propTypes = {
-  isOpen: PropTypes.bool,
+  isOpen: PropTypes.bool.isRequired,
   modalType: PropTypes.oneOf(Object.values(modalEnum)),
 };
 
