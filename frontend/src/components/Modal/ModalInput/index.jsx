@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const ModalInput = ({
   componentRef,
@@ -31,6 +32,17 @@ const ModalInput = ({
       <Tag {...props}></Tag>
     </label>
   );
+};
+
+ModalInput.propTypes = {
+  componentRef: PropTypes.elementType,
+  shortName: PropTypes.string,
+  resource: PropTypes.object,
+  errors: PropTypes.object,
+  required: PropTypes.bool,
+  disabled: PropTypes.bool,
+  labelText: PropTypes.string,
+  tag: PropTypes.string,
 };
 
 export default ModalInput;

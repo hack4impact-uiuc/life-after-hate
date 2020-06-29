@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./styles.scss";
 import Maximize from "../../../assets/images/expand-black.svg";
 import Close from "../../../assets/images/close3.svg";
@@ -133,6 +134,16 @@ const mapDispatchToProps = {
   selectMapResource,
   openResourceModalWithPayload,
   clearMapResource,
+};
+
+ResourceCard.propTypes = {
+  resource: PropTypes.object,
+  isSelected: PropTypes.bool,
+  selectMapResource: PropTypes.func,
+  openResourceModalWithPayload: PropTypes.func,
+  clearMapResource: PropTypes.func,
+  myRef: PropTypes.elementType,
+  style: PropTypes.object,
 };
 
 export default connect(null, mapDispatchToProps)(ResourceCard);

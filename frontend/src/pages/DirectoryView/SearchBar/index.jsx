@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { useForm } from "react-hook-form";
@@ -52,5 +53,9 @@ const SearchBar = ({ isLoading }) => {
 const mapStateToProps = (state) => ({
   isLoading: state.isLoading,
 });
+
+SearchBar.propTypes = {
+  isLoading: PropTypes.bool,
+};
 
 export default connect(mapStateToProps)(SearchBar);

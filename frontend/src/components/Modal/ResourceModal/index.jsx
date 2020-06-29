@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/no-onchange */
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import { openModal, closeModal } from "../../../redux/actions/modal";
+import { closeModal } from "../../../redux/actions/modal";
 import ModalTagComplete from "../ModalTagComplete";
 import { resourceEnum } from "../../../utils/enums";
 import {
@@ -176,8 +177,17 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  openModal,
   closeModal,
+};
+
+ResourceModal.propTypes = {
+  resource: PropTypes.shape({
+    type: PropTypes.oneOf(Object.values(resourceEnum)),
+    _id: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
+  }),
+  isAddingResource: PropTypes.bool,
+  closeModal: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceModal);

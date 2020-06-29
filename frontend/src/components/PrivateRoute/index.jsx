@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 import Loader from "../Loader";
 import Navbar from "../Navbar";
@@ -56,5 +57,13 @@ const mapStateToProps = (state) => ({
   role: state.auth.role,
   showLoader: state.auth.isFetchingAuth,
 });
+
+PrivateRoute.propTypes = {
+  component: PropTypes.elementType,
+  authed: PropTypes.bool,
+  role: PropTypes.oneOf(Object.values(roleEnum)),
+  showLoader: PropTypes.bool,
+  roleRequired: PropTypes.oneOf(Object.values(roleEnum)),
+};
 
 export default connect(mapStateToProps)(PrivateRoute);

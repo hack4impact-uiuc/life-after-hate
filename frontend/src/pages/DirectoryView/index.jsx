@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import AdminView from "../../components/Auth/AdminView";
@@ -55,6 +56,11 @@ const MapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   openResourceModal,
+};
+
+ResourceManager.propTypes = {
+  openResourceModal: PropTypes.func,
+  resources: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default connect(MapStateToProps, mapDispatchToProps)(ResourceManager);

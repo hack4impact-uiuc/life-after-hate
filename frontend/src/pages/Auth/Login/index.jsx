@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-
+import PropTypes from "prop-types";
 import Logo from "../../../assets/images/lah-logo-2.png";
 import Avatar from "../../../assets/images/user-avatar.svg";
 import GoogleLogo from "../../../assets/images/google_logo.svg";
@@ -47,4 +47,7 @@ const MapStateToProps = (state) => ({
   authed: state.auth.authenticated,
 });
 
+Login.propTypes = {
+  authed: PropTypes.bool,
+};
 export default connect(MapStateToProps)(Login);

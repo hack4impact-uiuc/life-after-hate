@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { modalEnum } from "../../../utils/enums";
 import ResourceModal from "../ResourceModal";
@@ -18,8 +19,15 @@ const getComponent = (modalType) => {
 const ModalManager = ({ isOpen, modalType }) => (
   <div className="modal-wrap-ee">{isOpen && getComponent(modalType)}</div>
 );
+
 const mapStateToProps = (state) => ({
   modalType: state.modal.modalType,
   isOpen: state.modal.isOpen,
 });
+
+ModalManager.propTypes = {
+  isOpen: PropTypes.bool,
+  modalType: PropTypes.oneOf(Object.values(modalEnum)),
+};
+
 export default connect(mapStateToProps)(ModalManager);

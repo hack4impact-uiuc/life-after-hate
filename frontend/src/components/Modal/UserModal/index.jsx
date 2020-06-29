@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import { openModal, closeModal } from "../../../redux/actions/modal";
+import { closeModal } from "../../../redux/actions/modal";
 import { roleEnum } from "../../../utils/enums";
 import { editAndRefreshUser } from "../../../utils/api";
 import { currentUserSelector } from "../../../redux/selectors/modal";
@@ -92,8 +93,18 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  openModal,
   closeModal,
+};
+
+UserModal.propTypes = {
+  closeModal: PropTypes.func,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.oneOf(Object.values(roleEnum)),
+  }),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserModal);

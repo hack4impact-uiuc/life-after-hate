@@ -1,6 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
+import { roleEnum } from "../../../utils/enums";
 import AdminView from "../../../components/Auth/AdminView";
 import { openUserModalWithPayload } from "../../../redux/actions/modal";
 import Edit from "../../../assets/images/pencil-edit-button-black.svg";
@@ -57,6 +59,16 @@ const UserCard = ({ user, openUserModalWithPayload }) => {
 
 const mapDispatchToProps = {
   openUserModalWithPayload,
+};
+
+UserCard.propTypes = {
+  user: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.oneOf(Object.values(roleEnum)),
+    title: PropTypes.string,
+  }),
 };
 
 export default connect(null, mapDispatchToProps)(UserCard);

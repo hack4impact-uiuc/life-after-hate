@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-onchange */
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { refreshAllUsers } from "../../utils/api";
 import { connect } from "react-redux";
 import {
@@ -44,7 +45,6 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
             isOpen={dropdownOpen}
             toggle={toggle}
             onChange={onCategoryChange}
-            // defaultValue={filter}
             data-cy="user-filter"
           >
             <DropdownToggle caret color="custom">
@@ -112,6 +112,12 @@ const MapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   changeUserFilter,
+};
+
+UserManager.propTypes = {
+  users: PropTypes.arrayOf(PropTypes.object),
+  filter: PropTypes.oneOf(Object.values(userFilterEnum)),
+  changeUserFilter: PropTypes.func,
 };
 
 export default connect(MapStateToProps, mapDispatchToProps)(UserManager);

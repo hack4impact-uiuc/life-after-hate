@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import FileSaver from "file-saver";
 import { getCSV } from "../../utils/csv";
@@ -25,4 +26,8 @@ export const CSVExporter = ({ data, name = "resources.csv" }) => {
       </div>
     )
   );
+};
+
+CSVExporter.propTypes = {
+  data: PropTypes.array,
 };

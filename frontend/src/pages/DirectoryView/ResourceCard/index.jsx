@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import AdminView from "../../../components/Auth/AdminView";
@@ -13,6 +14,7 @@ import {
 } from "../../../redux/selectors/resource";
 import "../styles.scss";
 import "./styles.scss";
+
 const ResourceCard = ({
   resource,
   openResourceModalWithPayload,
@@ -83,6 +85,13 @@ const ResourceCard = ({
 
 const mapDispatchToProps = {
   openResourceModalWithPayload,
+};
+
+ResourceCard.propTypes = {
+  resource: PropTypes.object.isRequired,
+  openResourceModalWithPayload: PropTypes.func,
+  style: PropTypes.object,
+  measure: PropTypes.func,
 };
 
 export default connect(null, mapDispatchToProps)(ResourceCard);

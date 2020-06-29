@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { formatDistance } from "date-fns";
 
 import "./styles.scss";
@@ -17,6 +18,14 @@ const LastModifiedInfo = ({ resource }) => {
       </i>
     </label>
   );
+};
+
+LastModifiedInfo.propTypes = {
+  resource: PropTypes.shape({
+    dateLastModified: PropTypes.string,
+    lastModifiedUser: PropTypes.string,
+    dateCreated: PropTypes.string,
+  }),
 };
 
 export default LastModifiedInfo;
