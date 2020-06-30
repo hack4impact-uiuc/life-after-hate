@@ -10,6 +10,7 @@ const IndividualResourceFields = [
     labelText: "Skills & Qualifications",
     shortName: "skills",
     tag: "textarea",
+    rows: 7,
   },
   { labelText: "Volunteer Roles", shortName: "volunteerRoles" },
   { labelText: "Availability", shortName: "availability" },
@@ -17,9 +18,10 @@ const IndividualResourceFields = [
     labelText: "Why Volunteer?",
     shortName: "volunteerReason",
     tag: "textarea",
+    rows: 4,
   },
   { labelText: "Address", shortName: "address", required: true },
-  { labelText: "Notes", shortName: "notes" },
+  { labelText: "Notes", shortName: "notes", tag: "textarea", rows: 7 },
 ];
 
 const IndividualResourceForm = (props) =>

@@ -11,7 +11,7 @@ const TangibleResourceFields = [
     labelText: "Description",
     shortName: "description",
     tag: "textarea",
-    rows: 10,
+    rows: 7,
   },
   {
     labelText: "Resource Quantity",
@@ -19,7 +19,7 @@ const TangibleResourceFields = [
     tag: "input",
   },
   { labelText: "Address", shortName: "address", required: true },
-  { labelText: "Notes", shortName: "notes" },
+  { labelText: "Notes", shortName: "notes", tag: "textarea", rows: 7 },
 ];
 
 const TangibleResourceForm = (props) =>

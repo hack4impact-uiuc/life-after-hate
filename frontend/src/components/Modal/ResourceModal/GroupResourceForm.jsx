@@ -11,10 +11,10 @@ const GroupResourceFields = [
     labelText: "Description",
     shortName: "description",
     tag: "textarea",
-    rows: 10,
+    rows: 7,
   },
   { labelText: "Address", shortName: "address", required: true },
-  { labelText: "Notes", shortName: "notes" },
+  { labelText: "Notes", shortName: "notes", tag: "textarea", rows: 7 },
 ];
 
 const GroupResourceForm = (props) =>
