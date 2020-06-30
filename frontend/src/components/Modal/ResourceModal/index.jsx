@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/no-onchange */
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import { openModal, closeModal } from "../../../redux/actions/modal";
+import { closeModal } from "../../../redux/actions/modal";
 import ModalTagComplete from "../ModalTagComplete";
 import { resourceEnum } from "../../../utils/enums";
 import {
@@ -23,13 +24,12 @@ import GroupResourceForm from "./GroupResourceForm";
 import TangibleResourceForm from "./TangibleResourceForm";
 import ModalInput from "../ModalInput";
 
-export const createInput = ({
+export const ResourceFormInput = ({
   register,
   errors,
   editable,
   resource,
   required,
-  shortName,
   tag,
   ...props
 }) => (
@@ -38,11 +38,14 @@ export const createInput = ({
     resource={resource}
     errors={errors}
     disabled={!editable}
-    key={shortName}
     tag={tag ?? "input"}
-    {...{ required, shortName, ...props }}
+    {...{ required, ...props }}
   ></ModalInput>
 );
+
+ResourceFormInput.propTypes = {
+  errors: PropTypes.object,
+};
 
 const ResourceModal = ({
   resource,
@@ -176,8 +179,18 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  openModal,
   closeModal,
+};
+
+ResourceModal.propTypes = {
+  resource: PropTypes.shape({
+    type: PropTypes.oneOf(Object.values(resourceEnum)),
+    _id: PropTypes.string,
+    tags: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  isAddingResource: PropTypes.bool.isRequired,
+  editable: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceModal);

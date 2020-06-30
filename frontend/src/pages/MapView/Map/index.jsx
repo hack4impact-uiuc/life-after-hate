@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import StaticMap, {
   FlyToInterpolator,
   _MapContext as MapContext,
@@ -186,4 +187,14 @@ const mapDispatchToProps = {
   clearResources,
   clearMapCenter,
 };
+
+Map.propTypes = {
+  center: PropTypes.arrayOf(PropTypes.number),
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectMapResource: PropTypes.func.isRequired,
+  clearMapResource: PropTypes.func.isRequired,
+  clearResources: PropTypes.func.isRequired,
+  clearMapCenter: PropTypes.func.isRequired,
+};
+
 export default connect(mapStateToProps, mapDispatchToProps)(Map);

@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
-import { openModal, closeModal } from "../../../redux/actions/modal";
+import { closeModal } from "../../../redux/actions/modal";
 import { roleEnum } from "../../../utils/enums";
 import { editAndRefreshUser } from "../../../utils/api";
 import { currentUserSelector } from "../../../redux/selectors/modal";
@@ -22,6 +23,7 @@ const UserModal = ({ closeModal, user, editable }) => {
     closeModal();
   };
 
+  // eslint-disable-next-line react/prop-types
   const createInput = ({ required, shortName, ...props }) => (
     <ModalInput
       componentRef={register({ required: required ?? false })}
@@ -92,8 +94,19 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  openModal,
   closeModal,
+};
+
+UserModal.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.oneOf(Object.values(roleEnum)),
+  }).isRequired,
+  editable: PropTypes.bool.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserModal);

@@ -1,5 +1,6 @@
+import React from "react";
 /* eslint-disable jsx-a11y/no-onchange */
-import { createInput } from "./index";
+import { ResourceFormInput } from "./index";
 
 const IndividualResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
@@ -9,6 +10,7 @@ const IndividualResourceFields = [
     labelText: "Skills & Qualifications",
     shortName: "skills",
     tag: "textarea",
+    rows: 7,
   },
   { labelText: "Volunteer Roles", shortName: "volunteerRoles" },
   { labelText: "Availability", shortName: "availability" },
@@ -16,11 +18,14 @@ const IndividualResourceFields = [
     labelText: "Why Volunteer?",
     shortName: "volunteerReason",
     tag: "textarea",
+    rows: 4,
   },
   { labelText: "Address", shortName: "address", required: true },
-  { labelText: "Notes", shortName: "notes" },
+  { labelText: "Notes", shortName: "notes", tag: "textarea", rows: 7 },
 ];
 
 const IndividualResourceForm = (props) =>
-  IndividualResourceFields.map((field) => createInput({ ...field, ...props }));
+  IndividualResourceFields.map((field) => (
+    <ResourceFormInput key={field.shortName} {...{ ...field, ...props }} />
+  ));
 export default IndividualResourceForm;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 import Loader from "../Loader";
 import Navbar from "../Navbar";
@@ -35,6 +36,7 @@ function PrivateRoute({
               }
               return (
                 <Redirect
+                  // eslint-disable-next-line react/prop-types
                   to={{ pathname: "/", state: { from: props.location } }}
                 />
               );
@@ -43,6 +45,7 @@ function PrivateRoute({
           }
           return (
             <Redirect
+              // eslint-disable-next-line react/prop-types
               to={{ pathname: "/login", state: { from: props.location } }}
             />
           );
@@ -56,5 +59,13 @@ const mapStateToProps = (state) => ({
   role: state.auth.role,
   showLoader: state.auth.isFetchingAuth,
 });
+
+PrivateRoute.propTypes = {
+  component: PropTypes.elementType.isRequired,
+  authed: PropTypes.bool.isRequired,
+  role: PropTypes.oneOf(Object.values(roleEnum)),
+  showLoader: PropTypes.bool.isRequired,
+  roleRequired: PropTypes.oneOf(Object.values(roleEnum)),
+};
 
 export default connect(mapStateToProps)(PrivateRoute);

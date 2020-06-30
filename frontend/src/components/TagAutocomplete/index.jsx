@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {
@@ -85,5 +86,11 @@ const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
     />
   </MuiThemeProvider>
 );
+
+TagAutocomplete.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  tagOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export default TagAutocomplete;

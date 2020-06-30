@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   mapResourceIdSelector,
@@ -136,5 +137,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {};
+
+CardView.propTypes = {
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedResource: PropTypes.string,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardView);

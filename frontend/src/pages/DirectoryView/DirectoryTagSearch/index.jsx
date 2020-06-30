@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import TagAutocomplete from "../../../components/TagAutocomplete";
 import {
@@ -27,5 +28,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = { replaceTags };
+
+DirectoryTagSearch.propTypes = {
+  tags: PropTypes.arrayOf(PropTypes.string),
+  replaceTags: PropTypes.func.isRequired,
+  globalTagList: PropTypes.arrayOf(PropTypes.string),
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(DirectoryTagSearch);

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import SearchIcon from "../../../assets/images/search.svg";
@@ -81,5 +82,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = { updateSearchLocation, updateSearchQuery };
+
+SearchBar.propTypes = {
+  query: PropTypes.string,
+  location: PropTypes.string,
+  updateSearchLocation: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.string),
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import Close from "../../assets/images/close.svg";
 import { connect } from "react-redux";
-import { openModal, closeModal } from "../../redux/actions/modal";
+import { closeModal } from "../../redux/actions/modal";
 import { titleSelector } from "../../redux/selectors/modal";
 import "./styles.scss";
 
@@ -31,8 +32,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  openModal,
   closeModal,
 };
 
+LAHModal.propTypes = {
+  isOpen: PropTypes.bool,
+  closeModal: PropTypes.func,
+  title: PropTypes.string,
+  children: PropTypes.element,
+};
 export default connect(mapStateToProps, mapDispatchToProps)(LAHModal);

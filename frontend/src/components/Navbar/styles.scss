@@ -7,6 +7,9 @@
 
   #logo {
     height: 30px;
+    @media (max-width: 768px) {
+      height: 20px;
+    }
   }
 }
 

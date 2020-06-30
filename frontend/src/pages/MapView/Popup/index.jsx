@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Popup } from "react-map-gl";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import { clearMapResource } from "../../../redux/actions/map";
@@ -49,6 +50,17 @@ const mapStateToProps = (state) => ({
   isResourceSelected: mapResourceIdSelector(state) !== undefined,
   role: state.auth.role,
 });
+
+MapPopup.propTypes = {
+  isResourceSelected: PropTypes.bool,
+  resource: PropTypes.shape({
+    location: PropTypes.PropTypes.shape({
+      coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
+    }),
+    distanceFromSearchLoc: PropTypes.number,
+  }).isRequired,
+  clearMapResource: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = { openResourceModalWithPayload, clearMapResource };
 

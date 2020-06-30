@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
@@ -125,6 +126,14 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   updateSearchQuery,
   addTag,
+};
+
+MapSearchAutocomplete.propTypes = {
+  globalTagList: PropTypes.arrayOf(PropTypes.string),
+  query: PropTypes.string,
+  updateSearchQuery: PropTypes.func,
+  addTag: PropTypes.func,
+  resources: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default connect(

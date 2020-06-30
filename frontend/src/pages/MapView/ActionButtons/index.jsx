@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 import AdminView from "../../../components/Auth/AdminView";
@@ -40,12 +41,15 @@ const ActionButtons = ({ resource, openResourceModalWithPayload }) => (
   </div>
 );
 
-const mapStateToProps = (state) => ({
-  role: state.auth.role,
-});
-
 const mapDispatchToProps = {
   openResourceModalWithPayload,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ActionButtons);
+ActionButtons.propTypes = {
+  resource: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }),
+  openResourceModalWithPayload: PropTypes.func,
+};
+
+export default connect(null, mapDispatchToProps)(ActionButtons);

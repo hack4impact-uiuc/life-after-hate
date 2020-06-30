@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ResourceCard from "../ResourceCard";
 import {
   CellMeasurer,
@@ -83,5 +84,9 @@ class ResourceList extends React.Component {
     );
   }
 }
+
+ResourceList.propTypes = {
+  resources: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default ResourceList;

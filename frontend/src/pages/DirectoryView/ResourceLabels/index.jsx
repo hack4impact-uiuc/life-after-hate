@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AdminView from "../../../components/Auth/AdminView";
 import { sortFieldEnum } from "../../../utils/enums";
@@ -69,5 +70,14 @@ const ResourceLabels = ({ sort, updateSort, resources }) => {
 const mapStateToProps = (state) => ({ sort: state.sort });
 
 const mapDispatchToProps = { updateSort };
+
+ResourceLabels.propTypes = {
+  sort: PropTypes.shape({
+    field: PropTypes.oneOf(Object.values(sortFieldEnum)),
+    order: PropTypes.string,
+  }),
+  updateSort: PropTypes.func.isRequired,
+  resources: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceLabels);

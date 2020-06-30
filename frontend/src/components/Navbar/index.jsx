@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import {
   NavbarBrand,
@@ -20,6 +21,7 @@ import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
 import { changePage } from "../../redux/actions/nav";
+
 const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -102,6 +104,14 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   changePage,
 };
+
+LAHNavbar.propTypes = {
+  profilePic: PropTypes.string.isRequired,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  changePage: PropTypes.func.isRequired,
+};
+
 // Add history functionality to Navbar (HOC wrapper) so that we can push a redirect to /login on signout
 export default connect(
   mapStateToProps,

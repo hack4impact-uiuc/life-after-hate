@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
-// import { useStateValue } from "../../utils/state_management";
+import PropTypes from "prop-types";
 import nProgress from "nprogress";
 import "nprogress/nprogress.css";
 
@@ -19,5 +19,9 @@ const MiniLoader = ({ shouldShowLoader }) => {
 const MapStateToProps = (state) => ({
   shouldShowLoader: state.isLoading,
 });
+
+MiniLoader.propTypes = {
+  shouldShowLoader: PropTypes.bool,
+};
 
 export default connect(MapStateToProps)(MiniLoader);

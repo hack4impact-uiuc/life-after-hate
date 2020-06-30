@@ -1,6 +1,7 @@
 import LogRocket from "logrocket";
 import { connect } from "react-redux";
-
+import PropTypes from "prop-types";
+import { roleEnum } from "../../utils/enums";
 if (process.env.REACT_APP_LOGROCKET_ACCESS_TOKEN) {
   LogRocket.init(process.env.REACT_APP_LOGROCKET_ACCESS_TOKEN);
 }
@@ -24,5 +25,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {};
+
+Analytics.propTypes = {
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  email: PropTypes.string,
+  role: PropTypes.oneOf(Object.values(roleEnum)),
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Analytics);
