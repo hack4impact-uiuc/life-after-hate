@@ -23,6 +23,7 @@ const UserModal = ({ closeModal, user, editable }) => {
     closeModal();
   };
 
+  // eslint-disable-next-line react/prop-types
   const createInput = ({ required, shortName, ...props }) => (
     <ModalInput
       componentRef={register({ required: required ?? false })}

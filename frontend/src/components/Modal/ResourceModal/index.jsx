@@ -24,13 +24,12 @@ import GroupResourceForm from "./GroupResourceForm";
 import TangibleResourceForm from "./TangibleResourceForm";
 import ModalInput from "../ModalInput";
 
-export const createInput = ({
+export const ResourceFormInput = ({
   register,
   errors,
   editable,
   resource,
   required,
-  shortName,
   tag,
   ...props
 }) => (
@@ -39,11 +38,14 @@ export const createInput = ({
     resource={resource}
     errors={errors}
     disabled={!editable}
-    key={shortName}
     tag={tag ?? "input"}
-    {...{ required, shortName, ...props }}
+    {...{ required, ...props }}
   ></ModalInput>
 );
+
+ResourceFormInput.propTypes = {
+  errors: PropTypes.object,
+};
 
 const ResourceModal = ({
   resource,
@@ -187,6 +189,7 @@ ResourceModal.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   isAddingResource: PropTypes.bool.isRequired,
+  editable: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
 

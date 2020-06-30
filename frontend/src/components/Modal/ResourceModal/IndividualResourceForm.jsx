@@ -1,5 +1,6 @@
+import React from "react";
 /* eslint-disable jsx-a11y/no-onchange */
-import { createInput } from "./index";
+import { ResourceFormInput } from "./index";
 
 const IndividualResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
@@ -22,5 +23,7 @@ const IndividualResourceFields = [
 ];
 
 const IndividualResourceForm = (props) =>
-  IndividualResourceFields.map((field) => createInput({ ...field, ...props }));
+  IndividualResourceFields.map((field) => (
+    <ResourceFormInput key={field.shortName} {...{ ...field, ...props }} />
+  ));
 export default IndividualResourceForm;

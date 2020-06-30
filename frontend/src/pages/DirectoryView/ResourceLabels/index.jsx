@@ -76,6 +76,8 @@ ResourceLabels.propTypes = {
     field: PropTypes.oneOf(Object.values(sortFieldEnum)),
     order: PropTypes.string,
   }),
+  updateSort: PropTypes.func.isRequired,
+  resources: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceLabels);

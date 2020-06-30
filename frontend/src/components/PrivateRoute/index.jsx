@@ -36,6 +36,7 @@ function PrivateRoute({
               }
               return (
                 <Redirect
+                  // eslint-disable-next-line react/prop-types
                   to={{ pathname: "/", state: { from: props.location } }}
                 />
               );
@@ -44,6 +45,7 @@ function PrivateRoute({
           }
           return (
             <Redirect
+              // eslint-disable-next-line react/prop-types
               to={{ pathname: "/login", state: { from: props.location } }}
             />
           );

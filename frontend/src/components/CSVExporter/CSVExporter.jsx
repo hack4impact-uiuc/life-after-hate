@@ -30,4 +30,5 @@ export const CSVExporter = ({ data, name = "resources.csv" }) => {
 
 CSVExporter.propTypes = {
   data: PropTypes.array.isRequired,
+  name: PropTypes.string,
 };

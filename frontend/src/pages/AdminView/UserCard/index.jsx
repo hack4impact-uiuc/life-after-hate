@@ -63,12 +63,14 @@ const mapDispatchToProps = {
 
 UserCard.propTypes = {
   user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     email: PropTypes.string,
     role: PropTypes.oneOf(Object.values(roleEnum)).isRequired,
     title: PropTypes.string,
   }),
+  openUserModalWithPayload: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(UserCard);

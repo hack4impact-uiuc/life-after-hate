@@ -1,5 +1,6 @@
+import React from "react";
 /* eslint-disable jsx-a11y/no-onchange */
-import { createInput } from "./index";
+import { ResourceFormInput } from "./index";
 
 const TangibleResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
@@ -22,5 +23,7 @@ const TangibleResourceFields = [
 ];
 
 const TangibleResourceForm = (props) =>
-  TangibleResourceFields.map((field) => createInput({ ...field, ...props }));
+  TangibleResourceFields.map((field) => (
+    <ResourceFormInput key={field.shortName} {...{ ...field, ...props }} />
+  ));
 export default TangibleResourceForm;

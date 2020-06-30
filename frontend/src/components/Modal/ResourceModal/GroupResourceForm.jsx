@@ -1,5 +1,6 @@
+import React from "react";
 /* eslint-disable jsx-a11y/no-onchange */
-import { createInput } from "./index";
+import { ResourceFormInput } from "./index";
 
 const GroupResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
@@ -17,6 +18,8 @@ const GroupResourceFields = [
 ];
 
 const GroupResourceForm = (props) =>
-  GroupResourceFields.map((field) => createInput({ ...field, ...props }));
+  GroupResourceFields.map((field) => (
+    <ResourceFormInput key={field.shortName} {...{ ...field, ...props }} />
+  ));
 
 export default GroupResourceForm;
