@@ -54,6 +54,8 @@
 
 .modal-input-field:disabled {
   color: #2a2a2a;
+  -webkit-text-fill-color: #2a2a2a;
+  opacity: 1; /* required on iOS */
 }
 
 .modal-backdrop {
