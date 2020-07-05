@@ -46,7 +46,11 @@
   }
 
   #edit-icon {
-    height: 18px;
+    height: 25px;
+    min-height: 25px;
+    // Give width & height so space is reserved before loading
+    // (fixes CellMeasurer race condition if images aren't loaded before measuring cell size)
+    width: 25px;
     padding-right: 5px;
     margin-top: -2px;
   }
