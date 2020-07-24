@@ -181,7 +181,7 @@ const touchResourceModification = (data, user) => {
     return data;
   }
   const { firstName, lastName } = user;
-  data.lastModifiedUser = `${firstName} ${lastName}`;
+  data.lastModifiedUser = [firstName, lastName].join(" ");
   data.dateLastModified = Date.now();
   return data;
 };
