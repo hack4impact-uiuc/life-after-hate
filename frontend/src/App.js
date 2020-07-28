@@ -1,6 +1,11 @@
 /* eslint-disable react/jsx-filename-extension */
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch,
+} from "react-router-dom";
 import { Provider } from "react-redux";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Auth/Login";
@@ -27,15 +32,18 @@ class App extends Component {
           <ToastContainer />
           <ModalManager />
           <Router>
-            <Route path="/login" component={Login} />
-            <PrivateRoute exact path="/" component={MapView} />
-            <PrivateRoute exact path="/directory" component={DirectoryView} />
-            <PrivateRoute
-              exact
-              path="/users"
-              component={AdminView}
-              roleRequired={roleEnum.ADMIN}
-            />
+            <Switch>
+              <Route path="/login" component={Login} />
+              <PrivateRoute exact path="/" component={MapView} />
+              <PrivateRoute exact path="/directory" component={DirectoryView} />
+              <PrivateRoute
+                exact
+                path="/users"
+                component={AdminView}
+                roleRequired={roleEnum.ADMIN}
+              />
+              <Redirect to="/login"></Redirect>
+            </Switch>
           </Router>
         </div>
       </Provider>

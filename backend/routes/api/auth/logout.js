@@ -1,7 +1,6 @@
 const router = require("express").Router();
-const { requireVolunteerStatus } = require("../../../utils/auth-middleware");
 
-router.get("/", requireVolunteerStatus, (req, res) => {
+router.get("/", (req, res) => {
   req.logout();
   res.send({
     code: 200,
