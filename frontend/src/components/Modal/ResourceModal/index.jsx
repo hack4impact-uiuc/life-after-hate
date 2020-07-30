@@ -109,10 +109,7 @@ const ResourceModal = ({
 
   return (
     <LAHModal>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="add-edit-resource-form"
-      >
+      <form className="add-edit-resource-form">
         {isExistingResource && (
           <LastModifiedInfo resource={resource}></LastModifiedInfo>
         )}
@@ -153,7 +150,11 @@ const ResourceModal = ({
         </label>
         {editable && (
           <div style={{ marginTop: "20px" }}>
-            <Button id="submit-form-button" type="submit">
+            <Button
+              id="submit-form-button"
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+            >
               Save
             </Button>
             {!isAddingResource && (
