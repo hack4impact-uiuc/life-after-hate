@@ -6,6 +6,7 @@ const IndividualResourceFields = [
   { labelText: "Contact Name", shortName: "contactName", required: true },
   { labelText: "Contact Phone", shortName: "contactPhone" },
   { labelText: "Contact Email", shortName: "contactEmail" },
+  { labelText: "Website", shortName: "websiteURL" },
   {
     labelText: "Skills & Qualifications",
     shortName: "skills",

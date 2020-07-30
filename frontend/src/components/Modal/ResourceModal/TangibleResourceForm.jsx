@@ -7,6 +7,7 @@ const TangibleResourceFields = [
   { labelText: "Name of Resource", shortName: "resourceName", required: true },
   { labelText: "Contact Phone", shortName: "contactPhone" },
   { labelText: "Contact Email", shortName: "contactEmail" },
+  { labelText: "Website", shortName: "websiteURL" },
   {
     labelText: "Description",
     shortName: "description",

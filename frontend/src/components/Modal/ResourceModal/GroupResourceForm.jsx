@@ -7,6 +7,7 @@ const GroupResourceFields = [
   { labelText: "Company Name", shortName: "companyName", required: true },
   { labelText: "Contact Phone", shortName: "contactPhone" },
   { labelText: "Contact Email", shortName: "contactEmail" },
+  { labelText: "Website", shortName: "websiteURL" },
   {
     labelText: "Description",
     shortName: "description",
