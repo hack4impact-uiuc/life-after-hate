@@ -210,7 +210,7 @@ const updatePath = R.curry((pth, fn, obj) =>
 );
 
 const isAbsoluteURL = (url) => /^((http|https|ftp):\/\/)/.test(url);
-const prefixWithHTTP = (url) => (isAbsoluteURL(url) ? url : `http://${url}`);
+const prefixWithHTTP = (url) => (isAbsoluteURL(url) ? url : `https://${url}`);
 
 const formatIncomingData = ({ lat, lng, region, address }) =>
   R.pipe(
