@@ -113,7 +113,7 @@ const ResourceCard = ({
                 <a
                   className="detail-content"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noreferrer noopener"
                   href={resource.websiteURL}
                 >
                   {resource.websiteURL}

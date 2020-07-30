@@ -210,6 +210,7 @@ const updatePath = R.curry((pth, fn, obj) =>
 );
 
 const isAbsoluteURL = (url) => /^((http|https|ftp):\/\/)/.test(url);
+const prefixWithHTTP = (url) => (isAbsoluteURL(url) ? url : `http://${url}`);
 
 const formatIncomingData = ({ lat, lng, region, address }) =>
   R.pipe(
@@ -218,9 +219,7 @@ const formatIncomingData = ({ lat, lng, region, address }) =>
     R.set(resourceRegionLens, region),
     R.set(resourceAddressLens, address),
     updatePath(["tags"], R.map(toTitleCase)),
-    updatePath(["websiteURL"], (url) =>
-      isAbsoluteURL(url) ? url : `http://${url}`
-    )
+    updatePath(["websiteURL"], (url) => (url ? prefixWithHTTP(url) : url))
   );
 
 module.exports = {
