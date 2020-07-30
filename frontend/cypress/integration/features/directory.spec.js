@@ -115,6 +115,7 @@ context("Directory View", () => {
     cy.get(".edit-button").first().click();
     cy.get(".modal-title").should("have.text", "Edit Resource");
     cy.get("[data-cy=modal-contactName]").clear().type("Edited Resource!!");
+    cy.get("[data-cy=modal-contactEmail]").clear();
     cy.get("[data-cy=modal-address]")
       .clear()
       .type("630 S 5th St, Champaign, IL");
@@ -128,6 +129,7 @@ context("Directory View", () => {
     cy.get("[data-cy=card-address]").should("contain.text", "61820");
     cy.get(".edit-button").first().click();
     cy.get("[data-cy=modal-contactName]").clear().type("Alan Fang");
+    cy.get("[data-cy=modal-contactEmail]").should("have.text", "");
     cy.get("#submit-form-button").click();
   });
 

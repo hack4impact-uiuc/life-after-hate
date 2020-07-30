@@ -19,15 +19,6 @@ export const toQueryString = R.pipe(
   R.join("&")
 );
 
-// Remove non-empty string fields from the object
-export const filterEmptyFields = (data) =>
-  Object.keys(data).reduce((accum, key) => {
-    if (data[key] !== "") {
-      accum[key] = data[key];
-    }
-    return accum;
-  }, {});
-
 export const getURLForEndpoint = (endpoint) => urljoin(API_URI, endpoint);
 /**
  *

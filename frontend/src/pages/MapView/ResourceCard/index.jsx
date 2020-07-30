@@ -107,6 +107,20 @@ const ResourceCard = ({
               </div>
             )}
 
+            {resource.websiteURL && (
+              <div className="detail-section">
+                <p className="detail-title">Website</p>
+                <a
+                  className="detail-content"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href={resource.websiteURL}
+                >
+                  {resource.websiteURL}
+                </a>
+              </div>
+            )}
+
             {resource.address && (
               <div className="detail-section">
                 <p className="detail-title">Address</p>

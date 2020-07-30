@@ -26,6 +26,7 @@ const Resource = new mongoose.Schema(
       type: { type: String, default: "Point" },
       coordinates: { type: Array, default: [] },
     },
+    websiteURL: { type: String, default: "" },
     dateCreated: { type: Date, default: Date.now },
     dateLastModified: { type: Date },
     lastModifiedUser: { type: String },

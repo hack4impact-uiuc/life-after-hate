@@ -29,6 +29,7 @@ const BASE_RESOURCE = Joi.object().keys({
     type: Joi.string().default("Point"),
     coordinates: Joi.array().length(2).items(Joi.number()),
   }).default({ type: "Point", coordinates: [0, 0] }),
+  websiteURL: Joi.string().allow(""),
   notes: Joi.string().allow(""),
   tags: Joi.array().items(Joi.string()),
   type: Joi.string()

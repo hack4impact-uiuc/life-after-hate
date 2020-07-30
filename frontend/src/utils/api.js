@@ -3,7 +3,6 @@ import {
   updateGlobalAuthState,
   purgeGlobalAuthState,
   toQueryString,
-  filterEmptyFields,
 } from "./apiHelpers";
 import {
   replaceAllResources,
@@ -82,13 +81,11 @@ async function addResource(data) {
 }
 
 async function editResource(data, id) {
-  // Remove non-empty string fields from the object
-  const filteredData = filterEmptyFields(data);
   return (
     await apiRequest({
       endpoint: `/resources/${id}`,
       method: "PUT",
-      data: filteredData,
+      data,
       notification: {
         successMessage: "Successfully edited resource!",
         failureMessage: "Failed to edit resource.",

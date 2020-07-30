@@ -209,13 +209,17 @@ const updatePath = R.curry((pth, fn, obj) =>
   R.hasPath(pth, obj) ? R.assocPath(pth, fn(R.path(pth, obj)), obj) : obj
 );
 
+const isAbsoluteURL = (url) => /^((http|https|ftp):\/\/)/.test(url);
+const prefixWithHTTP = (url) => (isAbsoluteURL(url) ? url : `https://${url}`);
+
 const formatIncomingData = ({ lat, lng, region, address }) =>
   R.pipe(
     R.set(resourceLatLens, lat),
     R.set(resourceLongLens, lng),
     R.set(resourceRegionLens, region),
     R.set(resourceAddressLens, address),
-    updatePath(["tags"], R.map(toTitleCase))
+    updatePath(["tags"], R.map(toTitleCase)),
+    updatePath(["websiteURL"], (url) => (url ? prefixWithHTTP(url) : url))
   );
 
 module.exports = {
