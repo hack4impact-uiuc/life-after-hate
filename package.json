@@ -22,7 +22,7 @@
     "@hack4impact-uiuc/eslint-plugin": "^2.0.1",
     "@typescript-eslint/parser": "^3.7.1",
     "cypress": "^4.11.0",
-    "eslint": "^7.5.0",
+    "eslint": "^7.6.0",
     "eslint-plugin-cypress": "^2.11.1",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
