@@ -3,6 +3,7 @@ import { createSelector } from "reselect";
 import { tagSelector } from "./tags";
 import GroupResourceImg from "../../assets/images/business-resource.svg";
 import IndividualResourceImg from "../../assets/images/individual-resource.svg";
+import TangibleResourceImg from "../../assets/images/tangible-resource.svg";
 
 export const resourceName = (resource) => {
   switch (resource.type) {
@@ -33,6 +34,8 @@ export const resourceLogo = (type) => {
       return IndividualResourceImg;
     case resourceEnum.GROUP:
       return GroupResourceImg;
+    case resourceEnum.TANGIBLE:
+      return TangibleResourceImg;
     default:
       return GroupResourceImg;
   }
