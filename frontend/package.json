@@ -11,7 +11,7 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "axios": "^0.19.2",
-    "bootstrap": "^4.5.0",
+    "bootstrap": "^4.5.1",
     "date-fns": "^2.15.0",
     "deck.gl": "^8.2.5",
     "file-saver": "^2.0.2",
