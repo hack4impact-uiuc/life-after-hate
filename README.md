@@ -1,25 +1,32 @@
 <h1 align="center">
-  <br>
-  <a href="https://www.lifeafterhate.org/"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Life_After_Hate_logo.png" alt="Life After Hate" width="200"></a>
-  <br/>
+  <br />
+  <a href="https://www.lifeafterhate.org/"
+    ><img
+      src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Life_After_Hate_logo.png"
+      alt="Life After Hate"
+      width="200"
+  /></a>
+  <br />
   Life After Hate
-  </br>
+  <br />
 </h1>
 
-<h4 align="center">A <a href="https://uiuc.hack4impact.org/" target="_blank">Hack4Impact UIUC</a> project.</h4>
+<h4 align="center">
+  A
+  <a href="https://uiuc.hack4impact.org/" target="_blank">Hack4Impact UIUC</a>
+  project.
+</h4>
 
 <p align="center">
-
-<img src="https://github.com/hack4impact-uiuc/life-after-hate/workflows/Testing/badge.svg">
-<img src="https://codecov.io/gh/hack4impact-uiuc/life-after-hate/branch/master/graph/badge.svg">
-</p>
-
-<p align="center">
-  <a href="#about-this-project">About</a> •
-  <a href="#team">Team</a> •
-  <a href="#setup-instructions">Setup Instructions</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#license">License</a>
+  <a
+    href="https://github.com/hack4impact-uiuc/life-after-hate/actions?query=branch%3Amaster"
+    ><img
+      src="https://github.com/hack4impact-uiuc/life-after-hate/workflows/Testing/badge.svg"
+  /></a>
+  <a href="https://codecov.io/gh/hack4impact-uiuc/life-after-hate"
+    ><img
+      src="https://codecov.io/gh/hack4impact-uiuc/life-after-hate/branch/master/graph/badge.svg"
+  /></a>
 </p>
 
 # About This Project
