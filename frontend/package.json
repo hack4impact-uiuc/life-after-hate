@@ -34,7 +34,7 @@
     "react-scripts": "^3.4.1",
     "react-spinners": "^0.9.0",
     "react-toastify": "^6.0.8",
-    "react-virtualized": "^9.21.2",
+    "react-virtualized": "^9.22.0",
     "reactstrap": "^8.5.1",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
