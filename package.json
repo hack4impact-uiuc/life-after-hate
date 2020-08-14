@@ -19,7 +19,7 @@
     "sinon": "^9.0.3"
   },
   "devDependencies": {
-    "@hack4impact-uiuc/eslint-plugin": "^2.0.1",
+    "@hack4impact-uiuc/eslint-plugin": "^2.0.3",
     "@typescript-eslint/parser": "^3.9.0",
     "cypress": "^4.12.1",
     "eslint": "^7.6.0",
