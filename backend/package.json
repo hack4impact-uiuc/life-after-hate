@@ -53,6 +53,6 @@
     "supertest": "^4.0.2",
     "winston": "^3.3.3",
     "winston-loggly-bulk": "^3.1.1",
-    "xlsx": "^0.16.5"
+    "xlsx": "^0.16.6"
   }
 }
