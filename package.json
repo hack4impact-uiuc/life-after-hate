@@ -27,7 +27,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.7"
+    "typescript": "^4.0.2"
   },
   "scripts": {
     "prettier": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
