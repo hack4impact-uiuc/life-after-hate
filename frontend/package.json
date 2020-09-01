@@ -12,7 +12,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
-    "date-fns": "^2.16.0",
+    "date-fns": "^2.16.1",
     "deck.gl": "^8.2.6",
     "file-saver": "^2.0.2",
     "istanbul-lib-coverage": "^3.0.0",
