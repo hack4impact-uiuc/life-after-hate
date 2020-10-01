@@ -17,7 +17,7 @@ const Pending = () => (
           <div className="login-card">
             <img id="user-avatar" src={Check} alt="avatar" />
             <p data-cy="pending">
-              Your request for access has been receieved. <br />
+              Your request for access has been received. <br />
               An administrator will review it shortly.
             </p>
             <button className="action-button orange" onClick={logout}>
