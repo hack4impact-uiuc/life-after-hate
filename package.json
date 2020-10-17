@@ -4,7 +4,7 @@
   "description": "Package with the development tools for LAH (such as Prettier and Husky). Please see the individual frontend and backend sub-packages for the actual dependencies.",
   "main": "index.js",
   "dependencies": {
-    "@cypress/code-coverage": "^3.8.1",
+    "@cypress/code-coverage": "^3.8.2",
     "@cypress/commit-info": "^2.2.0",
     "chai": "^4.2.0",
     "colors": "^1.4.0",
