@@ -32,7 +32,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "express-winston": "^4.0.5",
-    "fuse.js": "^6.4.2",
+    "fuse.js": "^6.4.3",
     "geolib": "^3.3.1",
     "helmet": "^4.1.1",
     "honeycomb-beeline": "^2.4.0",
