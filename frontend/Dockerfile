@@ -1,4 +1,4 @@
-FROM node:15.2.1
+FROM node:15.3.0
 
 WORKDIR '/var/www/app'
 # Install app dependencies
