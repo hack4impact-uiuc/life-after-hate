@@ -39,7 +39,7 @@
     "joi-objectid": "^3.0.1",
     "keyword-extractor": "0.0.19",
     "mocha": "^8.2.1",
-    "mongoose": "^5.10.17",
+    "mongoose": "^5.10.18",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
