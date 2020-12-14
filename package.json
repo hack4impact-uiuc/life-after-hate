@@ -8,7 +8,7 @@
     "@cypress/commit-info": "^2.2.0",
     "chai": "^4.2.0",
     "colors": "^1.4.0",
-    "commander": "^6.2.0",
+    "commander": "^6.2.1",
     "express-session": "^1.17.1",
     "find-up": "^5.0.0",
     "istanbul-lib-coverage": "^3.0.0",
