@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/boom": "^9.1.0",
+    "@hapi/boom": "^9.1.1",
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "celebrate": "^13.0.4",
