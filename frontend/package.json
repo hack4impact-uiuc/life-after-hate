@@ -33,7 +33,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
     "react-spinners": "^0.10.4",
-    "react-toastify": "^6.2.0",
+    "react-toastify": "^7.0.3",
     "react-virtualized": "^9.22.3",
     "reactstrap": "^8.7.1",
     "redux": "^4.0.5",
