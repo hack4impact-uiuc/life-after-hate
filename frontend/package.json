@@ -18,7 +18,7 @@
     "istanbul-lib-coverage": "^3.0.0",
     "json2csv": "^5.0.5",
     "logrocket": "^1.0.14",
-    "mapbox-gl": "^1.13.0",
+    "mapbox-gl": "^2.2.0",
     "node-fetch": "^2.6.1",
     "node-sass": "^4.14.1",
     "nprogress": "^0.2.0",
