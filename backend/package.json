@@ -47,7 +47,7 @@
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
     "progress": "^2.0.3",
-    "ramda": "^0.27.0",
+    "ramda": "^0.27.1",
     "ramda-adjunct": "^2.32.0",
     "sinon": "^10.0.1",
     "supertest": "^6.1.3",
