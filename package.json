@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@hack4impact-uiuc/eslint-plugin": "^2.0.10",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@typescript-eslint/parser": "^4.28.5",
     "cypress": "^5.6.0",
     "eslint": "^7.25.0",
     "eslint-plugin-cypress": "^2.11.2",
