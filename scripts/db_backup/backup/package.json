@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.665.0",
+    "aws-sdk": "^2.814.0",
     "child_process": "^1.0.2",
     "dayjs": "^1.8.25",
     "fs": "0.0.1-security",
