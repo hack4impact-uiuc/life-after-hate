@@ -14,7 +14,7 @@
     "istanbul-lib-coverage": "^3.0.0",
     "joi-objectid": "^3.0.1",
     "mocha": "^8.3.2",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.2",
     "nyc": "^15.1.0",
     "sinon": "^10.0.1"
   },
