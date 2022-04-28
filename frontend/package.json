@@ -19,7 +19,7 @@
     "json2csv": "^5.0.5",
     "logrocket": "^1.0.14",
     "mapbox-gl": "^1.13.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.4",
     "node-sass": "^4.14.1",
     "nprogress": "^0.2.0",
     "nyc": "^15.1.0",
