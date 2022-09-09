@@ -1,4 +1,4 @@
-FROM node:16.0.0
+FROM node:18.9.0
 
 WORKDIR '/var/www/app'
 # Install app dependencies
