@@ -42,7 +42,7 @@
     "url-join": "^4.0.1"
   },
   "engines": {
-    "node": "12.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "react-scripts start",
