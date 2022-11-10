@@ -40,7 +40,7 @@ context("Resource Map", () => {
       .and("have.text", "Fairway Inn");
 
     cy.get(".card-distance")
-      .should("have.text", "86.04 miles away")
+      .should("have.text", "86.05 miles away")
       .and("be.visible");
 
     // Try again with an empty search, but this time making sure that more than one resource is displayed
@@ -69,7 +69,7 @@ context("Resource Map", () => {
       .should("have.length.gt", 1)
       .and("be.visible")
       .first()
-      .should("have.text", "86.04 miles away");
+      .should("have.text", "86.05 miles away");
 
     // Check to make sure the popup has a visible distance as well
     cy.get(".card-distance").first().click();
