@@ -38,7 +38,7 @@
     "honeycomb-beeline": "^2.7.0",
     "joi-objectid": "^3.0.1",
     "keyword-extractor": "0.0.19",
-    "mocha": "^8.3.2",
+    "mocha": "^10.2.0",
     "mongoose": "^5.12.7",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
