@@ -36,7 +36,7 @@
     "react-toastify": "^7.0.3",
     "react-virtualized": "^9.22.3",
     "reactstrap": "^8.7.1",
-    "redux": "^4.0.5",
+    "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "reselect": "^4.0.0",
     "url-join": "^4.0.1"
