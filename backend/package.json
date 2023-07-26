@@ -41,7 +41,7 @@
     "mocha": "^8.3.2",
     "mongoose": "^5.12.7",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.3.2",
     "nodemon": "^2.0.7",
     "nyc": "^15.1.0",
     "passport": "^0.4.1",
