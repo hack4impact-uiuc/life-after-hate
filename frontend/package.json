@@ -20,7 +20,6 @@
     "logrocket": "^1.0.14",
     "mapbox-gl": "^1.13.0",
     "node-fetch": "^2.6.1",
-    "node-sass": "^9.0.0",
     "nprogress": "^0.2.0",
     "nyc": "^15.1.0",
     "ramda": "^0.27.1",
@@ -39,6 +38,7 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "reselect": "^4.0.0",
+    "sass": "^1.71.1",
     "url-join": "^4.0.1"
   },
   "scripts": {
