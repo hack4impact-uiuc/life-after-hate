@@ -41,9 +41,6 @@
     "reselect": "^4.0.0",
     "url-join": "^4.0.1"
   },
-  "engines": {
-    "node": "14.x"
-  },
   "scripts": {
     "start": "react-scripts start",
     "start:coverage": "react-scripts -r @cypress/instrument-cra start",
