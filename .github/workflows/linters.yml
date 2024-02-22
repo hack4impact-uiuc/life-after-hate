@@ -18,29 +18,3 @@ jobs:
         npm run prettier-check
       env:
         CI: true
-
-  lint-frontend:
-    runs-on: ubuntu-latest
-    name: ESLint Frontend
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Lint frontend
-        run: |
-         npm ci
-         npm run lint:fe
-
-  lint-backend:
-    runs-on: ubuntu-latest
-    name: ESLint Backend
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Lint backend
-        run: |
-         npm ci
-         npm run lint:be

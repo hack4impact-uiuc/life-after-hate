@@ -45,10 +45,10 @@ jobs:
         # containers: [1, 2]
     steps:
       - uses: actions/checkout@v1
-      - name: Use Node.js 12.x 
+      - name: Use Node.js 20.x 
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 20.x
       - name: npm installation
         run: npm ci
       - name: Setup CI Script
