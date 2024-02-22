@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-onchange */
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { refreshAllUsers } from "../../utils/api";
