@@ -14,9 +14,6 @@
     "start": "node appListener.js",
     "start:coverage": "nyc --reporter=lcov node appListener.js"
   },
-  "engines": {
-    "node": "16.x"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
