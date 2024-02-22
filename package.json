@@ -16,7 +16,7 @@
     "mocha": "^8.3.2",
     "node-fetch": "^2.6.1",
     "nyc": "^15.1.0",
-    "sinon": "^10.0.1"
+    "sinon": "^17.0.1"
   },
   "devDependencies": {
     "@hack4impact-uiuc/eslint-plugin": "^2.0.10",
