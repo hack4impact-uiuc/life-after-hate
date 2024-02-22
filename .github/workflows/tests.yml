@@ -7,7 +7,7 @@ jobs:
     name: Backend Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Setup CI Script
         run: bash scripts/setup_ci.sh
         env:
@@ -44,7 +44,7 @@ jobs:
         # run 3 copies of the current job in parallel
         # containers: [1, 2]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Use Node.js 20.x 
         uses: actions/setup-node@v1
         with:
