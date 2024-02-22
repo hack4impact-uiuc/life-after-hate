@@ -27,7 +27,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-session": "^1.17.1",
+    "express-session": "^1.18.0",
     "express-winston": "^4.1.0",
     "fuse.js": "^6.4.6",
     "geolib": "^3.3.1",
