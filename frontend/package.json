@@ -33,7 +33,7 @@
     "react-scripts": "^5.0.1",
     "react-spinners": "^0.10.4",
     "react-toastify": "^7.0.3",
-    "react-virtualized": "^9.22.3",
+    "react-virtualized": "^9.22.5",
     "reactstrap": "^8.7.1",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
