@@ -40,9 +40,6 @@
     "type": "git",
     "url": "git+https://github.com/hack4impact-uiuc/life-after-hate.git"
   },
-  "engines": {
-    "node": "20.x"
-  },
   "author": "",
   "license": "ISC",
   "bugs": {
