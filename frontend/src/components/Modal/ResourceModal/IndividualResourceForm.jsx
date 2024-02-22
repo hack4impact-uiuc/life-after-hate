@@ -1,5 +1,4 @@
 import React from "react";
-/* eslint-disable jsx-a11y/no-onchange */
 import { ResourceFormInput } from "./index";
 
 const IndividualResourceFields = [
