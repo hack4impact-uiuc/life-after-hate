@@ -36,7 +36,13 @@ class ResourceList extends React.Component {
   };
 
   componentDidUpdate = (previous) => {
-    if (previous.resources !== this.props.resources) this.purgeCache();
+    if (
+      previous.resources !== this.props.resources ||
+      previous.density !== this.props.density
+    ) {
+      this.purgeCache();
+      this.list?.recomputeRowHeights();
+    }
   };
 
   rowRenderer({ index, key, parent, style }) {
@@ -68,7 +74,12 @@ class ResourceList extends React.Component {
     const { resources } = this.props;
     return (
       resources.length > 0 && (
-        <div className="resource-list">
+        <div
+          className="resource-list"
+          style={{
+            "--directory-rows-height": `${resources.length * (this.props.density === "compact" ? 70 : 90)}px`,
+          }}
+        >
           <AutoSizer>
             {({ height, width }) => (
               <List
@@ -92,6 +103,7 @@ class ResourceList extends React.Component {
 
 ResourceList.propTypes = {
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
+  density: PropTypes.string,
 };
 
 export default ResourceList;

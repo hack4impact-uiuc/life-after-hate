@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import AdminView from "../../../components/Auth/AdminView";
 import { sortFieldEnum } from "../../../utils/enums";
-import { CSVExporter } from "../../../components/CSVExporter/CSVExporter";
 import { updateSort } from "../../../redux/actions/sort";
 
 const ResourceLabels = ({ sort, updateSort, resources }) => {
@@ -41,52 +39,30 @@ const ResourceLabels = ({ sort, updateSort, resources }) => {
             {sort.order === "desc" ? "↓" : "↑"}
           </button>
         </div>
-        <div className="resource-labels row">
-          <div
-            className="col my-auto"
-            onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
-          >
-            <h3 className="resource-label">
-              Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}
-            </h3>
-          </div>
-          <div
-            className="col d-none d-md-block my-auto"
-            onClick={() => updateSort(sortFieldEnum.LOCATION)}
-          >
-            <h3 className="resource-label">
-              Location {sortIcon(sortFieldEnum.LOCATION)}
-            </h3>
-          </div>
-          <div
-            className="col d-none d-sm-block my-auto"
-            onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
-          >
-            <h3 className="resource-label">
-              Volunteer Role {sortIcon(sortFieldEnum.VOLUNTEER_ROLE)}
-            </h3>
-          </div>
-          <div
-            className="col my-auto"
-            onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
-          >
-            <h3 className="resource-label">
-              Description {sortIcon(sortFieldEnum.DESCRIPTION)}
-            </h3>
-          </div>
-          <div
-            className="col my-auto d-none d-sm-block"
-            onClick={() => updateSort(sortFieldEnum.AVAILABILITY)}
-          >
-            <h3 className="resource-label">
-              Availability {sortIcon(sortFieldEnum.AVAILABILITY)}
-            </h3>
-          </div>
-          <AdminView>
-            <div className="col">
-              <CSVExporter data={resources}></CSVExporter>
+        <div className="resource-labels">
+          {[
+            ["Resource", sortFieldEnum.RESOURCE_NAME],
+            ["Location", sortFieldEnum.LOCATION],
+            ["Tags", null],
+            ["Description", sortFieldEnum.DESCRIPTION],
+            ["Availability", sortFieldEnum.AVAILABILITY],
+          ].map(([label, field]) => (
+            <div key={label}>
+              {field ? (
+                <button
+                  type="button"
+                  className="resource-label"
+                  onClick={() => updateSort(field)}
+                  aria-label={`Sort by ${label.toLowerCase()}`}
+                >
+                  {label} {sortIcon(field)}
+                </button>
+              ) : (
+                <span>Tags</span>
+              )}
             </div>
-          </AdminView>
+          ))}
+          <span aria-hidden="true" />
         </div>
       </div>
     )

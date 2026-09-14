@@ -23,7 +23,7 @@ const SearchBar = ({ isLoading }) => {
             type="text"
             {...register("keyword")}
             className="search-input"
-            placeholder="Search"
+            placeholder="Search names, skills, notes…"
           />
         </label>
         <label className="col-md mb-3 mb-md-0 ps-md-0">
@@ -42,7 +42,7 @@ const SearchBar = ({ isLoading }) => {
 
         <div className="col-6 mx-auto col-sm-6 col-md-2 ps-md-0">
           <Button id="search-button" type="submit" disabled={isLoading}>
-            SEARCH
+            Search
           </Button>
         </div>
       </form>

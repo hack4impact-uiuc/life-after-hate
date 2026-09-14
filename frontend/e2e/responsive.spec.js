@@ -56,6 +56,8 @@ for (const width of [320, 390, 768, 1280]) {
         path: "/tmp/lah-mobile-directory.png",
         fullPage: true,
       });
+    if (width < 768)
+      await page.getByRole("button", { name: "Toggle navigation" }).click();
     await page.locator("#add-button").click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(page.locator(".modal")).toHaveClass(/show/);

@@ -4,23 +4,16 @@ import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import AdminView from "../../../components/Auth/AdminView";
 import { openResourceModalWithPayload } from "../../../redux/actions/modal";
-import Edit from "../../../assets/images/pencil-edit-button-black.svg";
 
 import { distanceToString } from "../../../utils/formatters";
 import {
   resourceName,
   resourceDescription,
-  resourceLogo,
 } from "../../../redux/selectors/resource";
 import "../styles.scss";
 import "./styles.scss";
 
-const ResourceCard = ({
-  resource,
-  openResourceModalWithPayload,
-  style,
-  measure,
-}) => {
+const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openResourceModalWithPayload({ resourceId: resource._id });
@@ -51,11 +44,15 @@ const ResourceCard = ({
           }
         }}
       >
-        <div className="resource-type-logo">
-          <img src={resourceLogo(resource.type)} onLoad={measure} alt=""></img>
-        </div>
+        <span
+          className={`resource-type-dot resource-type-dot--${resource.type.toLowerCase()}`}
+          aria-hidden="true"
+        />
         <div className="col resource-name">
           <p data-cy="card-companyName">{resourceName(resource)}</p>
+          <span className="resource-type-label">
+            {resource.type === "TANGIBLE" ? "Resource" : resource.type}
+          </span>
         </div>
         <div className="col resource-location">
           <p data-cy="card-address">{resource.address}</p>
@@ -65,8 +62,20 @@ const ResourceCard = ({
             </p>
           )}
         </div>
-        <div className="col resource-role">
-          <p>{resource.volunteerRoles}</p>
+        <div className="col resource-tags">
+          {(resource.tags || []).slice(0, 3).map((tag) => (
+            <span className="resource-tag" key={tag}>
+              {tag}
+            </span>
+          ))}
+          {resource.tags?.length > 3 && (
+            <span
+              className="resource-tag resource-tag-more"
+              title={resource.tags.slice(3).join(", ")}
+            >
+              +{resource.tags.length - 3}
+            </span>
+          )}
         </div>
         <div className="col col-desc col-desc-collapsed resource-description">
           <p>{resourceDescription(resource)}</p>
@@ -81,7 +90,6 @@ const ResourceCard = ({
               className="edit-button"
               color="transparent"
             >
-              <img id="edit-icon" src={Edit} alt="edit icon" />
               Edit
             </Button>
           </div>
@@ -99,7 +107,6 @@ ResourceCard.propTypes = {
   resource: PropTypes.object.isRequired,
   openResourceModalWithPayload: PropTypes.func.isRequired,
   style: PropTypes.object,
-  measure: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(ResourceCard);

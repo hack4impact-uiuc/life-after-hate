@@ -96,8 +96,12 @@ test("navbar titles, navigation, logo, authenticated login redirect and logout",
     await expect(
       page.getByRole("button", { name: "New resource", exact: true }),
     ).toBeVisible();
-    await expect(page.locator("#logo")).toHaveCSS("width", "32px");
-    await expect(page.locator("#logo")).toHaveCSS("height", "32px");
+    if (path !== "/directory")
+      await expect(page.locator("#logo")).toHaveCSS("width", "32px");
+    await expect(page.locator("#logo")).toHaveCSS(
+      "height",
+      path === "/directory" ? "28px" : "32px",
+    );
   }
   await page.getByRole("link", { name: "Directory", exact: true }).click();
   await page.locator("#logo").click();
@@ -115,15 +119,15 @@ test("directory headers, empty search and CSV visibility", async ({
 }) => {
   await login(page, request);
   await expect(page.locator(".manager-header")).toContainText(
-    "Resource Directory",
+    "Resource directory",
   );
   await expect(page.locator("#csv-download-btn")).toBeHidden();
   await search(page);
   await expect(names(page)).toHaveCount(3);
   for (const label of [
-    "Resource Name",
+    "Resource",
     "Location",
-    "Volunteer Role",
+    "Tags",
     "Description",
     "Availability",
   ])

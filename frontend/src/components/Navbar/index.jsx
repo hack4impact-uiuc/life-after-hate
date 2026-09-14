@@ -56,7 +56,11 @@ const LAHNavbar = ({
 
   return (
     <div ref={navbarRef}>
-      <Navbar light expand="md" className="lah_navbar">
+      <Navbar
+        light
+        expand="md"
+        className={`lah_navbar${location.pathname === "/directory" ? " lah_navbar--directory" : ""}`}
+      >
         <NavbarBrand tag={Link} to="/" onClick={navigate}>
           <img src={Logo} alt="Life After Hate home" id="logo" />
         </NavbarBrand>
@@ -117,6 +121,11 @@ const LAHNavbar = ({
             <AdminView>
               <NavItem className="header-create-resource">
                 <Button
+                  id={
+                    location.pathname === "/directory"
+                      ? "add-button"
+                      : undefined
+                  }
                   onClick={() => {
                     setDropdownOpen(false);
                     openResourceModal();
