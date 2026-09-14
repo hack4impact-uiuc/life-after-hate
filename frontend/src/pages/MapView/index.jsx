@@ -7,6 +7,7 @@ import SortMenu from "./SortMenu";
 import SearchBar from "./SearchBar";
 import Map from "./Map";
 import ActionButtons from "./ActionButtons";
+import LastModifiedInfo from "../../components/Modal/LastModifiedInfo";
 import { getTags, removeFilterTag } from "../../utils/api";
 import {
   mappableResourceSelector,
@@ -168,9 +169,14 @@ const MapView = () => {
               </header>
               <ActionButtons resource={drawerResource} />
               <div className="drawer-body">
-                <p className="drawer-description">
-                  {resourceDescription(drawerResource)}
-                </p>
+                {resourceDescription(drawerResource) && (
+                  <div className="drawer-description">
+                    {drawerResource.type === "INDIVIDUAL" && (
+                      <div className="eyebrow">Skills & qualifications</div>
+                    )}
+                    <p>{resourceDescription(drawerResource)}</p>
+                  </div>
+                )}
                 <dl>
                   {[
                     ["Contact", drawerResource.contactName],
@@ -178,9 +184,11 @@ const MapView = () => {
                     ["Phone", drawerResource.contactPhone],
                     ["Address", drawerResource.address],
                     ["Availability", drawerResource.availability],
+                    ["Volunteer roles", drawerResource.volunteerRoles],
+                    ["Quantity", drawerResource.quantity],
                     ["Website", drawerResource.websiteURL],
                   ]
-                    .filter(([, value]) => value)
+                    .filter(([, value]) => value != null && value !== "")
                     .map(([label, value]) => (
                       <div key={label}>
                         <dt>{label}</dt>
@@ -196,6 +204,18 @@ const MapView = () => {
                       </div>
                     ))}
                 </dl>
+                {drawerResource.volunteerReason && (
+                  <div className="drawer-section">
+                    <div className="eyebrow">Why volunteer?</div>
+                    <p>{drawerResource.volunteerReason}</p>
+                  </div>
+                )}
+                {drawerResource.howDiscovered && (
+                  <div className="drawer-section">
+                    <div className="eyebrow">How discovered</div>
+                    <p>{drawerResource.howDiscovered}</p>
+                  </div>
+                )}
                 <div className="eyebrow">Tags</div>
                 <div className="drawer-tags">
                   {drawerResource.tags?.map((tag) => (
@@ -206,6 +226,11 @@ const MapView = () => {
                   <div className="drawer-notes">
                     <div className="eyebrow">Notes</div>
                     <p>{drawerResource.notes}</p>
+                  </div>
+                )}
+                {(drawerResource.dateLastModified || drawerResource.dateCreated) && (
+                  <div className="drawer-history">
+                    <LastModifiedInfo resource={drawerResource} />
                   </div>
                 )}
               </div>

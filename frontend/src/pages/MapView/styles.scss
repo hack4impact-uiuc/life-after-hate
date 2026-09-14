@@ -477,6 +477,27 @@
     line-height: 1.65;
     margin-bottom: 22px;
   }
+  .drawer-description p,
+  .drawer-section p,
+  .drawer-notes p {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .drawer-section {
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .drawer-history {
+    margin-top: 20px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    color: var(--muted);
+  }
+  .drawer-history .last-modified {
+    font-size: 12px;
+    line-height: 1.6;
+  }
   .drawer-body dl {
     display: grid;
     grid-template-columns: 1fr 1fr;
