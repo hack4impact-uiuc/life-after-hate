@@ -95,10 +95,11 @@ try {
         .prepare("INSERT INTO migration_source VALUES(?,?,?,?)")
         .bind(collection, doc._id, canonical, digest(canonical))
         .run();
-      const restored = await db
-        .prepare(`SELECT document FROM ${collection} WHERE id=?`)
-        .bind(doc._id)
-        .first();
+      const selectSql =
+        collection === "users"
+          ? "SELECT document FROM users WHERE id=?"
+          : "SELECT document FROM resources WHERE id=?";
+      const restored = await db.prepare(selectSql).bind(doc._id).first();
       assert.deepEqual(JSON.parse(restored.document), doc);
       const saved = await db
         .prepare(
@@ -114,19 +115,31 @@ try {
       });
       if (collection === "users")
         statements.push(
-          `INSERT INTO users(id,oauth_id,email,role,document) VALUES(${[doc._id, doc.oauthId, doc.email, doc.role, JSON.stringify(doc)].map(quote).join(",")});`,
+          "INSERT INTO users(id,oauth_id,email,role,document) VALUES(" +
+            [doc._id, doc.oauthId, doc.email, doc.role, JSON.stringify(doc)]
+              .map(quote)
+              .join(",") +
+            ");",
         );
       else
         statements.push(
-          `INSERT INTO resources(id,document) VALUES(${[doc._id, JSON.stringify(doc)].map(quote).join(",")});`,
+          "INSERT INTO resources(id,document) VALUES(" +
+            [doc._id, JSON.stringify(doc)].map(quote).join(",") +
+            ");",
         );
       statements.push(
-        `INSERT INTO migration_source VALUES(${[collection, doc._id, canonical, digest(canonical)].map(quote).join(",")});`,
+        "INSERT INTO migration_source VALUES(" +
+          [collection, doc._id, canonical, digest(canonical)]
+            .map(quote)
+            .join(",") +
+          ");",
       );
     }
-    const count = await db
-      .prepare(`SELECT count(*) AS n FROM ${collection}`)
-      .first();
+    const countSql =
+      collection === "users"
+        ? "SELECT count(*) AS n FROM users"
+        : "SELECT count(*) AS n FROM resources";
+    const count = await db.prepare(countSql).first();
     assert.equal(count.n, originals.length);
     manifest.collections[collection] = { count: originals.length, records };
     console.log(
@@ -147,9 +160,11 @@ try {
     for (let i = 0; i < statements.length; i += 50)
       await vdb.batch(statements.slice(i, i + 50).map((s) => vdb.prepare(s)));
     for (const [collection, entry] of Object.entries(manifest.collections)) {
-      const rows = await vdb
-        .prepare(`SELECT id,document FROM ${collection} ORDER BY id`)
-        .all();
+      const rowsSql =
+        collection === "users"
+          ? "SELECT id,document FROM users ORDER BY id"
+          : "SELECT id,document FROM resources ORDER BY id";
+      const rows = await vdb.prepare(rowsSql).all();
       assert.equal(rows.results.length, entry.count);
       for (const row of rows.results)
         assert.equal(
