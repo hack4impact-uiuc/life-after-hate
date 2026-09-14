@@ -206,7 +206,7 @@ div.navbar-dropdown {
       background: #f3efe8;
       padding: 3px 1px;
     }
-    .workspace-tab:first-child {
+    .workspace-tab:first-of-type {
       padding-left: 3px;
       border-radius: 8px 0 0 8px;
     }
@@ -286,6 +286,7 @@ div.navbar-dropdown {
 .lah_navbar {
   .navbar-brand {
     margin-right: 18px;
+    flex-shrink: 0;
   }
   #logo {
     display: block;
