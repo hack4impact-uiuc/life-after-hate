@@ -299,7 +299,7 @@ for (const surface of [".resource-drawer"])
     await expect(page.locator(".resource-drawer h2")).toHaveCount(0);
     await expect(page.locator(".expanded")).toHaveCount(0);
   });
-test("map drawer opens read-only details and tag selection deduplicates/persists", async ({
+test("map drawer opens read-only details and tag selection toggles and stays synchronized", async ({
   page,
   request,
 }) => {
@@ -311,13 +311,26 @@ test("map drawer opens read-only details and tag selection deduplicates/persists
     .click();
   await expect(field(page, "companyName")).toBeDisabled();
   await page.locator(".close-button").click();
-  for (let i = 0; i < 2; i++)
-    for (const tag of ["Housing", "Meals"])
-      await page
-        .locator(".card-tags .filter-tag")
-        .filter({ hasText: tag })
-        .first()
-        .click();
+  const cardTag = page
+    .locator(".card-tags .filter-tag")
+    .filter({ hasText: "Housing" })
+    .first();
+  const drawerTag = page
+    .locator(".drawer-tags .filter-tag")
+    .filter({ hasText: "Housing" });
+  await cardTag.click();
+  await expect(cardTag).toHaveAttribute("aria-pressed", "true");
+  await expect(drawerTag).toHaveAttribute("aria-pressed", "true");
+  await drawerTag.click();
+  await expect(cardTag).toHaveAttribute("aria-pressed", "false");
+  await expect(drawerTag).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(0);
+  for (const tag of ["Housing", "Meals"])
+    await page
+      .locator(".card-tags .filter-tag")
+      .filter({ hasText: tag })
+      .first()
+      .click();
   await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(2);
   await mapSearch(page);
   await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(2);

@@ -924,3 +924,20 @@
   color: var(--ink);
   outline: none;
 }
+
+.map-view .tag-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+  &[aria-pressed="true"] {
+    background: #f9d7ae;
+    color: #843d00;
+    box-shadow: inset 0 0 0 1px #d39149;
+  }
+  &[aria-pressed="true"]:hover {
+    background: #f3c994;
+  }
+}

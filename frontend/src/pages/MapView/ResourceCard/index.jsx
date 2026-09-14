@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { selectMapResource } from "../../../redux/actions/map";
-import { addFilterTag } from "../../../utils/api";
+import TagToggle from "../TagToggle";
 import {
   resourceName,
   resourceDescription,
@@ -39,13 +39,7 @@ const ResourceCard = ({ resource, isSelected, myRef, style }) => {
         </button>
         <div className="card-tags">
           {(resource.tags || []).slice(0, 3).map((tag) => (
-            <button
-              className="filter-tag"
-              key={tag}
-              onClick={() => addFilterTag(tag)}
-            >
-              {tag}
-            </button>
+            <TagToggle key={tag} tag={tag} />
           ))}
           {resource.tags?.length > 3 && (
             <button

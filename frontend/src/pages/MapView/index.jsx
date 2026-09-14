@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CardView from "./CardView";
 import TagPicker from "./TagPicker";
+import TagToggle from "./TagToggle";
 import SortMenu from "./SortMenu";
 import SearchBar from "./SearchBar";
 import Map from "./Map";
 import ActionButtons from "./ActionButtons";
-import { getTags, addFilterTag, removeFilterTag } from "../../utils/api";
+import { getTags, removeFilterTag } from "../../utils/api";
 import {
   mappableResourceSelector,
   currentResourceSelector,
@@ -198,13 +199,7 @@ const MapView = () => {
                 <div className="eyebrow">Tags</div>
                 <div className="drawer-tags">
                   {drawerResource.tags?.map((tag) => (
-                    <button
-                      className="filter-tag"
-                      key={tag}
-                      onClick={() => addFilterTag(tag)}
-                    >
-                      {tag}
-                    </button>
+                    <TagToggle key={tag} tag={tag} />
                   ))}
                 </div>
                 {drawerResource.notes && (
