@@ -73,7 +73,7 @@ async function getTags() {
 
 async function addResource(data) {
   return await apiRequest({
-    endpoint: `resources/`,
+    endpoint: `resources`,
     method: "POST",
     data,
     notification: {
@@ -126,7 +126,7 @@ async function editUser(data, id) {
 
 // Redux dispatches for resources and users
 async function refreshAllUsers() {
-  const userList = (await apiRequest({ endpoint: `users/` })).result;
+  const userList = (await apiRequest({ endpoint: `users` })).result;
   store.dispatch(updateUsers(userList));
 }
 

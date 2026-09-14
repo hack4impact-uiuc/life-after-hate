@@ -45,7 +45,7 @@ async function mockApi(page, role) {
     } else if (path === "/api/resources/tags") result = ["Support"];
     else if (path === "/api/resources/filter")
       result = { resources: [resource], center: null };
-    else if (path === "/api/resources/" && req.method() === "POST") {
+    else if (path === "/api/resources" && req.method() === "POST") {
       resource = { ...resource, ...req.postDataJSON() };
       return route.fulfill({
         status: 201,
@@ -57,7 +57,7 @@ async function mockApi(page, role) {
     } else if (path.includes("/api/resources/") && req.method() === "DELETE") {
       return route.fulfill({ json: { success: true } });
     } else if (path.includes("/api/resources/")) result = resource;
-    else if (path === "/api/users/") result = [];
+    else if (path === "/api/users") result = [{id:"listed-user",firstName:"Directory",lastName:"Member",email:"member@example.com",role:"VOLUNTEER",title:"Coordinator"}];
     else return route.fulfill({ status: 404, json: {} });
     return route.fulfill({ json: { success: true, result } });
   });
@@ -179,4 +179,11 @@ test("map search displays a resource and opens its popup", async ({ page }) => {
     "Test Resource",
   );
   expect(errors).toEqual([]);
+});
+
+test("account management loads users from the canonical API path", async ({page})=>{
+ await mockApi(page,"ADMIN");
+ await page.goto("/users");
+ await expect(page.getByText("Directory Member",{exact:true})).toBeVisible();
+ await expect(page.getByText("member@example.com",{exact:true})).toBeVisible();
 });
