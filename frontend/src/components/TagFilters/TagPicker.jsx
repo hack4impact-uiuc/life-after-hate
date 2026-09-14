@@ -34,7 +34,7 @@ const TagPicker = ({ tags, selectedTags }) => {
         transformOrigin={{ vertical: "top", horizontal: "left" }}
         slotProps={{
           paper: {
-            className: "map-tag-picker",
+            className: "tag-picker",
             role: "dialog",
             "aria-label": "Choose a tag",
           },

@@ -162,6 +162,16 @@ for (const width of [390, 1440]) {
     const picker = page.getByRole("dialog", { name: "Choose a tag" });
     const query = picker.getByRole("textbox", { name: "Find a tag" });
     await expect(query).toBeFocused();
+    await expect(picker).toHaveCSS("width", "260px");
+    await expect(picker).toHaveCSS("padding", "8px");
+    await expect(picker.getByRole("button").first()).toHaveCSS(
+      "display",
+      "flex",
+    );
+    await expect(picker.locator(".tag-picker-options")).toHaveCSS(
+      "overflow-y",
+      "auto",
+    );
     await query.fill("hOuS");
     await picker.getByRole("button", { name: "Housing", exact: true }).click();
     await expect(picker).toBeHidden();
