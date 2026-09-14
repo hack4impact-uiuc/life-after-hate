@@ -96,11 +96,11 @@ test("navbar titles, navigation, logo, authenticated login redirect and logout",
     await expect(
       page.getByRole("button", { name: "New resource", exact: true }),
     ).toBeVisible();
-    if (path === "/")
+    if (path !== "/users")
       await expect(page.locator("#logo")).toHaveCSS("width", "32px");
     await expect(page.locator("#logo")).toHaveCSS(
       "height",
-      path === "/directory" ? "28px" : path === "/users" ? "24px" : "32px",
+      path === "/users" ? "24px" : "32px",
     );
   }
   await page.getByRole("link", { name: "Directory", exact: true }).click();
