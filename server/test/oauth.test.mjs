@@ -36,13 +36,13 @@ before(async () => {
           email_verified: true,
           given_name: "Test",
           nonce,
+          iss: "https://accounts.google.com",
+          aud: "test-client",
+          iat: Math.floor(Date.now() / 1000),
+          exp: Math.floor(Date.now() / 1000) + 300,
           ...claims,
         })
           .setProtectedHeader({ alg: "RS256", kid: "test" })
-          .setIssuer("https://accounts.google.com")
-          .setAudience("test-client")
-          .setIssuedAt()
-          .setExpirationTime("5m")
           .sign(keys.privateKey);
         return Response.json({ id_token: jwt });
       }
@@ -210,4 +210,31 @@ test("admin CRUD uses real libSQL, zero coordinates, strict input and durable au
     ).n,
     3,
   );
+});
+
+test("invalid or missing mandatory ID token claims never create a session", async () => {
+  for (const invalid of [
+    { exp: undefined },
+    { iat: undefined },
+    { sub: "" },
+    { email: "" },
+    { exp: 1 },
+    { iss: "https://attacker.example" },
+    { aud: "other-client" },
+  ]) {
+    await db.prepare("DELETE FROM rate_limits").run();
+    const before = await db
+      .prepare("SELECT count(*) AS n FROM sessions")
+      .first();
+    claims = invalid;
+    assert.equal(
+      (await finish(await start())).status,
+      401,
+      JSON.stringify(invalid),
+    );
+    assert.equal(
+      (await db.prepare("SELECT count(*) AS n FROM sessions").first()).n,
+      before.n,
+    );
+  }
 });

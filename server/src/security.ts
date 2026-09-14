@@ -51,10 +51,10 @@ export async function rateLimit(
   c: Context<ContextEnv>,
   scope: string,
   limit: number,
+  subject = c.env.CLIENT_IP || "local",
 ) {
   const window = Math.floor(Date.now() / 60000);
-  const ip = c.env.CLIENT_IP || "local";
-  const key = await hash(`${scope}:${ip}:${window}`);
+  const key = await hash(`${scope}:${subject}:${window}`);
   const row = await c.env.DB.prepare(
     "INSERT INTO rate_limits(key,count,expires_at) VALUES(?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count",
   )
@@ -193,6 +193,7 @@ export async function callback(c: Context<ContextEnv>) {
       issuer: ["https://accounts.google.com", "accounts.google.com"],
       audience: c.env.GOOGLE_CLIENT_ID,
       algorithms: ["RS256"],
+      requiredClaims: ["exp", "iat", "sub", "email", "nonce"],
     }));
   } catch {
     throw new HTTPException(401);
@@ -201,7 +202,9 @@ export async function callback(c: Context<ContextEnv>) {
     payload.nonce !== saved.nonce ||
     payload.email_verified !== true ||
     typeof payload.sub !== "string" ||
-    typeof payload.email !== "string"
+    !payload.sub ||
+    typeof payload.email !== "string" ||
+    !payload.email
   )
     throw new HTTPException(401);
   let row = await c.env.DB.prepare("SELECT id FROM users WHERE oauth_id=?")

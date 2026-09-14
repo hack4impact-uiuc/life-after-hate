@@ -227,8 +227,10 @@ app.get("/api/resources/tags", async (c) => {
 app.get("/api/resources/filter", async (c) => {
   const query = searchSchema.parse(c.req.query());
   let center: number[] | undefined;
-  if (query.address)
+  if (query.address) {
+    await rateLimit(c, "geocode", 20, c.get("user")._id);
     center = (await geocode(query.address, c.env)).location.coordinates;
+  }
   const rows = await c.env.DB.prepare("SELECT document FROM resources").all<{
     document: string;
   }>();
@@ -262,8 +264,10 @@ async function resourceData(
     throw new HTTPException(400);
   if (existing && data.type && data.type !== existing.type)
     throw new HTTPException(400, { message: "Resource type cannot change" });
-  if (data.address !== undefined)
+  if (data.address !== undefined) {
+    await rateLimit(c, "geocode", 20, c.get("user")._id);
     Object.assign(data, await geocode(data.address, c.env));
+  }
   if (data.websiteURL !== undefined) data.websiteURL = safeURL(data.websiteURL);
   if (data.tags)
     data.tags = data.tags.map((t: string) =>
