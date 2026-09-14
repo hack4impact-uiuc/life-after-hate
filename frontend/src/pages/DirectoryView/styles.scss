@@ -1,3 +1,5 @@
+@use "../../styles/input-focus";
+
 .directory {
   --directory-border: #e9e3db;
   --directory-muted: #817a71;
@@ -90,9 +92,12 @@
   #search-button:hover {
     background: #484037;
   }
-  .search-input:focus {
-    border-color: #ba7036;
-    box-shadow: 0 0 0 2px #f7923020;
+  .search-input,
+  .mobile-sort select {
+    @include input-focus.transition;
+    &:focus {
+      @include input-focus.ring;
+    }
   }
   .tag-filters {
     margin-top: 14px;

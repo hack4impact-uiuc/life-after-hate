@@ -1,3 +1,5 @@
+@use "../../styles/input-focus";
+
 .add-edit-resource-form {
   display: flex;
   flex-direction: column;
@@ -48,8 +50,12 @@
   border: solid red 1.5px;
 }
 
-.modal-input-field:focus {
-  border: solid #f7922f 1.5px;
+.modal-input-field,
+.modal-select-field {
+  @include input-focus.transition;
+  &:focus {
+    @include input-focus.ring;
+  }
 }
 
 .modal-input-field:disabled {

@@ -1,3 +1,5 @@
+@use "../../styles/input-focus";
+
 .tag-filters {
   display: flex;
   flex-wrap: wrap;
@@ -81,8 +83,11 @@
     border-radius: 7px;
     outline: none;
   }
-  input:focus {
-    border-color: #b9afa0;
+  input {
+    @include input-focus.transition;
+    &:focus {
+      @include input-focus.ring;
+    }
   }
   .tag-picker-options {
     max-height: 240px;

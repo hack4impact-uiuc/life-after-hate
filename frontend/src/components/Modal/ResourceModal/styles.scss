@@ -1,3 +1,5 @@
+@use "../../../styles/input-focus";
+
 .lah-modal.resource-editor-modal {
   max-width: 880px;
   margin: 0 auto;
@@ -33,7 +35,7 @@
     input { position: absolute; width: 1px; height: 1px; opacity: 0; min-height: 0; }
     span { display: block; border: 1px solid #e6dfd5; border-radius: 8px; padding: 9px 8px; text-align: center; color: #6b6359; font-size: 13px; transition: background .18s, border-color .18s, box-shadow .18s; }
     input:checked + span { background: #fff2e3; color: #a64c0b; border-color: #ff9b44; font-weight: 600; }
-    input:focus-visible + span { box-shadow: 0 0 0 3px #b6afa540; }
+    input:focus-visible + span { @include input-focus.ring; }
     input:disabled + span { cursor: default; }
   }
   .resource-editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 16px; }
@@ -42,8 +44,8 @@
   .modal-lab p, .resource-editor-tags > p { margin: 0 0 6px; font-size: 12px; text-transform: none; font-weight: 500; color: #554e44; }
   .modal-input-field {
     border: 1px solid #e6dfd5; border-radius: 8px; background: #fff; padding: 9px 11px; font-size: 14px; min-height: 40px;
-    transition: border-color .18s, box-shadow .18s;
-    &:focus { border-color: #aaa295; box-shadow: 0 0 0 3px #b6afa52b; outline: none; }
+    @include input-focus.transition;
+    &:focus { @include input-focus.ring; }
     &:disabled { background: #faf8f4; }
     &.invalid { border-color: #d36b59; }
   }
@@ -53,8 +55,9 @@
   .resource-editor-tags {
     margin-top: 18px;
     small { display: block; margin-top: 6px; font-size: 11px; color: #8b8378; }
-    .MuiInputBase-root.MuiFilledInput-root { border: 1px solid #e6dfd5; border-radius: 8px; background: white; padding: 5px 10px; min-height: 46px; font-family: inherit; transition: box-shadow .18s, border-color .18s; }
-    .MuiInputBase-root.Mui-focused { border-color: #aaa295; box-shadow: 0 0 0 3px #b6afa52b; }
+    .MuiInputBase-root.MuiFilledInput-root { border: 1px solid #e6dfd5; border-radius: 8px; background: white; padding: 5px 10px; min-height: 46px; font-family: inherit; @include input-focus.transition; }
+    .MuiInputBase-root.Mui-focused { @include input-focus.ring; }
+    .MuiInputBase-input:focus { outline: none; box-shadow: none; }
     .MuiInputBase-root::before, .MuiInputBase-root::after { display: none; }
     .MuiChip-root { background: #fff1df; border: 0; height: 26px; margin: 3px; }
     .MuiChip-label { color: #a64c0b; text-transform: none; font-weight: 500; font-size: 12px; }

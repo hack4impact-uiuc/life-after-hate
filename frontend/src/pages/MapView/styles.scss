@@ -1,3 +1,5 @@
+@use "../../styles/input-focus";
+
 .map-view {
   --ink: #211e1a;
   --muted: #756e64;
@@ -17,9 +19,7 @@
   button {
     cursor: pointer;
   }
-  button:focus-visible,
-  select:focus-visible,
-  input:focus-visible {
+  button:focus-visible {
     outline: 2px solid #a34b00;
     outline-offset: 3px;
   }
@@ -56,19 +56,12 @@
   .searchKeyword,
   .workspace-radius {
     box-shadow: 0 0 0 0 rgba(140, 133, 122, 0);
-    transition:
-      border-color 180ms ease,
-      box-shadow 180ms ease,
-      background-color 180ms ease;
+    @include input-focus.transition;
   }
   .searchLocation:focus-within,
   .searchKeyword:focus-within,
   .workspace-radius:focus-within {
-    border-color: #a69d90;
-    background-color: #faf8f4;
-    box-shadow:
-      0 0 0 3px rgba(140, 133, 122, 0.18),
-      0 0 8px rgba(140, 133, 122, 0.08);
+    @include input-focus.ring;
   }
   .searchLocation input:focus-visible,
   .searchKeyword input:focus-visible {
