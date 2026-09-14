@@ -95,7 +95,8 @@ for (const width of [390, 1440]) {
     await expect(details).toHaveCount(0);
     await expect(row).toBeFocused();
     await expect(row).toHaveCSS("outline-style", "solid");
-    await page.locator(".edit-button").first().click();
+    await page.locator(".directory .card-wrapper").first().click();
+    await page.locator("[data-cy=card-resource-edit-btn]").click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("button", { name: "Close dialog" }).click();
     expect(

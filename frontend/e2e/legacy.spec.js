@@ -214,7 +214,8 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
       .press("Enter");
     await page.locator("#submit-form-button").click();
     await closed(page);
-    await page.locator(".edit-button").first().click();
+    await page.locator(".directory .card-wrapper").first().click();
+    await page.locator("[data-cy=card-resource-edit-btn]").click();
     await expect(page.locator("[data-cy=tag-chip]")).toContainText(
       "Sample Tag",
     );
@@ -240,7 +241,8 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
     await expect(details.locator("dt", { hasText: /^Email$/ })).toHaveCount(0);
     await expect(details.locator("input, textarea, select")).toHaveCount(0);
     await page.getByRole("button", { name: "Close resource details" }).click();
-    await page.locator(".edit-button").click();
+    await page.locator(".directory .card-wrapper").click();
+    await page.locator("[data-cy=card-resource-edit-btn]").click();
     await page.locator("#delete-form-button").click();
     await expect(page.locator("#delete-form-button")).toHaveText(
       "Confirm delete",
@@ -405,9 +407,18 @@ test("user panel labels, read-only identity, persistent role edit and filters", 
   await user.click();
   await expect(field(page, "name")).toHaveValue("Casey Example");
   await expect(field(page, "name")).toBeDisabled();
-  await expect(page.locator("[data-cy=modal-submit]")).toHaveCount(0);
-  await page.locator(".close-button").click();
-  await user.locator(".edit-button").click();
+  await expect(page.locator("[data-cy=modal-submit]")).toBeVisible();
+  await field(page, "title").fill("Unsaved title");
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await closed(page);
+  await user.focus();
+  await user.press("Enter");
+  await expect(field(page, "title")).not.toHaveValue("Unsaved title");
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await closed(page);
+  await user.focus();
+  await user.press("Space");
+  await expect(page.locator("[data-cy=modal-submit]")).toBeVisible();
   await expect(field(page, "name")).toBeDisabled();
   await field(page, "role").selectOption("VOLUNTEER");
   await field(page, "title").fill("Updated title");

@@ -117,14 +117,15 @@ test("admin can add, edit and delete a resource with CSRF-protected writes", asy
   await expect(page.locator(".add-edit-resource-form")).toHaveCount(0);
   expect(writes[0].data.type).toBe("GROUP");
   expect(writes[0].data.companyName).toBe("Created Resource");
-  await page.locator(".edit-button").first().click();
+  await page.locator(".directory .card-wrapper").first().click();
+  await page.locator("[data-cy=card-resource-edit-btn]").click();
   await page.locator('[data-cy="modal-notes"]').fill("Updated note");
   await page.locator("#submit-form-button").click();
   await expect(page.locator(".add-edit-resource-form")).toHaveCount(0);
   expect(writes.find((entry) => entry.method === "PUT").data.notes).toBe(
     "Updated note",
   );
-  await page.locator(".edit-button").first().click();
+  await page.locator("[data-cy=card-resource-edit-btn]").click();
   await page.locator("#delete-form-button").click();
   await page.locator("#delete-form-button").click();
   await expect(page.locator(".add-edit-resource-form")).toHaveCount(0);
