@@ -69,9 +69,7 @@ export const UserModal = ({ closeModal, user, editable, isOpen, onClosed }) => {
       isOpen={isOpen}
       onClosed={onClosed}
       busy={pending}
-      headerTitle={
-        editable ? "Edit User" : `${user.firstName} ${user.lastName}`
-      }
+      headerTitle={`${user.firstName} ${user.lastName}`}
       modalClassName="user-editor-modal"
       subtitle={
         editable

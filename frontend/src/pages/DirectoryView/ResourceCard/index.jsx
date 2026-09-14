@@ -1,9 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Button } from "reactstrap";
-import { connect } from "react-redux";
-import AdminView from "../../../components/Auth/AdminView";
-import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 
 import { distanceToString } from "../../../utils/formatters";
 import {
@@ -13,18 +9,8 @@ import {
 import "../styles.scss";
 import "./styles.scss";
 
-const ResourceCard = ({
-  resource,
-  openResourceModalWithPayload,
-  style,
-  onSelectResource,
-}) => {
+const ResourceCard = ({ resource, style, onSelectResource }) => {
   const [pointerFocused, setPointerFocused] = useState(false);
-  const toggleModal = (event) => {
-    event.stopPropagation();
-    openResourceModalWithPayload({ resourceId: resource._id });
-  };
-
   const openDetails = (event) => {
     event.stopPropagation();
     onSelectResource(resource._id);
@@ -92,31 +78,18 @@ const ResourceCard = ({
         <div className="col col-desc col-desc-collapsed resource-availability">
           <p>{resource.availability}</p>
         </div>
-        <AdminView>
-          <div className="col col-edit">
-            <Button
-              onClick={toggleModal}
-              className="edit-button"
-              color="transparent"
-            >
-              Edit
-            </Button>
-          </div>
-        </AdminView>
+        <span className="resource-chevron" aria-hidden="true">
+          ›
+        </span>
       </div>
     </div>
   );
 };
 
-const mapDispatchToProps = {
-  openResourceModalWithPayload,
-};
-
 ResourceCard.propTypes = {
   resource: PropTypes.object.isRequired,
-  openResourceModalWithPayload: PropTypes.func.isRequired,
   style: PropTypes.object,
   onSelectResource: PropTypes.func.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(ResourceCard);
+export default ResourceCard;

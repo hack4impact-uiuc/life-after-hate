@@ -265,17 +265,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .edit-button {
-    color: #b7500b;
-    padding: 8px 0;
-    background: transparent;
-    border: 0;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .edit-button:hover {
-    color: #833600;
-    text-decoration: underline;
+  .resource-chevron {
+    color: #9a9389;
+    font-size: 24px;
+    text-align: right;
   }
   .directory-empty {
     overflow: auto;
@@ -397,14 +390,10 @@
     .resource-description {
       grid-column: 2 / -1;
     }
-    .col-edit {
+    .resource-chevron {
       grid-column: 3;
       grid-row: 1;
       align-self: start;
-    }
-    .edit-button {
-      min-height: 44px;
-      margin-top: -8px;
     }
   }
 }
@@ -479,8 +468,7 @@
       background: transparent;
     }
   }
-  #search-button,
-  .edit-button {
+  #search-button {
     transition:
       background-color var(--motion-fast, 150ms),
       color var(--motion-fast, 150ms);
@@ -491,8 +479,7 @@
   .directory .sort-chevron,
   .directory .density-control::before,
   .directory .density-control button,
-  .directory #search-button,
-  .directory .edit-button {
+  .directory #search-button {
     transition: none;
   }
 }
