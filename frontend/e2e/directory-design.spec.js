@@ -76,6 +76,16 @@ for (const width of [390, 1440]) {
       details.getByRole("heading", { name: "Alpha Support" }),
     ).toBeVisible();
     await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.keyboard.press("Escape");
+    await expect(details).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await expect(row).toHaveCSS("outline-style", "none");
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Shift+Tab");
+    await expect(row).toBeFocused();
+    await expect(row).toHaveCSS("outline-style", "solid");
+    await row.press("Enter");
+    await expect(details).toBeVisible();
     await page.getByRole("button", { name: "Close resource details" }).click();
     await expect(details).toHaveCount(0);
     await row.focus();
@@ -83,6 +93,8 @@ for (const width of [390, 1440]) {
     await expect(details).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(details).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await expect(row).toHaveCSS("outline-style", "solid");
     await page.locator(".edit-button").first().click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("button", { name: "Close dialog" }).click();
