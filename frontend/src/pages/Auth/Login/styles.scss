@@ -1,0 +1,272 @@
+.sign-in-page,
+.sign-in-page * {
+  box-sizing: border-box;
+}
+.sign-in-page {
+  --sign-in-accent-color: #f79331;
+  min-height: 100svh;
+  padding: 22px clamp(20px, 5.25vw, 84px) 24px;
+  background: #f0f0f1;
+  color: #24211c;
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  .sign-in-frame {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .sign-in-label {
+    margin: 0 0 18px;
+    color: #776f64;
+    font:
+      12px/1.2 ui-monospace,
+      monospace;
+    letter-spacing: 3px;
+  }
+  .sign-in-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100svh - 80px);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 65px #29201416;
+  }
+  .sign-in-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 72px;
+    background: #222224;
+    color: #faf9f6;
+    padding: 46px clamp(32px, 3.6vw, 58px) 56px;
+  }
+  .sign-in-logo {
+    width: 420px;
+    max-width: 100%;
+    height: auto;
+    align-self: flex-start;
+  }
+  .sign-in-mission {
+    max-width: 540px;
+  }
+  .sign-in-accent {
+    display: block;
+    height: 3px;
+    width: 42px;
+    background: var(--sign-in-accent-color);
+    margin-bottom: 25px;
+  }
+  .sign-in-mission h2 {
+    margin: 0 0 22px;
+    font-size: clamp(23px, 2vw, 30px);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.55px;
+  }
+  .sign-in-mission p {
+    margin: 0;
+    font-size: clamp(15px, 1.3vw, 19px);
+    line-height: 1.6;
+    color: #bcbdc0;
+  }
+  .sign-in-form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 72px clamp(32px, 6.5vw, 124px);
+    background: #fff;
+  }
+  .sign-in-content {
+    width: 100%;
+    max-width: 450px;
+  }
+  h1 {
+    margin: 0 0 11px;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.2;
+  }
+  .sign-in-instructions {
+    color: #7a7267;
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0 0 26px;
+  }
+  .sign-in-google {
+    min-height: 64px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    padding: 17px 20px;
+    border: 1px solid var(--sign-in-accent-color);
+    border-radius: 12px;
+    background: var(--sign-in-accent-color);
+    color: #292315;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      box-shadow 0.15s;
+  }
+  .sign-in-google:hover {
+    background: #ed8524;
+    border-color: #ed8524;
+    color: #292315;
+    box-shadow: 0 3px 9px #a8511620;
+  }
+  .sign-in-google:focus-visible {
+    outline: 3px solid #794015;
+    outline-offset: 5px;
+  }
+  .sign-in-google svg {
+    flex-shrink: 0;
+  }
+  @media (max-width: 900px) {
+    padding-left: 28px;
+    padding-right: 28px;
+    .sign-in-brand {
+      padding: 32px 30px 40px;
+    }
+    .sign-in-form-panel {
+      padding: 48px 30px;
+    }
+    .sign-in-logo {
+      max-width: 100%;
+      width: 340px;
+    }
+    .sign-in-instructions {
+      font-size: 16px;
+    }
+    .sign-in-google {
+      font-size: 16px;
+    }
+  }
+  @media (max-width: 640px) {
+    padding: 18px 16px;
+    .sign-in-label {
+      font-size: 10px;
+      margin-bottom: 12px;
+    }
+    .sign-in-panels {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      border-radius: 12px;
+    }
+    .sign-in-brand {
+      padding: 20px 26px 28px;
+      gap: 12px;
+    }
+    .sign-in-logo {
+      width: 280px;
+      margin: 0;
+    }
+    .sign-in-accent {
+      width: 32px;
+      margin-bottom: 16px;
+    }
+    .sign-in-mission h2 {
+      font-size: 23px;
+      margin-bottom: 12px;
+    }
+    .sign-in-mission p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .sign-in-form-panel {
+      padding: 36px 26px 40px;
+    }
+    h1 {
+      font-size: 29px;
+    }
+    .sign-in-instructions {
+      font-size: 16px;
+      margin-bottom: 22px;
+    }
+    .sign-in-google {
+      min-height: 56px;
+      padding: 14px;
+      border-radius: 9px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sign-in-google {
+      transition: none;
+    }
+  }
+}
+.sign-in-page {
+  .pending-check {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    background: #fff0e1;
+    color: #594433;
+    border-radius: 50%;
+    margin-bottom: 28px;
+  }
+  .pending-content h1 {
+    font-size: clamp(27px, 2.2vw, 34px);
+  }
+  .pending-email {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .pending-status {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    padding: 16px 20px;
+    background: #faf8f5;
+    border: 1px solid #e6dfd5;
+    border-radius: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #746c60;
+    margin: 26px 0 24px;
+  }
+  .pending-status strong {
+    color: #ae500b;
+    font-weight: 600;
+  }
+  .pending-signout {
+    width: 100%;
+    min-height: 58px;
+    padding: 14px 20px;
+    border: 1px solid #e4ddd3;
+    background: #fff;
+    color: #29231d;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .pending-signout:hover {
+    background: #fff5ea;
+    border-color: #e5a575;
+  }
+  .pending-signout:focus-visible {
+    outline: 3px solid #794015;
+    outline-offset: 4px;
+  }
+  @media (max-width: 640px) {
+    .pending-check {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 22px;
+    }
+    .pending-status {
+      font-size: 14px;
+      padding: 14px 16px;
+      margin: 22px 0 18px;
+    }
+    .pending-signout {
+      font-size: 16px;
+      min-height: 52px;
+    }
+  }
+}

@@ -57,7 +57,17 @@ async function mockApi(page, role) {
     } else if (path.includes("/api/resources/") && req.method() === "DELETE") {
       return route.fulfill({ json: { success: true } });
     } else if (path.includes("/api/resources/")) result = resource;
-    else if (path === "/api/users") result = [{id:"listed-user",firstName:"Directory",lastName:"Member",email:"member@example.com",role:"VOLUNTEER",title:"Coordinator"}];
+    else if (path === "/api/users")
+      result = [
+        {
+          id: "listed-user",
+          firstName: "Directory",
+          lastName: "Member",
+          email: "member@example.com",
+          role: "VOLUNTEER",
+          title: "Coordinator",
+        },
+      ];
     else return route.fulfill({ status: 404, json: {} });
     return route.fulfill({ json: { success: true, result } });
   });
@@ -66,7 +76,9 @@ async function mockApi(page, role) {
 test("anonymous users cannot open the directory", async ({ page }) => {
   await mockApi(page, null);
   await page.goto("/directory");
-  await expect(page.getByText("Sign in with Google")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Continue with Google" }),
+  ).toBeVisible();
   await expect(page.locator("#page-title")).toHaveCount(0);
 });
 test("pending users see approval status", async ({ page }) => {
@@ -128,7 +140,9 @@ test("logout uses POST and removes private content", async ({ page }) => {
   await expect(page.locator("#result-count")).toHaveText("1 result");
   await page.locator("#user-icon").click();
   await page.locator("#signout-button").click();
-  await expect(page.getByText("Sign in with Google")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Continue with Google" }),
+  ).toBeVisible();
   await expect(page.getByText("Private test note")).toHaveCount(0);
   expect(
     writes.some(
@@ -146,7 +160,9 @@ test("locks the screen after inactivity even if the backend is unreachable", asy
   await expect(page.locator("#page-title")).toBeVisible();
   await page.route("**/api/auth/logout", (route) => route.abort());
   await page.clock.fastForward(15 * 60 * 1000 + 1000);
-  await expect(page.getByText("Sign in with Google")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Continue with Google" }),
+  ).toBeVisible();
   await expect(page.locator("#page-title")).toHaveCount(0);
 });
 
@@ -181,9 +197,15 @@ test("map search displays a resource and opens its popup", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test("account management loads users from the canonical API path", async ({page})=>{
- await mockApi(page,"ADMIN");
- await page.goto("/users");
- await expect(page.getByText("Directory Member",{exact:true})).toBeVisible();
- await expect(page.getByText("member@example.com",{exact:true})).toBeVisible();
+test("account management loads users from the canonical API path", async ({
+  page,
+}) => {
+  await mockApi(page, "ADMIN");
+  await page.goto("/users");
+  await expect(
+    page.getByText("Directory Member", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("member@example.com", { exact: true }),
+  ).toBeVisible();
 });
