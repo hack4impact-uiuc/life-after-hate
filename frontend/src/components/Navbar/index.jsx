@@ -55,7 +55,7 @@ const LAHNavbar = ({
   };
 
   return (
-    <div ref={navbarRef}>
+    <div ref={navbarRef} className="lah-navbar-container">
       <Navbar
         light
         expand="md"
