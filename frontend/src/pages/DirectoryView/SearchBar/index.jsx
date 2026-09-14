@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "reactstrap";
@@ -8,9 +8,41 @@ import DirectoryTagSearch from "../DirectoryTagSearch";
 import "../styles.scss";
 
 const SearchBar = ({ isLoading }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch } = useForm({
+    defaultValues: { keyword: "", location: "" },
+  });
+  const pendingSearch = useRef(null);
+  const revision = useRef(0);
+  const runSearch = (data, searchRevision) => {
+    // The API reports failures; catch here so timer callbacks do not reject unhandled.
+    filterAndRefreshResource(
+      data.keyword,
+      data.location,
+      undefined,
+      undefined,
+      {
+        shouldApply: () => revision.current === searchRevision,
+      },
+    ).catch(() => {});
+  };
+  useEffect(() => {
+    const subscription = watch((data, { name }) => {
+      if (name !== "keyword" && name !== "location") return;
+      clearTimeout(pendingSearch.current);
+      const searchRevision = ++revision.current;
+      pendingSearch.current = setTimeout(() => {
+        runSearch(data, searchRevision);
+      }, 350);
+    });
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(pendingSearch.current);
+      revision.current += 1;
+    };
+  }, [watch]);
   const onSubmit = (data) => {
-    filterAndRefreshResource(data.keyword, data.location, data.tag);
+    clearTimeout(pendingSearch.current);
+    runSearch(data, ++revision.current);
   };
 
   return (

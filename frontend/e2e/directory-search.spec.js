@@ -1,0 +1,104 @@
+import { test, expect } from "@playwright/test";
+
+test.beforeEach(async ({ page, request }) => {
+  const response = await request.post("http://127.0.0.1:4176/__test/reset", {
+    data: { role: "ADMIN" },
+  });
+  const { token } = await response.json();
+  await page.context().addCookies([
+    {
+      name: "lah.sid",
+      value: token,
+      url: "http://127.0.0.1:4174",
+      httpOnly: true,
+      sameSite: "Lax",
+    },
+  ]);
+  await page.goto("/directory");
+});
+
+test("typing is debounced, clearing refreshes, and submit cancels the timer", async ({
+  page,
+}) => {
+  const searches = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/resources/filter?"))
+      searches.push(request.url());
+  });
+  await page.clock.install();
+  await page.locator("#search-general").fill("Al");
+  await page.clock.runFor(200);
+  await page.locator("#search-general").fill("Alpha");
+  await page.clock.runFor(300);
+  expect(searches).toHaveLength(0);
+  await page.clock.runFor(50);
+  await expect(page.locator('[data-cy="card-companyName"]')).toHaveText(
+    ["Alpha Support"],
+  );
+  expect(searches).toHaveLength(1);
+  await page.locator("#search-general").fill("");
+  await page.clock.runFor(350);
+  await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(3);
+  await page.locator("#search-location").fill("Saint Louis");
+  await page.clock.runFor(350);
+  await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(2);
+  await page.locator("#search-general").fill("Alpha");
+  await page.locator("#search-general").press("Enter");
+  await expect(page.locator('[data-cy="card-companyName"]')).toHaveText(
+    ["Alpha Support"],
+  );
+  const submitted = searches.length;
+  await page.clock.runFor(700);
+  expect(searches).toHaveLength(submitted);
+});
+
+test("a late response cannot replace a newer search", async ({ page }) => {
+  let release;
+  const held = new Promise((resolve) => {
+    release = resolve;
+  });
+  let received;
+  const arrived = new Promise((resolve) => {
+    received = resolve;
+  });
+  await page.route("**/resources/filter?*", async (route) => {
+    const response = await route.fetch();
+    if (
+      new URL(route.request().url()).searchParams.get("keyword") === "Alpha"
+    ) {
+      received();
+      await held;
+    }
+    await route.fulfill({ response });
+  });
+  await page.locator("#search-general").fill("Alpha");
+  await arrived;
+  await page.locator("#search-general").fill("Bravo");
+  await expect(page.locator('[data-cy="card-companyName"]')).toHaveText(
+    ["Bravo Shelter"],
+  );
+  const oldResponse = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).searchParams.get("keyword") === "Alpha",
+  );
+  release();
+  await oldResponse;
+  await page.waitForTimeout(100);
+  await expect(page.locator('[data-cy="card-companyName"]')).toHaveText(
+    ["Bravo Shelter"],
+  );
+});
+
+test("leaving the directory cancels a pending search", async ({ page }) => {
+  const searches = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/resources/filter?"))
+      searches.push(request.url());
+  });
+  await page.clock.install();
+  await page.locator("#search-general").fill("Alpha");
+  await page.getByRole("link", { name: "People", exact: true }).click();
+  await expect(page.locator(".user-directory")).toBeVisible();
+  await page.clock.runFor(700);
+  expect(searches).toHaveLength(0);
+});

@@ -160,9 +160,16 @@ function removeFilterTag(data) {
   store.dispatch(removeTag(data));
 }
 
-async function filterAndRefreshResource(keyword, address, tag, radius) {
+async function filterAndRefreshResource(
+  keyword,
+  address,
+  tag,
+  radius,
+  { shouldApply = () => true } = {},
+) {
   store.dispatch(updateSearchParams({ keyword, address, tag }));
   const results = await getSearchResults(keyword, address, tag, radius);
+  if (!shouldApply()) return results;
   store.dispatch(replaceAllResources(results.resources));
   if (results.center?.length === 2 && results.center.every(Number.isFinite)) {
     store.dispatch(updateMapCenter(results.center));
