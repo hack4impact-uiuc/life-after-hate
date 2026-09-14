@@ -1,4 +1,4 @@
-FROM node:24-bookworm-slim
+FROM node:26-bookworm-slim
 WORKDIR /var/www/app
 COPY --chown=node:node package*.json ./
 RUN npm ci --ignore-scripts
