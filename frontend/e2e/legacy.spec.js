@@ -121,7 +121,7 @@ test("directory headers, empty search and CSV visibility", async ({
   await expect(page.locator(".manager-header")).toContainText(
     "Resource directory",
   );
-  await expect(page.locator("#csv-download-btn")).toBeHidden();
+  await expect(page.locator("#csv-download-btn")).toBeVisible();
   await search(page);
   await expect(names(page)).toHaveCount(3);
   for (const label of [
@@ -252,7 +252,7 @@ test("navigation clears result and search state", async ({ page, request }) => {
   await page.getByRole("link", { name: "Map", exact: true }).click();
   await expect(page.locator(".card-title")).toHaveCount(0);
   await page.getByRole("link", { name: "Directory", exact: true }).click();
-  await expect(names(page)).toHaveCount(0);
+  await expect(names(page)).toHaveCount(3);
   await page.getByRole("link", { name: "Map", exact: true }).click();
   await mapSearch(page, "Alpha", "Chicago");
   await expect(page.locator(".card-title")).toHaveCount(1);

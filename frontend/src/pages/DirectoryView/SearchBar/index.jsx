@@ -7,7 +7,7 @@ import { filterAndRefreshResource } from "../../../utils/api";
 import DirectoryTagSearch from "../DirectoryTagSearch";
 import "../styles.scss";
 
-const SearchBar = ({ isLoading }) => {
+const SearchBar = ({ isLoading, onSearchStatusChange }) => {
   const { register, handleSubmit, watch } = useForm({
     defaultValues: { keyword: "", location: "" },
   });
@@ -23,24 +23,35 @@ const SearchBar = ({ isLoading }) => {
       {
         shouldApply: () => revision.current === searchRevision,
       },
-    ).catch(() => {});
+    )
+      .then(() => {
+        if (revision.current === searchRevision)
+          onSearchStatusChange("complete");
+      })
+      .catch(() => {
+        if (revision.current === searchRevision) onSearchStatusChange("error");
+      });
   };
   useEffect(() => {
     const subscription = watch((data, { name }) => {
       if (name !== "keyword" && name !== "location") return;
+      onSearchStatusChange("searching");
       clearTimeout(pendingSearch.current);
       const searchRevision = ++revision.current;
       pendingSearch.current = setTimeout(() => {
         runSearch(data, searchRevision);
       }, 350);
     });
+    onSearchStatusChange("searching");
+    runSearch({ keyword: "", location: "" }, ++revision.current);
     return () => {
       subscription.unsubscribe();
       clearTimeout(pendingSearch.current);
       revision.current += 1;
     };
-  }, [watch]);
+  }, [watch, onSearchStatusChange]);
   const onSubmit = (data) => {
+    onSearchStatusChange("searching");
     clearTimeout(pendingSearch.current);
     runSearch(data, ++revision.current);
   };
@@ -88,6 +99,7 @@ const mapStateToProps = (state) => ({
 
 SearchBar.propTypes = {
   isLoading: PropTypes.bool,
+  onSearchStatusChange: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps)(SearchBar);

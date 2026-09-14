@@ -10,7 +10,8 @@ import ResourceLabels from "./ResourceLabels";
 import ResourceList from "./ResourceList";
 import "./styles.scss";
 
-const ResourceManager = ({ resources, allResources, sort, isLoading }) => {
+const ResourceManager = ({ resources, allResources, sort }) => {
+  const [searchStatus, setSearchStatus] = useState("searching");
   const [density, setDensity] = useState("comfortable");
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
@@ -26,25 +27,34 @@ const ResourceManager = ({ resources, allResources, sort, isLoading }) => {
         <div>
           <h1 id="page-title">Resource directory</h1>
           <p>
-            {allResources.length} resources · {recentCount} added in the last 90
-            days
+            {searchStatus === "complete"
+              ? `${allResources.length} resources · ${recentCount} added in the last 90 days`
+              : searchStatus === "error"
+                ? "Resources could not be loaded"
+                : "Finding resources…"}
           </p>
         </div>
         <AdminView>
           <CSVExporter data={resources} />
         </AdminView>
       </header>
-      <SearchBar />
+      <SearchBar onSearchStatusChange={setSearchStatus} />
       <div className="directory-results-toolbar">
         <div className="directory-result-summary" aria-live="polite">
           <strong id="result-count">
-            {resources.length} result{resources.length !== 1 ? "s" : ""}
+            {searchStatus === "complete"
+              ? `${resources.length} result${resources.length !== 1 ? "s" : ""}`
+              : searchStatus === "error"
+                ? "Search failed"
+                : "Searching…"}
           </strong>
-          <span>
-            {sort.field
-              ? `sorted by ${sort.field === "RESOURCE NAME" ? "name" : sort.field.toLowerCase()}${sort.order === "desc" ? " (descending)" : ""}`
-              : "in default order"}
-          </span>
+          {searchStatus === "complete" && (
+            <span>
+              {sort.field
+                ? `sorted by ${sort.field === "RESOURCE NAME" ? "name" : sort.field.toLowerCase()}${sort.order === "desc" ? " (descending)" : ""}`
+                : "in default order"}
+            </span>
+          )}
         </div>
         <div className="density-control" role="group" aria-label="Row density">
           {["comfortable", "compact"].map((value) => (
@@ -62,15 +72,17 @@ const ResourceManager = ({ resources, allResources, sort, isLoading }) => {
       <div
         className="directory-table"
         aria-label="Resources"
-        aria-busy={isLoading}
+        aria-busy={searchStatus === "searching"}
       >
         <ResourceLabels resources={resources} />
         <ResourceList resources={resources} density={density} />
         {!resources.length && (
           <div className="directory-empty">
-            {isLoading
-              ? "Loading resources…"
-              : "No resources found. Try a different search or remove a tag."}
+            {searchStatus === "searching"
+              ? "Searching resources…"
+              : searchStatus === "error"
+                ? "Could not load resources. Try searching again."
+                : "No resources found. Try a different search or remove a tag."}
           </div>
         )}
       </div>
@@ -81,12 +93,10 @@ const mapStateToProps = (state) => ({
   resources: tagFilteredResourceSelector(state),
   allResources: state.resources || [],
   sort: state.sort,
-  isLoading: state.isLoading,
 });
 ResourceManager.propTypes = {
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
   allResources: PropTypes.arrayOf(PropTypes.object).isRequired,
   sort: PropTypes.object.isRequired,
-  isLoading: PropTypes.bool,
 };
 export default connect(mapStateToProps)(ResourceManager);
