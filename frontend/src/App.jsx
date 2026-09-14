@@ -13,6 +13,7 @@ const MapView = lazy(() => import("./pages/MapView"));
 const DirectoryView = lazy(() => import("./pages/DirectoryView"));
 const AdminView = lazy(() => import("./pages/AdminView"));
 import MiniLoader from "./components/Loader/mini-loader";
+import Loader from "./components/Loader";
 import ModalManager from "./components/Modal/ModalManager";
 import { roleEnum } from "./utils/enums";
 import store from "./redux/store";
@@ -31,21 +32,25 @@ class App extends Component {
           <MiniLoader />
           <ToastContainer />
           <ModalManager />
-          <Suspense fallback={<div role="status">Loading…</div>}>
-          <Router>
-            <Switch>
-              <Route path="/login" component={Login} />
-              <PrivateRoute exact path="/" component={MapView} />
-              <PrivateRoute exact path="/directory" component={DirectoryView} />
-              <PrivateRoute
-                exact
-                path="/users"
-                component={AdminView}
-                roleRequired={roleEnum.ADMIN}
-              />
-              <Redirect to="/login"></Redirect>
-            </Switch>
-          </Router>
+          <Suspense fallback={<Loader />}>
+            <Router>
+              <Switch>
+                <Route path="/login" component={Login} />
+                <PrivateRoute exact path="/" component={MapView} />
+                <PrivateRoute
+                  exact
+                  path="/directory"
+                  component={DirectoryView}
+                />
+                <PrivateRoute
+                  exact
+                  path="/users"
+                  component={AdminView}
+                  roleRequired={roleEnum.ADMIN}
+                />
+                <Redirect to="/login"></Redirect>
+              </Switch>
+            </Router>
           </Suspense>
         </div>
       </Provider>

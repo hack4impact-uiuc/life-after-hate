@@ -1,12 +1,20 @@
 import React from "react";
-import Logo from "../../assets/images/lah-logo.png";
-import ClipLoader from "react-spinners/ClipLoader";
+import Logo from "../../assets/images/lah-logo-2.png";
 import "./styles.scss";
 function Loader() {
   return (
-    <div className="loading-spinner">
-      <img src={Logo} alt="LAH Logo"></img>
-      <ClipLoader sizeUnit={"px"} size={200} color={"#123abc"} loading />
+    <div
+      className="loading-screen"
+      role="status"
+      aria-label="Loading Life After Hate"
+    >
+      <div className="loading-screen-content">
+        <img className="loading-screen-logo" src={Logo} alt="" />
+        <div className="loading-screen-feedback" aria-hidden="true">
+          <span className="loading-screen-ring" />
+          <span>Loading…</span>
+        </div>
+      </div>
     </div>
   );
 }

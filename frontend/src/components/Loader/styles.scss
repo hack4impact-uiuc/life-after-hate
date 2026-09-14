@@ -1,16 +1,60 @@
-.loading-spinner {
-  position: absolute;
-  img {
-    position: absolute;
-    margin: auto;
-    margin: 50px;
-    width: 100px;
-    height: 100px;
+.loading-screen {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  background: #fff;
+  color: #776f64;
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
+.loading-screen-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: min(280px, 100%);
+}
+.loading-screen-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.loading-screen-feedback {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.loading-screen-ring {
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 2px solid #fbe8d6;
+  border-top-color: #f79331;
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .loading-screen-content {
+    animation: lah-loader-reveal 250ms ease-out 150ms backwards;
   }
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  .loading-screen-ring {
+    animation: lah-loader-turn 800ms linear infinite;
+  }
+}
+@keyframes lah-loader-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lah-loader-turn {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 #nprogress .bar,
