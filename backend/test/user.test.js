@@ -1,4 +1,4 @@
-const request = require("supertest");
+const request = require("./request");
 const { expect } = require("chai");
 const app = require("../app.js");
 const User = require("../models/User");
@@ -51,7 +51,7 @@ const createSamplePendingUser = async (userInfo = samplePendingUserInfo) => {
 };
 
 const createSampleVolunteerUser = async (
-  userInfo = sampleVolunteerUserInfo
+  userInfo = sampleVolunteerUserInfo,
 ) => {
   const newUser = new User(userInfo);
   await newUser.save();
@@ -216,7 +216,7 @@ describe("PATCH /user/:user_id", () => {
       role: roleEnum.VOLUNTEER,
     };
 
-    const id = mongoose.Types.ObjectId();
+    const id = new mongoose.Types.ObjectId();
 
     const res = await request(app)
       .patch(`/api/users/${id}`)
@@ -246,7 +246,7 @@ describe("DELETE /user/:user_id", () => {
 
 describe("DELETE /user/:user_id", () => {
   it("should fail to delete user that doesn't exist", async () => {
-    const id = mongoose.Types.ObjectId();
+    const id = new mongoose.Types.ObjectId();
 
     const res = await request(app).delete(`/api/users/${id}`).expect(404);
 

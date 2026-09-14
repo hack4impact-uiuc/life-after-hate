@@ -1,82 +1,17 @@
-const passport = require("passport");
 const router = require("express").Router();
-const Boom = require("@hapi/boom");
-const {
-  requireAdminStatus,
-  requireVolunteerStatus,
-} = require("../../../utils/auth-middleware");
-// Defines the endpoint which will be serializecd in state
-const CALLBACK_ENDPOINT = "/api/auth/login/callback";
-// Where to go affter a succ
-const LOGIN_SUCCESS_REDIRECT = process.env.FE_URI ? process.env.FE_URI : "/";
-
 router.get("/", (req, res, next) => {
-  // Construct the "callback" url by concatenating the current base URL (host) with the callback URL
-  // Anything we put into Passport's state can be accessed after the login is successful, as it gets encoded in the URL
-  const callbackUrl = `${req.protocol}://${req.get(
-    "host"
-  )}${CALLBACK_ENDPOINT}`;
-  const state = callbackUrl
-    ? Buffer.from(JSON.stringify({ callbackUrl })).toString("base64")
-    : undefined;
-  const auth = passport.authenticate("google", {
+  req.app.locals.passport.authenticate("google", {
     scope: ["openid", "profile", "email"],
-    state,
-  });
-  auth(req, res, next);
-  next();
+  })(req, res, next);
 });
-
-/* Serves as a middle point workaround for Google OAuth only allowing one callback URL
- * Essentially, we're using our main, production now deployment, for example lah.hack4impact.now.sh
- * Which is registered in Google OAuth console. We instruct Passport to redirect to this URL
- * (even if we're checking out, for example, lah-branch-deploy.hack4impact.now.sh)
- * Based on the serialized info above, this will reconstruct the original callback URL (lah-branch-deploy.hack4impact.now.sh)
- * And will redirect to lah-branch-deploy.hack4impact.now.sh/CALLBACK_ENDPOINT
- * TLDR: will take PROD_URL/api/auth/login/redirectURI?queryparams -> ORIGINAL_URL/api/auth/login/callback?queryparams
- */
-router.get("/redirectURI", (req, res) => {
-  try {
-    // If we are here, this endpoint is likely being run on the MAIN deployment
-    const { state } = req.query;
-    // Grab the branch deployment (lah-branch-deploy.hack4impact.now.sh) for example
-    const { callbackUrl } = JSON.parse(Buffer.from(state, "base64").toString());
-    if (typeof callbackUrl === "string") {
-      // Reconstruct the URL and redirect
-      const callbackURL = `${callbackUrl}?${req._parsedUrl.query}`;
-      return res.redirect(callbackURL);
-    }
-    // There was no base
-    return res.redirect(CALLBACK_ENDPOINT);
-  } catch (e) {
-    return Boom.badRequest("Something went wrong with the URI redirection");
-  }
-});
-
+// Every deployment registers its own fixed callback. No relay redirects.
 router.get(
   "/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/login",
-  }),
-  (req, res) => {
-    res.redirect(LOGIN_SUCCESS_REDIRECT);
-  }
+  (req, res, next) => {
+    req.app.locals.passport.authenticate("google", {
+      failureRedirect: `${req.app.locals.config.frontendOrigin}/login`,
+    })(req, res, next);
+  },
+  (req, res) => res.redirect(req.app.locals.config.frontendOrigin),
 );
-
-router.get("/testVolunteer", requireVolunteerStatus, function (req, res) {
-  res.json({
-    code: 200,
-    result: "you are a volunteer boo yah",
-    success: true,
-  });
-});
-
-router.get("/testAdmin", requireAdminStatus, function (req, res) {
-  res.json({
-    code: 200,
-    result: "you are an admin boo yah",
-    success: true,
-  });
-});
-
 module.exports = router;

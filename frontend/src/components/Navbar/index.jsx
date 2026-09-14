@@ -31,14 +31,14 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
 
   return (
     <div>
-      <Navbar light expand="md" className="lah_navbar pl-sm-5 pr-sm-5">
+      <Navbar light expand="md" className="lah_navbar ps-sm-5 pe-sm-5">
         <NavbarBrand tag={Link} to="/" onClick={changePage}>
           <img src={Logo} alt="LAH Logo" id="logo" />
         </NavbarBrand>
         <NavbarToggler onClick={toggleUserDropdown} />
         <Collapse isOpen={dropdownOpen} navbar>
           <Nav
-            className="ml-auto align-items-md-center"
+            className="ms-auto align-items-md-center"
             data-cy="nav-links"
             navbar
           >
@@ -47,7 +47,7 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
                 tag={Link}
                 onClick={changePage}
                 to="/"
-                className="hover-orange pr-md-3"
+                className="hover-orange pe-md-3"
               >
                 Map
               </NavLink>
@@ -57,7 +57,7 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
                 tag={Link}
                 onClick={changePage}
                 to="/directory"
-                className="hover-orange pr-md-3"
+                className="hover-orange pe-md-3"
               >
                 Directory
               </NavLink>
@@ -68,7 +68,7 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
                   tag={Link}
                   onClick={changePage}
                   to="/users"
-                  className="hover-orange pr-md-3"
+                  className="hover-orange pe-md-3"
                 >
                   Account Management
                 </NavLink>
@@ -78,7 +78,7 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
               <DropdownToggle nav caret>
                 <img src={profilePic} alt="User icon" id="user-icon" />
               </DropdownToggle>
-              <DropdownMenu right>
+              <DropdownMenu end>
                 <DropdownItem header>{`${firstName} ${lastName}`}</DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem header>

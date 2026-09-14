@@ -8,73 +8,87 @@ import {
 import { startLoader, endLoader } from "../actions/loader";
 import { toast } from "react-toastify";
 
-const apiMiddleware = ({ dispatch }) => (next) => (action) => {
-  // Call the next method in the middleware
-  next(action);
-
-  if (action.type !== API_REQUEST) {
-    return;
-  }
-
-  const {
-    url,
-    method,
-    data,
-    onSuccess,
-    onFailure,
-    headers,
-    withLoader,
-    notification,
-    expectUnauthorizedResponse,
-  } = action.payload;
-
-  // Depending on the type of request, there might be a "data" or "params" field.
-  const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
-
-  // Headers set for all requests
-  axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "";
-  axios.defaults.headers.common["Content-Type"] = "application/json";
-
-  if (withLoader) {
-    dispatch(startLoader());
-  }
-
-  axios
-    .request({
+const apiMiddleware = ({ dispatch }) => {
+  let sessionGeneration = 0;
+  let csrfRequest;
+  return (next) => (action) => {
+    if (["AUTH_PURGE", "API_ACCESS_DENIED"].includes(action.type)) {
+      sessionGeneration++;
+      csrfRequest = undefined;
+    }
+    next(action);
+    if (action.type !== API_REQUEST) return;
+    const generation = sessionGeneration;
+    const {
       url,
       method,
+      data,
+      onSuccess,
+      onFailure,
       headers,
-      [dataOrParams]: data,
-      withCredentials: true,
-    })
-    .then(({ data }) => {
-      dispatch(apiSuccess(data));
-      // Request was successful, so call the callback for success
-      onSuccess(data);
-      if (notification && notification.successMessage) {
-        toast.success(notification.successMessage);
-      }
-    })
-    .catch((error) => {
-      dispatch(apiError(error.response));
-      onFailure(error.response);
-      if (notification && notification.failureMessage) {
-        toast.error(notification.failureMessage);
-      }
-      if (
-        expectUnauthorizedResponse !== true &&
-        error.response &&
-        error.response.status === 401
-      ) {
-        dispatch(accessDenied(window.location.pathname));
-        toast.info("You have been signed out due to an unauthorized request.");
-      }
-    })
-    .finally(() => {
-      if (withLoader) {
-        dispatch(endLoader());
-      }
-    });
+      withLoader,
+      notification,
+      expectUnauthorizedResponse,
+    } = action.payload;
+    const stale = () => generation !== sessionGeneration;
+    const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
+    if (withLoader) dispatch(startLoader());
+    const csrfUrl = new URL(url, window.location.origin);
+    csrfUrl.pathname = "/api/auth/csrf";
+    csrfUrl.search = "";
+    if (!["GET", "HEAD", "OPTIONS"].includes(method) && !csrfRequest) {
+      csrfRequest = axios
+        .get(csrfUrl.href, { withCredentials: true })
+        .then(({ data }) => data.token)
+        .catch((error) => {
+          csrfRequest = undefined;
+          throw error;
+        });
+    }
+    const tokenRequest = ["GET", "HEAD", "OPTIONS"].includes(method)
+      ? Promise.resolve(null)
+      : csrfRequest;
+    tokenRequest
+      .then((token) => {
+        if (stale()) throw new Error("Session changed");
+        return axios.request({
+          url,
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            ...headers,
+            ...(token ? { "X-CSRF-Token": token } : {}),
+          },
+          [dataOrParams]: data,
+          withCredentials: true,
+        });
+      })
+      .then(({ data }) => {
+        // A response started before logout must never repopulate private state.
+        if (stale()) throw new Error("Session changed");
+        dispatch(apiSuccess(data));
+        onSuccess(data);
+        if (notification?.successMessage)
+          toast.success(notification.successMessage);
+      })
+      .catch((error) => {
+        if (stale()) {
+          onFailure(new Error("Session changed"));
+          return;
+        }
+        dispatch(apiError({ status: error.response?.status }));
+        onFailure(error.response || error);
+        if (notification?.failureMessage)
+          toast.error(notification.failureMessage);
+        if (error.response?.status === 403) csrfRequest = undefined;
+        if (!expectUnauthorizedResponse && error.response?.status === 401) {
+          dispatch(accessDenied(window.location.pathname));
+          toast.info("Your session has ended. Please sign in again.");
+        }
+      })
+      .finally(() => {
+        if (withLoader && !stale()) dispatch(endLoader());
+      });
+  };
 };
-
 export default apiMiddleware;

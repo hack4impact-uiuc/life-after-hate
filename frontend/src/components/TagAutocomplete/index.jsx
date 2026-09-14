@@ -1,62 +1,68 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Chip from "@material-ui/core/Chip";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
 import {
-  createMuiTheme,
+  createTheme,
   ThemeProvider as MuiThemeProvider,
-} from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
+} from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 
-const theme = createMuiTheme({
-  overrides: {
-    MuiInputBase: {
-      root: {
-        "&&&": {
-          paddingTop: 0,
-          paddingBottom: 0,
-          paddingRight: 0,
-          borderRadius: "4px",
-          backgroundColor: "#f6f6f6",
-        },
-      },
-    },
-    MuiFilledInput: {
-      underline: {
-        "&&&:before": {
-          borderBottom: "none",
-        },
-
-        "&&&:after": {
-          borderBottom: "2px solid #f79230",
-        },
-      },
-    },
-    MuiChip: {
-      label: {
-        "&&&": {
-          color: "#f79230",
-          fontWeight: 700,
-          fontSize: "12px",
-          textTransform: "uppercase",
-        },
-      },
-      deleteIcon: {
-        "&": {
-          color: "#f79230",
-        },
-        "&:hover": {
-          color: "#f9ac61",
-        },
-      },
-      outlined: {
-        "&&&": {
-          border: "1px solid #f79230",
-          backgroundColor: "transparent",
-        },
+const overrides = {
+  MuiInputBase: {
+    root: {
+      "&&&": {
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingRight: 0,
+        borderRadius: "4px",
+        backgroundColor: "#f6f6f6",
       },
     },
   },
+  MuiFilledInput: {
+    underline: {
+      "&&&:before": {
+        borderBottom: "none",
+      },
+
+      "&&&:after": {
+        borderBottom: "2px solid #f79230",
+      },
+    },
+  },
+  MuiChip: {
+    label: {
+      "&&&": {
+        color: "#f79230",
+        fontWeight: 700,
+        fontSize: "12px",
+        textTransform: "uppercase",
+      },
+    },
+    deleteIcon: {
+      "&": {
+        color: "#f79230",
+      },
+      "&:hover": {
+        color: "#f9ac61",
+      },
+    },
+    outlined: {
+      "&&&": {
+        border: "1px solid #f79230",
+        backgroundColor: "transparent",
+      },
+    },
+  },
+};
+const theme = createTheme({
+  components: Object.fromEntries(
+    Object.entries(overrides).map(([key, styles]) => [
+      key,
+      { styleOverrides: styles },
+    ]),
+  ),
 });
 
 const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (

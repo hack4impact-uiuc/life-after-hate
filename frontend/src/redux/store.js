@@ -1,16 +1,11 @@
-import LogRocket from "logrocket";
-import logger from "redux-logger";
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./reducers";
 import apiMiddleware from "./middleware/api_middleware";
 
-// Add Redux DevTools support
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// Resource and identity data must not be sent to session replay or console logs.
 const store = createStore(
   rootReducer,
-  composeEnhancers(
-    applyMiddleware(logger, apiMiddleware, LogRocket.reduxMiddleware())
-  )
+  applyMiddleware(apiMiddleware)
 );
 
 export default store;

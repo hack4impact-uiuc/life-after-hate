@@ -1,56 +1,52 @@
 {
   "version": 2,
-  "regions": ["iad1"],
-  "name": "life-after-hate",
-  "alias": "lah.vercel.app",
-  "builds": [
-    { "src": "backend/app.js", "use": "@vercel/node" },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
+  "regions": [
+    "iad1"
+  ],
+  "framework": null,
+  "installCommand": "npm ci && npm --prefix cloudflare ci && npm --prefix frontend ci",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "frontend/build",
+  "functions": {
+    "api/index.mjs": {
+      "maxDuration": 30
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "headers": { "cache-control": "s-maxage=0" },
-      "dest": "backend/app.js"
-    },
-
-    {
-      "src": "/static/(.*)",
-      "headers": { "cache-control": "s-maxage=31536000,immutable" },
-      "dest": "frontend/static/$1"
-    },
-    { "src": "/favicon.ico", "dest": "/frontend/favicon.ico" },
-    {
-      "src": "/asset-manifest.json",
-      "dest": "frontend/asset-manifest.json"
-    },
-    { "src": "/manifest.json", "dest": "frontend/manifest.json" },
-    {
-      "src": "/precache-manifest.(.*)",
-      "dest": "frontend/precache-manifest.$1"
-    },
-    {
-      "src": "/service-worker.js",
-      "headers": { "cache-control": "s-maxage=0" },
-      "dest": "frontend/service-worker.js"
-    },
-    { "src": "/(.*)", "dest": "frontend/index.html" }
-  ],
-  "env": {
-    "GOOGLE_CLIENT_ID": "@lah_google_client_id",
-    "GOOGLE_CLIENT_SECRET": "@lah_google_client_secret",
-    "OAUTH_CALLBACK_URI": "@lah_oauth_callback_uri",
-    "MAPQUEST_URI": "@lah_mapquest_uri",
-    "LOGGLY_TOKEN": "@loggly_token",
-    "SESSION_SECRET": "@lah_session_secret"
   },
-  "build": {
-    "env": {
-      "REACT_APP_MAPBOX_ACCESS_TOKEN": "@lah_mapbox_token"
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
-  }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.googleusercontent.com https://*.mapbox.com https://tiles.openfreemap.org; font-src 'self'; connect-src 'self' https://*.mapbox.com https://events.mapbox.com https://tiles.openfreemap.org; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        }
+      ]
+    }
+  ]
 }

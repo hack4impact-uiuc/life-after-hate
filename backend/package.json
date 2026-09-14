@@ -8,48 +8,51 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec --exit",
-    "test:coverage": "nyc --reporter=lcov mocha --reporter spec --exit",
-    "start:dev": "nodemon appListener.js",
+    "test": "node test/run.cjs",
+    "test:coverage": "nyc --reporter=lcov node test/run.cjs",
+    "start:dev": "node --watch appListener.js",
     "start": "node appListener.js",
-    "start:coverage": "nyc --reporter=lcov node appListener.js"
+    "start:coverage": "nyc --reporter=lcov node appListener.js",
+    "test:security": "mocha --timeout 10000 test/security.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^9.1.2",
-    "axios": "^0.21.1",
-    "body-parser": "^1.19.0",
-    "celebrate": "^14.0.0",
-    "chai": "^4.3.4",
+    "axios": "^1.20.0",
+    "celebrate": "^16.0.0",
     "colors": "^1.4.0",
-    "connect-mongo": "^3.2.0",
+    "connect-mongo": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "express-winston": "^4.1.0",
-    "fuse.js": "^6.4.6",
+    "dotenv": "^17.4.2",
+    "exceljs": "^4.4.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "express-session": "^1.19.0",
+    "fuse.js": "^7.5.0",
     "geolib": "^3.3.1",
-    "helmet": "^4.6.0",
-    "honeycomb-beeline": "^2.7.0",
+    "helmet": "^8.3.0",
     "joi-objectid": "^3.0.1",
-    "keyword-extractor": "0.0.19",
-    "mocha": "^8.3.2",
-    "mongoose": "^5.12.7",
-    "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
-    "nodemon": "^2.0.7",
-    "nyc": "^15.1.0",
-    "passport": "^0.4.1",
-    "passport-google-oauth": "^2.0.0",
-    "progress": "^2.0.3",
+    "mongoose": "^9.10.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "ramda": "^0.27.0",
-    "ramda-adjunct": "^2.32.0",
-    "sinon": "^10.0.1",
-    "supertest": "^6.1.3",
-    "winston": "^3.3.3",
-    "winston-loggly-bulk": "^3.2.1",
-    "xlsx": "^0.16.9"
+    "ramda-adjunct": "^2.32.0"
+  },
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "mocha": "^12.0.1",
+    "mongodb-memory-server": "^11.2.0",
+    "nyc": "^18.0.0",
+    "sinon": "^22.1.0",
+    "supertest": "^7.2.2"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
   }
 }

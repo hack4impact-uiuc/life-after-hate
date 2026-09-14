@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "./styles.scss";
-import InputRange from "react-input-range";
+import Slider from "@mui/material/Slider";
 import { filterAndRefreshResource } from "../../../utils/api";
 
 const RadiusFilter = ({ hasCenter, search }) => {
@@ -13,19 +13,22 @@ const RadiusFilter = ({ hasCenter, search }) => {
       search.keyword,
       search.address,
       search.tags,
-      newRadius
+      newRadius,
     );
   };
 
   return (
     <div className={`radius-filter ${hasCenter ? "" : "radius-filter-hidden"}`}>
-      <InputRange
-        minValue={10}
-        maxValue={1000}
+      <Slider
+        min={10}
+        max={1000}
         value={searchRadius}
-        onChange={updateSearchRadius}
-        onChangeComplete={runSearch}
-        formatLabel={(value) => `${value}mi`}
+        onChange={(_, value) => updateSearchRadius(value)}
+        onChangeCommitted={(_, value) => runSearch(value)}
+        valueLabelFormat={(value) => `${value}mi`}
+        valueLabelDisplay="auto"
+        aria-label="Search radius in miles"
+        sx={{ color: "#f79230" }}
       />
     </div>
   );

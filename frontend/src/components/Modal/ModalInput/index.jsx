@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ModalInput = ({
-  componentRef,
+  registration,
   shortName,
   resource,
   errors,
@@ -13,13 +13,13 @@ const ModalInput = ({
   ...passedInProps
 }) => {
   const props = {
-    ref: componentRef,
+    ...registration,
     type: "text",
     name: shortName,
     "data-cy": `modal-${shortName}`,
     defaultValue: resource[shortName],
     className: `modal-input-field ${
-      required && errors[shortName] ? "invalid" : ""
+      required && errors?.[shortName] ? "invalid" : ""
     }`,
     disabled,
     ...passedInProps,
@@ -35,7 +35,7 @@ const ModalInput = ({
 };
 
 ModalInput.propTypes = {
-  componentRef: PropTypes.elementType.isRequired,
+  registration: PropTypes.object.isRequired,
   shortName: PropTypes.string.isRequired,
   resource: PropTypes.object.isRequired,
   errors: PropTypes.object,

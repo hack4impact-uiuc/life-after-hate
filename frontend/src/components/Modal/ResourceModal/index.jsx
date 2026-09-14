@@ -30,10 +30,12 @@ export const ResourceFormInput = ({
   resource,
   required,
   tag,
+  shortName,
   ...props
 }) => (
   <ModalInput
-    componentRef={register({ required: required ?? false })}
+    registration={register(shortName, { required: required ?? false })}
+    shortName={shortName}
     resource={resource}
     errors={errors}
     disabled={!editable}
@@ -52,14 +54,26 @@ const ResourceModal = ({
   closeModal,
   editable,
 }) => {
-  const { register, handleSubmit, setValue, watch, errors } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      ...resource,
+      type: resource.type ?? resourceEnum.INDIVIDUAL,
+      tags: resource.tags ?? [],
+    },
+  });
   useEffect(() => {
-    register({ name: "tags" });
+    register("tags");
   }, [register]);
 
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [groupType, setGroupType] = useState(
-    resource.type ?? resourceEnum.INDIVIDUAL
+    resource.type ?? resourceEnum.INDIVIDUAL,
   );
   const onSubmit = (data) => {
     isAddingResource ? handleAddResource(data) : handleEditResource(data);
@@ -115,14 +129,16 @@ const ResourceModal = ({
         <label className="modal-lab">
           <p>Resource Type</p>
           <select
-            ref={register({ required: true })}
-            name="type"
+            {...register("type", { required: true })}
             data-cy="modal-resourceType"
             value={groupType}
             rows="5"
             className={`modal-input-field ${errors.type ? "invalid" : ""}`}
             disabled={isExistingResource}
-            onChange={(e) => setGroupType(e.target.value)}
+            onChange={(e) => {
+              setGroupType(e.target.value);
+              setValue("type", e.target.value);
+            }}
           >
             <option>{resourceEnum.INDIVIDUAL}</option>
             <option>{resourceEnum.GROUP}</option>

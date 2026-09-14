@@ -26,7 +26,7 @@ const UserModal = ({ closeModal, user, editable }) => {
   // eslint-disable-next-line react/prop-types
   const createInput = ({ required, shortName, ...props }) => (
     <ModalInput
-      componentRef={register({ required: required ?? false })}
+      registration={register(shortName, { required: required ?? false })}
       resource={user}
       disabled={!editable}
       key={shortName}
@@ -58,8 +58,7 @@ const UserModal = ({ closeModal, user, editable }) => {
         <label className="modal-lab">
           <p>Role</p>
           <select
-            ref={register}
-            name="role"
+            {...register("role")}
             data-cy="modal-role"
             defaultValue={user.role}
             className="modal-select-field"

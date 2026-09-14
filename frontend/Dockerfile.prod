@@ -1,21 +1,12 @@
-FROM node:20.0.0
-
-WORKDIR '/var/www/app'
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-
-
+FROM node:24-bookworm-slim AS build
+WORKDIR /app
 COPY package*.json ./
-
-RUN npm ci --only=production
-
-RUN npm install -g serve
-
-# If you are building your code for production
-
-# Bundle app source
+RUN npm ci
 COPY . .
-EXPOSE 3000
-ENV NODE_ENV production
+ARG VITE_MAPBOX_ACCESS_TOKEN
+ENV VITE_MAPBOX_ACCESS_TOKEN=$VITE_MAPBOX_ACCESS_TOKEN
 RUN npm run build
+FROM caddy:2-alpine
+COPY Caddyfile /etc/caddy/Caddyfile
+COPY --from=build /app/build /srv
+EXPOSE 80 443

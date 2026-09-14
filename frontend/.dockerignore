@@ -1,0 +1,9 @@
+node_modules
+.env
+.env.*
+!.env.example
+coverage
+.nyc_output
+build
+*.log
+core

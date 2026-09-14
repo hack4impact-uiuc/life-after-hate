@@ -1,61 +1,37 @@
-import json2csv from "json2csv";
-import { distanceToString } from "../utils/formatters";
-const R = require("ramda");
+import { distanceToString } from "./formatters";
 
-const getAllFields = (arr) =>
-  arr.reduce((fields, item) => {
-    Object.keys(item).forEach((field) => {
-      if (!fields.includes(field)) {
-        fields.push(field);
-      }
-    });
-
-    return fields;
-  }, []);
-
-const moveItemToFront = (target, arr) =>
-  arr.forEach((item, idx) => {
-    if (item === target) {
-      arr.splice(idx, 1);
-      arr.unshift(item);
-    }
-  });
-
-const moveItemsToFront = (targets, arr) =>
-  targets.reverse().forEach((i) => moveItemToFront(i, arr));
-
+// Quote every cell, and neutralize spreadsheet formula prefixes even after whitespace.
+export const csvCell = (value) => {
+  let text = value == null ? "" : String(value);
+  if (/^[\s\uFEFF]*[=+@-]/.test(text) || /^[\t\r\n]/.test(text))
+    text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+};
 export const getCSV = (resources) => {
-  const allFields = getAllFields(resources);
-
-  const filteredFields = R.without(
-    ["__v", "_id", "federalRegion", "location", "allText"],
-    allFields
+  const excluded = new Set([
+    "__v",
+    "_id",
+    "federalRegion",
+    "location",
+    "allText",
+  ]);
+  const fields = [...new Set(resources.flatMap(Object.keys))].filter(
+    (key) => !excluded.has(key),
   );
-  // Move some of the items to the beginning in the CSV file
-  moveItemsToFront(["contactName", "companyName", "type"], filteredFields);
-
-  // Apply a function on a property if the property exists
-  const applyFnOnProp = R.curry((prop, fn) =>
-    R.map(R.when(R.has(prop))(R.over(R.lensProp(prop), fn)))
+  const first = ["contactName", "companyName", "type"].filter((key) =>
+    fields.includes(key),
   );
-  const formatTags = applyFnOnProp("tags", R.join(", "));
-
-  const formatDate = applyFnOnProp("dateCreated", (date) =>
-    new Date(date).toString()
+  const ordered = [...first, ...fields.filter((key) => !first.includes(key))];
+  const rows = resources.map((resource) =>
+    ordered
+      .map((field) => {
+        const value = resource[field];
+        if (field === "distanceFromSearchLoc" && value != null)
+          return csvCell(distanceToString(value));
+        if (Array.isArray(value)) return csvCell(value.join(", "));
+        return csvCell(value);
+      })
+      .join(","),
   );
-  const formatDistance = applyFnOnProp(
-    "distanceFromSearchLoc",
-    distanceToString
-  );
-
-  // const readableDate = R.map((r) => )
-  const formattedResources = R.pipe(
-    formatTags,
-    formatDate,
-    formatDistance
-  )(resources);
-  console.log(formattedResources);
-  return json2csv.parse(formattedResources, {
-    fields: filteredFields,
-  });
+  return [ordered.map(csvCell).join(","), ...rows].join("\r\n");
 };

@@ -26,7 +26,7 @@ const SearchBar = ({ query, location, updateSearchLocation, tags }) => {
   const clearLocation = () => updateSearchLocation("");
 
   return (
-    <div className="search">
+    <div className="map-search">
       <form onSubmit={onSubmit}>
         <div className="searchLocation">
           <img className="locationIcon" src={LocationIcon} alt="Location" />
@@ -36,12 +36,15 @@ const SearchBar = ({ query, location, updateSearchLocation, tags }) => {
               name="location"
               type="text"
               placeholder="Location"
+              aria-label="Search location"
               tabIndex="0"
               value={location}
               onChange={(e) => updateSearchLocation(e.target.value)}
             />
             <Button
               className="closeButtons"
+              type="button"
+              aria-label="Clear location"
               close
               onClick={clearLocation}
               tabIndex="-1"

@@ -1,16 +1,12 @@
 /* eslint-disable no-unused-vars */
 // run `node utils/volunteer-sheet-parser.js <insert_spreadsheet_path>` from the `/backend` folder
 
-const XLSX = require("xlsx");
-const extractor = require("keyword-extractor");
+require("dotenv").config({ quiet: true });
+const ExcelJS = require("exceljs");
+
 const resourceUtils = require("./resource-utils");
 const IndividualResource = require("../models/IndividualResource");
 const mongoose = require("mongoose");
-
-mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
 
 const createTags = ({
   "18 or Older?": eighteen,
@@ -51,9 +47,7 @@ const getLocation = async (mailingAddress) => {
       address,
     };
   } catch (err) {
-    console.log(mailingAddress);
-    console.log(err);
-    throw "Bad address";
+    throw new Error("An address could not be geocoded");
   }
 };
 
@@ -76,22 +70,33 @@ const convertSchema = async (entry) => ({
 const main = async () => {
   const spreadsheet = process.argv[2];
 
-  const workbook = XLSX.readFile(spreadsheet);
-  const json = XLSX.utils.sheet_to_json(
-    workbook.Sheets[workbook.SheetNames[0]],
-    { defval: "", raw: false }
-  );
+  await mongoose.connect(process.env.DB_URI, { serverSelectionTimeoutMS: 10000 });
+  const workbook = new ExcelJS.Workbook();
   try {
-    const mongoData = await Promise.all(json.map(convertSchema));
+    await workbook.xlsx.readFile(spreadsheet);
+    const sheet = workbook.worksheets[0];
+    if (!sheet || sheet.rowCount > 10000) throw new Error("Invalid or oversized spreadsheet");
+    const headers = sheet.getRow(1).values;
+    const json = [];
+    sheet.eachRow((row, number) => {
+      if (number === 1) return;
+      const entry = {};
+      headers.forEach((header, index) => { if (header) entry[String(header)] = row.getCell(index).text; });
+      json.push(entry);
+    });
+    // Bound geocoding concurrency and avoid transmitting an entire sheet at once.
+    const mongoData = [];
+    for (const entry of json) mongoData.push(await convertSchema(entry));
     const resources = mongoData.map(
       (resource) => new IndividualResource(resource)
     );
     await Promise.all(resources.map((r) => r.save()));
   } catch (err) {
-    console.log(err);
+    console.error("Import failed; no raw spreadsheet data is logged");
+    process.exitCode = 1;
   } finally {
-    mongoose.connection.close();
+    await mongoose.connection.close();
   }
 };
 
-main();
+main().catch(() => { console.error("Import could not start"); process.exitCode = 1; });

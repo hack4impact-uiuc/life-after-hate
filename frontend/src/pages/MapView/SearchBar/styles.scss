@@ -1,9 +1,81 @@
-.search {
+.map-search {
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-  padding: 15px 0px 20px 12px;
+  padding: 15px 12px 20px;
   width: auto;
+
+  .locationIcon,
+  .searchIcon {
+    flex: 0 0 16px;
+  }
+
+  #underlineLocation {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    margin-right: 0;
+    padding-bottom: 0;
+    min-height: 32px;
+
+    &:focus-within {
+      border-color: #f79230;
+    }
+  }
+
+  #locationInput {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 32px;
+    padding: 4px 0 5px;
+    line-height: 23px;
+
+    &::placeholder {
+      color: #757575;
+      opacity: 1;
+    }
+  }
+
+  #locationInput,
+  #map-keyword-input {
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #2a2a2a;
+    height: 32px;
+    line-height: 23px;
+    padding: 4px 0 5px;
+    box-sizing: border-box;
+    text-indent: 0;
+
+    &::placeholder {
+      color: #757575;
+      opacity: 1;
+    }
+  }
+
+  .map-search-autocomplete {
+    flex: 1;
+    min-width: 0;
+
+    .MuiFormControl-root {
+      width: 100%;
+    }
+  }
+
+  .submitSearch {
+    flex: 0 0 42px;
+  }
+
+  #underlineLocation .closeButtons {
+    flex: 0 0 12px;
+    width: 12px;
+    height: 12px;
+    padding: 4px;
+    margin-left: 8px;
+  }
 }
 
 .searchLocation,
@@ -38,7 +110,7 @@
 
 #locationInput,
 #searchInput {
-  font-family: "Roboto";
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
   width: 230px;
   height: auto;
   box-sizing: border-box;

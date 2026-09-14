@@ -1,48 +1,21 @@
-# docker-compose.yml
-version: "3.7"
-services: 
-
-  prod-backend: 
-    build: ./backend
-    command: "npm run start:coverage"
-    depends_on: 
-      - db
-    env_file: 
-      - ./.env
-    environment: 
-      - PORT=5000
-      - NODE_ENV=test
-      - BYPASS_AUTH_ROLE=ADMIN
-    ports: 
-      - "5000:5000"
-
-  db: 
-    image: mongo
-    init: true
-    logging: 
-      driver: none
-    ports: 
-      - "27017:27017"
-    volumes: 
-      - "mongo_data:/data/db"
-      
-  prod-frontend: 
-    stdin_open: true
-    env_file: 
-      - ./.env
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
-    command: "npm run start:coverage"
-    depends_on: 
-      - prod-backend
-      - db
-    environment: 
-      - REACT_APP_API_PORT=5000
-      - PORT=3000
-      - DEBUG=instrument-cra
-    ports: 
-      - "3000:3000"
-
-volumes: 
-  mongo_data: ~
+# Legacy Cypress development setup. The maintained CI suite is frontend/e2e (Playwright).
+services:
+  frontend:
+    extends:
+      file: docker-compose.yml
+      service: frontend
+  backend:
+    extends:
+      file: docker-compose.yml
+      service: backend
+    environment:
+      NODE_ENV: test
+      BYPASS_AUTH_ROLE: ADMIN
+  db:
+    extends:
+      file: docker-compose.yml
+      service: db
+volumes:
+  fe_modules:
+  be_modules:
+  mongo_data:

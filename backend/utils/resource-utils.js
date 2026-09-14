@@ -1,7 +1,9 @@
 const axios = require("axios");
 const R = require("ramda");
 const mapquestKey = process.env.MAPQUEST_KEY;
-const mapquestURI = process.env.MAPQUEST_URI;
+const mapquestURI =
+  process.env.MAPQUEST_URI || "https://www.mapquestapi.com/geocoding/v1/";
+const Boom = require("@hapi/boom");
 const { STATE_REGION_MAP } = require("./constants");
 const Fuse = require("fuse.js");
 const geolib = require("geolib");
@@ -53,13 +55,13 @@ const parseGeocodingResponse = (resp) => {
   // Take the state and find the federal region that maps to it
   const findFederalRegion = R.pipe(
     R.propEq("State"),
-    R.flip(R.find)(STATE_REGION_MAP)
+    R.flip(R.find)(STATE_REGION_MAP),
   );
 
   const region = R.pipe(
     getStateFromResults,
     findFederalRegion,
-    R.prop("Region")
+    R.prop("Region"),
   )(resp);
 
   const getCoord = R.pipe(getLocationFromResults, R.flip(R.prop))(resp);
@@ -88,13 +90,39 @@ const getModelForType = (type) => {
   }
 };
 
-const geocodeAddress = R.memoizeWith(R.identity, async (address) => {
-  const addressQuery = encodeURI(
-    `${mapquestURI}address?key=${mapquestKey}&maxResults=5&outFormat=json&location=${address}`
-  );
-  const response = await axios.get(addressQuery);
-  return parseGeocodingResponse(response.data);
-});
+const geocodeAddress = async (address) => {
+  if (typeof address !== "string" || !address.trim() || address.length > 500)
+    throw Boom.badRequest("Invalid address");
+  const url = new URL("address", mapquestURI);
+  if (
+    url.protocol !== "https:" ||
+    url.hostname !== "www.mapquestapi.com" ||
+    url.username ||
+    url.password
+  ) {
+    throw new Error("Geocoding requires the HTTPS MapQuest endpoint");
+  }
+  try {
+    const response = await axios.get(url.href, {
+      params: {
+        key: mapquestKey,
+        maxResults: 1,
+        outFormat: "json",
+        location: address,
+      },
+      timeout: 10000,
+      maxRedirects: 0,
+      maxContentLength: 1024 * 1024,
+    });
+    const result = parseGeocodingResponse(response.data);
+    if (!Number.isFinite(result.lat) || !Number.isFinite(result.lng))
+      throw new Error("No coordinates");
+    return result;
+  } catch (_error) {
+    // Never propagate Axios errors containing the API key and searched address.
+    throw Boom.badGateway("Geocoding failed");
+  }
+};
 
 const addDistanceField = (lat, long) => (resource) => ({
   ...resource,
@@ -102,7 +130,7 @@ const addDistanceField = (lat, long) => (resource) => ({
     resource.location.coordinates[1],
     resource.location.coordinates[0],
     lat,
-    long
+    long,
   ),
 });
 
@@ -113,10 +141,10 @@ const computeDistance = R.curry(
         latitude: sourceLat,
         longitude: sourceLong,
       },
-      { latitude: destLat, longitude: destLong }
+      { latitude: destLat, longitude: destLong },
     ) /
       1000) *
-    0.621371
+    0.621371,
 );
 
 const filterByOptions = R.curry((filterOptions, query, resources) => {
@@ -138,18 +166,18 @@ const filterByOptions = R.curry((filterOptions, query, resources) => {
       "lastModifiedUser",
     ]),
     (r) => Object.values(r),
-    R.join(" ")
+    R.join(" "),
   );
 
   const preparedResources = R.map(
-    R.over(R.lens(R.identity, R.assoc("allText")), getAllText)
+    R.over(R.lens(R.identity, R.assoc("allText")), getAllText),
   )(resources);
 
   const fuse = new Fuse(preparedResources, filterOptions);
   const results = fuse
     .search(query)
     .map((i) => i.item)
-    .map(R.omit("allText"));
+    .map(R.omit(["allText"]));
   return results;
 });
 
@@ -165,15 +193,16 @@ const distanceFilter = R.curry((lat, long, radius) =>
         R.view(resourceLatLens, resource),
         R.view(resourceLongLens, resource),
         lat,
-        long
-      ) < radius
-  )
+        long,
+      ) < radius,
+  ),
 );
 
 // Coerce to boolean
 const nullLocationFilter = R.filter(
   (resource) =>
-    R.view(resourceLatLens, resource) && R.view(resourceLongLens, resource)
+    Number.isFinite(R.view(resourceLatLens, resource)) &&
+    Number.isFinite(R.view(resourceLongLens, resource)),
 );
 
 const touchResourceModification = (data, user) => {
@@ -187,7 +216,7 @@ const touchResourceModification = (data, user) => {
 };
 
 const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
-  if (!(lat && long && radius)) {
+  if (![lat, long, radius].every(Number.isFinite)) {
     // Do nothing if undefined
     return resources;
   }
@@ -195,7 +224,7 @@ const filterResourcesWithinRadius = R.curry((lat, long, radius, resources) => {
     nullLocationFilter,
     distanceFilter(lat, long, radius),
     R.map(addDistanceField(lat, long)),
-    R.sortBy(R.prop("distanceFromSearchLoc"))
+    R.sortBy(R.prop("distanceFromSearchLoc")),
   )(resources);
 });
 
@@ -206,11 +235,16 @@ const toTitleCase = (str) =>
 
 // Apply fn only if path exists
 const updatePath = R.curry((pth, fn, obj) =>
-  R.hasPath(pth, obj) ? R.assocPath(pth, fn(R.path(pth, obj)), obj) : obj
+  R.hasPath(pth, obj) ? R.assocPath(pth, fn(R.path(pth, obj)), obj) : obj,
 );
 
 const isAbsoluteURL = (url) => /^((http|https|ftp):\/\/)/.test(url);
 const prefixWithHTTP = (url) => (isAbsoluteURL(url) ? url : `https://${url}`);
+
+const normalizeResourceFields = R.pipe(
+  updatePath(["tags"], R.map(toTitleCase)),
+  updatePath(["websiteURL"], (url) => (url ? prefixWithHTTP(url) : url)),
+);
 
 const formatIncomingData = ({ lat, lng, region, address }) =>
   R.pipe(
@@ -219,10 +253,11 @@ const formatIncomingData = ({ lat, lng, region, address }) =>
     R.set(resourceRegionLens, region),
     R.set(resourceAddressLens, address),
     updatePath(["tags"], R.map(toTitleCase)),
-    updatePath(["websiteURL"], (url) => (url ? prefixWithHTTP(url) : url))
+    updatePath(["websiteURL"], (url) => (url ? prefixWithHTTP(url) : url)),
   );
 
 module.exports = {
+  normalizeResourceFields,
   getModelForType,
   geocodeAddress,
   filterResourcesWithinRadius,

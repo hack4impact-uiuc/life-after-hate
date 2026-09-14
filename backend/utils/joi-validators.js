@@ -1,70 +1,70 @@
-const { Joi: JoiOriginal } = require("celebrate");
+const { Joi } = require("celebrate");
 const { resourceEnum } = require("../models/Resource");
-// Joi.objectId = require("joi-objectid")(Joi);
-// Workaround
-// https://github.com/hapijs/joi/issues/556#issuecomment-593115711
-const Joi = JoiOriginal.extend({
-  // we want to apply this extension to all available types
-  type: /.*/,
-  rules: {
-    requiredAtFirst: {
-      method() {
-        // we apply 'required()' only if the schema
-        // is tailored to the 'finally' target
-        // see https://github.com/hapijs/joi/blob/master/API.md#anyaltertargets
-        return this.alter({
-          post: (schema) => schema.required(),
-        });
-      },
-    },
-  },
-});
-
-const BASE_RESOURCE = Joi.object().keys({
-  contactName: Joi.string().requiredAtFirst(),
-  contactPhone: Joi.string().allow(""),
-  contactEmail: Joi.string().allow(""),
-  address: Joi.string().requiredAtFirst(),
-  location: Joi.object({
-    type: Joi.string().default("Point"),
-    coordinates: Joi.array().length(2).items(Joi.number()),
-  }).default({ type: "Point", coordinates: [0, 0] }),
-  websiteURL: Joi.string().allow(""),
-  notes: Joi.string().allow(""),
-  tags: Joi.array().items(Joi.string()),
-  type: Joi.string()
-    .valid(resourceEnum.INDIVIDUAL, resourceEnum.GROUP, resourceEnum.TANGIBLE)
-    .default(resourceEnum.INDIVIDUAL),
-});
-
-const INDIVIDUAL_RESOURCE = BASE_RESOURCE.keys({
-  availability: Joi.string().allow(""),
-  howDiscovered: Joi.string().allow(""),
-  volunteerReason: Joi.string().allow(""),
-  skills: Joi.string().allow(""),
-  volunteerRoles: Joi.string().allow(""),
-});
-
-const GROUP_RESOURCE = BASE_RESOURCE.keys({
-  description: Joi.string().allow(""),
-  companyName: Joi.string().requiredAtFirst(),
-});
-
-const TANGIBLE_RESOURCE = BASE_RESOURCE.keys({
-  description: Joi.string().allow(""),
-  quantity: Joi.string().allow(""),
-  resourceName: Joi.string().requiredAtFirst(),
-});
-
-const RESOURCE_SCHEMA = Joi.alternatives().conditional(".type", {
-  switch: [
-    { is: resourceEnum.INDIVIDUAL, then: INDIVIDUAL_RESOURCE },
-    { is: resourceEnum.GROUP, then: GROUP_RESOURCE },
-    { is: resourceEnum.TANGIBLE, then: TANGIBLE_RESOURCE },
-  ],
-});
-
+const text = () => Joi.string().max(10000).allow("");
+const common = {
+  contactName: Joi.string().max(300),
+  contactPhone: text(),
+  contactEmail: Joi.string().email().max(254).allow(""),
+  address: Joi.string().max(500),
+  websiteURL: Joi.string()
+    .max(2000)
+    .allow("")
+    .custom((value, helpers) => {
+      try {
+        const url = new URL(
+          /^[a-z][a-z0-9+.-]*:/i.test(value) ? value : `https://${value}`,
+        );
+        if (
+          !["http:", "https:"].includes(url.protocol) ||
+          url.username ||
+          url.password
+        )
+          return helpers.error("any.invalid");
+        return url.href;
+      } catch {
+        return helpers.error("any.invalid");
+      }
+    }),
+  notes: text(),
+  tags: Joi.array().max(50).items(Joi.string().max(100)),
+  type: Joi.string().valid(...Object.values(resourceEnum)),
+};
+const individual = {
+  availability: text(),
+  howDiscovered: text(),
+  volunteerReason: text(),
+  skills: text(),
+  volunteerRoles: text(),
+};
+const group = { description: text(), companyName: Joi.string().max(300) };
+const tangible = {
+  description: text(),
+  quantity: text(),
+  resourceName: Joi.string().max(300),
+};
+const post = (type, extra, required = {}) =>
+  Joi.object({
+    ...common,
+    ...extra,
+    type: Joi.string().valid(type).required(),
+    contactName: common.contactName.required(),
+    address: common.address.required(),
+    ...required,
+  });
 module.exports = {
-  POST_RESOURCE_SCHEMA: RESOURCE_SCHEMA.tailor("post"),
-  PUT_RESOURCE_SCHEMA: RESOURCE_SCHEMA,
+  POST_RESOURCE_SCHEMA: Joi.alternatives().try(
+    post(resourceEnum.INDIVIDUAL, individual),
+    post(resourceEnum.GROUP, group, {
+      companyName: group.companyName.required(),
+    }),
+    post(resourceEnum.TANGIBLE, tangible, {
+      resourceName: tangible.resourceName.required(),
+    }),
+  ),
+  PUT_RESOURCE_SCHEMA: Joi.object({
+    ...common,
+    ...individual,
+    ...group,
+    ...tangible,
+  }).min(1),
 };

@@ -1,4 +1,5 @@
-const fetch = require("node-fetch");
+require("dotenv").config({ quiet: true });
+const path = require("node:path");
 const mongoose = require("mongoose");
 const colors = require("colors");
 const IndividualResource = require("../models/IndividualResource");
@@ -9,15 +10,12 @@ const fs = require("fs");
 const JSON_LINK_RESOURCES =
   "http://www.json-generator.com/api/json/get/bUvEqZDKPS?indent=2";
 
-const RESOURCE_FILE_PATH = "/var/www/app/assets/mock_data.json";
-const USER_FILE_PATH = "/var/www/app/assets/mock_user_data.json";
+const RESOURCE_FILE_PATH = path.resolve(__dirname, "../../assets/mock_data.json");
+const USER_FILE_PATH = path.resolve(__dirname, "../../assets/mock_user_data.json");
 
 const createConnection = async () => {
   console.log(colors.green("Attempting to connect to Mongo..."));
-  await mongoose.connect(process.env.DB_URI, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  });
+  await mongoose.connect(process.env.DB_URI, { serverSelectionTimeoutMS: 10000 });
 };
 
 const closeConnection = async () => {
@@ -36,7 +34,7 @@ const fetchFromFile = (path) => JSON.parse(fs.readFileSync(path, "utf-8"));
 
 const addMockIndividualResources = async () => {
   const names = ["Alan Fang", "Josh B."];
-  names.map((name) =>
+  const writes = names.map((name) =>
     new IndividualResource({
       contactName: name,
       contactEmail: "email@test.com",
@@ -54,7 +52,7 @@ const addMockIndividualResources = async () => {
       location: { coordinates: [-90, 40] },
     }).save()
   );
-  await Promise.all(names);
+  await Promise.all(writes);
 };
 const addSampleResource = (resource) => {
   // Convert what was an group resource to an individual resource for sake of testing out the app
@@ -70,6 +68,11 @@ const addSampleUser = (user) => {
 };
 
 const main = async () => {
+  if (process.env.NODE_ENV === "production" || process.env.ALLOW_DESTRUCTIVE_SEED !== "yes-local-only") {
+    throw new Error("Seeding deletes data; set ALLOW_DESTRUCTIVE_SEED=yes-local-only only for a disposable local database");
+  }
+  const host = new URL(process.env.DB_URI).hostname;
+  if (!["localhost", "127.0.0.1", "db"].includes(host)) throw new Error("Seeding is restricted to local development databases");
   const args = process.argv.slice(2);
   const resourceCountLimit = args[0];
   const shouldUseLoremData = args[1] === "lorem";
@@ -100,4 +103,4 @@ const main = async () => {
   }
 };
 
-main();
+main().catch(() => { console.error("Seed failed; verify local database configuration"); process.exitCode = 1; });

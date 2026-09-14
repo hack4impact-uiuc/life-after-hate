@@ -1,9 +1,9 @@
 frontend:
-  - frontend/**/*
-
-backend: 
-  - backend/**/*
-
+  - changed-files:
+      - any-glob-to-any-file: frontend/**/*
+backend:
+  - changed-files:
+      - any-glob-to-any-file: backend/**/*
 infrastructure:
-  - scripts/**/*
-  - .github/**/*
+  - changed-files:
+      - any-glob-to-any-file: [scripts/**/*, .github/**/*]

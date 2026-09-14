@@ -5,7 +5,7 @@ const errorWrap = require("../../utils/error-wrap");
 const { roleEnum } = require("../../models/User");
 
 // get all users
-router.get(
+router.post(
   "/setRole/:role",
   celebrate({
     params: {
@@ -16,13 +16,13 @@ router.get(
     },
   }),
   errorWrap((req, res) => {
-    req.app.locals.mockRole = req.params.role;
+    req.app.locals.mockRole = req.params.role.toUpperCase();
     res.json({
       code: 200,
       result: `Mock user changed to ${req.app.locals.mockRole}.`,
       success: true,
     });
-  })
+  }),
 );
 
 module.exports = router;

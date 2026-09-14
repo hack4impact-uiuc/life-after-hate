@@ -113,3 +113,22 @@ frontend/cypress/screenshots
 .dynamodb/
 
 .vercel
+# Private environment variants and generated test/build artifacts
+.env.*
+!.env.example
+frontend/playwright-report/
+frontend/test-results/
+.aws-sam/
+
+frontend/build-e2e/
+cloudflare/dist/
+cloudflare/.wrangler/
+**/.dev.vars*
+*.archive.gz
+*.sqlite
+*.sqlite-*
+
+turso/dist/
+*.db
+*.db-*
+.env*

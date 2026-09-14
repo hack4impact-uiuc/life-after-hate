@@ -1,0 +1,19 @@
+# Set PUBLIC_HOST to the production hostname. Caddy terminates HTTPS itself.
+{$PUBLIC_HOST} {
+    header {
+        Referrer-Policy "no-referrer"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Cache-Control "no-store"
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.googleusercontent.com https://*.mapbox.com; font-src 'self'; connect-src 'self' https://*.mapbox.com https://events.mapbox.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        -Server
+    }
+    handle /api/* {
+        reverse_proxy backend:5000
+    }
+    handle {
+        root * /srv
+        try_files {path} /index.html
+        file_server
+    }
+}

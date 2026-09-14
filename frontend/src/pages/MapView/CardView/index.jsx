@@ -89,7 +89,7 @@ class CardView extends React.Component {
           // 'style' attribute required to position cell (within parent List)
           <ResourceCard
             key={resources[index]._id}
-            ref={registerChild}
+            myRef={registerChild}
             resource={resources[index]}
             isSelected={resources[index]._id === selectedResource}
             style={style}

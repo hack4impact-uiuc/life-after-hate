@@ -20,27 +20,25 @@ const SearchBar = ({ isLoading }) => {
           <input
             id="search-general"
             type="text"
-            name="keyword"
-            ref={register}
+            {...register("keyword")}
             className="search-input"
             placeholder="Search"
           />
         </label>
-        <label className="col-md mb-3 mb-md-0 pl-md-0">
+        <label className="col-md mb-3 mb-md-0 ps-md-0">
           <input
             id="search-location"
             type="text"
-            name="location"
+            {...register("location")}
             placeholder="Location"
             className="search-input"
-            ref={register}
           />
         </label>
-        <div className="col-md mb-3 mb-md-0 pl-md-0">
+        <div className="col-md mb-3 mb-md-0 ps-md-0">
           <DirectoryTagSearch></DirectoryTagSearch>
         </div>
 
-        <div className="col-6 mx-auto col-sm-6 col-md-2 pl-md-0">
+        <div className="col-6 mx-auto col-sm-6 col-md-2 ps-md-0">
           <Button id="search-button" type="submit" disabled={isLoading}>
             SEARCH
           </Button>

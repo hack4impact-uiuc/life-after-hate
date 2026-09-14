@@ -1,280 +1,30 @@
 #!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
-const program = require("commander");
-const { spawn } = require("child_process");
-const colors = require("colors");
-const path = require("path");
-const findUp = require("find-up");
-const fs = require("fs");
-const fetch = require("node-fetch");
-
-const installPackage = async module => {
-  const curDir = path.basename(process.cwd());
-  if (curDir !== "frontend" && curDir !== "backend") {
-    console.log(
-      colors.red("Must be in the root of the frontend or backend directory")
-    );
-    return;
-  }
-  try {
-    await runCommand("npm", ["install", "--save", module]);
-    await runCommand("rm", ["-rf", "node_modules"]);
-    await updateEnv();
-    await runSingleCommand("docker-compose", ["down", "-v"]);
-    await runSingleCommand("docker-compose", ["build"]);
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const runSingleCommand = async (cmd, args, cb, env) => {
-  try {
-    await runCommand(cmd, args, cb, env);
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const runCommand = (cmd, args, cb, env) => {
-  return new Promise((res, rej) => {
-    // spawn a new process
-    const merged_env = { ...process.env, ...env };
-    const proc = spawn(cmd, args, { env: merged_env });
-
-    // pipe the output to the console
-    proc.stdout.on("data", data => {
-      process.stdout.write(data);
-      if (cb) {
-        cb(data.toString().split(/[\r\n]+/));
-      }
-    });
-
-    proc.stderr.on("data", data => {
-      process.stderr.write(data);
-      if (cb) {
-        cb(data.toString().split(/[\r\n]+/));
-      }
-    });
-
-    proc.on("close", code => {
-      const msg = `LAHUTIL: Command ${cmd} ${args.join(
-        " "
-      )} exited with code ${code}`;
-      if (code === 0) {
-        console.log(colors.green(msg));
-        res(code);
-      } else {
-        console.error(colors.red(msg));
-        rej(`Process error with exit code ${code}`);
-      }
-    });
-
-    proc.on("error", code => {
-      rej(code);
-    });
-  });
-};
-
-const removeAll = async () => {
-  await runSingleCommand("docker", ["ps", "-a", "-q"], idArr => {
-    // For every container running, stop it
-    Promise.all(idArr.map(id => runSingleCommand("docker", ["stop", id])));
-  });
-  await runSingleCommand("docker", ["container", "ls", "-a", "-q"], idArr => {
-    // For every container, remove it
-    Promise.all(
-      idArr.map(id => runSingleCommand("docker", ["container", "rm", "-f", id]))
-    );
-  });
-  await runSingleCommand("docker", ["image", "ls", "-a", "-q"], idArr => {
-    // For every image, remove it
-    Promise.all(
-      idArr.map(id => runSingleCommand("docker", ["image", "rm", "-f", id]))
-    );
-  });
-  await runSingleCommand("docker", ["volume", "ls", "-q"], idArr => {
-    // For every volume, remove it
-    Promise.all(
-      idArr.map(id => runSingleCommand("docker", ["volume", "rm", "-f", id]))
-    );
-  });
-};
-
-const updateEnv = async isWindows => {
-  console.log(colors.blue("LAHUTIL: Attempting to sync up .env file..."));
-  const envURLLoc = await findUp(".env_url");
-  if (typeof envURLLoc === "undefined") {
-    console.error(
-      colors.red(
-        "LAHUTIL: Cannot find .env_url - are you sure you have added it?"
-      )
-    );
-  } else {
-    const url = fs.readFileSync(envURLLoc, "utf8");
-    const result = await (await fetch(url)).text();
-    const dest = path.join(path.dirname(envURLLoc), ".env");
-    fs.writeFileSync(dest, result);
-    if (isWindows) {
-      fs.appendFileSync(dest, "CHOKIDAR_USEPOLLING=true");
-    }
-    console.log(
-      colors.green(
-        "LAHUTIL: Successfully pulled current .env file from web server."
-      )
-    );
-  }
-};
-
-const seedDB = async ({ count, lorem }) => {
-  const DEFAULT_NUM_RESOURCES = 100;
-  console.log(
-    colors.blue("LAHUTIL: Attempting to seed DB with sample data...")
-  );
-  if (!count) {
-    console.log(
-      colors.blue(
-        `LAHUTIL: "count" argument to lahutil seed is not defined, will seed database with default ${DEFAULT_NUM_RESOURCES} resources.`
-      )
-    );
-  }
-
-  await runSingleCommand("docker-compose", [
-    "run",
-    "backend",
-
-    "/bin/bash",
-    "-c",
-    `node utils/generate_mock_data.js ${
-      count ? count : DEFAULT_NUM_RESOURCES
-    } ${lorem ? "lorem" : "false"} --color`
-  ]);
-};
-
-// error on unknown commands
-program.on("command:*", function() {
-  console.error(
-    "Invalid command: %s\nType lahutil -h for a list of available commands.",
-    program.args.join(" ")
-  );
-  process.exit(1);
-});
-
-program
-  .version("0.0.1")
-  .description(
-    "A simple application for Life After Hate developers to manager their Docker containers without dealing with the extra overhead."
-  );
-
-program
-  .command("up")
-  .description(
-    "Start up a new instance of the LAH frontend, backend, and database using Docker Compose."
-  )
-  .option("-a, --admin", "Run with admin role")
-  .option("-v, --volunteer", "Run with volunteer role")
-  .option("-p, --pending", "Run with pending role")
-  .option("-r, --rejected", "Run with rejected role")
-  .action(cmdObj => {
-    let currentRole;
-    if (cmdObj.admin) {
-      currentRole = "ADMIN";
-    } else if (cmdObj.volunteer) {
-      currentRole = "VOLUNTEER";
-    } else if (cmdObj.pending) {
-      currentRole = "PENDING";
-    } else if (cmdObj.rejected) {
-      currentRole = "REJECTED";
-    }
-
-    runSingleCommand("docker-compose", ["up"], null, {
-      BYPASS_AUTH_ROLE: currentRole
-    });
-  });
-
-program
-  .command("down")
-  .description(
-    "Stops the LAH frontend, backend, and database, and removes all DB information."
-  )
-  .action(() => {
-    runSingleCommand("docker-compose", ["down", "-v"]);
-  });
-
-program
-  .command("reset")
-  .description(
-    "Rebuilds everything — use this if you just pulled new changes and need to update your installed packages."
-  )
-  .action(async () => {
-    await updateEnv();
-    await runSingleCommand("docker-compose", ["down", "-v"]);
-    await runSingleCommand("docker-compose", ["build"]);
-  });
-
-program
-  .command("clearall")
-  .description("Removes everything Docker-related. Only use as a last resort.")
-  .action(async () => {
-    await removeAll();
-    // Do second pass in case there were any dependencies that couldn't be removed the first time
-    await removeAll();
-    console.log(colors.bgMagenta("Cleared all Docker-related files."));
-  });
-
-program
-  .command("install <module>")
-  .description("Installs module in directory")
-  .action(installPackage);
-
-program
-  .command("env")
-  .option("-w, --windows", "Is running docker for windows")
-  .description(
-    "Pulls latest .env file. Requires that you have the URL set it in .env_url"
-  )
-  .action(cmdObj => {
-    updateEnv(cmdObj.windows);
-  });
-
-program
-  .command("seed")
-  .option("-c, --count <number>", "Number of resources")
-  .option(
-    "-l, --lorem",
-    "Use the more boring but standardized lorem ispum data"
-  )
-  .description("Seeds the database with the mock data")
-  .action(seedDB);
-
-program
-  .command("test")
-  .description("Runs backend testing suite")
-  .action(() =>
-    runSingleCommand("docker-compose", ["run", "backend", "npm", "test"])
-  );
-
-program
-  .command("testfe")
-  .description("Opens the test runner for Cypress tests")
-  .action(async () => {
-    const cypressExec = path.resolve(__dirname, "../node_modules/.bin/cypress");
-    await seedDB({ count: 100 });
-    runCommand("docker-compose", ["up"], null, {
-      BYPASS_AUTH_ROLE: "ADMIN"
-    });
-    await runCommand(cypressExec, ["open", "--project", "./frontend"], null, {
-      CYPRESS_BASE_URI: "http://localhost:3000",
-      CYPRESS_API_URI: "http://localhost:5000"
-    });
-    runCommand("docker-compose", ["down"]);
-  });
-
-if (!process.argv.slice(2).length) {
-  program.outputHelp();
+const { spawn } = require("node:child_process");
+const path = require("node:path");
+const root = path.resolve(__dirname, "..");
+const [command, ...args] = process.argv.slice(2);
+function run(executable, argv, env = {}) {
+  const child = spawn(executable, argv, { cwd: root, stdio: "inherit", env: { ...process.env, ...env } });
+  child.on("error", () => { console.error("Command could not start"); process.exitCode = 1; });
+  child.on("exit", (code) => { process.exitCode = code ?? 1; });
 }
-
-program.parse(process.argv);
+switch (command) {
+  case "up": {
+    const roles = { "--admin": "ADMIN", "--volunteer": "VOLUNTEER", "--pending": "PENDING", "--rejected": "REJECTED" };
+    run("docker", ["compose", "up", "--build"], { BYPASS_AUTH_ROLE: roles[args[0]] || "" });
+    break;
+  }
+  case "down": run("docker", ["compose", "down"]); break;
+  case "reset": run("docker", ["compose", "build", "--pull"]); break;
+  case "seed":
+    if (!args.includes("--confirm-local-data-loss")) {
+      console.error("Seeding replaces the local database. Pass --confirm-local-data-loss for a disposable local database.");
+      process.exitCode = 1;
+    } else run("docker", ["compose", "run", "--rm", "-e", "ALLOW_DESTRUCTIVE_SEED=yes-local-only", "backend", "node", "utils/generate_mock_data.js"]);
+    break;
+  case "test": run("npm", ["--prefix", "backend", "test"]); break;
+  case "testfe": run("npm", ["--prefix", "frontend", "run", "test:e2e"]); break;
+  default:
+    console.info("Usage: lahutil up [--admin|--volunteer|--pending|--rejected] | down | reset | seed --confirm-local-data-loss | test | testfe");
+    if (command) process.exitCode = 1;
+}

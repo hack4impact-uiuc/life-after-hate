@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 const express = require("express");
+const Boom = require("@hapi/boom");
 const R = require("ramda");
 const { celebrate, Joi } = require("celebrate");
 Joi.objectId = require("joi-objectid")(Joi);
-const beeline = require("honeycomb-beeline");
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const resourceUtils = require("../../utils/resource-utils");
@@ -27,6 +27,20 @@ const validators = require("../../utils/joi-validators");
 const router = express.Router();
 
 const concatAddress = (resource) => {
+  // Older stored records may predate URL validation. Never expose executable links.
+  let websiteURL = "";
+  try {
+    const url = new URL(resource.websiteURL);
+    if (
+      ["http:", "https:"].includes(url.protocol) &&
+      !url.username &&
+      !url.password
+    )
+      websiteURL = url.href;
+  } catch {
+    /* Missing or malformed legacy URL. */
+  }
+  resource = { ...resource, websiteURL };
   const address = R.view(resourceAddressLens, resource);
   if (!resource.address) {
     return resource;
@@ -47,15 +61,14 @@ router.get(
   "/",
   requireVolunteerStatus,
   errorWrap(async (req, res) => {
-    const span = beeline.startSpan({ name: "Resource Fetch" });
     const resources = await Resource.find({}).lean();
-    beeline.finishSpan(span);
+
     res.json({
       code: 200,
       result: resources.map(concatAddress),
       success: true,
     });
-  })
+  }),
 );
 
 router.get(
@@ -64,7 +77,7 @@ router.get(
   errorWrap(async (req, res) => {
     const tags = await Resource.distinct("tags").lean();
     res.json({ code: 200, result: tags, success: true });
-  })
+  }),
 );
 // get list of resources filtered by location radius
 router.get(
@@ -72,41 +85,36 @@ router.get(
   requireVolunteerStatus,
   celebrate({
     query: {
-      radius: Joi.number(),
-      address: Joi.string(),
-      keyword: Joi.string(),
-      customWeights: Joi.array(),
-      tag: Joi.string(),
+      radius: Joi.number().min(0).max(12500),
+      address: Joi.string().max(500),
+      keyword: Joi.string().max(200),
+
+      tag: Joi.string().max(100),
     },
   }),
   errorWrap(async (req, res) => {
-    const { radius, address, keyword, customWeights, tag } = req.query;
-    let span = beeline.startSpan({ name: "Resource Fetch" });
+    const { radius, address, keyword, tag } = req.query;
+
     let resources = await Resource.find({}).lean();
-    beeline.finishSpan(span);
+
     const { lat, lng } = address
       ? await resourceUtils.geocodeAddress(address)
       : {};
 
-    // if custom weights provided, will set custom field rankings
-    const filterOptions = customWeights
-      ? { ...DEFAULT_FILTER_OPTIONS, keys: customWeights }
-      : DEFAULT_FILTER_OPTIONS;
+    const filterOptions = DEFAULT_FILTER_OPTIONS;
 
-    span = beeline.startSpan({ name: "Resource Filtering Computation" });
     resources = R.pipe(
       filterResourcesWithinRadius(lat, lng, radius),
       filterByOptions(filterOptions)(keyword),
-      filterByOptions(TAG_ONLY_OPTIONS)(tag)
+      filterByOptions(TAG_ONLY_OPTIONS)(tag),
     )(resources);
-    beeline.finishSpan(span);
 
     res.json({
       code: 200,
       result: { center: [lng, lat], resources: resources.map(concatAddress) },
       success: true,
     });
-  })
+  }),
 );
 
 // create new resource
@@ -118,11 +126,9 @@ router.post(
     // Copy the object and add an empty coordinate array
     let data = { ...req.body };
 
-    const span = beeline.startSpan({ name: "Resource Create" });
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
-      data.address
+      data.address,
     );
-    beeline.finishSpan(span);
 
     data = formatIncomingData({ lat, lng, region, address })(data);
     touchResourceModification(data, req.user);
@@ -137,7 +143,7 @@ router.post(
       id: _id,
       success: true,
     });
-  })
+  }),
 );
 
 // get one resource
@@ -151,15 +157,16 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
-    const span = beeline.startSpan({ name: "Resource Fetch" });
+
     const resource = await Resource.findById(resourceId).lean();
-    beeline.finishSpan(span);
+    if (!resource) throw Boom.notFound();
+
     res.json({
       code: 200,
       result: concatAddress(resource),
       success: true,
     });
-  })
+  }),
 );
 
 // edit resource
@@ -176,23 +183,24 @@ router.put(
     let data = { ...req.body };
     const resourceId = req.params.resource_id;
 
-    let span = beeline.startSpan({ name: "Geocode Address" });
-    const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
-      data.address
-    );
-    beeline.finishSpan(span);
-
-    data = formatIncomingData({ lat, lng, region, address })(data);
+    const existing = await Resource.findById(resourceId).lean();
+    if (!existing) throw Boom.notFound();
+    if (data.type && data.type !== existing.type)
+      throw Boom.badRequest("Resource type cannot change");
+    if (data.address !== undefined) {
+      const { lat, lng, region, ...address } =
+        await resourceUtils.geocodeAddress(data.address);
+      data = formatIncomingData({ lat, lng, region, address })(data);
+    } else {
+      data = resourceUtils.normalizeResourceFields(data);
+    }
     touchResourceModification(data, req.user);
-
-    const ResourceModel = getModelForType(data.type);
-    span = beeline.startSpan({ name: "Resource Update" });
+    const ResourceModel = getModelForType(existing.type);
     const resource = await ResourceModel.findByIdAndUpdate(
       resourceId,
       { $set: data },
-      { new: true }
+      { returnDocument: "after", runValidators: true },
     );
-    beeline.finishSpan(span);
 
     const ret = resource
       ? {
@@ -206,7 +214,7 @@ router.put(
           success: false,
         };
     res.status(ret.code).json(ret);
-  })
+  }),
 );
 
 // delete resource
@@ -220,9 +228,9 @@ router.delete(
   }),
   errorWrap(async (req, res) => {
     const resourceId = req.params.resource_id;
-    const span = beeline.startSpan({ name: "Resource Delete" });
-    const resource = await Resource.findByIdAndRemove(resourceId);
-    beeline.finishSpan(span);
+
+    const resource = await Resource.findByIdAndDelete(resourceId);
+
     const ret = resource
       ? {
           code: 200,
@@ -235,7 +243,7 @@ router.delete(
           success: false,
         };
     res.status(ret.code).json(ret);
-  })
+  }),
 );
 
 module.exports = router;

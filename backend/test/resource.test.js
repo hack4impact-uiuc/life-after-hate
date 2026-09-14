@@ -1,4 +1,4 @@
-const request = require("supertest");
+const request = require("./request");
 const { expect } = require("chai");
 const app = require("../app.js");
 const Resource = require("../models/Resource");
@@ -60,20 +60,20 @@ const sampleResourceInfo3 = {
 };
 
 const createSampleResource = async (resourceInfo = sampleResourceInfo) => {
-  const newResource = new Resource(resourceInfo);
+  const newResource = new (require("../models/GroupResource"))(resourceInfo);
   await newResource.save();
 };
 
 const createSampleResource2 = async (resourceInfo = sampleResourceInfo2) => {
-  const newResource = new Resource(resourceInfo);
+  const newResource = new (require("../models/GroupResource"))(resourceInfo);
   await newResource.save();
 };
 
 beforeEach(createSampleResource);
-afterEach(() => Resource.remove({}));
+afterEach(() => Resource.deleteMany({}));
 
 describe("GET /resources", () => {
-  beforeEach(() => Resource.remove());
+  beforeEach(() => Resource.deleteMany({}));
   it("should get no Resources", async () => {
     const res = await request(app).get(`/api/resources`).expect(200);
     expect(res.body.result).to.be.an("array").that.is.empty;
@@ -84,7 +84,11 @@ describe("GET /resources", () => {
     await createSampleResource();
     const res = await request(app).get(`/api/resources`).expect(200);
     expect(res.body.result).to.have.lengthOf(1);
-    expect(Object.keys(res.body.result[0])).to.have.lengthOf(14);
+    expect(res.body.result[0]).to.include({
+      contactName: "Alice",
+      companyName: "Google",
+      type: "GROUP",
+    });
     expect(didCheckIsVolunteer()).to.be.true;
   });
 });
@@ -104,7 +108,7 @@ describe("GET /resources/:resource_id", () => {
 describe("GET /resources/filter", () => {
   it("should sort existing Resources by closest lat/long", async () => {
     await createSampleResource2();
-    const radius = 100000;
+    const radius = 12500;
     const address = "Chicago, IL";
     const stub = sinon
       .stub(resourceUtils, "geocodeAddress")
@@ -150,7 +154,13 @@ describe("POST /resources", () => {
 
     await request(app)
       .post(`/api/resources/`)
-      .send(sampleResourceInfo3)
+      .send(
+        Object.fromEntries(
+          Object.entries(sampleResourceInfo3).filter(
+            ([key]) => key !== "location",
+          ),
+        ),
+      )
       .expect(201);
     const resource = await Resource.findOne({ companyName: "Facebook" });
     expect(resource.contactName).equals("Evan");
@@ -186,6 +196,9 @@ describe("PUT /resources", () => {
       .expect(200);
     const newResource = await Resource.findById(resourceId);
     expect(newResource.description).to.eq("new description");
+    expect(newResource.address.city).to.eq("Silicon Valley");
+    expect(newResource.location.coordinates).to.deep.eq([35, 40]);
+    expect(stub.called).to.eq(false);
     expect(didCheckIsAdmin()).to.be.true;
     stub.restore();
   });
@@ -199,5 +212,53 @@ describe("DELETE /resource", () => {
     const resources = await Resource.find();
     expect(resources).to.be.an("array").that.is.empty;
     expect(didCheckIsAdmin()).to.be.true;
+  });
+});
+
+describe("resource validation boundaries", () => {
+  it("returns 404 for a missing resource", async () => {
+    await request(app)
+      .get("/api/resources/507f1f77bcf86cd799439011")
+      .expect(404);
+  });
+  it("rejects resource type changes", async () => {
+    const resource = await Resource.findOne({ companyName: "Google" });
+    await request(app)
+      .put(`/api/resources/${resource._id}`)
+      .send({ type: "INDIVIDUAL" })
+      .expect(400);
+    expect((await Resource.findById(resource._id)).type).to.eq("GROUP");
+  });
+  it("rejects unsafe website schemes and forged coordinates", async () => {
+    const resource = await Resource.findOne({ companyName: "Google" });
+    for (const data of [
+      { websiteURL: "javascript:alert(1)" },
+      { location: { coordinates: [0, 0] } },
+    ]) {
+      await request(app)
+        .put(`/api/resources/${resource._id}`)
+        .send(data)
+        .expect(400);
+    }
+  });
+  it("rejects oversized searches", async () => {
+    await request(app)
+      .get("/api/resources/filter")
+      .query({ keyword: "x".repeat(201) })
+      .expect(400);
+  });
+});
+
+describe("legacy resource safety", () => {
+  it("does not return executable website URLs from old records", async () => {
+    const resource = await Resource.findOne({ companyName: "Google" });
+    await Resource.updateOne(
+      { _id: resource._id },
+      { websiteURL: "javascript:alert(1)" },
+    );
+    const response = await request(app)
+      .get(`/api/resources/${resource._id}`)
+      .expect(200);
+    expect(response.body.result.websiteURL).to.eq("");
   });
 });

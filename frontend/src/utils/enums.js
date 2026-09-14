@@ -31,8 +31,4 @@ const sortFieldEnum = {
   DESCRIPTION: "DESCRIPTION",
 };
 
-module.exports.roleEnum = roleEnum;
-module.exports.resourceEnum = resourceEnum;
-module.exports.userFilterEnum = userFilterEnum;
-module.exports.modalEnum = modalEnum;
-module.exports.sortFieldEnum = sortFieldEnum;
+export { roleEnum, resourceEnum, userFilterEnum, modalEnum, sortFieldEnum };

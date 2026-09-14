@@ -1,11 +1,11 @@
 name: Labeler
 on: [pull_request_target]
-
+permissions:
+  contents: read
+  pull-requests: write
 jobs:
   label:
-    name: Label Branch
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/labeler@v2
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      # No checkout or execution of PR code in a privileged workflow.
+      - uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9 # v5

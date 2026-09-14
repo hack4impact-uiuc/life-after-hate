@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 import { globalTagListSelector } from "../../../redux/selectors/tags";
 import { updateSearchQuery } from "../../../redux/actions/map";
 import { addTag } from "../../../redux/actions/tags";
@@ -10,69 +10,65 @@ import { searchQuerySelector } from "../../../redux/selectors/map";
 import { resourceSelector } from "../../../redux/selectors/resource";
 
 import {
-  createMuiTheme,
+  createTheme,
   ThemeProvider as MuiThemeProvider,
-} from "@material-ui/core/styles";
+} from "@mui/material/styles";
 
-const theme = createMuiTheme({
-  overrides: {
-    MuiInputBase: {
-      root: {
-        "&&&": {
-          paddingTop: 0,
-          paddingBottom: 0,
-          paddingRight: 0,
-          borderRadius: "4px",
-          backgroundColor: "#fff",
-        },
-      },
-    },
-    MuiFormControl: {
-      root: {
-        "&&&": {
-          marginTop: 0,
-          marginBottom: 0,
-          borderRadius: "4px",
-          backgroundColor: "#fff",
-        },
-      },
-    },
-    MuiInput: {
-      underline: {
-        "&&&:before": {
-          borderBottom: "1px solid rgba(0,0,0,0.2)",
-        },
-
-        "&&&:after": {
-          borderBottom: "1px solid #f79230",
-        },
-      },
-    },
-    MuiAutocomplete: {
-      root: {
-        "&&&": {
-          marginRight: "5px",
-          marginLeft: "4px",
-        },
-      },
-      noOptions: {
-        "&&&": {
-          display: "none",
-        },
-      },
-      input: {
-        "&&&": {
-          width: "252px",
-          fontSize: "14px",
-          textIndent: "2px",
-          color: "#2a2a2a",
-        },
-        "&&&::placeholder": {
-          color: "#000",
-        },
+const overrides = {
+  MuiInputBase: {
+    root: {
+      "&&&": {
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingRight: 0,
+        borderRadius: "4px",
+        backgroundColor: "#fff",
       },
     },
   },
+  MuiFormControl: {
+    root: {
+      "&&&": {
+        marginTop: 0,
+        marginBottom: 0,
+        borderRadius: "4px",
+        backgroundColor: "#fff",
+      },
+    },
+  },
+  MuiInput: {
+    underline: {
+      "&&&:before": {
+        borderBottom: "1px solid rgba(0,0,0,0.2)",
+      },
+
+      "&&&:after": {
+        borderBottom: "1px solid #f79230",
+      },
+    },
+  },
+  MuiAutocomplete: {
+    root: {
+      "&&&": {
+        marginRight: "5px",
+        marginLeft: "4px",
+      },
+    },
+    noOptions: {
+      "&&&": {
+        display: "none",
+      },
+    },
+
+  },
+};
+const theme = createTheme({
+  components: Object.fromEntries(
+    Object.entries(overrides).map(([key, styles]) => [
+      key,
+      { styleOverrides: styles },
+    ]),
+  ),
 });
 
 const MapSearchAutocomplete = ({
@@ -97,17 +93,20 @@ const MapSearchAutocomplete = ({
   return (
     <MuiThemeProvider theme={theme}>
       <Autocomplete
-        getOptionSelected={() => false}
+        id="map-keyword-input"
+        className="map-search-autocomplete"
+        isOptionEqualToValue={() => false}
         freeSolo
         onInputChange={onInputChange}
         forcePopupIcon={query !== ""}
         // Only present suggestions when there are resources!
-        options={resources.length > 0 ? globalTagList ?? [] : []}
+        options={resources.length > 0 ? (globalTagList ?? []) : []}
         renderInput={(params) => (
           <TextField
             {...params}
             data-cy="searchInput"
             margin="normal"
+            variant="standard"
             placeholder="Search"
           />
         )}
@@ -138,5 +137,5 @@ MapSearchAutocomplete.propTypes = {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MapSearchAutocomplete);

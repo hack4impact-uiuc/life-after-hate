@@ -3,13 +3,13 @@ import { apiAction } from "../redux/actions/api";
 import { authUpdateAction, authPurgeAction } from "../redux/actions/auth";
 import urljoin from "url-join";
 import { toast } from "react-toastify";
-const R = require("ramda");
+import * as R from "ramda";
 
-const API_URI = process.env.REACT_APP_API_URI
-  ? process.env.REACT_APP_API_URI
+const API_URI = import.meta.env.VITE_API_URI
+  ? import.meta.env.VITE_API_URI
   : "/api/";
 
-console.log(`API URI is ${API_URI}`);
+
 
 // Map an object with key/value pairs to a query string of the form key=value&key2=value2
 export const toQueryString = R.pipe(
@@ -55,7 +55,7 @@ export const apiRequest = ({
 
 export const updateGlobalAuthState = (payload) => {
   store.dispatch(authUpdateAction(payload));
-  if (process.env.NODE_ENV === "development") {
+  if (import.meta.env.DEV) {
     toast.info(`Logged in with ${payload.role} role!`, {
       autoClose: 2000,
     });

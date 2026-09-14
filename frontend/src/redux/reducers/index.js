@@ -9,7 +9,7 @@ import tags from "./tags";
 import search from "./search";
 import sort from "./sort";
 
-export default combineReducers({
+const combined = combineReducers({
   isLoading: loading,
   auth,
   resources,
@@ -20,3 +20,9 @@ export default combineReducers({
   search,
   sort,
 });
+
+export default function rootReducer(state, action) {
+  if (["AUTH_PURGE", "API_ACCESS_DENIED"].includes(action.type))
+    state = undefined;
+  return combined(state, action);
+}

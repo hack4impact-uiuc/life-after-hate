@@ -72,7 +72,7 @@ const Map = ({
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
   const handleCenterChange = () => {
-    if (center && center[0]) {
+    if (center?.length === 2 && center.every(Number.isFinite)) {
       // If we received a new center point, focus the map
       setViewport((prevState) => ({
         ...prevState,
@@ -100,7 +100,7 @@ const Map = ({
 
   const getMarkerPoints = () => {
     // If the location information came back correct, display on the map
-    if (center && center[0]) {
+    if (center?.length === 2 && center.every(Number.isFinite)) {
       return [
         ...resources,
         { location: { type: "Center", coordinates: center } },
@@ -165,9 +165,10 @@ const Map = ({
       ContextProvider={MapContext.Provider}
     >
       <StaticMap
+        mapStyle={import.meta.env.VITE_MAP_STYLE || undefined}
         width="100%"
         height="100vh"
-        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+        mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         reuseMap
         preventStyleDiffing
       ></StaticMap>

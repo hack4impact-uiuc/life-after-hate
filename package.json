@@ -1,62 +1,27 @@
 {
   "name": "life-after-hate",
-  "version": "1.0.0",
-  "description": "Package with the development tools for LAH (such as Prettier and Husky). Please see the individual frontend and backend sub-packages for the actual dependencies.",
-  "main": "index.js",
-  "dependencies": {
-    "@cypress/code-coverage": "^3.9.5",
-    "@cypress/commit-info": "^2.2.0",
-    "chai": "^4.3.4",
-    "colors": "^1.4.0",
-    "commander": "^7.2.0",
-    "express-session": "^1.17.1",
-    "find-up": "^5.0.0",
-    "istanbul-lib-coverage": "^3.0.0",
-    "joi-objectid": "^3.0.1",
-    "mocha": "^8.3.2",
-    "node-fetch": "^2.6.1",
-    "nyc": "^15.1.0",
-    "sinon": "^10.0.1"
-  },
-  "devDependencies": {
-    "@hack4impact-uiuc/eslint-plugin": "^2.0.10",
-    "@typescript-eslint/parser": "^4.33.0",
-    "cypress": "^5.6.0",
-    "eslint": "^7.25.0",
-    "eslint-plugin-cypress": "^2.11.2",
-    "husky": "^6.0.0",
-    "lint-staged": "^10.5.4",
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.4"
+  "version": "2.0.0",
+  "private": true,
+  "description": "Development commands for the Life After Hate resource directory",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24 <27"
   },
   "scripts": {
-    "prettier": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
-    "prettier-check": "prettier --check '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,css,json,md}}'",
-    "lint": "eslint '{frontend/**/*.{js,jsx},backend/**/*.{js,jsx}}'",
-    "lint:fe": "eslint 'frontend/**/*.{js,jsx}'",
-    "lint:be": "eslint 'backend/**/*.{js,jsx}'"
+    "test": "npm --prefix backend test && npm --prefix frontend test && npm --prefix scripts/db_backup/backup test",
+    "build": "npm --prefix frontend run build",
+    "test:e2e": "npm --prefix frontend run test:e2e",
+    "lint": "node scripts/check-syntax.cjs",
+    "format": "prettier --write backend frontend/src scripts/db_backup/backup '*.md'",
+    "build:vercel": "node turso/build.mjs && node turso/build-frontend.mjs",
+    "test:turso": "node turso/build.mjs && LAH_TEST_DATABASE=turso node --test cloudflare/test/api.test.mjs turso/*.test.mjs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hack4impact-uiuc/life-after-hate.git"
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "prettier": "^3.8.0"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hack4impact-uiuc/life-after-hate/issues"
-  },
-  "homepage": "https://github.com/hack4impact-uiuc/life-after-hate#readme",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,css,scss,json,md,jsx}": [
-      "prettier --write"
-    ],
-    "*.{js,jsx}": [
-      "eslint --fix"
-    ]
+  "dependencies": {
+    "@hono/node-server": "^2.1.1",
+    "@libsql/client": "^0.18.0"
   }
 }

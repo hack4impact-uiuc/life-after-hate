@@ -1,56 +1,58 @@
-Description: >-
-  Every day at 0400 CST, back up the database using a Lambda function which
-  dumps the result in an S3 bucket.
-
+Description: Private encrypted MongoDB backups using Secrets Manager and a maintained tools layer.
 Transform: AWS::Serverless-2016-10-31
-
 Parameters:
-  MongoURI:
-    Description: Required; the MongoDB URI from the environment.
+  MongoSecretArn:
     Type: String
+    Description: Secrets Manager secret containing a JSON object with a uri field.
   S3Bucket:
-    Description: Required; the bucket where backups should be stored.
     Type: String
+    Description: Private, versioned backup bucket with Block Public Access enabled.
+  BackupKmsKeyArn:
+    Type: String
+  MongoToolsLayerArn:
+    Type: String
+    Description: Reviewed x86_64 Linux MongoDB Database Tools layer exposing /opt/bin/mongodump.
   EmailAddress:
-    Description: Required; where the failure notifications get sent.
     Type: String
-
 Resources:
   BackupFunction:
-    Description: Backup function which should get triggered once a day.
     Type: AWS::Serverless::Function
     Properties:
       Handler: backup.handler
-      Runtime: nodejs12.x
+      Runtime: nodejs24.x
+      Architectures: [x86_64]
       CodeUri: backup/
+      Layers: [!Ref MongoToolsLayerArn]
       MemorySize: 2048
-      Timeout: 30
-      ReservedConcurrentExecutions: 1 # not more than 1 backup at a time
-      Policies:
-        - S3FullAccessPolicy:
-            BucketName: !Ref S3Bucket
+      Timeout: 300
+      ReservedConcurrentExecutions: 1
       Environment:
         Variables:
-          MONGO_URI: !Ref MongoURI
+          MONGO_SECRET_ARN: !Ref MongoSecretArn
           S3_BUCKET: !Ref S3Bucket
+          BACKUP_KMS_KEY_ARN: !Ref BackupKmsKeyArn
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: !Ref MongoSecretArn
+            - Effect: Allow
+              Action: s3:PutObject
+              Resource: !Sub arn:${AWS::Partition}:s3:::${S3Bucket}/backups/*
+            - Effect: Allow
+              Action: [kms:GenerateDataKey, kms:Decrypt]
+              Resource: !Ref BackupKmsKeyArn
+      Events:
+        Daily:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 9 * * ? *)
       EventInvokeConfig:
         DestinationConfig:
           OnFailure:
             Type: SNS
             Destination: !Ref SNSFailureTopic
-
-  ScheduledRule:
-    Description: In essence a cron job, but running on AWS.
-    Type: AWS::Events::Rule
-    Properties:
-      ScheduleExpression: "cron(0 9 * * ? *)" # every day at 0900 UTC / 0400 CST
-      State: "ENABLED"
-      Targets:
-        - Arn: !GetAtt BackupFunction.Arn
-          Id: "TargetFunction"
-
   SNSFailureTopic:
-    Description: The notification channel along which failures will be sent.
     Type: AWS::SNS::Topic
     Properties:
       Subscription:

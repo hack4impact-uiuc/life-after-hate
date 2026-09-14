@@ -44,8 +44,11 @@ const refreshGlobalAuth = async () => {
 };
 
 const logout = async () => {
-  await apiRequest({ endpoint: `auth/logout` });
-  purgeGlobalAuthState();
+  try {
+    await apiRequest({ endpoint: `auth/logout`, method: "POST" });
+  } finally {
+    purgeGlobalAuthState();
+  }
 };
 
 async function getResource(id) {
@@ -161,7 +164,7 @@ async function filterAndRefreshResource(keyword, address, tag, radius) {
   store.dispatch(updateSearchParams({ keyword, address, tag }));
   const results = await getSearchResults(keyword, address, tag, radius);
   store.dispatch(replaceAllResources(results.resources));
-  if (results.center && results.center[0]) {
+  if (results.center?.length === 2 && results.center.every(Number.isFinite)) {
     store.dispatch(updateMapCenter(results.center));
   } else {
     store.dispatch(updateMapCenter(null));

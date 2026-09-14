@@ -13,7 +13,7 @@ import {
   CLEAR_RESOURCES,
 } from "../actions/resources";
 import { CHANGE_PAGE } from "../actions/nav";
-const R = require("ramda");
+import * as R from "ramda";
 
 const INITIAL_STATE = { search: { location: "", query: "" } };
 

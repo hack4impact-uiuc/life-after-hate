@@ -1,20 +1,13 @@
-name: Linting
-
-on: [push]
-
+name: Whitespace
+on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
-  format:
-    name: Prettier Check
+  whitespace:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 12.x 
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-    - name: Prettier check
-      run: |
-        npm ci
-        npm run prettier-check
-      env:
-        CI: true
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - run: git diff --check HEAD~1 HEAD

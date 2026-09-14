@@ -1,108 +1,21 @@
-require("dotenv").config();
-const beeline = require("honeycomb-beeline");
-beeline({
-  writeKey: process.env.BEELINE_KEY,
-  dataset: "LAH",
-  serviceName: "lah-backend",
-  // ... additional optional configuration ...
-});
-
-const express = require("express");
-const axios = require("axios");
-const cors = require("cors");
-const helmet = require("helmet");
+require("dotenv").config({ quiet: true });
 const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
-const app = express();
-const passport = require("passport");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const { errors } = require("celebrate");
-const errorHandler = require("./utils/error-handler");
-const {
-  mockUserMiddleware,
-  setMockUserRole,
-} = require("./utils/auth-middleware");
-const { requestLogger, errorLogger } = require("./utils/logging-middleware");
-
-require("./utils/passport-setup");
-require("./utils/auth-middleware");
-
-// For code coverage
-app.get("/__coverage__", (req, res) => {
-  res.json(global.__coverage__ || null);
+const MongoStore = require("connect-mongo").default;
+const { loadConfig } = require("./utils/config");
+const { createApp } = require("./create-app");
+const config = loadConfig();
+mongoose.set("sanitizeFilter", true);
+const ready = mongoose.connect(config.dbUri, {
+  serverSelectionTimeoutMS: 10000,
 });
-
-const isProd = process.env.NODE_ENV === "production";
-// Console Logger for external API requests
-axios.interceptors.request.use((request) => {
-  console.log(`Starting Axios Request with URL: ${request.url}`);
-  return request;
+const store = MongoStore.create({
+  clientPromise: ready.then(() => mongoose.connection.getClient()),
+  collectionName: "sessions",
+  ttl: 30 * 60,
 });
-
-axios.interceptors.response.use((response) => {
-  console.log("Response:", response.status);
-  return response;
+const app = createApp(config, {
+  store,
+  logRequests: process.env.NODE_ENV !== "test",
 });
-app.use(helmet());
-if (!isProd) {
-  app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
-}
-app.use(morgan("dev"));
-
-mongoose.connect(process.env.DB_URI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  serverSelectionTimeoutMS: 2000000,
-});
-// Silence deprecation warnings
-mongoose.set("useCreateIndex", true);
-console.log(
-  `REACT_APP: ${process.env.REACT_APP_API_URI === "http://backend:5000/api/"}`
-);
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    store: new MongoStore({
-      mongooseConnection: mongoose.connection,
-      touchAfter: 24 * 3600,
-      stringify: false,
-    }),
-    saveUninitialized: false, // don't create session until something stored
-    resave: false, //don't save session if unmodified
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week long
-    },
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(bodyParser.json());
-
-if (isProd) {
-  console.log("Using production-level logging.");
-  app.use(requestLogger);
-}
-
-// If we're running in a mode that should bypass auth, set up a mock user
-if (!isProd && process.env.BYPASS_AUTH_ROLE) {
-  console.warn(
-    `Auth is being bypassed with role \"${process.env.BYPASS_AUTH_ROLE}\"!`
-  );
-  setMockUserRole(app, process.env.BYPASS_AUTH_ROLE);
-  app.use(mockUserMiddleware);
-}
-
-app.use(require("./routes"));
-
-// Error handle logging
-if (isProd) {
-  app.use(errorLogger);
-}
-
-app.use(errors());
-app.use(errorHandler);
-
+app.locals.ready = ready;
 module.exports = app;

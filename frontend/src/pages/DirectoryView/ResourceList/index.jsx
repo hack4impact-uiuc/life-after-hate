@@ -32,7 +32,9 @@ class ResourceList extends React.Component {
     }
   };
 
-  componentDidUpdate = () => this.purgeCache();
+  componentDidUpdate = (previous) => {
+    if (previous.resources !== this.props.resources) this.purgeCache();
+  };
 
   rowRenderer({ index, key, parent, style }) {
     const { resources } = this.props;
@@ -47,13 +49,13 @@ class ResourceList extends React.Component {
       >
         {({ registerChild, measure }) => (
           // 'style' attribute required to position cell (within parent List)
-          <ResourceCard
-            key={resources[index]._id}
-            ref={registerChild}
-            resource={resources[index]}
-            style={style}
-            measure={measure}
-          />
+          <div ref={registerChild} style={style}>
+            <ResourceCard
+              key={resources[index]._id}
+              resource={resources[index]}
+              measure={measure}
+            />
+          </div>
         )}
       </CellMeasurer>
     );

@@ -1,0 +1,39 @@
+# Uses an externally managed, authenticated TLS MongoDB instance.
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_MAPBOX_ACCESS_TOKEN: ${VITE_MAPBOX_ACCESS_TOKEN:-}
+    environment:
+      PUBLIC_HOST: ${PUBLIC_HOST:?Set the production hostname}
+    ports: ["80:80", "443:443"]
+    volumes: ["caddy_data:/data", "caddy_config:/config"]
+    networks:
+      app:
+        ipv4_address: 172.30.40.2
+    restart: unless-stopped
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    env_file: .env.production
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      TRUST_PROXY: 172.30.40.2
+    networks: [app]
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+networks:
+  app:
+    ipam:
+      config:
+        - subnet: 172.30.40.0/24
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,3 +1,11 @@
+Production target: [Vercel + Turso setup](turso/README.md). The Cloudflare candidate is retained for reference.
+
+# Local Cloudflare migration trial
+
+The optional [Workers + D1 candidate](cloudflare/README.md) preserves the current
+interface and replaces the MongoDB backend. It has a disposable synthetic preview
+and a verified local archive-to-SQL migration tool. Production has not been moved.
+
 <h1 align="center">
   <br />
   <a href="https://www.lifeafterhate.org/"
@@ -161,115 +169,48 @@ To learn more details about the project, please view the official [case study](h
   </tr>
 </table>
 
-# Setup Instructions
+# Development and verification
 
-## Prerequisites
+The app now uses Node 24 LTS, Express 5, Mongoose 9, Passport 0.7, React 18, Vite, MUI 7, and React Hook Form 7. Read [SECURITY.md](SECURITY.md) before working with real records or deploying.
 
-To run this project locally, please first install [Docker](https://www.docker.com/) on your machine. We use Docker to allow for a more seamless development experience, allowing us to get up and running with just a few commands.
+## Local setup
 
-You must have [Git](https://git-scm.com/) installed as well, along with [Node.js](https://nodejs.org/en/) to use the helper utility.
+1. Install Node 24 (`nvm install` / `nvm use`) and Docker with Compose v2.
+2. Copy `.env.example` to `.env`, generate a random session secret, and supply Google OAuth, Mapbox, and MapQuest credentials. Register `http://localhost:3000/api/auth/login/callback` in Google Cloud. The frontend proxies `/api` to the backend.
+3. Run `docker compose up --build`, then open `http://localhost:3000`.
 
-## Cloning the repository
+For synthetic local testing with authentication bypass: `./scripts/lahutil up --admin`. The helper needs no npm dependencies. Production explicitly rejects authentication bypass.
 
-To get a copy of the code to run, please [clone this repository](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository).
+Seeding **replaces local data** and must be intentional:
 
-In your terminal:
-
-```
-git clone https://github.com/hack4impact-uiuc/life-after-hate
-```
-
-## Creating the `.env` file
-
-To run this app, we use external integrations with Google OAuth, Mapbox, and MapQuest. Hence, you will need to create a file named `.env` in your root directory with the below template, and provide values for the specified API keys below. Feel free to set `SESSION_SECRET` to any arbitrary string.
-The keys may be obtained from the following sources:
-
-- [Mapbox](https://docs.mapbox.com/help/how-mapbox-works/access-tokens/)
-- [Google OAuth](https://developers.google.com/identity/protocols/oauth2)
-- [MapQuest](https://developer.mapquest.com/)
-
-```
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-REACT_APP_MAPBOX_ACCESS_TOKEN=
-SESSION_SECRET=
-MAPQUEST_KEY=
-REACT_APP_API_URI=http://localhost:5000/api/
-FE_URI=http://localhost:3000/
-DB_URI=mongodb://db:27017/LAH_DB
-OAUTH_CALLBACK_URI=http://localhost:5000/api/auth/login/redirectURI
-MAPQUEST_URI=http://www.mapquestapi.com/geocoding/v1/
+```sh
+./scripts/lahutil seed --confirm-local-data-loss
 ```
 
-## Setting up `LAHUtil`
+Normal `./scripts/lahutil down` preserves database volumes. The old global Docker cleanup and remote environment-file download commands were removed.
 
-You may have trouble running the below commands on a Windows machine. If this is the case, please reach out to us for support.
+## Tests and build
 
-This project comes bundled with an executable to help ease development located at `scripts/lahutil`. It wraps around the Docker Compose commands, so if you are familiar with those, you can skip this step and run the commands directly. Once you have completed the above step with your `.env` file, please `cd` into this repository and run the following commands in your root directory:
-
-```
-npm install
-sudo chmod +x ./scripts/lahutil
-./scripts/lahutil
-```
-
-You should be presented now with a menu of options at this point.
-
-Optional: you may add `lahutil` to your `PATH` environment variable to allow you to run commands directly, so instead of running `./scripts/lahutil up`, you can just run `lahutil up`.
-
-You can add the following to your `~/.bashrc` (or `~/.zshrc` if you are using `zsh`):
-
-```
-export PATH=~/Documents/life-after-hate/scripts:$PATH
+```sh
+npm ci --ignore-scripts
+npm ci --prefix backend --ignore-scripts
+npm ci --prefix frontend
+npm ci --prefix scripts/db_backup/backup --ignore-scripts
+npm run lint
+npm test
+npm run build
+cd frontend
+npx playwright install chromium
+npm run test:e2e
 ```
 
-## Running the app
+Backend tests create a disposable MongoDB instance; the first run downloads its binary. They never connect to your configured `DB_URI`. Browser tests use synthetic API responses and do not need external credentials. The older Cypress fixtures remain as historical workflow references; Playwright is the maintained browser suite.
 
-To add mock data to the database, run the following command:
+## Deployment and migration
 
-```
-./scripts/lahutil seed
-```
+See [SECURITY.md](SECURITY.md) for the production Compose setup, Google callback migration, HTTPS/proxy and database requirements, session changes, and external-provider limitations. Deployment requires explicit configuration; no production services are changed by installing dependencies or running tests.
 
-To bypass authentication, run the following:
-
-```
-./scripts/lahutil up --admin
-```
-
-Alternatively, to run without authentication bypass (i.e. requiring you to log in), instead run:
-
-```
-./scripts/lahutil up
-```
-
-The above may take a few minutes to run, as it will download all the appropriate packages to run the entire application.
-
-After this, you should be able to navigate to `localhost:3000` in a web browser to access the app. Similarly, the backend will run at `localhost:5000`. These ports are configurable within the `.env` file. If you do so, however, make sure to change the corresponding ports in `docker-compose.yml`.
-
-When you are finished running, you can run `lahutil down`.
-
-## Running manually without `LAHUtil`
-
-You can instead run the following commands instead if you are running into difficulties with the above steps:
-
-To seed the database with sample data:
-
-```bash
-docker-compose run backend /bin/bash -c "node utils/generate_mock_data.js"
-```
-
-To run the app bypassing authentication:
-
-```bash
-BYPASS_AUTH_ROLE=admin docker-compose up
-```
-
-Without authentication bypass:
-
-```bash
-docker-compose up
-```
+For native local development outside Docker, set `DB_URI` to an isolated local MongoDB, run the backend from `backend/` with its environment supplied, and start the frontend from `frontend/`. Vite proxies `/api` to `127.0.0.1:5000` by default. Use `API_PROXY_TARGET` to change that internal development target.
 
 # Credits
 
@@ -293,7 +234,8 @@ Backend packages:
 
 Testing:
 
-- [Cypress](https://www.cypress.io/) for E2E testing
+- [Playwright](https://playwright.dev/) for browser workflow testing
+- [Vitest](https://vitest.dev/) for frontend regression testing
 - [Mocha](https://mochajs.org/) for backend testing
 
 # License

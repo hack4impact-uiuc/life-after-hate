@@ -1,13 +1,10 @@
-name: PR Tasks
-on:
-  pull_request:
-    branches:
-      - master
+# Branch deletion is managed by the repository's "Automatically delete head branches" setting.
+name: Branch housekeeping
+on: workflow_dispatch
+permissions:
+  contents: read
 jobs:
-  cleanup-branch:
-    name: Post-Merge Branch Cleanup
+  notice:
     runs-on: ubuntu-latest
     steps:
-    - uses: jessfraz/branch-cleanup-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo 'Enable automatic head-branch deletion in repository settings.'

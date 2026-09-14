@@ -15,7 +15,7 @@ export const currentResourceSelector = createSelector(
       return {};
     }
     return resources.find((resource) => resource._id === id);
-  }
+  },
 );
 
 // Filter out resources that don't have a location
@@ -23,6 +23,8 @@ export const mappableResourceSelector = createSelector(
   [tagFilteredResourceSelector],
   (resources) =>
     resources.filter(
-      (r) => r.location.coordinates[0] && r.location.coordinates[1]
-    )
+      (r) =>
+        r.location?.coordinates?.length === 2 &&
+        r.location.coordinates.every(Number.isFinite),
+    ),
 );

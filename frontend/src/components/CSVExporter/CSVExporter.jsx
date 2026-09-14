@@ -22,7 +22,7 @@ export const CSVExporter = ({ data, name = "resources.csv" }) => {
         >
           <img src={Download} alt="Download Results as CSV"></img>
         </Button>
-        <h3 className="d-none d-md-inline pl-2">Download CSV</h3>
+        <h3 className="d-none d-md-inline ps-2">Download CSV</h3>
       </div>
     )
   );

@@ -1,5 +1,5 @@
 const express = require("express");
-const beeline = require("honeycomb-beeline");
+const Boom = require("@hapi/boom");
 const { filterSensitiveInfo } = require("../../utils/user-utils");
 const router = express.Router();
 const User = require("../../models/User");
@@ -12,20 +12,27 @@ const {
 const { roleEnum } = require("../../models/User");
 // Filters down the user information into just what's needed
 
+router.param("user_id", (req, res, next, id) => {
+  if (!/^[a-fA-F0-9]{24}$/.test(id))
+    return res
+      .status(400)
+      .json({ code: 400, success: false, message: "Invalid user ID" });
+  next();
+});
+
 // get all users
 router.get(
   "/",
   requireAdminStatus,
   errorWrap(async (req, res) => {
-    const span = beeline.startSpan({ name: "User Fetch" });
     const users = await User.find({}).sort({ firstName: "asc" });
-    beeline.finishSpan(span);
+
     res.json({
       code: 200,
       result: users.map(filterSensitiveInfo),
       success: true,
     });
-  })
+  }),
 );
 
 // get current users (partial info only)
@@ -52,15 +59,15 @@ router.get(
   }),
   errorWrap(async (req, res) => {
     const role = req.params.role.toUpperCase();
-    const span = beeline.startSpan({ name: "User Fetch" });
+
     const users = await User.find({ role: role });
-    beeline.finishSpan(span);
+
     res.json({
       code: 200,
       result: users.map(filterSensitiveInfo),
       success: true,
     });
-  })
+  }),
 );
 
 // get one user
@@ -69,15 +76,16 @@ router.get(
   requireAdminStatus,
   errorWrap(async (req, res) => {
     const userId = req.params.user_id;
-    const span = beeline.startSpan({ name: "User Fetch" });
+
     const user = await User.findById(userId);
-    beeline.finishSpan(span);
+    if (!user) throw Boom.notFound();
+
     res.json({
       code: 200,
       result: filterSensitiveInfo(user),
       success: true,
     });
-  })
+  }),
 );
 
 // create new user
@@ -90,15 +98,17 @@ router.post(
       lastName: Joi.string().required(),
       oauthId: Joi.string().required(),
       propicUrl: Joi.string(),
-      role: Joi.string().default(roleEnum.PENDING),
+      role: Joi.string()
+        .valid(...Object.values(roleEnum))
+        .default(roleEnum.PENDING),
       title: Joi.string(),
       location: Joi.string().required(),
-      email: Joi.string().required(),
+      email: Joi.string().email().max(254).required(),
     }),
   }),
   errorWrap(async (req, res) => {
     const data = req.body;
-    const span = beeline.startSpan({ name: "User Create" });
+
     const newUser = new User({
       firstName: data.firstName,
       lastName: data.lastName,
@@ -110,13 +120,13 @@ router.post(
       email: data.email,
     });
     await newUser.save();
-    beeline.finishSpan(span);
+
     res.json({
       code: 200,
       message: "User Successfully Created",
       success: true,
     });
-  })
+  }),
 );
 
 // set role and title
@@ -125,7 +135,9 @@ router.patch(
   requireAdminStatus,
   celebrate({
     body: Joi.object().keys({
-      role: Joi.string().required(),
+      role: Joi.string()
+        .valid(...Object.values(roleEnum))
+        .required(),
       title: Joi.string().allow("").default(""),
     }),
   }),
@@ -133,13 +145,12 @@ router.patch(
     const data = req.body;
     const userId = req.params.user_id;
 
-    const span = beeline.startSpan({ name: "User Update" });
     const user = await User.findByIdAndUpdate(
       userId,
       { $set: { role: data.role, title: data.title } },
-      { new: true }
+      { returnDocument: "after", runValidators: true },
     );
-    beeline.finishSpan(span);
+
     const ret = user
       ? {
           code: 200,
@@ -152,7 +163,7 @@ router.patch(
           success: false,
         };
     res.status(ret.code).json(ret);
-  })
+  }),
 );
 
 // delete user
@@ -161,9 +172,9 @@ router.delete(
   requireAdminStatus,
   errorWrap(async (req, res) => {
     const userId = req.params.user_id;
-    const span = beeline.startSpan({ name: "User Delete" });
-    const user = await User.findByIdAndRemove(userId);
-    beeline.finishSpan(span);
+
+    const user = await User.findByIdAndDelete(userId);
+
     const ret = user
       ? {
           code: 200,
@@ -176,7 +187,7 @@ router.delete(
           success: false,
         };
     res.status(ret.code).json(ret);
-  })
+  }),
 );
 
 module.exports = router;

@@ -29,7 +29,7 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
   const renderCards = (user) => <UserCard key={user.id} user={user} />;
 
   const onCategoryChange = (event) => {
-    console.log("filter changed");
+
     changeUserFilter(event.target.value);
   };
 
@@ -49,7 +49,7 @@ const UserManager = ({ users, filter, changeUserFilter }) => {
             <DropdownToggle caret color="custom">
               {filter} Users
             </DropdownToggle>
-            <DropdownMenu right>
+            <DropdownMenu end>
               <DropdownItem
                 value={userFilterEnum.ALL}
                 onClick={onCategoryChange}
