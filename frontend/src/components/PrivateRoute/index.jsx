@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 import Loader from "../Loader";
-import Navbar from "../Navbar";
 import Pending from "../../pages/Auth/Pending";
 import { connect } from "react-redux";
 import { roleEnum } from "../../utils/enums";
@@ -29,7 +28,6 @@ function PrivateRoute({
               if (!roleRequired || roleRequired === role) {
                 return (
                   <div>
-                    {authed && !pending && <Navbar />}
                     <Component {...props} />
                   </div>
                 );

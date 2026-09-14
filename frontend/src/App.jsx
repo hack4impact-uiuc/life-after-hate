@@ -5,8 +5,10 @@ import {
   Route,
   Redirect,
   Switch,
+  useLocation,
 } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
+import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Auth/Login";
 const MapView = lazy(() => import("./pages/MapView"));
@@ -21,6 +23,28 @@ import { refreshGlobalAuth } from "./utils/api";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SessionGuard from "./components/SessionGuard";
+
+function WorkspaceNavbar() {
+  const { pathname } = useLocation();
+  const auth = useSelector((state) => state.auth);
+  return auth.authenticated &&
+    !auth.isFetchingAuth &&
+    auth.role !== roleEnum.PENDING &&
+    ["/", "/directory", "/users"].includes(pathname) ? (
+    <Navbar />
+  ) : null;
+}
+
+function WorkspacePage({ children }) {
+  const { pathname } = useLocation();
+  // A new boundary prevents a fast return from reusing a page whose search
+  // was cancelled while the next route's lazy module was still loading.
+  return (
+    <Suspense key={pathname} fallback={<Loader />}>
+      {children}
+    </Suspense>
+  );
+}
 class App extends Component {
   componentDidMount = refreshGlobalAuth;
 
@@ -33,7 +57,8 @@ class App extends Component {
           <ToastContainer />
           <ModalManager />
           <Router>
-            <Suspense fallback={<Loader />}>
+            <WorkspaceNavbar />
+            <WorkspacePage>
               <Switch>
                 <Route path="/login" component={Login} />
                 <PrivateRoute exact path="/" component={MapView} />
@@ -50,7 +75,7 @@ class App extends Component {
                 />
                 <Redirect to="/login"></Redirect>
               </Switch>
-            </Suspense>
+            </WorkspacePage>
           </Router>
         </div>
       </Provider>

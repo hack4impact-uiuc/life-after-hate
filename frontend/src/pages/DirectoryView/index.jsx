@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AdminView from "../../components/Auth/AdminView";
@@ -18,6 +18,22 @@ const ResourceManager = ({ resources, allResources, sort }) => {
     (resource) => resource._id === selectedId,
   );
   const [density, setDensity] = useState("comfortable");
+  const resultsRef = useRef(null);
+  const resultsSignature = resources
+    .map((resource) => resource.id ?? resource._id)
+    .join("|");
+  useEffect(() => {
+    if (
+      searchStatus !== "complete" ||
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const animation = resultsRef.current?.animate?.(
+      [{ opacity: 0.65 }, { opacity: 1 }],
+      { duration: 200, easing: "ease-out" },
+    );
+    return () => animation?.cancel();
+  }, [density, resultsSignature, searchStatus]);
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
     getTags();
@@ -61,7 +77,11 @@ const ResourceManager = ({ resources, allResources, sort }) => {
             </span>
           )}
         </div>
-        <div className="density-control" role="group" aria-label="Row density">
+        <div
+          className={`density-control density-control--${density}`}
+          role="group"
+          aria-label="Row density"
+        >
           {["comfortable", "compact"].map((value) => (
             <button
               key={value}
@@ -75,6 +95,7 @@ const ResourceManager = ({ resources, allResources, sort }) => {
         </div>
       </div>
       <div
+        ref={resultsRef}
         className="directory-table"
         aria-label="Resources"
         aria-busy={searchStatus === "searching"}

@@ -45,7 +45,7 @@ const ResourceDetails = ({ resource, onClose }) => {
         >
           <aside className="resource-drawer" aria-label="Resource details">
             <header>
-              <div>
+              <div key={drawerResource._id} className="drawer-detail-enter">
                 <h2>
                   <span className={`type-dot ${drawerResource.type}`} />
                   {resourceName(drawerResource)}
@@ -61,7 +61,10 @@ const ResourceDetails = ({ resource, onClose }) => {
               </button>
             </header>
             <ActionButtons resource={drawerResource} />
-            <div className="drawer-body">
+            <div
+              key={drawerResource._id}
+              className="drawer-body drawer-detail-enter"
+            >
               {resourceDescription(drawerResource) && (
                 <div className="drawer-description">
                   {drawerResource.type === "INDIVIDUAL" && (

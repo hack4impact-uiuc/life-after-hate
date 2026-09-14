@@ -187,3 +187,87 @@
     padding-top: 0;
   }
 }
+
+.modal.fade:has(.lah-modal) {
+  transition: opacity var(--motion-panel, 280ms) var(--motion-ease, ease-out);
+  .lah-modal {
+    transform: translateY(12px);
+    transition: transform var(--motion-panel, 280ms)
+      var(--motion-ease, ease-out);
+  }
+  &.show .lah-modal {
+    transform: translateY(0);
+  }
+}
+.modal-backdrop.fade {
+  transition-duration: var(--motion-medium, 200ms);
+}
+.lah-modal {
+  .modal-request-error {
+    flex-shrink: 0;
+    color: #a1392c;
+    background: #fff1ee;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 12px 20px;
+    font-size: 13px;
+    animation: modal-feedback-in var(--motion-medium, 200ms)
+      var(--motion-ease, ease-out);
+  }
+  button {
+    transition:
+      background-color var(--motion-fast, 150ms),
+      color var(--motion-fast, 150ms),
+      opacity var(--motion-fast, 150ms);
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  #submit-form-button {
+    min-width: 136px;
+  }
+  #delete-form-button {
+    min-width: 118px;
+  }
+  .modal-input-field:focus,
+  .modal-select-field:focus {
+    transition: none;
+  }
+}
+@keyframes modal-feedback-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal.fade:has(.lah-modal),
+  .modal.fade .lah-modal,
+  .modal-backdrop.fade {
+    transition: none !important;
+  }
+  .modal.fade .lah-modal {
+    transform: none !important;
+  }
+  .lah-modal *,
+  .lah-modal *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .modal.fade:has(.lah-modal) {
+    .lah-modal {
+      transform: scale(0.985);
+    }
+    &.show .lah-modal {
+      transform: scale(1);
+    }
+  }
+}
