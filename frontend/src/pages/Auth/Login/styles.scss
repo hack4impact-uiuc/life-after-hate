@@ -14,6 +14,9 @@
     min-height: 100svh;
   }
   .sign-in-brand {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -21,6 +24,27 @@
     background: #222224;
     color: #faf9f6;
     padding: 46px clamp(32px, 3.6vw, 58px) 56px;
+  }
+  .sign-in-brand::before,
+  .sign-in-brand::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    width: clamp(220px, 28vw, 480px);
+    aspect-ratio: 1;
+    right: -12%;
+    bottom: -8%;
+    border: 1px solid #f793312b;
+    background: linear-gradient(135deg, #f793310a, transparent 65%);
+    transform: rotate(-24deg);
+  }
+  .sign-in-brand::after {
+    right: 8%;
+    bottom: -20%;
+    border-color: #ffffff12;
+    background: transparent;
+    transform: rotate(-12deg);
   }
   .sign-in-logo {
     width: 420px;
@@ -76,6 +100,9 @@
     margin: 0 0 26px;
   }
   .sign-in-google {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     min-height: 64px;
     width: 100%;
     display: flex;
@@ -93,7 +120,39 @@
     text-decoration: none;
     transition:
       background 0.15s,
-      box-shadow 0.15s;
+      box-shadow 0.2s,
+      translate 0.2s;
+  }
+  .sign-in-google::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      110deg,
+      transparent 25%,
+      #ffffff38 50%,
+      transparent 75%
+    );
+    transform: translateX(-110%);
+  }
+  .sign-in-arrow {
+    opacity: 0.55;
+    line-height: 1;
+  }
+  .sign-in-google:active {
+    background: #dc781c;
+    box-shadow: inset 0 2px 4px #79401526;
+  }
+  .sign-in-provider.is-connecting {
+    border: 2px solid #29231538;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    padding: 2px;
+  }
+  .sign-in-provider.is-connecting path {
+    visibility: hidden;
   }
   .sign-in-google:hover {
     background: #ed8524;
@@ -107,6 +166,74 @@
   }
   .sign-in-google svg {
     flex-shrink: 0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sign-in-provider,
+    .sign-in-arrow {
+      transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 220ms;
+    }
+    .sign-in-google:focus-visible::before {
+      animation: sign-in-sheen 650ms ease-out;
+    }
+    .sign-in-google:focus-visible .sign-in-arrow {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+    .sign-in-provider.is-connecting {
+      animation: sign-in-spin 800ms linear infinite;
+    }
+    .sign-in-brand::before,
+    .sign-in-brand::after {
+      animation: sign-in-geometry 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .sign-in-brand::after {
+      animation-delay: 120ms;
+    }
+    .sign-in-logo,
+    .sign-in-mission,
+    .sign-in-content > :not(.pending-content),
+    .pending-content > * {
+      animation: sign-in-arrive 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    }
+    .sign-in-content > h1,
+    .pending-content > :nth-child(1) {
+      animation-delay: 100ms;
+    }
+    .sign-in-content > .sign-in-instructions,
+    .pending-content > :nth-child(2) {
+      animation-delay: 180ms;
+    }
+    .sign-in-content > .sign-in-google,
+    .pending-content > :nth-child(n + 3) {
+      animation-delay: 260ms;
+    }
+    .sign-in-google:focus-visible {
+      translate: 0 -2px;
+    }
+    @media (hover: hover) {
+      .sign-in-google:hover::before {
+        animation: sign-in-sheen 650ms ease-out;
+      }
+      .sign-in-google:hover .sign-in-provider:not(.is-connecting) {
+        transform: rotate(-8deg) scale(1.08);
+      }
+      .sign-in-google:hover .sign-in-arrow {
+        opacity: 1;
+        transform: translateX(3px);
+      }
+      .sign-in-google:hover {
+        translate: 0 -3px;
+        box-shadow: 0 10px 24px #a8511626;
+      }
+    }
+    .sign-in-google:active {
+      translate: 0 0;
+    }
+    .sign-in-google:active .sign-in-arrow {
+      transform: translateX(5px);
+    }
   }
   @media (max-width: 900px) {
     .sign-in-brand {
@@ -171,6 +298,36 @@
     .sign-in-google {
       transition: none;
     }
+  }
+}
+@keyframes sign-in-sheen {
+  to {
+    transform: translateX(110%);
+  }
+}
+@keyframes sign-in-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes sign-in-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes sign-in-geometry {
+  from {
+    opacity: 0;
+    translate: 28px 36px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
   }
 }
 .sign-in-page {
