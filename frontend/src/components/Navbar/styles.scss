@@ -362,3 +362,23 @@ div.navbar-dropdown {
     }
   }
 }
+
+.lah_navbar.people-navbar {
+  padding: 12px 22px !important;
+  #logo {
+    width: auto;
+    height: 24px;
+    object-fit: contain;
+  }
+  .navbar-brand {
+    margin-right: 24px;
+  }
+  @media (max-width: 767px) {
+    padding: 8px 16px !important;
+    #logo {
+      max-width: 58vw;
+      height: auto;
+      max-height: 24px;
+    }
+  }
+}

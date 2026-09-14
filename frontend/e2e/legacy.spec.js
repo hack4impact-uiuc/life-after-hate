@@ -346,8 +346,11 @@ test("user panel labels, read-only identity, persistent role edit and filters", 
   request,
 }) => {
   await login(page, request, "ADMIN", "/users");
-  await expect(page.locator(".manager-header")).toContainText("User Directory");
-  await expect(page.locator(".user-labels")).toContainText("Account Type");
+  await expect(page.locator(".people-heading")).toContainText("People");
+  await expect(page.locator(".user-labels")).toContainText("Role");
+  await expect(page.locator(".card-wrapper")).toHaveCount(3);
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
+  await expect(page.locator(".review-queue")).toHaveCount(0);
   await expect(page.locator(".card-wrapper")).toHaveCount(4);
   const user = page
     .locator(".card-wrapper")
@@ -367,15 +370,26 @@ test("user panel labels, read-only identity, persistent role edit and filters", 
   await expect(user).toContainText("VOLUNTEER");
   await expect(user).toContainText("Updated title");
   for (const [label, count] of [
-    ["Pending Users", 0],
-    ["Rejected/Deactivated Users", 1],
-    ["Active Users", 3],
-    ["All Users", 4],
+    ["Deactivated", 1],
+    ["Active", 3],
+    ["All", 4],
   ]) {
-    await page.locator("[data-cy=user-filter] .dropdown-toggle").click();
-    await page.getByRole("menuitem", { name: label, exact: true }).click();
+    await page.getByRole("button", { name: label, exact: true }).click();
     await expect(page.locator(".card-wrapper")).toHaveCount(count);
   }
+});
+test("people search and decline persist", async ({ page, request }) => {
+  await login(page, request, "ADMIN", "/users");
+  await page.getByRole("button", { name: "Decline", exact: true }).click();
+  await expect(page.locator(".review-queue")).toHaveCount(0);
+  await page.reload();
+  await page.getByRole("button", { name: "Deactivated", exact: true }).click();
+  await expect(page.locator(".card-wrapper")).toHaveCount(2);
+  await page.getByRole("searchbox", { name: "Find a teammate" }).fill("casey");
+  await expect(page.locator(".card-wrapper")).toHaveCount(1);
+  await expect(page.locator(".card-wrapper")).toContainText("Casey Example");
+  await page.getByRole("searchbox").fill("no such teammate");
+  await expect(page.getByText("No teammates match your search.")).toBeVisible();
 });
 test("expired server session on resource request signs the browser out", async ({
   page,

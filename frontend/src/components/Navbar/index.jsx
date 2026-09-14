@@ -56,7 +56,11 @@ const LAHNavbar = ({
 
   return (
     <div ref={navbarRef}>
-      <Navbar light expand="md" className="lah_navbar">
+      <Navbar
+        light
+        expand="md"
+        className={`lah_navbar${location.pathname === "/users" ? " people-navbar" : ""}`}
+      >
         <NavbarBrand tag={Link} to="/" onClick={navigate}>
           <img src={Logo} alt="Life After Hate home" id="logo" />
         </NavbarBrand>
