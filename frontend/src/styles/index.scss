@@ -1,3 +1,9 @@
+html,
+body {
+  // Keep the page attached to the sticky header at scroll boundaries.
+  overscroll-behavior-y: none;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

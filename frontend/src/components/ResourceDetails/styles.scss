@@ -59,6 +59,7 @@
     background: white;
     border-left: 1px solid var(--line);
     overflow-y: auto;
+    overscroll-behavior-y: none;
   }
   .resource-drawer header {
     display: flex;
