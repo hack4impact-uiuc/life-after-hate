@@ -103,10 +103,10 @@ export const resourceSelector = createSelector(
     const numericalOrder = order === "asc" ? 1 : -1;
     resourceCopy.sort(
       (resource1, resource2) =>
-        comparator(getter(resource1), getter(resource2)) * numericalOrder
+        comparator(getter(resource1), getter(resource2)) * numericalOrder,
     );
     return resourceCopy;
-  }
+  },
 );
 
 export const tagFilteredResourceSelector = createSelector(
@@ -115,7 +115,10 @@ export const tagFilteredResourceSelector = createSelector(
     if (!resources) {
       return [];
     }
-    const tagMatch = (resource) => tags.every((t) => resource.tags.includes(t));
+    const tagMatch = (resource) =>
+      tags.every(
+        (t) => Array.isArray(resource.tags) && resource.tags.includes(t),
+      );
     return resources.filter(tagMatch);
-  }
+  },
 );

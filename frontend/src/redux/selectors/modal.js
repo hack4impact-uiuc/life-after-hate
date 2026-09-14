@@ -14,8 +14,8 @@ export const currentResourceSelector = createSelector(
     if (!id) {
       return {};
     }
-    return resources.find((resource) => resource._id === id);
-  }
+    return resources.find((resource) => resource._id === id) ?? {};
+  },
 );
 
 export const currentUserSelector = createSelector(
@@ -24,8 +24,8 @@ export const currentUserSelector = createSelector(
     if (!id) {
       return {};
     }
-    return users.find((user) => user.id === id);
-  }
+    return users.find((user) => user.id === id) ?? {};
+  },
 );
 
 // Derives the modal title
@@ -59,11 +59,11 @@ export const titleSelector = createSelector(
       // We are editing, so use Edit User
       return "Edit User";
     }
-  }
+  },
 );
 
 // Returns whether the user is adding a new resource
 export const isAddingResourceSelector = createSelector(
   [modalResourceIdSelector],
-  (id) => (id ? false : true)
+  (id) => (id ? false : true),
 );

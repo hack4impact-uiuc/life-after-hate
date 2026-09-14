@@ -8,7 +8,11 @@ export default defineConfig(({ mode }) => ({
         }
       : {},
   plugins: [react()],
-  build: { assetsInlineLimit: (path) => /\.woff2?$/.test(path) ? false : undefined, outDir: mode === "e2e" ? "build-e2e" : "build", sourcemap: false },
+  build: {
+    assetsInlineLimit: (path) => (/\.woff2?$/.test(path) ? false : undefined),
+    outDir: mode === "e2e" ? "build-e2e" : "build",
+    sourcemap: false,
+  },
   server: {
     proxy: {
       "/api": {
@@ -20,6 +24,32 @@ export default defineConfig(({ mode }) => ({
   test: {
     environment: "jsdom",
     globals: true,
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{js,jsx}"],
+      exclude: ["src/**/*.test.{js,jsx}"],
+      reporter: ["text", "html", "json-summary"],
+      thresholds: {
+        "src/redux/{reducers,selectors}/**/*.js": {
+          lines: 100,
+          statements: 100,
+          functions: 100,
+          branches: 100,
+        },
+        "src/utils/*.js": {
+          lines: 100,
+          statements: 100,
+          functions: 100,
+          branches: 80,
+        },
+        "src/components/SessionGuard/index.jsx": {
+          lines: 100,
+          statements: 100,
+          functions: 100,
+          branches: 100,
+        },
+      },
+    },
     include: ["src/**/*.test.{js,jsx}"],
   },
 }));

@@ -14,7 +14,7 @@ export const currentResourceSelector = createSelector(
     if (!id) {
       return {};
     }
-    return resources.find((resource) => resource._id === id);
+    return resources.find((resource) => resource._id === id) ?? {};
   },
 );
 
@@ -25,6 +25,8 @@ export const mappableResourceSelector = createSelector(
     resources.filter(
       (r) =>
         r.location?.coordinates?.length === 2 &&
-        r.location.coordinates.every(Number.isFinite),
+        r.location.coordinates.every(Number.isFinite) &&
+        Math.abs(r.location.coordinates[0]) <= 180 &&
+        Math.abs(r.location.coordinates[1]) <= 90,
     ),
 );

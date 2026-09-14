@@ -14,7 +14,7 @@ const API_URI = import.meta.env.VITE_API_URI
 // Map an object with key/value pairs to a query string of the form key=value&key2=value2
 export const toQueryString = R.pipe(
   Object.entries,
-  R.filter(([, v]) => v),
+  R.filter(([, v]) => v != null && v !== ""),
   R.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`),
   R.join("&")
 );

@@ -8,7 +8,7 @@
     "node": ">=24 <27"
   },
   "scripts": {
-    "test": "npm --prefix backend test && npm --prefix frontend test && npm --prefix scripts/db_backup/backup test",
+    "test": "npm run test:server:unit && npm run test:turso && npm --prefix backend test && npm --prefix frontend test && npm --prefix scripts/db_backup/backup test",
     "build": "npm --prefix frontend run build",
     "test:e2e": "node turso/build.mjs && npm --prefix frontend run test:e2e",
     "lint": "node scripts/check-syntax.cjs",
@@ -16,7 +16,9 @@
     "build:vercel": "node turso/build.mjs && node turso/build-frontend.mjs",
     "test:turso": "node turso/build.mjs && node --test server/test/*.test.mjs turso/*.test.mjs",
     "check:server": "tsc -p server/tsconfig.json",
-    "dev:demo": "node turso/build.mjs && node server/scripts/preview.mjs"
+    "dev:demo": "node turso/build.mjs && node server/scripts/preview.mjs",
+    "test:server:unit": "node frontend/node_modules/vitest/vitest.mjs run --root server",
+    "test:coverage": "npm run test:server:unit -- --coverage && npm --prefix frontend run test:coverage"
   },
   "devDependencies": {
     "@types/node": "^26.5.1",

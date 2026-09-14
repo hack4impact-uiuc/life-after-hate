@@ -125,8 +125,10 @@ export function filter(
         const coord = doc.location?.coordinates;
         if (
           !Array.isArray(coord) ||
-          coord.length < 2 ||
-          !coord.every(Number.isFinite)
+          coord.length !== 2 ||
+          !coord.every(Number.isFinite) ||
+          Math.abs(coord[0]) > 180 ||
+          Math.abs(coord[1]) > 90
         )
           return [];
         const [lng, lat] = coord,
