@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-filename-extension */
-import React, { Component } from "react";
+import React, { Component, lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -9,9 +9,9 @@ import {
 import { Provider } from "react-redux";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Auth/Login";
-import MapView from "./pages/MapView";
-import DirectoryView from "./pages/DirectoryView";
-import AdminView from "./pages/AdminView";
+const MapView = lazy(() => import("./pages/MapView"));
+const DirectoryView = lazy(() => import("./pages/DirectoryView"));
+const AdminView = lazy(() => import("./pages/AdminView"));
 import MiniLoader from "./components/Loader/mini-loader";
 import ModalManager from "./components/Modal/ModalManager";
 import { roleEnum } from "./utils/enums";
@@ -31,6 +31,7 @@ class App extends Component {
           <MiniLoader />
           <ToastContainer />
           <ModalManager />
+          <Suspense fallback={<div role="status">Loading…</div>}>
           <Router>
             <Switch>
               <Route path="/login" component={Login} />
@@ -45,6 +46,7 @@ class App extends Component {
               <Redirect to="/login"></Redirect>
             </Switch>
           </Router>
+          </Suspense>
         </div>
       </Provider>
     );
