@@ -20,15 +20,12 @@ Production runs on [Vercel + Turso](turso/README.md).
 </h4>
 
 <p align="center">
-  <a
-    href="https://github.com/hack4impact-uiuc/life-after-hate/actions?query=branch%3Amaster"
-    ><img
-      src="https://github.com/hack4impact-uiuc/life-after-hate/workflows/Testing/badge.svg"
-  /></a>
-  <a href="https://codecov.io/gh/hack4impact-uiuc/life-after-hate"
-    ><img
-      src="https://codecov.io/gh/hack4impact-uiuc/life-after-hate/branch/master/graph/badge.svg"
-  /></a>
+  <a href="https://github.com/hack4impact-uiuc/life-after-hate/actions/workflows/tests.yml">
+    <img
+      src="https://github.com/hack4impact-uiuc/life-after-hate/actions/workflows/tests.yml/badge.svg?branch=master"
+      alt="Tests and security"
+    />
+  </a>
 </p>
 
 # About This Project
