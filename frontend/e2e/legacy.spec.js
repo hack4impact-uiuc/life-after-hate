@@ -138,9 +138,11 @@ test("required resource fields and resource type-specific inputs", async ({
 }) => {
   await login(page, request);
   await page.locator("#add-button").click();
-  await expect(field(page, "resourceType")).toHaveValue("INDIVIDUAL");
+  await expect(
+    page.getByRole("radio", { name: "Individual", exact: true }),
+  ).toBeChecked();
   await expect(field(page, "skills")).toBeVisible();
-  await field(page, "resourceType").selectOption("GROUP");
+  await page.getByRole("radio", { name: "Group", exact: true }).check();
   await expect(field(page, "skills")).toHaveCount(0);
   await expect(field(page, "description")).toBeVisible();
   await field(page, "companyName").fill("Incomplete");
@@ -159,7 +161,16 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
   }) => {
     await login(page, request);
     await page.locator("#add-button").click();
-    await field(page, "resourceType").selectOption(type);
+    await page
+      .getByRole("radio", {
+        name: {
+          GROUP: "Group",
+          INDIVIDUAL: "Individual",
+          TANGIBLE: "Resource",
+        }[type],
+        exact: true,
+      })
+      .check();
     if (type === "GROUP")
       await field(page, "companyName").fill("Created Group");
     if (type === "TANGIBLE") {
@@ -196,7 +207,7 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
     await page.locator(".close-button").click();
     await page.locator(".edit-button").click();
     await page.locator("#delete-form-button").click();
-    await expect(page.locator("#delete-form-button")).toHaveText("Confirm");
+    await expect(page.locator("#delete-form-button")).toHaveText("Confirm delete");
     await page.locator("#delete-form-button").click();
     await closed(page);
     await page.reload();
@@ -280,13 +291,13 @@ for (const surface of [".resource-drawer"])
       "Alpha Support",
     );
     await page.locator(`${surface} [data-cy=card-resource-edit-btn]`).click();
-    await expect(page.locator(".modal-title")).toHaveText("Edit Resource");
+    await expect(page.locator(".modal-title")).toHaveText(/^Edit /);
     await field(page, "companyName").fill("Unsaved change");
     await field(page, "contactName").fill("");
     await page.locator("#submit-form-button").click();
     await expect(field(page, "contactName")).toHaveClass(/invalid/);
     await page.locator("#delete-form-button").click();
-    await expect(page.locator("#delete-form-button")).toHaveText("Confirm");
+    await expect(page.locator("#delete-form-button")).toHaveText("Confirm delete");
     await field(page, "companyName").click();
     await expect(page.locator("#delete-form-button")).toHaveText("Delete");
     await page.locator(".close-button").click();

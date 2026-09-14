@@ -7,10 +7,10 @@ import { closeModal } from "../../redux/actions/modal";
 import { titleSelector } from "../../redux/selectors/modal";
 import "./styles.scss";
 
-const LAHModal = ({ isOpen, closeModal, title, children }) => (
-  <Modal fade isOpen={isOpen} toggle={closeModal} className="lah-modal">
+const LAHModal = ({ isOpen, closeModal, title, children, modalClassName = "", headerTitle, subtitle }) => (
+  <Modal fade isOpen={isOpen} toggle={closeModal} className={`lah-modal ${modalClassName}`}>
     <ModalHeader>
-      {title}
+      <span>{headerTitle ?? title}{subtitle && <small className="resource-editor-subtitle">{subtitle}</small>}</span>
       <Button
         color="link"
         className="close-button"
@@ -38,5 +38,8 @@ LAHModal.propTypes = {
   closeModal: PropTypes.func,
   title: PropTypes.string,
   children: PropTypes.element,
+  modalClassName: PropTypes.string,
+  headerTitle: PropTypes.string,
+  subtitle: PropTypes.string,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(LAHModal);
