@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
         }
       : {},
   plugins: [react()],
-  build: { outDir: mode === "e2e" ? "build-e2e" : "build", sourcemap: false },
+  build: { assetsInlineLimit: (path) => /\.woff2?$/.test(path) ? false : undefined, outDir: mode === "e2e" ? "build-e2e" : "build", sourcemap: false },
   server: {
     proxy: {
       "/api": {
