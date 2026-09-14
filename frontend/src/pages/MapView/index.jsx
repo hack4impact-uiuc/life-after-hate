@@ -69,9 +69,6 @@ const MapView = () => {
             ),
           )}
         </div>
-        <span className="filter-hint">
-          Find the right support, in the right place.
-        </span>
       </div>
       <div className={`map-workspace ${resource ? "has-detail" : ""}`}>
         <section

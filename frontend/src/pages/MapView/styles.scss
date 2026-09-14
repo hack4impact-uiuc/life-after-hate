@@ -231,12 +231,12 @@
   }
   .filter-tag,
   .workspace-filters .filter-tag {
-    border: 0;
+    border: 1px solid transparent;
     background: #fdf0e2;
     color: #a34b00;
     border-radius: 20px;
-    padding: 4px 9px;
-    font-size: 11px;
+    padding: 5px 10px;
+    font-size: 12px;
     font-weight: 500;
   }
   .filter-tag:hover {
