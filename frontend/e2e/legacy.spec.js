@@ -57,9 +57,7 @@ test("volunteer navigation and read-only directory/map modals", async ({
 }) => {
   await login(page, request, "VOLUNTEER", "/users");
   await expect(page).toHaveURL("http://127.0.0.1:4174/");
-  await expect(
-    page.getByText("Account Management", { exact: true }),
-  ).toHaveCount(0);
+  await expect(page.getByText("People", { exact: true })).toHaveCount(0);
   await page.goto("/directory");
   await search(page);
   await expect(names(page)).toHaveCount(3);
@@ -86,12 +84,20 @@ test("navbar titles, navigation, logo, authenticated login redirect and logout",
   await expect(page).toHaveTitle("Map View - Life After Hate");
   for (const [label, path, title] of [
     ["Directory", "/directory", "Directory View"],
-    ["Account Management", "/users", "Account Management"],
+    ["People", "/users", "Account Management"],
     ["Map", "/", "Map View"],
   ]) {
     await page.getByRole("link", { name: label, exact: true }).click();
     await expect(page).toHaveURL("http://127.0.0.1:4174" + path);
     await expect(page).toHaveTitle(title + " - Life After Hate");
+    await expect(
+      page.getByRole("link", { name: label, exact: true }),
+    ).toHaveAttribute("aria-current", "page");
+    await expect(
+      page.getByRole("button", { name: "New resource", exact: true }),
+    ).toBeVisible();
+    await expect(page.locator("#logo")).toHaveCSS("width", "32px");
+    await expect(page.locator("#logo")).toHaveCSS("height", "32px");
   }
   await page.getByRole("link", { name: "Directory", exact: true }).click();
   await page.locator("#logo").click();

@@ -32,8 +32,8 @@ class App extends Component {
           <MiniLoader />
           <ToastContainer />
           <ModalManager />
-          <Suspense fallback={<Loader />}>
-            <Router>
+          <Router>
+            <Suspense fallback={<Loader />}>
               <Switch>
                 <Route path="/login" component={Login} />
                 <PrivateRoute exact path="/" component={MapView} />
@@ -50,8 +50,8 @@ class App extends Component {
                 />
                 <Redirect to="/login"></Redirect>
               </Switch>
-            </Router>
-          </Suspense>
+            </Suspense>
+          </Router>
         </div>
       </Provider>
     );

@@ -56,9 +56,9 @@ const LAHNavbar = ({
 
   return (
     <div ref={navbarRef}>
-      <Navbar light expand="lg" className="lah_navbar ps-sm-5 pe-sm-5">
+      <Navbar light expand="md" className="lah_navbar">
         <NavbarBrand tag={Link} to="/" onClick={navigate}>
-          <img src={Logo} alt="LAH Logo" id="logo" />
+          <img src={Logo} alt="Life After Hate home" id="logo" />
         </NavbarBrand>
         <NavbarToggler
           onClick={toggleUserDropdown}
@@ -75,47 +75,65 @@ const LAHNavbar = ({
             data-cy="nav-links"
             navbar
           >
-            <NavItem>
+            <NavItem className="workspace-tab">
               <NavLink
                 tag={Link}
                 onClick={navigate}
                 to="/"
+                aria-current={location.pathname === "/" ? "page" : undefined}
                 className="hover-orange pe-md-3"
               >
                 Map
               </NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="workspace-tab">
               <NavLink
                 tag={Link}
                 onClick={navigate}
                 to="/directory"
+                aria-current={
+                  location.pathname === "/directory" ? "page" : undefined
+                }
                 className="hover-orange pe-md-3"
               >
                 Directory
               </NavLink>
             </NavItem>
             <AdminView>
-              <NavItem>
+              <NavItem className="workspace-tab">
                 <NavLink
                   tag={Link}
                   onClick={navigate}
                   to="/users"
+                  aria-current={
+                    location.pathname === "/users" ? "page" : undefined
+                  }
                   className="hover-orange pe-md-3"
                 >
-                  Account Management
+                  People
                 </NavLink>
               </NavItem>
             </AdminView>
-            {location.pathname === "/" && (
-              <AdminView>
-                <NavItem className="map-create-resource">
-                  <Button onClick={openResourceModal}>New resource</Button>
-                </NavItem>
-              </AdminView>
-            )}
+            <AdminView>
+              <NavItem className="header-create-resource">
+                <Button
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    openResourceModal();
+                  }}
+                >
+                  New resource
+                </Button>
+              </NavItem>
+            </AdminView>
             <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
+              <DropdownToggle
+                nav
+                tag="button"
+                type="button"
+                className="dropdown-toggle"
+                aria-label="User menu"
+              >
                 {profilePic && !pictureFailed ? (
                   <img
                     src={profilePic}
@@ -133,13 +151,30 @@ const LAHNavbar = ({
                   </span>
                 )}
               </DropdownToggle>
-              <DropdownMenu end>
-                <DropdownItem header>{`${firstName} ${lastName}`}</DropdownItem>
-                <DropdownItem divider />
+              <DropdownMenu end className="account-menu">
                 <DropdownItem header>
-                  <Button id="signout-button" onClick={logout}>
-                    Sign Out
-                  </Button>
+                  <span className="account-menu-label">Signed in as</span>
+                  <span className="account-menu-name">
+                    {[firstName, lastName].filter(Boolean).join(" ") ||
+                      "Your account"}
+                  </span>
+                </DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem id="signout-button" onClick={logout}>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 5H5v14h4M10 12h10m-4-4 4 4-4 4" />
+                  </svg>
+                  <span>Sign out</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
