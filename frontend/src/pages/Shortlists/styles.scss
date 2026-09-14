@@ -1,0 +1,153 @@
+.shortlists-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  color: #211e1a;
+  font-family: "Instrument Sans", "Roboto", sans-serif;
+  overflow-wrap: anywhere;
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 24px 0;
+  }
+  h1 {
+    font-size: 30px;
+  }
+  h2 {
+    font-size: 19px;
+  }
+  p {
+    color: #655d53;
+  }
+  .shortlist-create {
+    background: #faf7f2;
+    padding: 20px;
+    border: 1px solid #e6e1d8;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  .shortlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .shortlist-card {
+    padding: 22px;
+    border: 1px solid #e6e1d8;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+  .shortlist-toolbar {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  details {
+    padding: 16px;
+    background: #faf7f2;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  summary {
+    cursor: pointer;
+  }
+  .delete-list {
+    margin-top: 18px;
+    color: #a02626;
+  }
+  .shortlist-resources article {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 0;
+    border-bottom: 1px solid #e6e1d8;
+  }
+  .handout-preview {
+    background: white;
+    border: 1px solid #d5cec3;
+    padding: 32px;
+    box-shadow: 0 5px 24px #211e1a10;
+  }
+  .handout-print-only {
+    display: none;
+  }
+  .handout article {
+    break-inside: avoid;
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+  }
+  .handout dl div {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 12px;
+  }
+  .handout dd {
+    white-space: pre-line;
+  }
+}
+.resource-page .resource-detail-view .drawer-shell {
+  position: static;
+  width: 100%;
+  animation: none;
+  margin-top: 24px;
+  .resource-drawer {
+    width: 100%;
+    max-height: none;
+    border: 1px solid #e6e1d8;
+    border-radius: 12px;
+    animation: none;
+    box-shadow: none;
+  }
+}
+@media print {
+  body:has(.has-handout) {
+    background: white !important;
+  }
+  body:has(.has-handout) .lah-navbar-container,
+  body:has(.has-handout) .Toastify,
+  body:has(.has-handout) .shortlist-controls,
+  body:has(.has-handout) #nprogress {
+    display: none !important;
+  }
+  .shortlists-page.has-handout {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  .shortlists-page .handout-print-only {
+    display: block;
+  }
+  .shortlists-page .handout-preview {
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+  .handout {
+    color: #000;
+    font-size: 11pt;
+  }
+  .handout p {
+    color: #333;
+  }
+  @page {
+    margin: 18mm;
+  }
+}
+@media print {
+  body:has(.has-handout) .modal,
+  body:has(.has-handout) .modal-backdrop {
+    display: none !important;
+  }
+}
+.shortlist-resources article > button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.shortlist-resources article > div {
+  min-width: 0;
+}

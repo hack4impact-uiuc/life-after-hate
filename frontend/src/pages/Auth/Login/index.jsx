@@ -70,14 +70,36 @@ SignInScreen.propTypes = {
   signInUrl: PropTypes.string.isRequired,
   onSignIn: PropTypes.func,
 };
-const Login = ({ authed }) => {
+const Login = ({ authed, location }) => {
   useEffect(() => {
     document.title = "Sign in - Life After Hate";
   }, []);
-  if (authed) return <Redirect to={{ pathname: "/" }} />;
-  return <SignInScreen signInUrl={getURLForEndpoint("auth/login")} />;
+  const target = location?.state?.from?.pathname;
+  const returnTo = /^\/(resources|shortlists)\/[a-f0-9]{24}$/i.test(
+    target || "",
+  )
+    ? target
+    : "/";
+  if (authed) return <Redirect to={returnTo} />;
+  return (
+    <SignInScreen
+      signInUrl={getURLForEndpoint("auth/login")}
+      onSignIn={() => {
+        try {
+          if (returnTo !== "/")
+            sessionStorage.setItem("lah.returnTo", returnTo);
+          else sessionStorage.removeItem("lah.returnTo");
+        } catch {
+          /* Sign-in still works without storage. */
+        }
+      }}
+    />
+  );
 };
-Login.propTypes = { authed: PropTypes.bool.isRequired };
+Login.propTypes = {
+  authed: PropTypes.bool.isRequired,
+  location: PropTypes.object,
+};
 export default connect((state) => ({ authed: state.auth.authenticated }))(
   Login,
 );

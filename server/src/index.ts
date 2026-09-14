@@ -317,6 +317,107 @@ app.delete("/api/resources/:id", async (c) => {
   ]);
   return c.json(success);
 });
+// Shared within LAH; only the creator and admins can change a shortlist.
+app.use("/api/shortlists/*", async (c, next) => {
+  requireRole(c, ["ADMIN", "VOLUNTEER"]);
+  await next();
+});
+const shortlistName = z
+  .object({ name: z.string().trim().min(1).max(120) })
+  .strict();
+async function shortlist(c: Parameters<typeof authenticate>[0], edit = false) {
+  const row = await c.env.DB.prepare("SELECT * FROM shortlists WHERE id=?")
+    .bind(id(c.req.param("id")!))
+    .first<Document>();
+  if (!row) throw new HTTPException(404);
+  if (
+    edit &&
+    row.owner_id !== c.get("user")._id &&
+    c.get("user").role !== "ADMIN"
+  )
+    throw new HTTPException(403);
+  return row;
+}
+app.get("/api/shortlists", async (c) => {
+  const rows = await c.env.DB.prepare(
+    "SELECT s.*, (SELECT count(*) FROM shortlist_items i WHERE i.shortlist_id=s.id) AS count FROM shortlists s ORDER BY s.created_at DESC",
+  ).all();
+  return c.json(result(rows.results));
+});
+app.post("/api/shortlists", async (c) => {
+  const { name } = shortlistName.parse(await body(c.req.raw));
+  const list = {
+    id: random(12),
+    name,
+    owner_id: c.get("user")._id,
+    created_at: new Date().toISOString(),
+  };
+  await c.env.DB.batch([
+    c.env.DB.prepare("INSERT INTO shortlists VALUES(?,?,?,?)").bind(
+      list.id,
+      list.name,
+      list.owner_id,
+      list.created_at,
+    ),
+    audit(c.env, c.get("user"), "shortlist.create", list.id),
+  ]);
+  return c.json(result(list), 201);
+});
+app.get("/api/shortlists/:id", async (c) => {
+  const list = await shortlist(c);
+  const rows = await c.env.DB.prepare(
+    "SELECT r.document FROM shortlist_items i JOIN resources r ON r.id=i.resource_id WHERE i.shortlist_id=? ORDER BY i.added_at,i.resource_id",
+  )
+    .bind(list.id)
+    .all<{ document: string }>();
+  return c.json(
+    result({
+      ...list,
+      resources: rows.results.map((r) => present(JSON.parse(r.document))),
+    }),
+  );
+});
+app.patch("/api/shortlists/:id", async (c) => {
+  const list = await shortlist(c, true);
+  const { name } = shortlistName.parse(await body(c.req.raw));
+  await c.env.DB.batch([
+    c.env.DB.prepare("UPDATE shortlists SET name=? WHERE id=?").bind(
+      name,
+      list.id,
+    ),
+    audit(c.env, c.get("user"), "shortlist.rename", list.id),
+  ]);
+  return c.json(success);
+});
+app.delete("/api/shortlists/:id", async (c) => {
+  const list = await shortlist(c, true);
+  await c.env.DB.batch([
+    c.env.DB.prepare("DELETE FROM shortlists WHERE id=?").bind(list.id),
+    audit(c.env, c.get("user"), "shortlist.delete", list.id),
+  ]);
+  return c.json(success);
+});
+app.put("/api/shortlists/:id/resources/:resourceId", async (c) => {
+  const list = await shortlist(c, true);
+  const resource = await find(c.env, "resources", c.req.param("resourceId"));
+  await c.env.DB.batch([
+    c.env.DB.prepare(
+      "INSERT OR IGNORE INTO shortlist_items VALUES(?,?,?)",
+    ).bind(list.id, resource._id, new Date().toISOString()),
+    audit(c.env, c.get("user"), "shortlist.add-resource", list.id),
+  ]);
+  return c.json(success);
+});
+app.delete("/api/shortlists/:id/resources/:resourceId", async (c) => {
+  const list = await shortlist(c, true);
+  await c.env.DB.batch([
+    c.env.DB.prepare(
+      "DELETE FROM shortlist_items WHERE shortlist_id=? AND resource_id=?",
+    ).bind(list.id, id(c.req.param("resourceId"))),
+    audit(c.env, c.get("user"), "shortlist.remove-resource", list.id),
+  ]);
+  return c.json(success);
+});
 app.all("/api/*", () => {
   throw new HTTPException(404);
 });

@@ -56,11 +56,7 @@ const LAHNavbar = ({
 
   return (
     <div ref={navbarRef} className="lah-navbar-container">
-      <Navbar
-        light
-        expand="md"
-        className="lah_navbar"
-      >
+      <Navbar light expand="md" className="lah_navbar">
         <NavbarBrand tag={Link} to="/" onClick={navigate}>
           <img src={Logo} alt="Life After Hate home" id="logo" />
         </NavbarBrand>
@@ -101,6 +97,21 @@ const LAHNavbar = ({
                 className="hover-orange pe-md-3"
               >
                 Directory
+              </NavLink>
+            </NavItem>
+            <NavItem className="workspace-tab">
+              <NavLink
+                tag={Link}
+                onClick={navigate}
+                to="/shortlists"
+                aria-current={
+                  location.pathname.startsWith("/shortlists")
+                    ? "page"
+                    : undefined
+                }
+                className="hover-orange pe-md-3"
+              >
+                Shortlists
               </NavLink>
             </NavItem>
             <AdminView>

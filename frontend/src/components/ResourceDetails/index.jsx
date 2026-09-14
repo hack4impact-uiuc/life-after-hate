@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import ResourceSharing from "../ResourceSharing";
 import ActionButtons from "../../pages/MapView/ActionButtons";
 import TagToggle from "../../pages/MapView/TagToggle";
 import LastModifiedInfo from "../Modal/LastModifiedInfo";
@@ -61,6 +62,10 @@ const ResourceDetails = ({ resource, onClose }) => {
               </button>
             </header>
             <ActionButtons resource={drawerResource} />
+            <ResourceSharing
+              key={drawerResource._id}
+              resource={drawerResource}
+            />
             <div className="drawer-body">
               {resourceDescription(drawerResource) && (
                 <div className="drawer-description">

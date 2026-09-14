@@ -20,3 +20,15 @@ The API keeps hashed sessions, server-side expiration, CSRF, role checks, bound 
 Before cutover: configure Google and geocoding credentials, verify real login and administrative changes on a protected preview, verify production data freshness, configure backup retention/recovery in Turso, and keep the old service available for rollback. Local tests do not verify live Google OAuth, Turso quotas, or Vercel account settings.
 
 Local demo: `npm run build:vercel && npm run dev:demo` starts a disposable synthetic libSQL database on localhost:3001. The backup conversion tool is `server/scripts/migrate-archive.mjs`; it restores a Mongo archive locally and produces verified SQL outside the repository.
+
+## Shortlists upgrade
+
+Before deploying the shortlist feature to an existing database, run:
+
+```sh
+node --env-file=.env turso/upgrade-shortlists.mjs
+```
+
+This idempotent, additive migration creates `shortlists` and `shortlist_items`; it does not replace existing resources or users. Fresh imports and disposable test/demo databases include these tables automatically. Run the migration against each deployment's database before publishing its frontend/API changes.
+
+All active LAH admins and volunteers can browse shortlists and open resource/shortlist links. Creators and admins can rename/delete lists and add/remove resources. Sharing does not create public access. The handout preview prints only resource names and contact fields, excluding shortlist names, notes, descriptions and volunteer background. Deleted resources disappear from existing lists. This release also supports the local MongoDB backend.

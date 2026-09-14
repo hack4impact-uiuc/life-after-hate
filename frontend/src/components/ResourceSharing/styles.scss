@@ -1,0 +1,61 @@
+.resource-sharing {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e6e1d8;
+}
+.resource-sharing,
+.shortlists-page {
+  button {
+    border: 1px solid #d5cec3;
+    border-radius: 7px;
+    background: #fff;
+    color: #713900;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #fff4e8;
+  }
+  button:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #a34b00;
+    outline-offset: 3px;
+  }
+  label {
+    display: grid;
+    gap: 5px;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  input,
+  select {
+    width: 100%;
+    min-width: 0;
+    padding: 9px;
+    border: 1px solid #d5cec3;
+    border-radius: 6px;
+    background: white;
+  }
+  form p,
+  [role="status"] {
+    font-size: 13px;
+    color: #655d53;
+  }
+  a {
+    color: #914200;
+  }
+  .copy-link {
+    display: grid;
+    gap: 5px;
+    margin-bottom: 8px;
+    justify-items: start;
+  }
+  .copy-link span {
+    font-size: 12px;
+  }
+}

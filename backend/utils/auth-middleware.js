@@ -48,6 +48,7 @@ const setMockUserRole = (app, role) => {
 // Middleware that'll set a mock user if the bypass authorization environment variable gets set
 const mockUserMiddleware = (req, _, next) => {
   req.user = {
+    _id: "000000000000000000000001",
     firstName: "John",
     lastName: "Doe",
     oauthId: "12345678",
