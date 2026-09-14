@@ -47,7 +47,7 @@ export function CopyLink({ path, label = "Copy link" }) {
   );
 }
 
-export default function ResourceSharing({ resource }) {
+export default function ResourceSharing({ resource, actions }) {
   const auth = useSelector((s) => s.auth);
   const [open, setOpen] = useState(false);
   const [lists, setLists] = useState([]);
@@ -97,6 +97,7 @@ export default function ResourceSharing({ resource }) {
   }
   return (
     <section className="resource-sharing" aria-label="Share and save resource">
+      {actions}
       <CopyLink
         path={`/resources/${resource._id}`}
         label="Copy resource link"
@@ -147,8 +148,13 @@ export default function ResourceSharing({ resource }) {
         </form>
       )}
       <p role="status">
-        {message}{" "}
-        {saved && <Link to={`/shortlists/${saved}`}>Open shortlist</Link>}
+        {message}
+        {saved && (
+          <>
+            {" "}
+            <Link to={`/shortlists/${saved}`}>Open shortlist</Link>
+          </>
+        )}
       </p>
     </section>
   );

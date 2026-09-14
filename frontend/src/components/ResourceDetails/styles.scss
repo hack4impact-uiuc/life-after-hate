@@ -89,27 +89,56 @@
     min-height: 32px;
     font-size: 20px;
   }
-  .card-action {
+  .resource-sharing {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
     padding: 12px 16px;
     border-bottom: 1px solid var(--line);
+
+    .card-action,
+    .copy-link {
+      display: contents;
+    }
+
+    button,
+    .card-action-btn.edit {
+      flex: 0 0 auto;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid #d5cec3;
+      border-radius: 7px;
+      background: white;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: #fff4e8;
+    }
+
+    form,
+    [role="status"],
+    .copy-link input {
+      flex-basis: 100%;
+      min-width: 0;
+      order: 1;
+      margin: 0;
+    }
+
+    [role="status"]:empty {
+      display: none;
+    }
   }
-  .card-action-btn {
-    flex: 1;
-    border: 0;
-    background: #f79230;
-    color: white;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: 600;
-    font-size: 13px;
-  }
-  .card-action-btn.edit {
-    background: white;
-    border: 1px solid var(--line);
-    color: var(--ink);
-    flex: 0 0 70px;
+
+  @media (max-width: 767px) {
+    .resource-sharing button {
+      min-height: 44px;
+    }
   }
   .popup-button-icon {
     display: none;

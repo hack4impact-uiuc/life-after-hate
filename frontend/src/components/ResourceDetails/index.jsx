@@ -61,10 +61,10 @@ const ResourceDetails = ({ resource, onClose }) => {
                 ×
               </button>
             </header>
-            <ActionButtons resource={drawerResource} />
             <ResourceSharing
               key={drawerResource._id}
               resource={drawerResource}
+              actions={<ActionButtons resource={drawerResource} />}
             />
             <div
               key={drawerResource._id}
