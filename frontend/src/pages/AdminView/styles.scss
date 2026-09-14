@@ -382,3 +382,67 @@
     }
   }
 }
+
+.user-directory {
+  .people-notice {
+    color: #386047;
+    margin: 0;
+  }
+  .people-notice:not(:empty) {
+    margin-bottom: 14px;
+  }
+  .review-row-shell {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition:
+      grid-template-rows var(--motion-panel, 280ms) var(--motion-ease, ease),
+      opacity var(--motion-medium, 200ms) ease;
+  }
+  .review-row-shell--leaving {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .review-row-clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .review-actions button {
+    min-width: 108px;
+  }
+  .review-actions button,
+  .edit-button,
+  .people-filters button {
+    transition:
+      background-color var(--motion-fast, 150ms),
+      color var(--motion-fast, 150ms),
+      border-color var(--motion-fast, 150ms),
+      box-shadow var(--motion-fast, 150ms);
+  }
+  .people-filters button {
+    font-weight: 700;
+  }
+  .people-filters button[aria-pressed="true"] {
+    box-shadow: 0 1px 3px #302b2610;
+  }
+  .card-wrapper {
+    transition: background-color var(--motion-fast, 150ms);
+  }
+  .card-wrapper:active {
+    background: #fff4e7;
+  }
+  .review-actions button:not(:disabled):active,
+  .edit-button:active {
+    background: #f7e6d2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .user-directory .review-row-shell,
+  .user-directory .review-actions button,
+  .user-directory .edit-button,
+  .user-directory .people-filters button,
+  .user-directory .card-wrapper {
+    transition: none;
+  }
+}

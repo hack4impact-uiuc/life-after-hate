@@ -7,12 +7,16 @@ import "nprogress/nprogress.css";
 // Shows progress bar at top when things are loading...
 const MiniLoader = ({ shouldShowLoader }) => {
   useEffect(() => {
+    nProgress.configure({ showSpinner: false });
     if (shouldShowLoader) {
-      nProgress.start();
+      const timer = window.setTimeout(() => nProgress.start(), 250);
+      return () => window.clearTimeout(timer);
     } else {
       nProgress.done();
     }
-  });
+  }, [shouldShowLoader]);
+
+  useEffect(() => () => nProgress.remove(), []);
 
   return null;
 };

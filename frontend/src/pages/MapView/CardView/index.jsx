@@ -67,6 +67,16 @@ class CardView extends React.Component {
     if (prevResourceList !== currResourceList) {
       // Purge the cache and scroll to the top now that we've received a new list of resources
       this.purgeCache();
+      // Animate the stable container only when committed results change.
+      if (!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+        this.content
+          ?.getAnimations?.()
+          .forEach((animation) => animation.cancel());
+        this.content?.animate?.([{ opacity: 0.65 }, { opacity: 1 }], {
+          duration: 200,
+          easing: "cubic-bezier(.22,1,.36,1)",
+        });
+      }
     }
 
     if (prevSelectedResource !== currSelectedResource) {
@@ -116,7 +126,12 @@ class CardView extends React.Component {
     const { resources } = this.props;
     return (
       resources.length > 0 && (
-        <div className="card-content">
+        <div
+          className="card-content"
+          ref={(element) => {
+            this.content = element;
+          }}
+        >
           <AutoSizer>
             {({ height, width }) => (
               <List

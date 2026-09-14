@@ -32,6 +32,36 @@ async function mapSearch(page, keyword = "", location = "") {
   await page.locator("#locationInput").fill(location);
   await page.locator(".submitSearch").click();
 }
+async function expectReadOnlyDrawer(page) {
+  const drawer = page.getByRole("complementary", { name: "Resource details" });
+  await expect(drawer).toBeVisible();
+  await expect(drawer.locator("h2")).toHaveText("Alpha Support");
+  await expect(drawer.locator(".drawer-description")).toHaveText(
+    "Synthetic description",
+  );
+  await expect(
+    drawer
+      .locator("dl > div")
+      .filter({ has: page.locator("dt", { hasText: /^Contact$/ }) })
+      .locator("dd"),
+  ).not.toBeEmpty();
+  await expect(
+    drawer.locator("input, textarea, select, [contenteditable=true]"),
+  ).toHaveCount(0);
+  await expect(page.locator(".modal-title")).toHaveCount(0);
+}
+async function addTagFilter(page, tag) {
+  await page
+    .getByRole("button", { name: "Add tag filter", exact: true })
+    .click();
+  const picker = page.getByRole("dialog", { name: "Choose a tag" });
+  await picker.getByRole("textbox", { name: "Find a tag" }).fill(tag);
+  await picker.getByRole("button", { name: tag, exact: true }).click();
+  await expect(picker).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: `Remove ${tag} filter`, exact: true }),
+  ).toBeVisible();
+}
 async function closed(page) {
   await expect(page.locator(".modal-title")).toHaveCount(0);
 }
@@ -51,7 +81,7 @@ for (const role of ["PENDING", "REJECTED", null])
       await expect(page.locator("#deckgl-overlay")).toHaveCount(0);
     }
   });
-test("volunteer navigation and read-only directory/map modals", async ({
+test("volunteer navigation and read-only directory/map details", async ({
   page,
   request,
 }) => {
@@ -63,17 +93,14 @@ test("volunteer navigation and read-only directory/map modals", async ({
   await expect(names(page)).toHaveCount(3);
   await expect(page.locator(".edit-button")).toHaveCount(0);
   await names(page).first().click();
-  await expect(field(page, "companyName")).toBeDisabled();
+  await expectReadOnlyDrawer(page);
   await expect(page.locator("#submit-form-button")).toHaveCount(0);
-  await page.locator(".close-button").click();
+  await page.getByRole("button", { name: "Close resource details" }).click();
   await page.goto("/");
   await mapSearch(page, "Alpha");
   await page.locator(".card-title").first().click();
   await expect(page.locator("[data-cy=card-resource-edit-btn]")).toHaveCount(0);
-  await page
-    .locator(".resource-drawer [data-cy=card-resource-view-btn]")
-    .click();
-  await expect(field(page, "companyName")).toBeDisabled();
+  await expectReadOnlyDrawer(page);
 });
 test("navbar titles, navigation, logo, authenticated login redirect and logout", async ({
   page,
@@ -96,12 +123,8 @@ test("navbar titles, navigation, logo, authenticated login redirect and logout",
     await expect(
       page.getByRole("button", { name: "New resource", exact: true }),
     ).toBeVisible();
-    if (path !== "/users")
-      await expect(page.locator("#logo")).toHaveCSS("width", "32px");
-    await expect(page.locator("#logo")).toHaveCSS(
-      "height",
-      path === "/users" ? "24px" : "32px",
-    );
+    await expect(page.locator("#logo")).toHaveCSS("width", "32px");
+    await expect(page.locator("#logo")).toHaveCSS("height", "32px");
   }
   await page.getByRole("link", { name: "Directory", exact: true }).click();
   await page.locator("#logo").click();
@@ -118,7 +141,7 @@ test("directory headers, empty search and CSV visibility", async ({
   request,
 }) => {
   await login(page, request);
-  await expect(page.locator(".manager-header")).toContainText(
+  await expect(page.locator("#page-title")).toContainText(
     "Resource directory",
   );
   await expect(page.locator("#csv-download-btn")).toBeVisible();
@@ -205,13 +228,23 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
     await expect(names(page)).toHaveCount(1);
     await expect(page.locator("[data-cy=card-address]")).toContainText("63101");
     await names(page).click();
-    await expect(field(page, "contactName")).toHaveValue("Edited Contact");
-    await expect(field(page, "contactEmail")).toHaveValue("");
-    await expect(field(page, "contactName")).toBeDisabled();
-    await page.locator(".close-button").click();
+    const details = page.getByRole("complementary", {
+      name: "Resource details",
+    });
+    await expect(
+      details
+        .locator("dl > div")
+        .filter({ has: page.locator("dt", { hasText: /^Contact$/ }) })
+        .locator("dd"),
+    ).toHaveText("Edited Contact");
+    await expect(details.locator("dt", { hasText: /^Email$/ })).toHaveCount(0);
+    await expect(details.locator("input, textarea, select")).toHaveCount(0);
+    await page.getByRole("button", { name: "Close resource details" }).click();
     await page.locator(".edit-button").click();
     await page.locator("#delete-form-button").click();
-    await expect(page.locator("#delete-form-button")).toHaveText("Confirm delete");
+    await expect(page.locator("#delete-form-button")).toHaveText(
+      "Confirm delete",
+    );
     await page.locator("#delete-form-button").click();
     await closed(page);
     await page.reload();
@@ -235,14 +268,17 @@ test("directory search location, name/distance sorting, live tag intersection", 
   await page.locator("#search-location").fill("");
   await search(page);
   await expect(names(page)).toHaveCount(3);
-  await page.locator("#tags-filled").fill("Housing");
-  await page.locator("#tags-filled").press("Enter");
+  await addTagFilter(page, "Housing");
   await expect(names(page)).toHaveCount(2);
-  await page.locator("#tags-filled").fill("Meals");
-  await page.locator("#tags-filled").press("Enter");
+  await addTagFilter(page, "Meals");
   await expect(names(page)).toHaveText("Alpha Support");
-  await page.locator("#tags-filled").press("Backspace");
-  await page.locator("#tags-filled").press("Backspace");
+  await page
+    .getByRole("button", { name: "Remove Meals filter", exact: true })
+    .click();
+  await expect(names(page)).toHaveCount(2);
+  await page
+    .getByRole("button", { name: "Remove Housing filter", exact: true })
+    .click();
   await expect(names(page)).toHaveCount(3);
 });
 test("navigation clears result and search state", async ({ page, request }) => {
@@ -284,7 +320,7 @@ test("map name/location searches, distances and independent location clearing", 
   await expect(page.locator(".card-title")).toHaveCount(3);
 });
 for (const surface of [".resource-drawer"])
-  test(`map ${surface} view/edit modal and close synchronization`, async ({
+  test(`map ${surface} inline details, edit modal and close synchronization`, async ({
     page,
     request,
   }) => {
@@ -301,15 +337,15 @@ for (const surface of [".resource-drawer"])
     await page.locator("#submit-form-button").click();
     await expect(field(page, "contactName")).toHaveClass(/invalid/);
     await page.locator("#delete-form-button").click();
-    await expect(page.locator("#delete-form-button")).toHaveText("Confirm delete");
+    await expect(page.locator("#delete-form-button")).toHaveText(
+      "Confirm delete",
+    );
     await field(page, "companyName").click();
     await expect(page.locator("#delete-form-button")).toHaveText("Delete");
     await page.locator(".close-button").click();
     await expect(page.locator(".resource-drawer h2")).toBeVisible();
-    await page.locator(`${surface} [data-cy=card-resource-view-btn]`).click();
-    await expect(field(page, "companyName")).toBeDisabled();
+    await expectReadOnlyDrawer(page);
     await expect(page.locator("#submit-form-button")).toHaveCount(0);
-    await page.locator(".close-button").click();
     await page.locator("button[aria-label='Close resource details']").click();
     await expect(page.locator(".resource-drawer h2")).toHaveCount(0);
     await expect(page.locator(".expanded")).toHaveCount(0);
@@ -321,11 +357,7 @@ test("map drawer opens read-only details and tag selection toggles and stays syn
   await login(page, request, "ADMIN", "/");
   await mapSearch(page, "Alpha");
   await page.locator(".card-title").first().click();
-  await page
-    .locator(".resource-drawer [data-cy=card-resource-view-btn]")
-    .click();
-  await expect(field(page, "companyName")).toBeDisabled();
-  await page.locator(".close-button").click();
+  await expectReadOnlyDrawer(page);
   const cardTag = page
     .locator(".card-tags .filter-tag")
     .filter({ hasText: "Housing" })

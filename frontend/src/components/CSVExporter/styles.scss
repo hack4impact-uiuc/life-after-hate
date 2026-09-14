@@ -1,11 +1,59 @@
 #csv-download-btn {
   padding: 0;
+  transition:
+    background-color var(--motion-fast, 150ms),
+    border-color var(--motion-fast, 150ms);
   img {
     height: 1.2em;
     opacity: 0.5;
-    transition: all 0.2s;
-    &:hover {
-      opacity: 1;
-    }
+    transition:
+      opacity var(--motion-fast, 150ms),
+      transform var(--motion-fast, 150ms);
   }
+  &:hover img {
+    opacity: 1;
+    transform: translateY(2px);
+  }
+  &:active img {
+    transform: translateY(3px);
+  }
+  &:focus-visible {
+    outline: 2px solid #a34b00;
+    outline-offset: 3px;
+  }
+}
+.csv-export {
+  position: relative;
+}
+.csv-export-label {
+  display: inline-grid;
+  > span {
+    grid-area: 1 / 1;
+  }
+}
+.csv-export-placeholder {
+  visibility: hidden;
+}
+.csv-export-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+@media (prefers-reduced-motion: reduce) {
+  #csv-download-btn,
+  #csv-download-btn img {
+    transition: none;
+  }
+  #csv-download-btn:hover img,
+  #csv-download-btn:active img {
+    transform: none;
+  }
+}
+.csv-export-error {
+  display: block;
+  margin-top: 6px;
+  color: #b13a23;
+  font-size: 13px;
 }

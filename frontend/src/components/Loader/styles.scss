@@ -62,3 +62,15 @@
   z-index: 1200 !important;
   height: 3px !important;
 }
+
+#nprogress .bar {
+  background: #d77a25;
+}
+#nprogress .peg {
+  box-shadow: 0 0 8px #d77a2566;
+}
+@media (prefers-reduced-motion: reduce) {
+  #nprogress .bar {
+    transition: none !important;
+  }
+}

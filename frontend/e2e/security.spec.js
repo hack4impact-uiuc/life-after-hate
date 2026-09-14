@@ -109,7 +109,7 @@ test("admin can add, edit and delete a resource with CSRF-protected writes", asy
   const writes = await mockApi(page, "ADMIN");
   await page.goto("/directory");
   await page.locator("#add-button").click();
-  await page.locator('[data-cy="modal-resourceType"]').selectOption("GROUP");
+  await page.getByRole("radio", { name: "Group", exact: true }).check();
   await page.locator('[data-cy="modal-companyName"]').fill("Created Resource");
   await page.locator('[data-cy="modal-contactName"]').fill("Test Contact");
   await page.locator('[data-cy="modal-address"]').fill("123 Test St");

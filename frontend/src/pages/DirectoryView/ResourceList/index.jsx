@@ -75,12 +75,7 @@ class ResourceList extends React.Component {
     const { resources } = this.props;
     return (
       resources.length > 0 && (
-        <div
-          className="resource-list"
-          style={{
-            "--directory-rows-height": `${resources.length * (this.props.density === "compact" ? 70 : 90)}px`,
-          }}
-        >
+        <div className="resource-list">
           <AutoSizer>
             {({ height, width }) => (
               <List

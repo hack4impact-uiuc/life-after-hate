@@ -14,20 +14,23 @@
     letter-spacing: 0.12em;
     color: #8c857a;
   }
-  button {
+  .filter-tag,
+  .add-tag-button {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     border-radius: 20px;
     font-family: inherit;
     font-size: 12px;
+    line-height: 16px;
+    min-height: 28px;
+    box-sizing: border-box;
   }
   .filter-tag {
-    border: 0;
+    border: 1px solid transparent;
     background: #fdf0e2;
     color: #a34b00;
-    padding: 4px 9px;
-    font-size: 11px;
+    padding: 5px 10px;
     font-weight: 500;
     overflow-wrap: anywhere;
     min-width: 0;
@@ -42,7 +45,7 @@
 }
 .tag-filters .add-tag-button {
   border: 1px solid #ded7cc;
-  padding: 5px 11px;
+  padding: 5px 10px;
   color: #6e675e;
   background: transparent;
   transition:
@@ -133,5 +136,47 @@
     button {
       min-height: 44px;
     }
+  }
+}
+
+.tag-filters .filter-tag {
+  transition:
+    background-color var(--motion-fast, 150ms),
+    opacity var(--motion-fast, 150ms),
+    transform var(--motion-fast, 150ms);
+  animation: filter-chip-enter var(--motion-fast, 150ms)
+    var(--motion-ease, ease-out);
+  &.is-leaving {
+    opacity: 0;
+    transform: scale(0.94);
+    pointer-events: none;
+    animation: none;
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+}
+.tag-picker button {
+  transition:
+    background-color var(--motion-fast, 150ms),
+    color var(--motion-fast, 150ms);
+}
+@keyframes filter-chip-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tag-filters .filter-tag,
+  .tag-filters .add-tag-button,
+  .tag-picker button {
+    animation: none;
+    transition: none;
+    transform: none;
   }
 }

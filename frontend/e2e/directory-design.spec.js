@@ -5,7 +5,7 @@ for (const width of [390, 1440]) {
     page,
     request,
   }) => {
-    await page.setViewportSize({ width, height: 1000 });
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 800 });
     const response = await request.post("http://127.0.0.1:4176/__test/reset", {
       data: { role: "ADMIN" },
     });
@@ -23,6 +23,17 @@ for (const width of [390, 1440]) {
     await page.locator("#search-button").click();
     await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(3);
     await expect(page.locator(".resource-tags").first()).toBeVisible();
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => document.documentElement.scrollHeight <= innerHeight,
+        ),
+      )
+      .toBe(true);
+    const table = await page.locator(".directory-table").boundingBox();
+    expect(table.y + table.height).toBeLessThanOrEqual(
+      page.viewportSize().height,
+    );
     const comfortable = await page
       .locator(".card-wrapper")
       .first()
