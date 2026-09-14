@@ -16,12 +16,19 @@ import { updateUsers } from "../redux/actions/users";
 import { addTag, removeTag, refreshTagList } from "../redux/actions/tags";
 import store from "../redux/store";
 
-async function getSearchResults(keyword, address, tag, radius = 500) {
+async function getSearchResults(
+  keyword,
+  address,
+  tag,
+  radius = 500,
+  options = {},
+) {
   const endptStr = `resources/filter?`;
   const arglist = { keyword, address, tag, radius };
   return (
     await apiRequest({
       endpoint: endptStr + toQueryString(arglist),
+      withLoader: options.withLoader ?? true,
       notification: {
         failureMessage: "Failed to execute search.",
       },
@@ -160,21 +167,40 @@ function removeFilterTag(data) {
   store.dispatch(removeTag(data));
 }
 
+let searchRequestId = 0;
+
 async function filterAndRefreshResource(
   keyword,
   address,
   tag,
   radius,
-  { shouldApply = () => true } = {},
+  options = {},
 ) {
+  const requestId = ++searchRequestId;
+  const results = await getSearchResults(
+    keyword,
+    address,
+    tag,
+    radius,
+    options,
+  );
+  // A newer search (or an edited/unmounted input) makes this response obsolete.
+  if (requestId !== searchRequestId || options.shouldApply?.() === false)
+    return results;
   store.dispatch(updateSearchParams({ keyword, address, tag }));
-  const results = await getSearchResults(keyword, address, tag, radius);
-  if (!shouldApply()) return results;
   store.dispatch(replaceAllResources(results.resources));
-  if (results.center?.length === 2 && results.center.every(Number.isFinite)) {
-    store.dispatch(updateMapCenter(results.center));
-  } else {
-    store.dispatch(updateMapCenter(null));
+  const center =
+    results.center?.length === 2 && results.center.every(Number.isFinite)
+      ? results.center
+      : null;
+  const previousCenter = store.getState().map.center;
+  if (
+    center
+      ? !previousCenter ||
+        center.some((value, i) => value !== previousCenter[i])
+      : previousCenter != null
+  ) {
+    store.dispatch(updateMapCenter(center));
   }
   return results;
 }

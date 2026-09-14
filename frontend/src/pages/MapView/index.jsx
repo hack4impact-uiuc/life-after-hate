@@ -32,6 +32,7 @@ const MapView = () => {
   const selected = useSelector(currentResourceSelector);
   const address = useSelector((state) => state.search.address);
   const [typeFilter, setTypeFilter] = useState("ALL");
+  const [searchStatus, setSearchStatus] = useState("idle");
   const [sort, setSort] = useState("nearest");
   const resources = React.useMemo(
     () =>
@@ -73,7 +74,7 @@ const MapView = () => {
   return (
     <div className="map-view">
       <div className="search-content">
-        <SearchBar />
+        <SearchBar onStatusChange={setSearchStatus} />
       </div>
       <div className="workspace-filters">
         <TagFilters />
@@ -101,12 +102,28 @@ const MapView = () => {
         </span>
       </div>
       <div className={`map-workspace ${resource ? "has-detail" : ""}`}>
-        <section className="results-rail" aria-label="Resource results">
+        <section
+          className="results-rail"
+          aria-label="Resource results"
+          aria-busy={searchStatus === "updating" || searchStatus === "pending"}
+        >
           <div className="results-heading">
-            <strong aria-live="polite">{resources.length} resources</strong>
+            <strong className="results-count" aria-live="polite">
+              {resources.length} resources
+              <span className="search-progress-slot" aria-hidden="true">
+                {searchStatus === "updating" && (
+                  <span className="search-progress" />
+                )}
+              </span>
+            </strong>
             {address && <span>near {address}</span>}
             <SortMenu value={sort} onChange={setSort} />
           </div>
+          {searchStatus === "error" && (
+            <div className="search-error" role="alert">
+              Search failed. Please try again.
+            </div>
+          )}
           {resources.length ? (
             <CardView resources={resources} />
           ) : (

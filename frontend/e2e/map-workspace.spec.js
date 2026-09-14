@@ -22,7 +22,15 @@ for (const width of [390, 1440]) {
       route.fulfill({ json: { version: 8, sources: {}, layers: [] } }),
     );
     await page.goto("/");
-    await page.locator(".submitSearch").click();
+    await expect(page.locator(".card-title")).toHaveCount(3);
+    await page
+      .getByRole("textbox", { name: "Search resources", exact: true })
+      .fill("Alpha");
+    await expect(page.locator(".card-title")).toHaveCount(1);
+    await expect(page.locator(".card-title")).toHaveText("Alpha Support");
+    await page
+      .getByRole("button", { name: "Clear search", exact: true })
+      .click();
     await expect(page.locator(".card-title")).toHaveCount(3);
     const typeFilters = page.getByRole("group", { name: "Resource type" });
     await typeFilters
