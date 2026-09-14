@@ -48,6 +48,32 @@ ResourceFormInput.propTypes = {
   errors: PropTypes.object,
 };
 
+// Submit only editable fields; read models also contain IDs, coordinates,
+// audit metadata and legacy fields that the API must never accept from a form.
+const editableFields = new Set([
+  "type",
+  "contactName",
+  "contactPhone",
+  "contactEmail",
+  "address",
+  "websiteURL",
+  "notes",
+  "tags",
+  "availability",
+  "howDiscovered",
+  "volunteerReason",
+  "skills",
+  "volunteerRoles",
+  "description",
+  "companyName",
+  "quantity",
+  "resourceName",
+]);
+const formPayload = (data) =>
+  Object.fromEntries(
+    Object.entries(data).filter(([key]) => editableFields.has(key)),
+  );
+
 const ResourceModal = ({
   resource,
   isAddingResource,
@@ -80,12 +106,12 @@ const ResourceModal = ({
   };
 
   const handleEditResource = async (data) => {
-    await editAndRefreshResource(data, resource._id);
+    await editAndRefreshResource(formPayload(data), resource._id);
     closeModal();
   };
 
   const handleAddResource = async (data) => {
-    await addAndRefreshResource(data);
+    await addAndRefreshResource(formPayload(data));
     closeModal();
   };
 

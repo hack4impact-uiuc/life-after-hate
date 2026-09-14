@@ -10,7 +10,7 @@
   "scripts": {
     "test": "npm --prefix backend test && npm --prefix frontend test && npm --prefix scripts/db_backup/backup test",
     "build": "npm --prefix frontend run build",
-    "test:e2e": "npm --prefix frontend run test:e2e",
+    "test:e2e": "node turso/build.mjs && npm --prefix frontend run test:e2e",
     "lint": "node scripts/check-syntax.cjs",
     "format": "prettier --write backend frontend/src scripts/db_backup/backup '*.md'",
     "build:vercel": "node turso/build.mjs && node turso/build-frontend.mjs",

@@ -97,8 +97,6 @@ typings/
 frontend/build
 
 
-frontend/cypress/videos
-frontend/cypress/screenshots
 
 # vuepress build output
 .vuepress/dist

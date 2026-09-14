@@ -198,7 +198,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Backend tests create a disposable MongoDB instance; the first run downloads its binary. They never connect to your configured `DB_URI`. Browser tests use synthetic API responses and do not need external credentials. The older Cypress fixtures remain as historical workflow references; Playwright is the maintained browser suite.
+Backend tests create a disposable MongoDB instance; the first run downloads its binary. They never connect to your configured `DB_URI`. Playwright browser tests exercise the real local API and disposable libSQL with synthetic records; a smaller mocked suite checks UI security behavior. See [browser test coverage](frontend/e2e/README.md). External credentials are not needed.
 
 ## Deployment and migration
 
