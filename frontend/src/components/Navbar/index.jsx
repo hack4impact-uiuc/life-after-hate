@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
   NavLink,
   UncontrolledDropdown,
   Button,
+  Collapse,
 } from "reactstrap";
 import { connect } from "react-redux";
 import { openResourceModal } from "../../redux/actions/modal";
@@ -35,6 +36,28 @@ const LAHNavbar = ({
   const [pictureFailed, setPictureFailed] = useState(false);
   useEffect(() => setPictureFailed(false), [profilePic]);
   const navbarRef = useRef(null);
+  const [indicator, setIndicator] = useState(null);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const active = navbarRef.current?.querySelector(
+        '.workspace-tab [aria-current="page"]',
+      );
+      const nav = active?.closest(".navbar-nav");
+      if (!active || !nav) return;
+      const rect = active.getBoundingClientRect();
+      const parent = nav.getBoundingClientRect();
+      setIndicator({
+        x: rect.left - parent.left,
+        y: rect.top - parent.top,
+        width: rect.width,
+        height: rect.height,
+      });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(navbarRef.current);
+    return () => observer.disconnect();
+  }, [location.pathname, dropdownOpen]);
   useEffect(() => {
     const observer = new ResizeObserver(([entry]) => {
       document.documentElement.style.setProperty(
@@ -56,11 +79,7 @@ const LAHNavbar = ({
 
   return (
     <div ref={navbarRef} className="lah-navbar-container">
-      <Navbar
-        light
-        expand="md"
-        className="lah_navbar"
-      >
+      <Navbar light expand="md" className="lah_navbar">
         <NavbarBrand tag={Link} to="/" onClick={navigate}>
           <img src={Logo} alt="Life After Hate home" id="logo" />
         </NavbarBrand>
@@ -70,15 +89,23 @@ const LAHNavbar = ({
           aria-expanded={dropdownOpen}
           aria-controls="main-navigation"
         />
-        <div
-          id="main-navigation"
-          className={`navbar-collapse collapse${dropdownOpen ? " show" : ""}`}
-        >
+        <Collapse id="main-navigation" isOpen={dropdownOpen} navbar>
           <Nav
             className="ms-auto align-items-md-center"
             data-cy="nav-links"
             navbar
           >
+            {indicator && (
+              <span
+                className="workspace-tab-indicator"
+                aria-hidden="true"
+                style={{
+                  width: indicator.width,
+                  height: indicator.height,
+                  transform: `translate(${indicator.x}px, ${indicator.y}px)`,
+                }}
+              />
+            )}
             <NavItem className="workspace-tab">
               <NavLink
                 tag={Link}
@@ -101,6 +128,21 @@ const LAHNavbar = ({
                 className="hover-orange pe-md-3"
               >
                 Directory
+              </NavLink>
+            </NavItem>
+            <NavItem className="workspace-tab">
+              <NavLink
+                tag={Link}
+                onClick={navigate}
+                to="/shortlists"
+                aria-current={
+                  location.pathname.startsWith("/shortlists")
+                    ? "page"
+                    : undefined
+                }
+                className="hover-orange pe-md-3"
+              >
+                Shortlists
               </NavLink>
             </NavItem>
             <AdminView>
@@ -188,7 +230,7 @@ const LAHNavbar = ({
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
-        </div>
+        </Collapse>
       </Navbar>
     </div>
   );

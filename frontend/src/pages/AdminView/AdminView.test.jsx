@@ -138,7 +138,7 @@ it("allows choosing Admin and disables review controls while pending", async () 
     "p",
   );
   await act(async () => pending.resolve());
-  expect(button(c, "Approve").disabled).toBe(false);
+  expect(c.querySelector(".review-row").textContent).toContain("Approved");
 });
 it.each([
   ["ECONNABORTED", "timed out"],
@@ -159,20 +159,10 @@ it.each([
     expect(c.querySelector('[role="alert"]')).toBeNull();
   },
 );
-it("opens view-only profile on row click and edit profile on edit click", async () => {
-  const c = render();
-  await flush();
-  click(c.querySelector(".users .card-wrapper"));
-  expect(view.store.getState().modal).toMatchObject({
-    userId: "a",
-    editable: false,
-  });
-  act(() => view.store.dispatch({ type: "MODAL_CLOSE" }));
-  click(c.querySelector(".users .edit-button"));
-  expect(view.store.getState().modal).toMatchObject({
-    userId: "a",
-    editable: true,
-  });
+it("opens the unified account editor on row click", async () => {
+ const c = render(); await flush(); click(c.querySelector(".users .card-wrapper"));
+ expect(view.store.getState().modal).toMatchObject({ userId: "a", editable: true });
+ expect(c.querySelector(".users .edit-button")).toBeNull();
 });
 it.each(["Enter", " "])("opens profiles with keyboard %j", async (key) => {
   const c = render();
@@ -184,7 +174,7 @@ it.each(["Enter", " "])("opens profiles with keyboard %j", async (key) => {
   );
   expect(view.store.getState().modal).toMatchObject({
     userId: "a",
-    editable: false,
+    editable: true,
   });
 });
 it("does not expose profile editing to volunteers", async () => {

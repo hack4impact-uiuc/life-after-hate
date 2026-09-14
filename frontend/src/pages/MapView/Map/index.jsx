@@ -30,7 +30,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 const ZOOMED_IN_CONSTANT = 5;
-const TRANSITION_LENGTH = 1500;
+const TRANSITION_LENGTH = 650;
 
 const Map = ({
   center,
@@ -45,6 +45,22 @@ const Map = ({
 }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(
+    () =>
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false,
+  );
+  useEffect(() => {
+    const preference = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!preference) return;
+    const update = () => {
+      setReducedMotion(preference.matches);
+      if (preference.matches) {
+        setViewport((previous) => ({ ...previous, transitionDuration: 0 }));
+      }
+    };
+    preference.addEventListener("change", update);
+    return () => preference.removeEventListener("change", update);
+  }, []);
   const handleCenterChange = () => {
     if (center?.length === 2 && center.every(Number.isFinite)) {
       // If we received a new center point, focus the map
@@ -54,7 +70,7 @@ const Map = ({
         longitude: center[0],
         zoom: ZOOMED_IN_CONSTANT,
         transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
-        transitionDuration: TRANSITION_LENGTH,
+        transitionDuration: reducedMotion ? 0 : TRANSITION_LENGTH,
       }));
     }
   };
@@ -105,6 +121,10 @@ const Map = ({
               INDIVIDUAL: [17, 132, 135],
               TANGIBLE: [73, 132, 87],
             }[d.type] || [86, 113, 170],
+      transitions: {
+        getRadius: reducedMotion ? 0 : 160,
+        getFillColor: reducedMotion ? 0 : 160,
+      },
       updateTriggers: { getRadius: [selectedId], getFillColor: [selectedId] },
     });
 

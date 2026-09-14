@@ -58,6 +58,7 @@ const resources = [
   },
 ];
 let view;
+const onSelectResource = vi.fn();
 beforeEach(() => vi.clearAllMocks());
 afterEach(() => view?.unmount());
 it.each(["directory", "map"])(
@@ -65,7 +66,7 @@ it.each(["directory", "map"])(
   (kind) => {
     view = mount(
       kind === "directory" ? (
-        <DirectoryList resources={resources} />
+        <DirectoryList onSelectResource={onSelectResource} resources={resources} />
       ) : (
         <CardView resources={resources} />
       ),
@@ -88,7 +89,7 @@ it.each(["directory", "map"])(
   (kind) => {
     view = mount(
       kind === "directory" ? (
-        <DirectoryList resources={[]} />
+        <DirectoryList onSelectResource={onSelectResource} resources={[]} />
       ) : (
         <CardView resources={[]} />
       ),
@@ -97,27 +98,19 @@ it.each(["directory", "map"])(
   },
 );
 it("recomputes directory layout for density and resource changes", () => {
-  view = mount(<DirectoryList resources={resources} density="comfortable" />);
-  expect(
-    view.container
-      .querySelector(".resource-list")
-      .style.getPropertyValue("--directory-rows-height"),
-  ).toBe("180px");
-  view.render(<DirectoryList resources={resources} density="compact" />);
+  view = mount(<DirectoryList onSelectResource={onSelectResource} resources={resources} density="comfortable" />);
+
+  view.render(<DirectoryList onSelectResource={onSelectResource} resources={resources} density="compact" />);
   expect(calls.scrollToPosition).toHaveBeenCalledWith(0);
   expect(calls.forceUpdateGrid).toHaveBeenCalled();
-  expect(
-    view.container
-      .querySelector(".resource-list")
-      .style.getPropertyValue("--directory-rows-height"),
-  ).toBe("140px");
-  view.render(<DirectoryList resources={[resources[0]]} density="compact" />);
+
+  view.render(<DirectoryList onSelectResource={onSelectResource} resources={[resources[0]]} density="compact" />);
   expect(view.container.querySelectorAll(".card-wrapper")).toHaveLength(1);
 });
 it.each(["click", "Enter", " "])(
   "opens view-only directory records using %s",
   (how) => {
-    view = mount(<DirectoryList resources={resources} />, {
+    view = mount(<DirectoryList onSelectResource={onSelectResource} resources={resources} />, {
       auth: { role: "ADMIN" },
     });
     const row = view.container.querySelector(".card-wrapper");
@@ -128,24 +121,16 @@ it.each(["click", "Enter", " "])(
           new KeyboardEvent("keydown", { key: how, bubbles: true }),
         ),
       );
-    expect(view.store.getState().modal).toMatchObject({
-      resourceId: "a",
-      editable: false,
-    });
+    expect(onSelectResource).toHaveBeenCalledWith("a");
   },
 );
-it("opens editable directory records without also firing the row action", () => {
-  view = mount(<DirectoryList resources={resources} />, {
-    auth: { role: "ADMIN" },
-  });
-  click(button(view.container, "Edit"));
-  expect(view.store.getState().modal).toMatchObject({
-    resourceId: "a",
-    editable: true,
-  });
+it("opens resource details from the directory without duplicate edit actions", () => {
+ view = mount(<DirectoryList resources={resources} onSelectResource={onSelectResource} />, { auth: { role: "ADMIN" } });
+ click(view.container.querySelector(".card-wrapper"));
+ expect(onSelectResource).toHaveBeenCalledWith("a"); expect(button(view.container, "Edit")).toBeUndefined();
 });
 it("hides directory edit actions from volunteers and renders zero distance", () => {
-  view = mount(<DirectoryList resources={resources} />, {
+  view = mount(<DirectoryList onSelectResource={onSelectResource} resources={resources} />, {
     auth: { role: "VOLUNTEER" },
   });
   expect(button(view.container, "Edit")).toBeUndefined();

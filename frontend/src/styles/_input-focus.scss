@@ -1,0 +1,17 @@
+// Shared with the map search fields. Apply to the visible field container
+// for composite controls so their inner inputs do not get a second ring.
+@mixin ring {
+  outline: none;
+  border-color: #a69d90;
+  background-color: #faf8f4;
+  box-shadow:
+    0 0 0 3px rgba(140, 133, 122, 0.18),
+    0 0 8px rgba(140, 133, 122, 0.08);
+}
+
+@mixin transition {
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}

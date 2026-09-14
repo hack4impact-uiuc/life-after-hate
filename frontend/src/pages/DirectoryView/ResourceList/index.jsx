@@ -63,6 +63,7 @@ class ResourceList extends React.Component {
               key={resources[index]._id}
               resource={resources[index]}
               measure={measure}
+              onSelectResource={this.props.onSelectResource}
             />
           </div>
         )}
@@ -74,12 +75,7 @@ class ResourceList extends React.Component {
     const { resources } = this.props;
     return (
       resources.length > 0 && (
-        <div
-          className="resource-list"
-          style={{
-            "--directory-rows-height": `${resources.length * (this.props.density === "compact" ? 70 : 90)}px`,
-          }}
-        >
+        <div className="resource-list">
           <AutoSizer>
             {({ height, width }) => (
               <List
@@ -104,6 +100,7 @@ class ResourceList extends React.Component {
 ResourceList.propTypes = {
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
   density: PropTypes.string,
+  onSelectResource: PropTypes.func.isRequired,
 };
 
 export default ResourceList;

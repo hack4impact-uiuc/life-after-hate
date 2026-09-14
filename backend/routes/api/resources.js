@@ -247,3 +247,5 @@ router.delete(
 );
 
 module.exports = router;
+
+module.exports.presentResource = concatAddress;

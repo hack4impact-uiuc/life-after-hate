@@ -17,7 +17,6 @@ import {
 import LAHModal from "../../Modal";
 import "../styles.scss";
 import "./styles.scss";
-import LastModifiedInfo from "../LastModifiedInfo";
 import IndividualResourceForm from "./IndividualResourceForm";
 import GroupResourceForm from "./GroupResourceForm";
 import TangibleResourceForm from "./TangibleResourceForm";
@@ -91,11 +90,13 @@ const formPayload = (data) =>
     Object.entries(data).filter(([key]) => editableFields.has(key)),
   );
 
-const ResourceModal = ({
+export const ResourceModal = ({
   resource,
   isAddingResource,
   closeModal,
   editable,
+  isOpen,
+  onClosed,
 }) => {
   const {
     register,
@@ -114,7 +115,6 @@ const ResourceModal = ({
     register("tags");
   }, [register]);
 
-  const [activeTab, setActiveTab] = useState("details");
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [groupType, setGroupType] = useState(
     resource.type ?? resourceEnum.INDIVIDUAL,
@@ -122,33 +122,49 @@ const ResourceModal = ({
   useEffect(() => {
     if (!isAddingResource && !resource._id) closeModal();
   }, [isAddingResource, resource._id, closeModal]);
-  const mutationPending = useRef(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState("");
-  const persist = async (operation) => {
-    if (!editable || mutationPending.current) return;
-    mutationPending.current = true;
-    setIsSaving(true);
-    setSaveError("");
+  const [pending, setPending] = useState(null);
+  const [requestError, setRequestError] = useState("");
+  const inFlight = useRef(false);
+  const active = useRef(isOpen);
+  active.current = isOpen;
+  useEffect(
+    () => () => {
+      active.current = false;
+    },
+    [],
+  );
+
+  const runMutation = async (operation, request) => {
+    if (inFlight.current || !editable) return;
+    inFlight.current = true;
+    setPending(operation);
+    setRequestError("");
     try {
-      await operation();
-      closeModal();
+      await request();
+      if (active.current) closeModal();
     } catch {
-      setSaveError("Could not save changes. Please try again.");
+      if (active.current)
+        setRequestError(
+          operation === "delete"
+            ? "We couldn’t complete the deletion. Please try again."
+            : "We couldn’t complete the save. Your entries are still here. Please try again.",
+        );
     } finally {
-      mutationPending.current = false;
-      setIsSaving(false);
+      inFlight.current = false;
+      if (active.current) setPending(null);
     }
   };
   const onSubmit = (data) =>
-    persist(() =>
+    runMutation("save", () =>
       isAddingResource
         ? addAndRefreshResource(formPayload(data))
         : editAndRefreshResource(formPayload(data), resource._id),
     );
+
   const handleDeleteResource = () => {
+    if (inFlight.current) return;
     if (!deleteClicked) return setDeleteClicked(true);
-    return persist(() => deleteAndRefreshResource(resource._id));
+    return runMutation("delete", () => deleteAndRefreshResource(resource._id));
   };
 
   if (!isAddingResource && !resource._id) return null;
@@ -187,128 +203,80 @@ const ResourceModal = ({
 
   return (
     <LAHModal
+      isOpen={isOpen}
+      onClosed={onClosed}
+      busy={!!pending}
       modalClassName="resource-editor-modal"
       headerTitle={title}
       subtitle={`${typeLabel} · ${isAddingResource ? "Unsaved resource" : editable ? "Resource details" : "View only"}`}
     >
       <form
         className="add-edit-resource-form resource-editor-form"
+        aria-busy={!!pending}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div
-          className="resource-editor-tabs"
-          role="tablist"
-          aria-label="Resource sections"
-        >
-          <button
-            type="button"
-            role="tab"
-            id="resource-details-tab"
-            aria-controls="resource-details-panel"
-            aria-selected={activeTab === "details"}
-            onClick={() => setActiveTab("details")}
-          >
-            Details
-          </button>
-          <button
-            type="button"
-            role="tab"
-            id="resource-notes-tab"
-            aria-controls="resource-notes-panel"
-            aria-selected={activeTab === "notes"}
-            onClick={() => setActiveTab("notes")}
-          >
-            Notes & history
-          </button>
-        </div>
         <div className="resource-editor-scroll">
-          <div
-            id="resource-details-panel"
-            role="tabpanel"
-            aria-labelledby="resource-details-tab"
-            hidden={activeTab !== "details"}
+          <fieldset
+            className="resource-editor-type"
+            disabled={isExistingResource || !editable || !!pending}
           >
-            <fieldset
-              className="resource-editor-type"
-              disabled={isExistingResource || !editable}
+            <legend>
+              Resource type{" "}
+              <span>
+                —{" "}
+                {isExistingResource
+                  ? "set when created"
+                  : "changes the fields below"}
+              </span>
+            </legend>
+            <div
+              className="resource-editor-segments"
+              data-cy="modal-resourceType"
             >
-              <legend>
-                Resource type{" "}
-                <span>
-                  —{" "}
-                  {isExistingResource
-                    ? "set when created"
-                    : "changes the fields below"}
-                </span>
-              </legend>
-              <div
-                className="resource-editor-segments"
-                data-cy="modal-resourceType"
-              >
-                {Object.entries(typeLabels).map(([value, label]) => (
-                  <label key={value}>
-                    <input
-                      type="radio"
-                      {...register("type", { required: true })}
-                      value={value}
-                      checked={groupType === value}
-                      onChange={() => {
-                        setGroupType(value);
-                        setValue("type", value);
-                      }}
-                    />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-            <div className="resource-editor-grid">
-              <FormComponent
-                register={register}
-                resource={resource}
-                errors={errors}
-                editable={editable}
-              />
+              {Object.entries(typeLabels).map(([value, label]) => (
+                <label key={value}>
+                  <input
+                    type="radio"
+                    {...register("type", { required: true })}
+                    value={value}
+                    checked={groupType === value}
+                    onChange={() => {
+                      setGroupType(value);
+                      setValue("type", value);
+                    }}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
             </div>
-            <div className="resource-editor-tags">
-              <p>Tags</p>
-              <ModalTagComplete
-                onChange={(_, value) => setValue("tags", value)}
-                tags={watch("tags") ?? resource.tags ?? []}
-                disabled={!editable}
-              />
-              {editable && (
-                <small>
-                  Choose existing tags or type a new one and press Enter.
-                </small>
-              )}
-            </div>
+          </fieldset>
+          <div className="resource-editor-grid" key={getResourceType()}>
+            <FormComponent
+              register={register}
+              resource={resource}
+              errors={errors}
+              editable={editable && !pending}
+            />
           </div>
-          <div
-            id="resource-notes-panel"
-            role="tabpanel"
-            aria-labelledby="resource-notes-tab"
-            hidden={activeTab !== "notes"}
-          >
-            <h3 className="resource-editor-section-heading">Notes & history</h3>
-            <p className="resource-editor-note-help">
-              Resource notes can be updated in Details.
-            </p>
-            <p className="resource-editor-note-preview">
-              {watch("notes") || "No notes yet."}
-            </p>
-            {isExistingResource &&
-              (resource.dateLastModified || resource.dateCreated) && (
-                <LastModifiedInfo resource={resource} />
-              )}
-            {isAddingResource && (
-              <p className="resource-editor-note-help">
-                History will be available after this resource is saved.
-              </p>
+          <div className="resource-editor-tags">
+            <p>Tags</p>
+            <ModalTagComplete
+              onChange={(_, value) => setValue("tags", value)}
+              tags={watch("tags") ?? resource.tags ?? []}
+              disabled={!editable || !!pending}
+            />
+            {editable && (
+              <small>
+                Choose existing tags or type a new one and press Enter.
+              </small>
             )}
           </div>
         </div>
-        {saveError && <p role="alert">{saveError}</p>}
+        {requestError && (
+          <p className="modal-request-error" role="alert">
+            {requestError}
+          </p>
+        )}
         <footer className="resource-editor-footer">
           <span className="resource-editor-footer-note">
             {isAddingResource
@@ -322,16 +290,21 @@ const ResourceModal = ({
               <button
                 type="button"
                 id="delete-form-button"
-                disabled={isSaving}
+                disabled={!!pending}
                 onClick={handleDeleteResource}
                 onBlur={() => setDeleteClicked(false)}
               >
-                {deleteClicked ? "Confirm delete" : "Delete"}
+                {pending === "delete"
+                  ? "Deleting…"
+                  : deleteClicked
+                    ? "Confirm delete"
+                    : "Delete"}
               </button>
             )}
             <button
               type="button"
               className="resource-editor-cancel"
+              disabled={!!pending}
               onClick={closeModal}
             >
               {editable ? "Cancel" : "Close"}
@@ -339,11 +312,10 @@ const ResourceModal = ({
             {editable && (
               <button
                 id="submit-form-button"
-                disabled={isSaving}
                 type="submit"
-                onClick={() => setActiveTab("details")}
+                disabled={!!pending}
               >
-                Save resource
+                {pending === "save" ? "Saving…" : "Save resource"}
               </button>
             )}
           </div>
@@ -353,10 +325,11 @@ const ResourceModal = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  resource: currentResourceSelector(state),
-  isAddingResource: isAddingResourceSelector(state),
-  editable: state.modal.editable,
+const mapStateToProps = (state, ownProps) => ({
+  resource: ownProps.resource ?? currentResourceSelector(state),
+  isAddingResource:
+    ownProps.isAddingResource ?? isAddingResourceSelector(state),
+  editable: ownProps.editable ?? state.modal.editable,
 });
 
 const mapDispatchToProps = {
@@ -372,6 +345,8 @@ ResourceModal.propTypes = {
   isAddingResource: PropTypes.bool.isRequired,
   editable: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool,
+  onClosed: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResourceModal);

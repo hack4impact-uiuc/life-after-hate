@@ -38,7 +38,7 @@ it("redirects anonymous users to sign in", () => {
 it.each(["ADMIN", "VOLUNTEER"])("allows approved %s users", (role) => {
   const c = render({ authenticated: true, role, isFetchingAuth: false });
   expect(c.textContent).toContain("Private data");
-  expect(c.textContent).toContain("Navigation");
+  expect(c.querySelector("nav")).toBeNull();
 });
 it("shows pending approval without private content", () => {
   const c = render({

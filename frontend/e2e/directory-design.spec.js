@@ -5,26 +5,35 @@ for (const width of [390, 1440]) {
     page,
     request,
   }) => {
-    await page.setViewportSize({ width, height: 1000 });
+    await page.setViewportSize({ width, height: width < 768 ? 844 : 800 });
     const response = await request.post("http://127.0.0.1:4176/__test/reset", {
       data: { role: "ADMIN" },
     });
     const { token } = await response.json();
-    await page
-      .context()
-      .addCookies([
-        {
-          name: "lah.sid",
-          value: token,
-          url: "http://127.0.0.1:4174",
-          httpOnly: true,
-          sameSite: "Lax",
-        },
-      ]);
+    await page.context().addCookies([
+      {
+        name: "lah.sid",
+        value: token,
+        url: "http://127.0.0.1:4174",
+        httpOnly: true,
+        sameSite: "Lax",
+      },
+    ]);
     await page.goto("/directory");
     await page.locator("#search-button").click();
     await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(3);
     await expect(page.locator(".resource-tags").first()).toBeVisible();
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => document.documentElement.scrollHeight <= innerHeight,
+        ),
+      )
+      .toBe(true);
+    const table = await page.locator(".directory-table").boundingBox();
+    expect(table.y + table.height).toBeLessThanOrEqual(
+      page.viewportSize().height,
+    );
     const comfortable = await page
       .locator(".card-wrapper")
       .first()
@@ -57,7 +66,37 @@ for (const width of [390, 1440]) {
     const download = page.waitForEvent("download");
     await page.getByRole("button", { name: "Export CSV" }).click();
     expect((await download).suggestedFilename()).toBe("resources.csv");
-    await page.locator(".edit-button").first().click();
+    const row = page.locator(".card-wrapper").first();
+    const details = page.getByRole("complementary", {
+      name: "Resource details",
+    });
+    await row.click();
+    await expect(details).toBeVisible();
+    await expect(
+      details.getByRole("heading", { name: "Alpha Support" }),
+    ).toBeVisible();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.keyboard.press("Escape");
+    await expect(details).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await expect(row).toHaveCSS("outline-style", "none");
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Shift+Tab");
+    await expect(row).toBeFocused();
+    await expect(row).toHaveCSS("outline-style", "solid");
+    await row.press("Enter");
+    await expect(details).toBeVisible();
+    await page.getByRole("button", { name: "Close resource details" }).click();
+    await expect(details).toHaveCount(0);
+    await row.focus();
+    await row.press("Enter");
+    await expect(details).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(details).toHaveCount(0);
+    await expect(row).toBeFocused();
+    await expect(row).toHaveCSS("outline-style", "solid");
+    await page.locator(".directory .card-wrapper").first().click();
+    await page.locator("[data-cy=card-resource-edit-btn]").click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("button", { name: "Close dialog" }).click();
     expect(

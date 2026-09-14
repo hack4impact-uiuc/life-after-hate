@@ -1,9 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Button } from "reactstrap";
-import { connect } from "react-redux";
-import AdminView from "../../../components/Auth/AdminView";
-import { openResourceModalWithPayload } from "../../../redux/actions/modal";
 
 import { distanceToString } from "../../../utils/formatters";
 import {
@@ -13,18 +9,11 @@ import {
 import "../styles.scss";
 import "./styles.scss";
 
-const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
-  const toggleModal = (event) => {
+const ResourceCard = ({ resource, style, onSelectResource }) => {
+  const [pointerFocused, setPointerFocused] = useState(false);
+  const openDetails = (event) => {
     event.stopPropagation();
-    openResourceModalWithPayload({ resourceId: resource._id });
-  };
-
-  const toggleViewOnlyModal = (event) => {
-    event.stopPropagation();
-    openResourceModalWithPayload({
-      resourceId: resource._id,
-      editable: false,
-    });
+    onSelectResource(resource._id);
   };
 
   return (
@@ -33,14 +22,20 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
         className="card-click row card-wrapper"
         role="button"
         tabIndex="0"
-        onClick={toggleViewOnlyModal}
+        data-pointer-focused={pointerFocused || undefined}
+        onPointerDown={() => setPointerFocused(true)}
+        onBlur={() => setPointerFocused(false)}
+        onClick={openDetails}
         onKeyDown={(event) => {
+          // Dismissing details should not turn a mouse click into a keyboard
+          // focus ring. Resume the indicator for subsequent keyboard use.
+          if (event.key !== "Escape") setPointerFocused(false);
           if (
             event.target === event.currentTarget &&
             ["Enter", " "].includes(event.key)
           ) {
             event.preventDefault();
-            toggleViewOnlyModal(event);
+            openDetails(event);
           }
         }}
       >
@@ -83,30 +78,18 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
         <div className="col col-desc col-desc-collapsed resource-availability">
           <p>{resource.availability}</p>
         </div>
-        <AdminView>
-          <div className="col col-edit">
-            <Button
-              onClick={toggleModal}
-              className="edit-button"
-              color="transparent"
-            >
-              Edit
-            </Button>
-          </div>
-        </AdminView>
+        <span className="resource-chevron" aria-hidden="true">
+          ›
+        </span>
       </div>
     </div>
   );
 };
 
-const mapDispatchToProps = {
-  openResourceModalWithPayload,
-};
-
 ResourceCard.propTypes = {
   resource: PropTypes.object.isRequired,
-  openResourceModalWithPayload: PropTypes.func.isRequired,
   style: PropTypes.object,
+  onSelectResource: PropTypes.func.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(ResourceCard);
+export default ResourceCard;

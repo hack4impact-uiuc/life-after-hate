@@ -2,30 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CardView from "./CardView";
 import TagFilters from "../../components/TagFilters";
-import TagToggle from "./TagToggle";
 import SortMenu from "./SortMenu";
 import SearchBar from "./SearchBar";
 import Map from "./Map";
-import ActionButtons from "./ActionButtons";
-import LastModifiedInfo from "../../components/Modal/LastModifiedInfo";
 import { getTags } from "../../utils/api";
 import {
   mappableResourceSelector,
   currentResourceSelector,
 } from "../../redux/selectors/map";
-import {
-  resourceName,
-  resourceDescription,
-} from "../../redux/selectors/resource";
+import { resourceName } from "../../redux/selectors/resource";
 import { clearMapResource } from "../../redux/actions/map";
-import { distanceToString, websiteHref } from "../../utils/formatters";
+import ResourceDetails, { typeLabels } from "../../components/ResourceDetails";
 import "./styles.scss";
 
-export const typeLabels = {
-  GROUP: "Group",
-  INDIVIDUAL: "Individual",
-  TANGIBLE: "Resource",
-};
 const MapView = () => {
   const dispatch = useDispatch();
   const allResources = useSelector(mappableResourceSelector);
@@ -50,28 +39,10 @@ const MapView = () => {
     selected?._id && resources.some((r) => r._id === selected._id)
       ? selected
       : null;
-  const [closingResource, setClosingResource] = useState(null);
-  const drawerResource = resource || closingResource;
-  const websiteURL = websiteHref(drawerResource?.websiteURL);
-  useEffect(() => {
-    if (resource) {
-      setClosingResource(resource);
-      return;
-    }
-    const timer = window.setTimeout(() => setClosingResource(null), 300);
-    return () => window.clearTimeout(timer);
-  }, [resource]);
   useEffect(() => {
     document.title = "Map View - Life After Hate";
     getTags();
   }, []);
-  useEffect(() => {
-    const close = (e) => {
-      if (e.key === "Escape") dispatch(clearMapResource());
-    };
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
-  }, [dispatch]);
   return (
     <div className="map-view">
       <div className="search-content">
@@ -98,9 +69,6 @@ const MapView = () => {
             ),
           )}
         </div>
-        <span className="filter-hint">
-          Find the right support, in the right place.
-        </span>
       </div>
       <div className={`map-workspace ${resource ? "has-detail" : ""}`}>
         <section
@@ -145,110 +113,10 @@ const MapView = () => {
             <span className="type-dot TANGIBLE" /> Resources
           </div>
         </div>
-        {drawerResource && (
-          <div
-            className={`drawer-shell ${resource ? "is-open" : "is-closing"}`}
-            inert={!resource ? "" : undefined}
-            aria-hidden={!resource || undefined}
-          >
-            <aside className="resource-drawer" aria-label="Resource details">
-              <header>
-                <div>
-                  <h2>
-                    <span className={`type-dot ${drawerResource.type}`} />
-                    {resourceName(drawerResource)}
-                  </h2>
-                  <p>
-                    {typeLabels[drawerResource.type]}
-                    {drawerResource.distanceFromSearchLoc != null &&
-                      ` · ${distanceToString(drawerResource.distanceFromSearchLoc)}`}
-                  </p>
-                </div>
-                <button
-                  aria-label="Close resource details"
-                  onClick={() => dispatch(clearMapResource())}
-                >
-                  ×
-                </button>
-              </header>
-              <ActionButtons resource={drawerResource} />
-              <div className="drawer-body">
-                {resourceDescription(drawerResource) && (
-                  <div className="drawer-description">
-                    {drawerResource.type === "INDIVIDUAL" && (
-                      <div className="eyebrow">Skills & qualifications</div>
-                    )}
-                    <p>{resourceDescription(drawerResource)}</p>
-                  </div>
-                )}
-                <dl>
-                  {[
-                    ["Contact", drawerResource.contactName],
-                    ["Email", drawerResource.contactEmail],
-                    ["Phone", drawerResource.contactPhone],
-                    ["Address", drawerResource.address],
-                    ["Availability", drawerResource.availability],
-                    ["Volunteer roles", drawerResource.volunteerRoles],
-                    ["Quantity", drawerResource.quantity],
-                    ["Website", drawerResource.websiteURL],
-                  ]
-                    .filter(([, value]) => value != null && value !== "")
-                    .map(([label, value]) => (
-                      <div key={label}>
-                        <dt>{label}</dt>
-                        <dd>
-                          {label === "Email" ? (
-                            <a href={`mailto:${value}`}>{value}</a>
-                          ) : label === "Phone" ? (
-                            <a href={`tel:${value}`}>{value}</a>
-                          ) : label === "Website" && websiteURL ? (
-                            <a
-                              href={websiteURL}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {value}
-                            </a>
-                          ) : (
-                            value
-                          )}
-                        </dd>
-                      </div>
-                    ))}
-                </dl>
-                {drawerResource.volunteerReason && (
-                  <div className="drawer-section">
-                    <div className="eyebrow">Why volunteer?</div>
-                    <p>{drawerResource.volunteerReason}</p>
-                  </div>
-                )}
-                {drawerResource.howDiscovered && (
-                  <div className="drawer-section">
-                    <div className="eyebrow">How discovered</div>
-                    <p>{drawerResource.howDiscovered}</p>
-                  </div>
-                )}
-                <div className="eyebrow">Tags</div>
-                <div className="drawer-tags">
-                  {drawerResource.tags?.map((tag) => (
-                    <TagToggle key={tag} tag={tag} />
-                  ))}
-                </div>
-                {drawerResource.notes && (
-                  <div className="drawer-notes">
-                    <div className="eyebrow">Notes</div>
-                    <p>{drawerResource.notes}</p>
-                  </div>
-                )}
-                {(drawerResource.dateLastModified || drawerResource.dateCreated) && (
-                  <div className="drawer-history">
-                    <LastModifiedInfo resource={drawerResource} />
-                  </div>
-                )}
-              </div>
-            </aside>
-          </div>
-        )}
+        <ResourceDetails
+          resource={resource}
+          onClose={() => dispatch(clearMapResource())}
+        />
       </div>
     </div>
   );

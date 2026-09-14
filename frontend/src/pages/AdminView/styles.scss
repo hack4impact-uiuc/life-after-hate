@@ -1,3 +1,5 @@
+@use "../../styles/input-focus";
+
 .user-directory {
   --people-border: #e8e2d9;
   min-height: calc(100dvh - var(--nav-height, 60px));
@@ -135,8 +137,6 @@
     filter: brightness(0.97);
   }
   button:focus-visible,
-  select:focus-visible,
-  input:focus-visible,
   .card-click:focus-visible {
     outline: 2px solid #b66019;
     outline-offset: 3px;
@@ -178,7 +178,15 @@
     width: 300px;
     color: #c8c4bd;
   }
+  .people-search,
+  .review-actions select {
+    @include input-focus.transition;
+    &:focus-within {
+      @include input-focus.ring;
+    }
+  }
   .people-search input {
+    outline: none;
     border: 0;
     background: transparent;
     width: 100%;
@@ -200,7 +208,7 @@
     display: grid;
     grid-template-columns:
       minmax(150px, 1.6fr) minmax(180px, 2fr) minmax(105px, 0.65fr)
-      minmax(110px, 1.4fr) minmax(85px, 0.85fr) 88px;
+      minmax(110px, 1.4fr) minmax(85px, 0.85fr) 24px;
     align-items: center;
     column-gap: 14px;
     padding: 16px 18px;
@@ -260,31 +268,10 @@
     background: #f0ece5;
     color: #837c73;
   }
-  .edit-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 44px;
-    min-width: 88px;
-    border: 1px solid #ded7ce;
-    border-radius: 8px;
-    background: #fff;
-    padding: 10px 14px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #554e44;
-    &:hover {
-      background: #fff4e7;
-      border-color: #d9b48d;
-      color: #934b16;
-    }
-  }
-  #edit-icon {
-    display: block;
-    width: 16px;
-    height: 16px;
+  .account-chevron {
+    color: #9a9389;
+    font-size: 24px;
+    text-align: right;
   }
   .people-empty {
     padding: 32px 18px;
@@ -312,7 +299,7 @@
     .card-wrapper {
       grid-template-columns:
         minmax(130px, 1.3fr) minmax(160px, 1.7fr)
-        110px minmax(90px, 1fr) 88px;
+        110px minmax(90px, 1fr) 24px;
     }
     .user-last-active,
     .user-labels > :nth-child(5) {
@@ -368,9 +355,70 @@
       white-space: normal;
       overflow-wrap: anywhere;
     }
-    .col-edit {
+    .account-chevron {
       grid-column: 2;
       grid-row: 1;
     }
+  }
+}
+
+.user-directory {
+  .people-notice {
+    color: #386047;
+    margin: 0;
+  }
+  .people-notice:not(:empty) {
+    margin-bottom: 14px;
+  }
+  .review-row-shell {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition:
+      grid-template-rows var(--motion-panel, 280ms) var(--motion-ease, ease),
+      opacity var(--motion-medium, 200ms) ease;
+  }
+  .review-row-shell--leaving {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .review-row-clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .review-actions button {
+    min-width: 108px;
+  }
+  .review-actions button,
+  .people-filters button {
+    transition:
+      background-color var(--motion-fast, 150ms),
+      color var(--motion-fast, 150ms),
+      border-color var(--motion-fast, 150ms),
+      box-shadow var(--motion-fast, 150ms);
+  }
+  .people-filters button {
+    font-weight: 700;
+  }
+  .people-filters button[aria-pressed="true"] {
+    box-shadow: 0 1px 3px #302b2610;
+  }
+  .card-wrapper {
+    transition: background-color var(--motion-fast, 150ms);
+  }
+  .card-wrapper:active {
+    background: #fff4e7;
+  }
+  .review-actions button:not(:disabled):active {
+    background: #f7e6d2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .user-directory .review-row-shell,
+  .user-directory .review-actions button,
+  .user-directory .people-filters button,
+  .user-directory .card-wrapper {
+    transition: none;
   }
 }

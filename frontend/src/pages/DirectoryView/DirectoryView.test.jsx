@@ -14,13 +14,24 @@ vi.mock("./SearchBar", () => ({
   ),
 }));
 vi.mock("./ResourceList", () => ({
-  default: ({ resources, density }) => (
+  default: ({ resources, density, onSelectResource }) => (
     <div data-testid="rows" data-density={density}>
       {resources.map((r) => (
-        <p key={r._id}>{r.companyName}</p>
+        <button key={r._id} onClick={() => onSelectResource(r._id)}>
+          {r.companyName}
+        </button>
       ))}
     </div>
   ),
+}));
+vi.mock("../../components/ResourceDetails", () => ({
+  default: ({ resource, onClose }) =>
+    resource ? (
+      <div data-testid="details">
+        {resource.companyName}
+        <button onClick={onClose}>Close details</button>
+      </div>
+    ) : null,
 }));
 import Directory from "./index";
 import { getTags } from "../../utils/api";
@@ -51,21 +62,21 @@ const render = (overrides = {}) => {
 };
 beforeEach(() => vi.clearAllMocks());
 afterEach(() => view?.unmount());
-it("loads tags and shows accurate totals after loading", async () => {
+it("loads tags and shows result counts after loading", async () => {
   const c = render();
   await flush();
   expect(document.title).toBe("Directory View - Life After Hate");
   expect(getTags).toHaveBeenCalledOnce();
-  expect(c.textContent).toContain("Finding resources");
+  expect(c.textContent).toContain("Searching…");
   click(button(c, "complete"));
-  expect(c.textContent).toContain("2 resources · 1 added in the last 90 days");
+
   expect(c.textContent).toContain("2 results");
   expect(c.textContent).toContain("in default order");
 });
-it("distinguishes selected-tag result counts from total resources", () => {
+it("shows selected-tag result counts", () => {
   const c = render({ tags: { selected: ["Food"], all: ["Food"] } });
   click(button(c, "complete"));
-  expect(c.textContent).toContain("2 resources");
+
   expect(c.querySelector("#result-count").textContent).toBe("1 result");
 });
 it.each([
@@ -125,4 +136,14 @@ it("supports mobile sort selection and direction changes", () => {
   });
   click(c.querySelector('[aria-label="Change sort order"]'));
   expect(view.store.getState().sort.order).toBe("desc");
+});
+
+it("opens and closes the selected resource drawer", () => {
+  const c = render();
+  click(button(c, "Alpha"));
+  expect(c.querySelector('[data-testid="details"]').textContent).toContain(
+    "Alpha",
+  );
+  click(button(c, "Close details"));
+  expect(c.querySelector('[data-testid="details"]')).toBeNull();
 });

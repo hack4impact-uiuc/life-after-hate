@@ -41,6 +41,7 @@ const run = (args, env) =>
         "test/setup.test.js",
         "test/resource.test.js",
         "test/user.test.js",
+        "test/shortlists.test.js",
       ],
       env,
     );

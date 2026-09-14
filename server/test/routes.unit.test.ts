@@ -30,6 +30,12 @@ beforeEach(async () => {
     "utf8",
   );
   await client.executeMultiple(sql);
+  await client.executeMultiple(
+    await readFile(
+      new URL("../migrations/0002_shortlists.sql", import.meta.url),
+      "utf8",
+    ),
+  );
   const user = {
     _id: uid,
     oauthId: "google-test",
@@ -53,19 +59,17 @@ beforeEach(async () => {
   env = { DB: db, APP_ORIGIN: "https://example.com", MAPQUEST_KEY: "test" };
   vi.stubGlobal(
     "fetch",
-    vi
-      .fn()
-      .mockResolvedValue(
-        Response.json({
-          results: [
-            {
-              locations: [
-                { latLng: { lat: 0, lng: 0 }, street: "New", adminArea3: "IL" },
-              ],
-            },
-          ],
-        }),
-      ),
+    vi.fn().mockResolvedValue(
+      Response.json({
+        results: [
+          {
+            locations: [
+              { latLng: { lat: 0, lng: 0 }, street: "New", adminArea3: "IL" },
+            ],
+          },
+        ],
+      }),
+    ),
   );
 });
 afterEach(() => {
@@ -340,4 +344,68 @@ it("rejects foreign origins before any mutation even with a valid CSRF token", a
       ).document,
     ),
   ).toEqual(original);
+});
+
+it("persists shortlist CRUD, deduplicates resources, and audits changes", async () => {
+  const created = await request("/api/shortlists", "POST", {
+    name: " Support ",
+  });
+  expect(created.status).toBe(201);
+  const { result: list } = await created.json();
+  expect(list.name).toBe("Support");
+  const path = `/api/shortlists/${list.id}`;
+  for (let i = 0; i < 2; i++)
+    expect((await request(`${path}/resources/${rid}`, "PUT")).status).toBe(200);
+  expect((await (await request(path)).json()).result.resources).toHaveLength(1);
+  expect(
+    (await (await request("/api/shortlists")).json()).result[0].count,
+  ).toBe(1);
+  expect((await request(path, "PATCH", { name: "Renamed" })).status).toBe(200);
+  expect((await (await request(path)).json()).result.name).toBe("Renamed");
+  expect((await request(`${path}/resources/${rid}`, "DELETE")).status).toBe(
+    200,
+  );
+  expect((await (await request(path)).json()).result.resources).toEqual([]);
+  expect((await request(path, "DELETE")).status).toBe(200);
+  expect((await request(path)).status).toBe(404);
+  expect((await (await request("/api/shortlists")).json()).result).toEqual([]);
+});
+it("allows owners but rejects edits by another volunteer", async () => {
+  const { result: list } = await (
+    await request("/api/shortlists", "POST", { name: "Owned" })
+  ).json();
+  const path = `/api/shortlists/${list.id}`;
+  const user = { _id: uid, role: "VOLUNTEER" };
+  await db
+    .prepare("UPDATE users SET role=?,document=? WHERE id=?")
+    .bind(user.role, JSON.stringify(user), uid)
+    .run();
+  expect((await request(path, "PATCH", { name: "Mine" })).status).toBe(200);
+  // Preserve valid foreign keys while assigning another existing owner.
+  const other = "e".repeat(24);
+  await db
+    .prepare("INSERT INTO users VALUES(?,?,?,?,?)")
+    .bind(
+      other,
+      "other",
+      "other@example.com",
+      "VOLUNTEER",
+      JSON.stringify({ _id: other, role: "VOLUNTEER" }),
+    )
+    .run();
+  await db
+    .prepare("UPDATE shortlists SET owner_id=? WHERE id=?")
+    .bind(other, list.id)
+    .run();
+  expect((await request(path)).status).toBe(200);
+  for (const method of ["PATCH", "DELETE"])
+    expect(
+      (
+        await request(
+          path,
+          method,
+          method === "PATCH" ? { name: "No" } : undefined,
+        )
+      ).status,
+    ).toBe(403);
 });

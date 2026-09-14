@@ -59,7 +59,7 @@ it.each([[[0, 0]], [[-87.6, 41.8]]])(
       longitude: center[0],
       latitude: center[1],
       zoom: 5,
-      transitionDuration: 1500,
+      transitionDuration: 650,
     });
     expect(capture.deck.layers[0].props.data.at(-1)).toEqual({
       location: { type: "Center", coordinates: center },

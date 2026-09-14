@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import AdminView from "../../components/Auth/AdminView";
@@ -8,36 +8,44 @@ import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
 import { getTags } from "../../utils/api";
 import ResourceLabels from "./ResourceLabels";
 import ResourceList from "./ResourceList";
+import ResourceDetails from "../../components/ResourceDetails";
 import "./styles.scss";
 
-const ResourceManager = ({ resources, allResources, sort }) => {
+const ResourceManager = ({ resources, sort }) => {
   const [searchStatus, setSearchStatus] = useState("searching");
+  const [selectedId, setSelectedId] = useState(null);
+  const selectedResource = resources.find(
+    (resource) => resource._id === selectedId,
+  );
   const [density, setDensity] = useState("comfortable");
+  const resultsRef = useRef(null);
+  const resultsSignature = resources
+    .map((resource) => resource.id ?? resource._id)
+    .join("|");
+  useEffect(() => {
+    if (
+      searchStatus !== "complete" ||
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const animation = resultsRef.current?.animate?.(
+      [{ opacity: 0.65 }, { opacity: 1 }],
+      { duration: 200, easing: "ease-out" },
+    );
+    return () => animation?.cancel();
+  }, [density, resultsSignature, searchStatus]);
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
     getTags();
   }, []);
-  const recentCount = allResources.filter((resource) => {
-    const created = new Date(resource.dateCreated).getTime();
-    return created <= Date.now() && created >= Date.now() - 90 * 86400000;
-  }).length;
   return (
-    <main className={`directory directory--${density}`}>
-      <header className="manager-header">
-        <div>
-          <h1 id="page-title">Resource directory</h1>
-          <p>
-            {searchStatus === "complete"
-              ? `${allResources.length} resources · ${recentCount} added in the last 90 days`
-              : searchStatus === "error"
-                ? "Resources could not be loaded"
-                : "Finding resources…"}
-          </p>
-        </div>
-        <AdminView>
-          <CSVExporter data={resources} />
-        </AdminView>
-      </header>
+    <main
+      className={`directory directory--${density}`}
+      aria-labelledby="page-title"
+    >
+      <h1 id="page-title" className="visually-hidden">
+        Resource directory
+      </h1>
       <SearchBar onSearchStatusChange={setSearchStatus} />
       <div className="directory-results-toolbar">
         <div className="directory-result-summary" aria-live="polite">
@@ -56,26 +64,40 @@ const ResourceManager = ({ resources, allResources, sort }) => {
             </span>
           )}
         </div>
-        <div className="density-control" role="group" aria-label="Row density">
-          {["comfortable", "compact"].map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={density === value}
-              onClick={() => setDensity(value)}
-            >
-              {value.charAt(0).toUpperCase() + value.slice(1)}
-            </button>
-          ))}
+        <div className="directory-results-actions">
+          <AdminView>
+            <CSVExporter data={resources} />
+          </AdminView>
+          <div
+            className={`density-control density-control--${density}`}
+            role="group"
+            aria-label="Row density"
+          >
+            {["comfortable", "compact"].map((value) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={density === value}
+                onClick={() => setDensity(value)}
+              >
+                {value.charAt(0).toUpperCase() + value.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       <div
+        ref={resultsRef}
         className="directory-table"
         aria-label="Resources"
         aria-busy={searchStatus === "searching"}
       >
         <ResourceLabels resources={resources} />
-        <ResourceList resources={resources} density={density} />
+        <ResourceList
+          resources={resources}
+          density={density}
+          onSelectResource={setSelectedId}
+        />
         {!resources.length && (
           <div className="directory-empty">
             {searchStatus === "searching"
@@ -86,17 +108,21 @@ const ResourceManager = ({ resources, allResources, sort }) => {
           </div>
         )}
       </div>
+      <div className="directory-details">
+        <ResourceDetails
+          resource={selectedResource}
+          onClose={() => setSelectedId(null)}
+        />
+      </div>
     </main>
   );
 };
 const mapStateToProps = (state) => ({
   resources: tagFilteredResourceSelector(state),
-  allResources: state.resources || [],
   sort: state.sort,
 });
 ResourceManager.propTypes = {
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
-  allResources: PropTypes.arrayOf(PropTypes.object).isRequired,
   sort: PropTypes.object.isRequired,
 };
 export default connect(mapStateToProps)(ResourceManager);

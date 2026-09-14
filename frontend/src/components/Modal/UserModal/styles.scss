@@ -1,3 +1,5 @@
+@use "../../../styles/input-focus";
+
 .lah-modal.user-editor-modal {
   max-width: 540px;
   color: #28251f;
@@ -127,13 +129,9 @@
     font-family: inherit;
     font-size: 14px;
     line-height: 1.5;
-    transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
+    @include input-focus.transition;
     &:focus {
-      border-color: #bc752e;
-      box-shadow: 0 0 0 3px #f7922f26;
-      outline: none;
+      @include input-focus.ring;
     }
     &:disabled {
       background-color: #f7f6f3;

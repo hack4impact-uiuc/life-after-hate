@@ -24,7 +24,7 @@ const user = {
   title: "Old",
 };
 function render(editable = true) {
-  view = mount(<UserModal />, {
+  view = mount(<UserModal isOpen />, {
     users: { userList: [user] },
     modal: { userId: "u", isOpen: true, editable, modalType: "USER" },
   });
@@ -64,7 +64,7 @@ it("prevents duplicate submissions while saving", async () => {
   editAndRefreshUser.mockReturnValueOnce(pending.promise);
   const c = render();
   await submit(c.querySelector("form"));
-  expect(button(c, "Save changes").disabled).toBe(true);
+  expect(c.querySelector("#submit-form-button").disabled).toBe(true);
   await act(async () => pending.resolve());
   expect(view.store.getState().modal.isOpen).toBe(false);
 });

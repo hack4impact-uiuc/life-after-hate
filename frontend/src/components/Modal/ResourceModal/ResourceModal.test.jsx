@@ -53,7 +53,7 @@ const resource = {
   skills: "Support",
 };
 function render(doc = resource, editable = true) {
-  view = mount(<ResourceModal />, {
+  view = mount(<ResourceModal isOpen />, {
     resources: doc ? [doc] : [],
     modal: {
       isOpen: true,
@@ -136,22 +136,14 @@ it.each(["INDIVIDUAL", "GROUP", "TANGIBLE"])(
     );
   },
 );
-it("switches between details and history without losing edits", () => {
-  const c = render();
-  change(c.querySelector('[name="notes"]'), "Draft");
-  click(button(c, "Notes & history"));
-  expect(c.querySelector("#resource-details-panel").hidden).toBe(true);
-  expect(c.querySelector("#resource-notes-panel").textContent).toContain(
-    "Draft",
-  );
-  click(button(c, "Details"));
-  expect(c.querySelector('[name="notes"]').value).toBe("Draft");
+it("edits notes inline without obsolete section tabs", () => {
+ const c = render(); change(c.querySelector('[name="notes"]'), "Draft");
+ expect(c.querySelector('[name="notes"]').value).toBe("Draft");
+ expect(c.querySelector('[role="tablist"]')).toBeNull();
 });
-it("shows new-resource history and empty-note placeholders", () => {
-  const c = render(null);
-  click(button(c, "Notes & history"));
-  expect(c.textContent).toContain("No notes yet.");
-  expect(c.textContent).toContain("History will be available");
+it("keeps new-resource notes editable without history tabs", () => {
+ const c = render(null); expect(c.querySelector('[name="notes"]').value).toBe("");
+ expect(c.querySelector('[role="tablist"]')).toBeNull();
 });
 it("cancels without saving", () => {
   const c = render();

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -11,29 +11,41 @@ import ModalInput from "../ModalInput";
 import LAHModal from "../../Modal";
 import "./styles.scss";
 
-const UserModal = ({ closeModal, user, editable }) => {
+export const UserModal = ({ closeModal, user, editable, isOpen, onClosed }) => {
   const { register, handleSubmit } = useForm();
 
-  const pending = useRef(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState("");
+  const [pending, setPending] = useState(false);
+  const [requestError, setRequestError] = useState("");
+  const inFlight = useRef(false);
+  const active = useRef(isOpen);
+  active.current = isOpen;
+  useEffect(
+    () => () => {
+      active.current = false;
+    },
+    [],
+  );
+
   const handleEditUser = async (data) => {
-    if (!editable || pending.current) return;
-    pending.current = true;
-    setIsSaving(true);
-    setSaveError("");
+    if (inFlight.current || !editable) return;
+    inFlight.current = true;
+    setPending(true);
+    setRequestError("");
     const reqBody = {
       role: data.role,
       title: data.title,
     };
     try {
       await editAndRefreshUser(reqBody, user.id);
-      closeModal();
+      if (active.current) closeModal();
     } catch {
-      setSaveError("Could not save changes. Please try again.");
+      if (active.current)
+        setRequestError(
+          "We couldn’t complete the save. Your entries are still here. Please try again.",
+        );
     } finally {
-      pending.current = false;
-      setIsSaving(false);
+      inFlight.current = false;
+      if (active.current) setPending(false);
     }
   };
 
@@ -42,7 +54,7 @@ const UserModal = ({ closeModal, user, editable }) => {
     <ModalInput
       registration={register(shortName, { required: required ?? false })}
       resource={user}
-      disabled={!editable}
+      disabled={!editable || pending}
       key={shortName}
       tag={"input"}
       {...{ required, shortName, ...props }}
@@ -54,6 +66,10 @@ const UserModal = ({ closeModal, user, editable }) => {
 
   return (
     <LAHModal
+      isOpen={isOpen}
+      onClosed={onClosed}
+      busy={pending}
+      headerTitle={`${user.firstName} ${user.lastName}`}
       modalClassName="user-editor-modal"
       subtitle={
         editable
@@ -61,7 +77,11 @@ const UserModal = ({ closeModal, user, editable }) => {
           : "Profile details and account access."
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="user-editor-form">
+      <form
+        aria-busy={pending}
+        onSubmit={handleSubmit(onSubmit)}
+        className="user-editor-form"
+      >
         <div className="user-editor-scroll">
           <section
             className="user-editor-profile"
@@ -102,7 +122,7 @@ const UserModal = ({ closeModal, user, editable }) => {
               data-cy="modal-role"
               defaultValue={user.role}
               className="modal-select-field"
-              disabled={!editable}
+              disabled={!editable || pending}
             >
               {Object.values(roleEnum).map(makeOption) /* Enum to options */}
             </select>
@@ -112,23 +132,28 @@ const UserModal = ({ closeModal, user, editable }) => {
             shortName: "title",
           })}
         </div>
-        {saveError && <p role="alert">{saveError}</p>}
+        {requestError && (
+          <p className="modal-request-error" role="alert">
+            {requestError}
+          </p>
+        )}
         {editable && (
           <div className="user-editor-footer">
             <Button
               type="button"
               className="user-editor-cancel"
               onClick={closeModal}
+              disabled={pending}
             >
               Cancel
             </Button>
             <Button
               id="submit-form-button"
-              disabled={isSaving}
               type="submit"
               data-cy="modal-submit"
+              disabled={pending}
             >
-              Save changes
+              {pending ? "Saving…" : "Save changes"}
             </Button>
           </div>
         )}
@@ -137,9 +162,9 @@ const UserModal = ({ closeModal, user, editable }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: currentUserSelector(state),
-  editable: state.modal.editable,
+const mapStateToProps = (state, ownProps) => ({
+  user: ownProps.user ?? currentUserSelector(state),
+  editable: ownProps.editable ?? state.modal.editable,
 });
 
 const mapDispatchToProps = {
@@ -156,6 +181,8 @@ UserModal.propTypes = {
     role: PropTypes.oneOf(Object.values(roleEnum)),
   }).isRequired,
   editable: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool,
+  onClosed: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserModal);

@@ -94,7 +94,7 @@ for (const width of [320, 390, 768, 1280]) {
         path: "/tmp/lah-mobile-users.png",
         fullPage: true,
       });
-    await page.locator(".user-directory .edit-button").first().click();
+    await page.locator(".user-directory .card-wrapper").first().click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("button", { name: "Close dialog" }).click();
     await page.goto("/");

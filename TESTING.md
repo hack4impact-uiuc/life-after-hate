@@ -41,7 +41,9 @@ boundaries; the separate Playwright tests validate actual browser interactions.
 Tests include regression cases for stale selected records, missing resource tags,
 invalid geographic coordinates, zero-valued query parameters, duplicate form
 submissions, premature dialog closure on deletion, rendering a resource removed
-during deletion, and undispatched map resets.
+during deletion, undispatched map resets, and stale shortlist data during route
+changes. Shortlist tests cover sharing, clipboard fallback, ownership, CRUD,
+retry, handout preview, and late responses after unmount.
 
 ## Coverage reports and enforcement
 

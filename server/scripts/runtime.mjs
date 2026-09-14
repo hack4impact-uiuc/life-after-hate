@@ -15,10 +15,7 @@ export async function runtime(options={}) {
  };
 }
 export async function schema(db) {
-  const sql = await readFile(
-    new URL("../migrations/0001_initial.sql", import.meta.url),
-    "utf8",
-  );
+  const sql = (await Promise.all(["0001_initial.sql", "0002_shortlists.sql"].map(name => readFile(new URL("../migrations/" + name, import.meta.url), "utf8")))).join("\n");
   // Only the checked-in schema is split; imported documents always use bindings.
   for (const statement of sql
     .replace(/--[^\n]*/g, "")

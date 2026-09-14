@@ -10,8 +10,8 @@ it.each([
   [true, "RESOURCE", "Resource editor"],
   [true, "USER", "User editor"],
   [false, "RESOURCE", ""],
-  [true, undefined, ""],
+  [true, undefined, "Resource editor"],
 ])("shows the correct editor %#", (isOpen, modalType, text) => {
-  view = mount(<ModalManager />, { modal: { isOpen, modalType } });
+  view = mount(<ModalManager />, { auth: { authenticated: true }, modal: { isOpen, modalType } });
   expect(view.container.textContent).toBe(text);
 });

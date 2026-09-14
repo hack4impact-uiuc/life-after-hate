@@ -6,10 +6,24 @@ import { updateSort } from "../../../redux/actions/sort";
 
 const ResourceLabels = ({ sort, updateSort, resources }) => {
   const sortIcon = (field) => {
-    if (field === sort.field) {
-      return sort.order === "asc" ? <>&#9660;</> : <>&#9650;</>;
-    }
-    return null;
+    return (
+      <svg
+        className={`sort-chevron ${field === sort.field ? "sort-chevron--active" : ""} ${field === sort.field && sort.order === "desc" ? "sort-chevron--descending" : ""}`}
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        aria-hidden="true"
+      >
+        <path
+          d="m3 7 3-3 3 3"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
   };
 
   return (
@@ -53,7 +67,7 @@ const ResourceLabels = ({ sort, updateSort, resources }) => {
                   type="button"
                   className="resource-label"
                   onClick={() => updateSort(field)}
-                  aria-label={`Sort by ${label.toLowerCase()}`}
+                  aria-label={`Sort by ${label.toLowerCase()}${field === sort.field ? `, currently ${sort.order === "desc" ? "descending" : "ascending"}` : ""}`}
                 >
                   {label} {sortIcon(field)}
                 </button>
