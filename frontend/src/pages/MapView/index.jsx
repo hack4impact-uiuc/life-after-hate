@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CardView from "./CardView";
-import TagPicker from "./TagPicker";
+import TagFilters from "../../components/TagFilters";
 import TagToggle from "./TagToggle";
 import SortMenu from "./SortMenu";
 import SearchBar from "./SearchBar";
 import Map from "./Map";
 import ActionButtons from "./ActionButtons";
 import LastModifiedInfo from "../../components/Modal/LastModifiedInfo";
-import { getTags, removeFilterTag } from "../../utils/api";
+import { getTags } from "../../utils/api";
 import {
   mappableResourceSelector,
   currentResourceSelector,
@@ -17,7 +17,6 @@ import {
   resourceName,
   resourceDescription,
 } from "../../redux/selectors/resource";
-import { tagSelector, globalTagListSelector } from "../../redux/selectors/tags";
 import { clearMapResource } from "../../redux/actions/map";
 import { distanceToString } from "../../utils/formatters";
 import "./styles.scss";
@@ -31,8 +30,6 @@ const MapView = () => {
   const dispatch = useDispatch();
   const allResources = useSelector(mappableResourceSelector);
   const selected = useSelector(currentResourceSelector);
-  const tags = useSelector(tagSelector);
-  const globalTags = useSelector(globalTagListSelector) || [];
   const address = useSelector((state) => state.search.address);
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [sort, setSort] = useState("nearest");
@@ -79,18 +76,7 @@ const MapView = () => {
         <SearchBar />
       </div>
       <div className="workspace-filters">
-        <span className="eyebrow">Filters</span>
-        {tags.map((tag) => (
-          <button
-            className="filter-tag"
-            key={tag}
-            onClick={() => removeFilterTag(tag)}
-            aria-label={`Remove ${tag} filter`}
-          >
-            {tag} <span>×</span>
-          </button>
-        ))}
-        <TagPicker tags={globalTags} selectedTags={tags} />
+        <TagFilters />
         <span className="filter-divider" />
         <div className="type-filters" role="group" aria-label="Resource type">
           {[["ALL", "All"], ...Object.entries(typeLabels)].map(

@@ -40,7 +40,7 @@
   }
   .search {
     display: grid;
-    grid-template-columns: 1.92fr 1fr 1fr 108px;
+    grid-template-columns: 1.92fr 1fr 108px;
     gap: 12px;
     margin: 0;
     align-items: start;
@@ -90,43 +90,12 @@
   #search-button:hover {
     background: #484037;
   }
-  .search .MuiInputBase-root.MuiFilledInput-root {
-    min-height: 54px;
-    padding: 5px 30px 5px 12px;
-    border: 1px solid var(--directory-border);
-    border-radius: 12px;
-    background: white;
-  }
-  .search .MuiFilledInput-root::before,
-  .search .MuiFilledInput-root::after {
-    display: none;
-  }
-  .search .MuiAutocomplete-input {
-    font-size: 17px;
-    padding: 8px 4px;
-  }
-  .search .MuiAutocomplete-input::placeholder {
-    color: #9e978e;
-    opacity: 1;
-  }
-  .search .MuiChip-root {
-    height: 26px;
-    border: 0;
-    background: #fff0df;
-  }
-  .search .MuiChip-label {
-    color: #b7500b;
-    text-transform: none;
-    font-size: 13px;
-  }
-  .search .MuiChip-deleteIcon {
-    color: #b7500b;
-    width: 16px;
-  }
-  .search-input:focus,
-  .search .Mui-focused.MuiInputBase-root {
+  .search-input:focus {
     border-color: #ba7036;
     box-shadow: 0 0 0 2px #f7923020;
+  }
+  .tag-filters {
+    margin-top: 14px;
   }
   .directory-results-toolbar {
     display: flex;
@@ -341,7 +310,7 @@
       font-size: 14px;
     }
     .search {
-      grid-template-columns: 1.5fr 1fr 1fr 90px;
+      grid-template-columns: 1.5fr 1fr 90px;
     }
   }
   @media (max-width: 767px) {
@@ -365,8 +334,7 @@
       grid-template-columns: 1fr;
       gap: 10px;
     }
-    .search-input,
-    .search .MuiAutocomplete-input {
+    .search-input {
       font-size: 16px;
     }
     .directory-results-toolbar {

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Button } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { filterAndRefreshResource } from "../../../utils/api";
-import DirectoryTagSearch from "../DirectoryTagSearch";
+import TagFilters from "../../../components/TagFilters";
 import "../styles.scss";
 
 const SearchBar = ({ isLoading, onSearchStatusChange }) => {
@@ -79,16 +79,13 @@ const SearchBar = ({ isLoading, onSearchStatusChange }) => {
             className="search-input"
           />
         </label>
-        <div className="col-md mb-3 mb-md-0 ps-md-0">
-          <DirectoryTagSearch></DirectoryTagSearch>
-        </div>
-
         <div className="col-6 mx-auto col-sm-6 col-md-2 ps-md-0">
           <Button id="search-button" type="submit" disabled={isLoading}>
             Search
           </Button>
         </div>
       </form>
+      <TagFilters />
     </div>
   );
 };

@@ -150,3 +150,38 @@ test("typing during the initial load shows searching and keeps the first query",
   await expect(page.locator("#result-count")).toHaveText("Searching…");
   await expect(page.locator("#result-count")).toHaveText("0 results");
 });
+for (const width of [390, 1440]) {
+  test(`tag browser filters and removes tags at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.getByRole("button", { name: "Search", exact: true }).click();
+    await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(3);
+    const addTag = page.getByRole("button", { name: "Add tag filter" });
+    await addTag.click();
+    const picker = page.getByRole("dialog", { name: "Choose a tag" });
+    const query = picker.getByRole("textbox", { name: "Find a tag" });
+    await expect(query).toBeFocused();
+    await query.fill("hOuS");
+    await picker.getByRole("button", { name: "Housing", exact: true }).click();
+    await expect(picker).toBeHidden();
+    await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(2);
+    await addTag.click();
+    await expect(query).toHaveValue("");
+    await expect(
+      picker.getByRole("button", { name: "Housing", exact: true }),
+    ).toHaveCount(0);
+    await query.fill("no such tag");
+    await expect(picker.getByRole("status")).toHaveText("No matching tags.");
+    await query.press("Escape");
+    await expect(picker).toBeHidden();
+    await expect(addTag).toBeFocused();
+    await page.getByRole("button", { name: "Remove Housing filter" }).click();
+    await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(3);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  });
+}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Popover from "@mui/material/Popover";
-import { addFilterTag } from "../../../utils/api";
+import { addFilterTag } from "../../utils/api";
 
 const TagPicker = ({ tags, selectedTags }) => {
   const [anchor, setAnchor] = useState(null);
@@ -17,6 +17,7 @@ const TagPicker = ({ tags, selectedTags }) => {
   return (
     <>
       <button
+        type="button"
         className="add-tag-button"
         aria-label="Add tag filter"
         aria-haspopup="dialog"
@@ -55,6 +56,7 @@ const TagPicker = ({ tags, selectedTags }) => {
         <div className="tag-picker-options">
           {matches.map((tag) => (
             <button
+              type="button"
               key={tag}
               onClick={() => {
                 addFilterTag(tag);

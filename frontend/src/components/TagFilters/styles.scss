@@ -1,0 +1,132 @@
+.tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-family: "Instrument Sans", "Roboto", sans-serif;
+
+  .tag-filters-label {
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8c857a;
+  }
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+  .filter-tag {
+    border: 0;
+    background: #fdf0e2;
+    color: #a34b00;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  .filter-tag:hover {
+    background: #fbe0c1;
+  }
+  .filter-tag:focus-visible {
+    outline: 2px solid #a34b00;
+    outline-offset: 2px;
+  }
+}
+.tag-filters .add-tag-button {
+  border: 1px solid #ded7cc;
+  padding: 5px 11px;
+  color: #6e675e;
+  background: transparent;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+  &:hover,
+  &[aria-expanded="true"] {
+    background: white;
+    border-color: #b9afa0;
+  }
+  &:focus-visible {
+    outline: 2px solid #c5b9a9;
+    outline-offset: 2px;
+  }
+  > span {
+    font-size: 16px;
+    line-height: 12px;
+    font-weight: 400;
+  }
+}
+.tag-picker.MuiPaper-root {
+  width: 260px;
+  max-width: calc(100vw - 32px);
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #e6e1d8;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px #211e1a1c;
+  font-family: "Instrument Sans", "Roboto", sans-serif;
+  color: #211e1a;
+  input {
+    width: 100%;
+    padding: 10px 11px;
+    font: inherit;
+    font-size: 14px;
+    border: 1px solid #e6e1d8;
+    background: #f7f4ee;
+    border-radius: 7px;
+    outline: none;
+  }
+  input:focus {
+    border-color: #b9afa0;
+  }
+  .tag-picker-options {
+    max-height: 240px;
+    overflow-y: auto;
+    margin-top: 6px;
+  }
+  button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    padding: 10px;
+    border: 0;
+    border-radius: 6px;
+    background: white;
+    font: inherit;
+    font-size: 13px;
+    color: inherit;
+    overflow-wrap: anywhere;
+  }
+  button span {
+    color: #8c857a;
+  }
+  button:hover,
+  button:focus-visible {
+    background: #fdf0e2;
+    color: #a34b00;
+    outline: none;
+  }
+  p {
+    margin: 0;
+    padding: 14px 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #756e64;
+  }
+  @media (max-width: 767px) {
+    input {
+      font-size: 16px;
+    }
+    button {
+      min-height: 44px;
+    }
+  }
+}
