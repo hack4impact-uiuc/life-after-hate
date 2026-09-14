@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
@@ -19,6 +19,7 @@ const ResourceCard = ({
   style,
   onSelectResource,
 }) => {
+  const [pointerFocused, setPointerFocused] = useState(false);
   const toggleModal = (event) => {
     event.stopPropagation();
     openResourceModalWithPayload({ resourceId: resource._id });
@@ -35,8 +36,14 @@ const ResourceCard = ({
         className="card-click row card-wrapper"
         role="button"
         tabIndex="0"
+        data-pointer-focused={pointerFocused || undefined}
+        onPointerDown={() => setPointerFocused(true)}
+        onBlur={() => setPointerFocused(false)}
         onClick={openDetails}
         onKeyDown={(event) => {
+          // Dismissing details should not turn a mouse click into a keyboard
+          // focus ring. Resume the indicator for subsequent keyboard use.
+          if (event.key !== "Escape") setPointerFocused(false);
           if (
             event.target === event.currentTarget &&
             ["Enter", " "].includes(event.key)

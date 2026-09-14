@@ -288,6 +288,9 @@
     outline: 2px solid #a34b00;
     outline-offset: -2px;
   }
+  .card-click[data-pointer-focused]:focus-visible {
+    outline: none;
+  }
   &.directory--compact .card-wrapper {
     min-height: 58px;
     padding-top: 8px;
