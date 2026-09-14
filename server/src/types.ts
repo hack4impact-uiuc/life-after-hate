@@ -1,6 +1,16 @@
+export interface Statement {
+ bind(...values: any[]): Statement;
+ first<T = Record<string, unknown>>(): Promise<T | null>;
+ all<T = Record<string, unknown>>(): Promise<{results:T[]}>;
+ run(): Promise<unknown>;
+}
+export interface Database {
+ prepare(sql: string): Statement;
+ batch(statements: Statement[]): Promise<unknown>;
+}
 export interface Env {
-  DB: D1Database;
-  ASSETS?: Fetcher;
+  DB: Database;
+  CLIENT_IP?: string;
   APP_ORIGIN: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;

@@ -1,7 +1,7 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-const { runtime, schema, insertDocument } = await import(process.env.LAH_TEST_DATABASE === "turso" ? "../../turso/runtime.mjs" : "../scripts/runtime.mjs");
+import {runtime,schema,insertDocument} from "../scripts/runtime.mjs";
 let mf, db;
 const sha = (s) => createHash("sha256").update(s).digest("hex");
 const accounts = { ADMIN: "a", VOLUNTEER: "b", PENDING: "c", REJECTED: "d" };
@@ -51,7 +51,7 @@ async function call(
 }
 before(async () => {
   mf = await runtime();
-  db = await mf.getD1Database("DB");
+  db = await mf.getDatabase();
   await schema(db);
   for (const [role, char] of Object.entries(accounts)) {
     const user = {
@@ -81,7 +81,7 @@ after(async () => {
   await mf?.dispose();
 });
 test('default radius-only search returns the directory without an address', async()=>{
- const response=await call('/resources/filter?radius=500',{headers:{'CF-Connecting-IP':'192.0.2.80'}});
+ const response=await call('/resources/filter?radius=500',{headers:{'x-test-client-ip':'192.0.2.80'}});
  assert.equal(response.status,200);
  assert.ok(Array.isArray((await response.json()).result.resources));
 });
@@ -353,7 +353,7 @@ test("API rate limit fails closed", async () => {
     status = (
       await call("/resources", {
         role: "ANON",
-        headers: { "CF-Connecting-IP": "192.0.2.123" },
+        headers: { "x-test-client-ip": "192.0.2.123" },
       })
     ).status;
     if (status === 429) break;

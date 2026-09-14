@@ -18,14 +18,11 @@ jobs:
             package-lock.json
             backend/package-lock.json
             frontend/package-lock.json
-            cloudflare/package-lock.json
             scripts/db_backup/backup/package-lock.json
       - run: npm ci --ignore-scripts
       - run: npm ci --prefix backend --ignore-scripts
       - run: npm ci --prefix frontend
-      - run: npm ci --prefix cloudflare
-      - run: npm run check --prefix cloudflare
-      - run: npm test --prefix cloudflare
+      - run: npm run check:server
       - run: npm run test:turso
       - run: npm run build:vercel
       - run: npm ci --prefix scripts/db_backup/backup --ignore-scripts
@@ -40,6 +37,5 @@ jobs:
           npm audit --omit=dev --audit-level=moderate
           npm audit --prefix backend --omit=dev --audit-level=moderate
           npm audit --prefix frontend --omit=dev --audit-level=moderate
-          npm audit --prefix cloudflare --audit-level=moderate
           npm audit --prefix scripts/db_backup/backup --omit=dev --audit-level=moderate
       - run: git diff --check

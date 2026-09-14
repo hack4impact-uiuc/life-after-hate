@@ -65,7 +65,7 @@ before(async () => {
       return new Response("", { status: 500 });
     },
   });
-  db = await mf.getD1Database("DB");
+  db = await mf.getDatabase();
   await schema(db);
 });
 after(async () => {
@@ -123,7 +123,7 @@ test("same email with different Google subject does not take over an existing ac
   claims = { sub: "different-google-id" };
   assert.equal((await finish(await start())).status, 409);
 });
-test("admin CRUD uses real D1, zero coordinates, strict input and durable audit", async () => {
+test("admin CRUD uses real libSQL, zero coordinates, strict input and durable audit", async () => {
   const row = await db.prepare("SELECT id,document FROM users LIMIT 1").first();
   const user = { ...JSON.parse(row.document), role: "ADMIN" };
   await db

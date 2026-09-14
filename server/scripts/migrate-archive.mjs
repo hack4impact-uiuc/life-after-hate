@@ -68,7 +68,7 @@ try {
   client = new MongoClient(uri);
   await client.connect();
   mf = await runtime();
-  const db = await mf.getD1Database("DB");
+  const db = await mf.getDatabase();
   await schema(db);
   const statements = [],
     manifest = {
@@ -138,11 +138,11 @@ try {
     0,
   );
   manifest.sessions = 0;
-  // Execute generated SQL into another fresh D1 database: verify the deliverable,
+  // Execute generated SQL into another fresh libSQL database: verify the deliverable,
   // not just the parameterized conversion that created it.
   const verify = await runtime();
   try {
-    const vdb = await verify.getD1Database("DB");
+    const vdb = await verify.getDatabase();
     await schema(vdb);
     for (let i = 0; i < statements.length; i += 50)
       await vdb.batch(statements.slice(i, i + 50).map((s) => vdb.prepare(s)));
@@ -163,7 +163,7 @@ try {
   const sql = statements.join("\n") + "\n";
   manifest.sqlSha256 = digest(sql);
   manifest.verification =
-    "Full field comparison and generated SQL import into isolated D1 passed";
+    "Full field comparison and generated SQL import into isolated libSQL passed";
   await writeFile(join(output, "data.sql.partial"), sql, { mode: 0o600 });
   await rename(join(output, "data.sql.partial"), join(output, "data.sql"));
   await writeFile(

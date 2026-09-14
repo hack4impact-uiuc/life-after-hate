@@ -1,10 +1,4 @@
-Production target: [Vercel + Turso setup](turso/README.md). The Cloudflare candidate is retained for reference.
-
-# Local Cloudflare migration trial
-
-The optional [Workers + D1 candidate](cloudflare/README.md) preserves the current
-interface and replaces the MongoDB backend. It has a disposable synthetic preview
-and a verified local archive-to-SQL migration tool. Production has not been moved.
+Production runs on [Vercel + Turso](turso/README.md).
 
 <h1 align="center">
   <br />

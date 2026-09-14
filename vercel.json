@@ -4,7 +4,7 @@
     "iad1"
   ],
   "framework": null,
-  "installCommand": "npm ci && npm --prefix cloudflare ci && npm --prefix frontend ci",
+  "installCommand": "npm ci && npm --prefix frontend ci",
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "frontend/build",
   "functions": {

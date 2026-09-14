@@ -14,14 +14,22 @@
     "lint": "node scripts/check-syntax.cjs",
     "format": "prettier --write backend frontend/src scripts/db_backup/backup '*.md'",
     "build:vercel": "node turso/build.mjs && node turso/build-frontend.mjs",
-    "test:turso": "node turso/build.mjs && LAH_TEST_DATABASE=turso node --test cloudflare/test/api.test.mjs turso/*.test.mjs"
+    "test:turso": "node turso/build.mjs && node --test server/test/*.test.mjs turso/*.test.mjs",
+    "check:server": "tsc -p server/tsconfig.json",
+    "dev:demo": "node turso/build.mjs && node server/scripts/preview.mjs"
   },
   "devDependencies": {
+    "@types/node": "^26.5.1",
     "esbuild": "^0.28.2",
-    "prettier": "^3.8.0"
+    "prettier": "^3.8.0",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.1",
-    "@libsql/client": "^0.18.0"
+    "@libsql/client": "^0.18.0",
+    "fuse.js": "^7.5.0",
+    "hono": "^4.13.7",
+    "jose": "^6.2.12",
+    "zod": "^4.6.5"
   }
 }

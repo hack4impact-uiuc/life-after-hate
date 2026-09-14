@@ -53,7 +53,7 @@ export async function rateLimit(
   limit: number,
 ) {
   const window = Math.floor(Date.now() / 60000);
-  const ip = c.req.header("CF-Connecting-IP") || "local";
+  const ip = c.env.CLIENT_IP || "local";
   const key = await hash(`${scope}:${ip}:${window}`);
   const row = await c.env.DB.prepare(
     "INSERT INTO rate_limits(key,count,expires_at) VALUES(?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count",

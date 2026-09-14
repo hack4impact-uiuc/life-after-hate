@@ -1,4 +1,4 @@
-// Synthetic, loopback-only preview. This helper is never bundled into the Worker.
+// Synthetic, loopback-only preview. This helper is never bundled into the production API.
 import { createServer } from "node:http";
 import { readFile, writeFile, stat } from "node:fs/promises";
 import { resolve, extname, join } from "node:path";
@@ -37,7 +37,7 @@ const mf = await runtime({
     });
   },
 });
-const db = await mf.getD1Database("DB");
+const db = await mf.getDatabase();
 await schema(db);
 const user = {
   _id: "a".repeat(24),
@@ -168,8 +168,8 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((resolve) => server.listen(3001, "127.0.0.1", resolve));
 const entryUrl = origin + "/__demo/" + entry;
-await writeFile("/tmp/lah-d1-preview-url", entryUrl, { mode: 0o600 });
-console.log("Synthetic D1 preview: " + entryUrl);
+await writeFile("/tmp/lah-preview-url", entryUrl, { mode: 0o600 });
+console.log("Synthetic libSQL preview: " + entryUrl);
 async function stop() {
   server.close();
   await mf.dispose();

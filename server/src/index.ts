@@ -316,11 +316,7 @@ app.delete("/api/resources/:id", async (c) => {
 app.all("/api/*", () => {
   throw new HTTPException(404);
 });
-app.get("*", async (c) =>
-  c.env.ASSETS
-    ? c.env.ASSETS.fetch(c.req.raw)
-    : c.text("LAH API local preview"),
-);
+app.get("*", (c) => c.text("LAH API"));
 app.onError((error, c) => {
   const status =
     error instanceof HTTPException
@@ -351,7 +347,7 @@ app.onError((error, c) => {
 });
 export default {
   fetch: app.fetch,
-  async scheduled(_controller: ScheduledController, env: Env) {
+  async cleanup(env: Env) {
     const now = Date.now();
     await env.DB.batch([
       env.DB.prepare(

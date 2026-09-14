@@ -1,14 +1,18 @@
-import { Miniflare } from "miniflare";
-import { readFile } from "node:fs/promises";
-export async function runtime(options = {}) {
-  return new Miniflare({
-    modules: true,
-    scriptPath: new URL("../dist/worker.js", import.meta.url).pathname,
-    compatibilityDate: "2026-07-30",
-    d1Databases: ["DB"],
-    bindings: { APP_ORIGIN: "http://localhost:8787" },
-    ...options,
-  });
+import {createClient} from '@libsql/client';
+import {readFile} from 'node:fs/promises';
+import {database} from '../../turso/database.mjs';
+import app from '../dist/app.mjs';
+export async function runtime(options={}) {
+ const client=createClient({url:':memory:'});
+ await client.execute('PRAGMA foreign_keys=ON');
+ const DB=database(client);
+ const previousFetch=globalThis.fetch;
+ if(options.outboundService) globalThis.fetch=(url,init)=>options.outboundService(new Request(url,init));
+ return {
+  getDatabase:async()=>DB,
+  dispatchFetch:(url,init)=>app.fetch(new Request(url,init),{DB,APP_ORIGIN:'http://localhost:8787',...options.bindings,CLIENT_IP:new Headers(init?.headers).get('x-test-client-ip')||'local'}),
+  dispose:async()=>{client.close();globalThis.fetch=previousFetch;},
+ };
 }
 export async function schema(db) {
   const sql = await readFile(

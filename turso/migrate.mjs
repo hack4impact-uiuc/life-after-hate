@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 import {connect} from './client.mjs';
 const file=process.argv[2];
 if (!file) throw new Error('Pass the verified private data.sql path');
-const schema=await readFile(new URL('../cloudflare/migrations/0001_initial.sql',import.meta.url),'utf8');
+const schema=await readFile(new URL('../server/migrations/0001_initial.sql',import.meta.url),'utf8');
 const local=createClient({url:':memory:'});
 const remote=process.argv.includes('--local-check')?createClient({url:':memory:'}):connect();
 const digest=v=>createHash('sha256').update(v).digest('hex');

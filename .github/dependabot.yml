@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directories: ["/", "/backend", "/frontend", "/cloudflare", "/scripts/db_backup/backup"]
+    directories: ["/", "/backend", "/frontend", "/scripts/db_backup/backup"]
     schedule: { interval: weekly }
     groups:
       compatible-updates:
