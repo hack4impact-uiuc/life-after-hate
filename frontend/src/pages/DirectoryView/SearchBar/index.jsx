@@ -19,6 +19,7 @@ const SearchBar = ({ isLoading }) => {
         <label className="col-md mt-2 mb-3 mb-md-0 mt-md-0">
           <input
             id="search-general"
+            aria-label="Search resources"
             type="text"
             {...register("keyword")}
             className="search-input"
@@ -28,6 +29,7 @@ const SearchBar = ({ isLoading }) => {
         <label className="col-md mb-3 mb-md-0 ps-md-0">
           <input
             id="search-location"
+            aria-label="Location"
             type="text"
             {...register("location")}
             placeholder="Location"

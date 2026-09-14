@@ -19,7 +19,10 @@ class ResourceList extends React.Component {
     window.addEventListener("resize", this.handleResize);
   }
 
-  handleResize = () => cache.clearAll();
+  handleResize = () => {
+    cache.clearAll();
+    this.list?.recomputeRowHeights();
+  };
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);

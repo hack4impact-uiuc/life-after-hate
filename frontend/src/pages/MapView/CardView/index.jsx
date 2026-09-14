@@ -43,7 +43,16 @@ class CardView extends React.Component {
     }
   };
 
-  componentDidMount = () => this.purgeCache();
+  componentDidMount = () => {
+    this.purgeCache();
+    window.addEventListener("resize", this.handleResize);
+  };
+  componentWillUnmount = () =>
+    window.removeEventListener("resize", this.handleResize);
+  handleResize = () => {
+    cache.clearAll();
+    this.list?.recomputeRowHeights();
+  };
 
   componentDidUpdate(prevProps) {
     const {

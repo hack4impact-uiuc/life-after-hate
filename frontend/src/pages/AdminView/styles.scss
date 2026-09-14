@@ -126,3 +126,92 @@
     margin-bottom: 20px;
   }
 }
+
+.user-directory {
+  height: auto;
+  min-height: calc(100dvh - var(--nav-height, 60px));
+  .card-wrapper > .col {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .card-click:focus-visible {
+    outline: 2px solid #a34b00;
+    outline-offset: -2px;
+  }
+  @media (max-width: 767px) {
+    padding: 16px 12px;
+    h1 {
+      font-size: 26px;
+    }
+    > .container-fluid,
+    .users > .container-fluid {
+      padding: 0;
+    }
+    .manager-header {
+      margin: 0 0 16px;
+      gap: 12px;
+    }
+    .manager-header > * {
+      padding: 0;
+    }
+    .btn-custom {
+      min-height: 44px;
+    }
+    .dropdown-menu {
+      max-width: calc(100vw - 24px);
+    }
+    .dropdown-item {
+      white-space: normal;
+      min-height: 44px;
+    }
+    .users {
+      padding: 12px;
+    }
+    .user-labels {
+      display: none;
+    }
+    .card-wrapper {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      margin: 0 0 12px;
+      padding: 16px;
+    }
+    .card-wrapper > * {
+      width: auto;
+      padding: 0;
+    }
+    .user-name {
+      grid-column: 1;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .user-email {
+      grid-column: 1 / -1;
+    }
+    .user-email .text-truncate {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .user-role {
+      grid-column: 1 / -1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #914500;
+    }
+    .user-title {
+      grid-column: 1 / -1;
+    }
+    .user-title:has(p:empty) {
+      display: none;
+    }
+    .col-edit {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .edit-button {
+      min-height: 44px;
+      margin: -8px -8px 0 0;
+    }
+  }
+}

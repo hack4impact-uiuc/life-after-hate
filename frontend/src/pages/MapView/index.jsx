@@ -14,7 +14,7 @@ const MapView = () => {
   }, []);
 
   return (
-    <div>
+    <div className="map-view">
       <div className="fixed-height-container">
         <div className="search-content">
           <div className="search-bar">
@@ -23,7 +23,9 @@ const MapView = () => {
         </div>
         <CardView />
       </div>
-      <Map></Map>
+      <div className="map-canvas">
+        <Map />
+      </div>
       <RadiusFilter />
     </div>
   );

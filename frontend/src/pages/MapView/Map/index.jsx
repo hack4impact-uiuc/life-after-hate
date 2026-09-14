@@ -167,7 +167,7 @@ const Map = ({
       <StaticMap
         mapStyle={import.meta.env.VITE_MAP_STYLE || undefined}
         width="100%"
-        height="100vh"
+        height="100%"
         mapboxApiAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
         reuseMap
         preventStyleDiffing

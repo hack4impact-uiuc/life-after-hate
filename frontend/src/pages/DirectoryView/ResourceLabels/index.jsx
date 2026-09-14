@@ -16,52 +16,78 @@ const ResourceLabels = ({ sort, updateSort, resources }) => {
 
   return (
     resources.length > 0 && (
-      <div className="resource-labels row">
-        <div
-          className="col my-auto"
-          onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
-        >
-          <h3 className="resource-label">
-            Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}
-          </h3>
+      <div className="resource-toolbar">
+        <div className="mobile-sort">
+          <select
+            aria-label="Sort resources"
+            value={sort.field || ""}
+            onChange={(event) => updateSort(event.target.value)}
+          >
+            <option value="" disabled>
+              Sort resources
+            </option>
+            {Object.values(sortFieldEnum).map((field) => (
+              <option key={field} value={field}>
+                {field.charAt(0) + field.slice(1).toLowerCase()}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            aria-label="Change sort order"
+            disabled={!sort.field}
+            onClick={() => updateSort(sort.field)}
+          >
+            {sort.order === "desc" ? "↓" : "↑"}
+          </button>
         </div>
-        <div
-          className="col d-none d-md-block my-auto"
-          onClick={() => updateSort(sortFieldEnum.LOCATION)}
-        >
-          <h3 className="resource-label">
-            Location {sortIcon(sortFieldEnum.LOCATION)}
-          </h3>
-        </div>
-        <div
-          className="col d-none d-sm-block my-auto"
-          onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
-        >
-          <h3 className="resource-label">
-            Volunteer Role {sortIcon(sortFieldEnum.VOLUNTEER_ROLE)}
-          </h3>
-        </div>
-        <div
-          className="col my-auto"
-          onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
-        >
-          <h3 className="resource-label">
-            Description {sortIcon(sortFieldEnum.DESCRIPTION)}
-          </h3>
-        </div>
-        <div
-          className="col my-auto d-none d-sm-block"
-          onClick={() => updateSort(sortFieldEnum.AVAILABILITY)}
-        >
-          <h3 className="resource-label">
-            Availability {sortIcon(sortFieldEnum.AVAILABILITY)}
-          </h3>
-        </div>
-        <AdminView>
-          <div className="col">
-            <CSVExporter data={resources}></CSVExporter>
+        <div className="resource-labels row">
+          <div
+            className="col my-auto"
+            onClick={() => updateSort(sortFieldEnum.RESOURCE_NAME)}
+          >
+            <h3 className="resource-label">
+              Resource Name {sortIcon(sortFieldEnum.RESOURCE_NAME)}
+            </h3>
           </div>
-        </AdminView>
+          <div
+            className="col d-none d-md-block my-auto"
+            onClick={() => updateSort(sortFieldEnum.LOCATION)}
+          >
+            <h3 className="resource-label">
+              Location {sortIcon(sortFieldEnum.LOCATION)}
+            </h3>
+          </div>
+          <div
+            className="col d-none d-sm-block my-auto"
+            onClick={() => updateSort(sortFieldEnum.VOLUNTEER_ROLE)}
+          >
+            <h3 className="resource-label">
+              Volunteer Role {sortIcon(sortFieldEnum.VOLUNTEER_ROLE)}
+            </h3>
+          </div>
+          <div
+            className="col my-auto"
+            onClick={() => updateSort(sortFieldEnum.DESCRIPTION)}
+          >
+            <h3 className="resource-label">
+              Description {sortIcon(sortFieldEnum.DESCRIPTION)}
+            </h3>
+          </div>
+          <div
+            className="col my-auto d-none d-sm-block"
+            onClick={() => updateSort(sortFieldEnum.AVAILABILITY)}
+          >
+            <h3 className="resource-label">
+              Availability {sortIcon(sortFieldEnum.AVAILABILITY)}
+            </h3>
+          </div>
+          <AdminView>
+            <div className="col">
+              <CSVExporter data={resources}></CSVExporter>
+            </div>
+          </AdminView>
+        </div>
       </div>
     )
   );

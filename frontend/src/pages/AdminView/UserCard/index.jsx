@@ -27,18 +27,26 @@ const UserCard = ({ user, openUserModalWithPayload }) => {
       role="button"
       tabIndex="0"
       onClick={toggleViewOnlyModal}
-      onKeyPress={toggleViewOnlyModal}
+      onKeyDown={(event) => {
+        if (
+          event.target === event.currentTarget &&
+          ["Enter", " "].includes(event.key)
+        ) {
+          event.preventDefault();
+          toggleViewOnlyModal(event);
+        }
+      }}
     >
-      <div className="col">
+      <div className="col user-name">
         <p>{`${user.firstName} ${user.lastName}`}</p>
       </div>
-      <div className="col">
+      <div className="col user-email">
         <p className="text-truncate">{user.email}</p>
       </div>
-      <div className="col">
+      <div className="col user-role">
         <p>{user.role}</p>
       </div>
-      <div className="col d-none d-md-block">
+      <div className="col user-title">
         <p>{user.title}</p>
       </div>
       <AdminView>

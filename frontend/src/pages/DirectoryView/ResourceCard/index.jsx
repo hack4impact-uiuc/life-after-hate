@@ -41,15 +41,23 @@ const ResourceCard = ({
         role="button"
         tabIndex="0"
         onClick={toggleViewOnlyModal}
-        onKeyPress={toggleViewOnlyModal}
+        onKeyDown={(event) => {
+          if (
+            event.target === event.currentTarget &&
+            ["Enter", " "].includes(event.key)
+          ) {
+            event.preventDefault();
+            toggleViewOnlyModal(event);
+          }
+        }}
       >
         <div className="resource-type-logo">
           <img src={resourceLogo(resource.type)} onLoad={measure} alt=""></img>
         </div>
-        <div className="col">
+        <div className="col resource-name">
           <p data-cy="card-companyName">{resourceName(resource)}</p>
         </div>
-        <div className="col d-none d-md-block">
+        <div className="col resource-location">
           <p data-cy="card-address">{resource.address}</p>
           {"distanceFromSearchLoc" in resource && (
             <p data-cy="card-distance" className="card-distance">
@@ -57,13 +65,13 @@ const ResourceCard = ({
             </p>
           )}
         </div>
-        <div className="col d-none d-sm-block">
+        <div className="col resource-role">
           <p>{resource.volunteerRoles}</p>
         </div>
-        <div className="col col-desc col-desc-collapsed">
+        <div className="col col-desc col-desc-collapsed resource-description">
           <p>{resourceDescription(resource)}</p>
         </div>
-        <div className="col col-desc col-desc-collapsed d-none d-sm-block">
+        <div className="col col-desc col-desc-collapsed resource-availability">
           <p>{resource.availability}</p>
         </div>
         <AdminView>

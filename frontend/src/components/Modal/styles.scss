@@ -128,3 +128,56 @@
     background-color: #f9ac61;
   }
 }
+
+.lah-modal {
+  .modal-content {
+    max-height: calc(100dvh - 100px);
+  }
+  .modal-body {
+    overflow-y: auto;
+    min-height: 0;
+    overscroll-behavior: contain;
+  }
+  .modal-header {
+    flex-shrink: 0;
+  }
+  .close-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  @media (max-width: 767px) {
+    margin: 8px;
+    max-width: none;
+    .modal-content {
+      max-height: calc(100dvh - 16px);
+    }
+    .modal-body {
+      padding: 12px 16px 24px;
+    }
+    .modal-title {
+      padding: 0;
+    }
+    .add-edit-resource-form {
+      padding: 0;
+    }
+    .modal-input-field,
+    .modal-select-field,
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+      min-height: 44px;
+    }
+    .modal-input-textarea {
+      min-height: 120px;
+    }
+    #delete-form-button {
+      margin-left: 12px;
+    }
+  }
+}
+@media (max-width: 767px) {
+  .modal {
+    padding-top: 0;
+  }
+}

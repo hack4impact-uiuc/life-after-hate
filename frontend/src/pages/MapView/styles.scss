@@ -111,3 +111,79 @@
   outline: none !important;
   transition: all 0.2s;
 }
+
+.map-view {
+  position: relative;
+  height: calc(100dvh - var(--nav-height, 60px));
+  min-height: 420px;
+  .map-canvas {
+    position: absolute;
+    inset: 0;
+  }
+  .fixed-height-container {
+    top: 12px;
+    bottom: 12px;
+    height: auto;
+    max-width: calc(100% - 24px);
+  }
+  .card-content {
+    min-height: 0;
+    margin-bottom: 0;
+  }
+  @media (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    background: #f9f9f9;
+    .fixed-height-container {
+      display: contents;
+    }
+    .search-content {
+      order: 0;
+      margin: 12px;
+    }
+    .map-canvas {
+      order: 1;
+      position: relative;
+      inset: auto;
+      height: 40svh;
+      min-height: 240px;
+      max-height: 400px;
+    }
+    .radius-filter {
+      order: 2;
+      position: relative;
+      inset: auto;
+      width: auto;
+      margin: 12px;
+      padding: 12px 24px;
+    }
+    .card-content {
+      order: 3;
+      width: auto;
+      height: 420px;
+      margin: 12px;
+    }
+    .map-search {
+      padding: 12px;
+    }
+    .map-search #locationInput,
+    .map-search #map-keyword-input {
+      font-size: 16px;
+      height: 44px;
+    }
+    .map-search .submitSearch {
+      flex-basis: 52px;
+      min-height: 44px;
+    }
+    .map-search #underlineLocation .closeButtons {
+      flex-basis: 44px;
+      width: 44px;
+      height: 44px;
+      padding: 14px;
+    }
+    .card-action-btn {
+      min-height: 44px;
+    }
+  }
+}

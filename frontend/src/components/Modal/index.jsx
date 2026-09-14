@@ -8,21 +8,19 @@ import { titleSelector } from "../../redux/selectors/modal";
 import "./styles.scss";
 
 const LAHModal = ({ isOpen, closeModal, title, children }) => (
-  <Modal fade isOpen={isOpen} toggle={closeModal}>
+  <Modal fade isOpen={isOpen} toggle={closeModal} className="lah-modal">
     <ModalHeader>
       {title}
-      <Button color="link" className="close-button" onClick={closeModal}>
+      <Button
+        color="link"
+        className="close-button"
+        aria-label="Close dialog"
+        onClick={closeModal}
+      >
         <img id="close-image" src={Close} alt="close" />
       </Button>
     </ModalHeader>
-    <ModalBody
-      style={{
-        maxHeight: "calc(100vh - 210px)",
-        overflowY: "auto",
-      }}
-    >
-      {children}
-    </ModalBody>
+    <ModalBody>{children}</ModalBody>
   </Modal>
 );
 

@@ -215,3 +215,195 @@
     }
   }
 }
+
+.directory {
+  .card-wrapper > .col {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .card-click:focus-visible {
+    outline: 2px solid #a34b00;
+    outline-offset: -2px;
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    padding: 20px 16px;
+    .resource-role,
+    .resource-availability {
+      display: none;
+    }
+    .resource-labels > :nth-child(3),
+    .resource-labels > :nth-child(5) {
+      display: none !important;
+    }
+  }
+  @media (max-width: 767px) {
+    padding: 16px 12px;
+    > .container-fluid,
+    .resources > .container-fluid {
+      padding: 0;
+    }
+    h1 {
+      font-size: 26px;
+      text-align: left;
+    }
+    .manager-header {
+      margin: 0 0 16px;
+      gap: 12px;
+    }
+    .manager-header > div {
+      padding: 0;
+      margin-bottom: 0 !important;
+    }
+    .manager-header #add-button {
+      min-height: 44px;
+    }
+    .resources {
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .searchbar-wrapper .search {
+      margin: 0;
+      padding: 12px;
+      gap: 12px;
+    }
+    .searchbar-wrapper .search > * {
+      width: 100%;
+      padding: 0;
+      margin: 0 !important;
+    }
+    .searchbar-wrapper .search-input {
+      height: 44px;
+      font-size: 16px;
+    }
+    .searchbar-wrapper #search-button {
+      height: 44px;
+    }
+    .searchbar-wrapper #search-general,
+    .searchbar-wrapper #search-location {
+      background-position-y: center;
+    }
+    .resource-labels {
+      margin: 0 0 10px;
+      gap: 8px;
+    }
+    .resource-labels > .col {
+      padding: 0;
+    }
+    .resource-labels > :nth-child(3),
+    .resource-labels > :nth-child(4),
+    .resource-labels > :nth-child(5) {
+      display: none !important;
+    }
+    .resource-labels > :nth-child(2) {
+      display: block !important;
+    }
+    .resource-labels h3 {
+      font-size: 12px;
+    }
+    .card-wrapper {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) auto;
+      gap: 8px 10px;
+      padding: 16px;
+      margin: 2px 2px 12px;
+      align-items: start;
+    }
+    .card-wrapper > * {
+      width: auto;
+      padding: 0;
+    }
+    .resource-type-logo {
+      grid-column: 1;
+      grid-row: 1;
+      margin: 2px 0 0;
+    }
+    .resource-name {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .resource-location {
+      grid-column: 2 / -1;
+      color: #595959;
+    }
+    .resource-description {
+      grid-column: 2 / -1;
+    }
+    .resource-role,
+    .resource-availability {
+      display: none;
+    }
+    .col-edit {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .card-wrapper .edit-button {
+      min-height: 44px;
+      padding: 8px;
+      margin: -8px -8px 0 0;
+    }
+    .resource-list {
+      height: min(65dvh, 600px);
+      min-height: 320px;
+    }
+  }
+}
+.directory {
+  .resource-toolbar {
+    display: contents;
+  }
+  .mobile-sort {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .card-wrapper .resource-type-logo {
+      margin: 2px 0 0;
+      width: 16px;
+    }
+    .resource-type-logo img {
+      width: 16px;
+    }
+    .resource-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .mobile-sort {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      gap: 8px;
+    }
+    .mobile-sort select {
+      width: 100%;
+      min-width: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      padding: 8px;
+    }
+    .mobile-sort button {
+      flex: 0 0 44px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: white;
+      font-size: 20px;
+    }
+    .resource-labels {
+      margin: 0;
+    }
+    .resource-labels > .col {
+      display: none !important;
+    }
+    .resource-labels > .col:last-child:has(#csv-download-btn) {
+      display: block !important;
+    }
+    #csv-download-btn {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+}

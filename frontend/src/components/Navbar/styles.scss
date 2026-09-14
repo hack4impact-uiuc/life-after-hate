@@ -90,3 +90,42 @@ div.navbar-dropdown {
 .spacing {
   flex-grow: 1;
 }
+
+.lah_navbar {
+  min-height: 60px;
+  .navbar-brand {
+    min-width: 0;
+  }
+  .navbar-toggler {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .nav-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  @media (max-width: 991px) {
+    padding: 8px 16px !important;
+    #logo {
+      height: auto;
+      width: min(230px, 62vw);
+    }
+    .navbar-collapse {
+      padding-top: 8px;
+    }
+    .nav-link {
+      padding: 12px 8px !important;
+    }
+  }
+}
+.lah_navbar #user-icon.user-initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  padding: 0;
+  background: #fce9d5;
+  color: #914500;
+  font-weight: 700;
+}
