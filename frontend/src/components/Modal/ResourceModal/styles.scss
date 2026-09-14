@@ -49,26 +49,6 @@
     overflow: hidden;
     min-height: 0;
   }
-  .resource-editor-tabs {
-    display: flex;
-    flex-shrink: 0;
-    gap: 4px;
-    padding: 0 22px;
-    border-bottom: 1px solid #eee8df;
-    button {
-      border: 0;
-      border-bottom: 2px solid transparent;
-      background: transparent;
-      padding: 14px 12px 11px;
-      color: #81796e;
-      font-size: 13px;
-    }
-    button[aria-selected="true"] {
-      color: #28251f;
-      border-bottom-color: #ff9227;
-      font-weight: 600;
-    }
-  }
   .resource-editor-scroll {
     overflow-y: auto;
     min-height: 0;
@@ -294,22 +274,6 @@
     outline: none !important;
     @include input-focus.ring;
   }
-  .resource-editor-section-heading {
-    font-size: 16px;
-  }
-  .resource-editor-note-help {
-    color: #827b70;
-    font-size: 13px;
-  }
-  .resource-editor-note-preview {
-    white-space: pre-wrap;
-    font-size: 14px;
-    min-height: 100px;
-  }
-  .last-modified {
-    font-size: 12px;
-    color: #827b70;
-  }
   @media (max-width: 767px) {
     margin: 8px;
     max-width: none;
@@ -319,9 +283,6 @@
     .modal-header,
     .resource-editor-scroll {
       padding: 16px;
-    }
-    .resource-editor-tabs {
-      padding: 0 16px;
     }
     .resource-editor-grid {
       grid-template-columns: 1fr;
@@ -350,29 +311,6 @@
 }
 
 .lah-modal.resource-editor-modal {
-  .resource-editor-tabs {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    &::after {
-      content: "";
-      position: absolute;
-      left: 22px;
-      bottom: -1px;
-      height: 2px;
-      width: calc((100% - 48px) / 2);
-      background: #ff9227;
-      transition: transform var(--motion-medium, 200ms)
-        var(--motion-ease, ease-out);
-    }
-    &[data-active="notes"]::after {
-      transform: translateX(calc(100% + 4px));
-    }
-    button[aria-selected="true"] {
-      border-bottom-color: transparent;
-    }
-  }
-  [role="tabpanel"]:not([hidden]),
   .resource-editor-grid {
     animation: modal-feedback-in var(--motion-medium, 200ms)
       var(--motion-ease, ease-out);
@@ -382,10 +320,6 @@
       var(--motion-ease, ease-out);
   }
   @media (max-width: 767px) {
-    .resource-editor-tabs::after {
-      left: 16px;
-      width: calc((100% - 36px) / 2);
-    }
     .resource-editor-actions {
       flex-wrap: wrap;
     }

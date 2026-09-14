@@ -17,7 +17,6 @@ import {
 import LAHModal from "../../Modal";
 import "../styles.scss";
 import "./styles.scss";
-import LastModifiedInfo from "../LastModifiedInfo";
 import IndividualResourceForm from "./IndividualResourceForm";
 import GroupResourceForm from "./GroupResourceForm";
 import TangibleResourceForm from "./TangibleResourceForm";
@@ -116,7 +115,6 @@ export const ResourceModal = ({
     register("tags");
   }, [register]);
 
-  const [activeTab, setActiveTab] = useState("details");
   const [deleteClicked, setDeleteClicked] = useState(false);
   const [groupType, setGroupType] = useState(
     resource.type ?? resourceEnum.INDIVIDUAL,
@@ -210,121 +208,64 @@ export const ResourceModal = ({
       <form
         className="add-edit-resource-form resource-editor-form"
         aria-busy={!!pending}
-        onSubmit={handleSubmit(onSubmit, () => setActiveTab("details"))}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        {isExistingResource && (
-          <div
-            className="resource-editor-tabs"
-            data-active={activeTab}
-            role="tablist"
-            aria-label="Resource sections"
-          >
-            <button
-              type="button"
-              role="tab"
-              id="resource-details-tab"
-              aria-controls="resource-details-panel"
-              aria-selected={activeTab === "details"}
-              onClick={() => setActiveTab("details")}
-            >
-              Details
-            </button>
-            <button
-              type="button"
-              role="tab"
-              id="resource-notes-tab"
-              aria-controls="resource-notes-panel"
-              aria-selected={activeTab === "notes"}
-              onClick={() => setActiveTab("notes")}
-            >
-              Notes & history
-            </button>
-          </div>
-        )}
         <div className="resource-editor-scroll">
-          <div
-            id="resource-details-panel"
-            role={isExistingResource ? "tabpanel" : undefined}
-            aria-labelledby={
-              isExistingResource ? "resource-details-tab" : undefined
-            }
-            hidden={isExistingResource && activeTab !== "details"}
+          <fieldset
+            className="resource-editor-type"
+            disabled={isExistingResource || !editable || !!pending}
           >
-            <fieldset
-              className="resource-editor-type"
-              disabled={isExistingResource || !editable || !!pending}
-            >
-              <legend>
-                Resource type{" "}
-                <span>
-                  —{" "}
-                  {isExistingResource
-                    ? "set when created"
-                    : "changes the fields below"}
-                </span>
-              </legend>
-              <div
-                className="resource-editor-segments"
-                data-cy="modal-resourceType"
-              >
-                {Object.entries(typeLabels).map(([value, label]) => (
-                  <label key={value}>
-                    <input
-                      type="radio"
-                      {...register("type", { required: true })}
-                      value={value}
-                      checked={groupType === value}
-                      onChange={() => {
-                        setGroupType(value);
-                        setValue("type", value);
-                      }}
-                    />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-            <div className="resource-editor-grid" key={getResourceType()}>
-              <FormComponent
-                register={register}
-                resource={resource}
-                errors={errors}
-                editable={editable && !pending}
-              />
-            </div>
-            <div className="resource-editor-tags">
-              <p>Tags</p>
-              <ModalTagComplete
-                onChange={(_, value) => setValue("tags", value)}
-                tags={watch("tags") ?? resource.tags ?? []}
-                disabled={!editable || !!pending}
-              />
-              {editable && (
-                <small>
-                  Choose existing tags or type a new one and press Enter.
-                </small>
-              )}
-            </div>
-          </div>
-          {isExistingResource && (
+            <legend>
+              Resource type{" "}
+              <span>
+                —{" "}
+                {isExistingResource
+                  ? "set when created"
+                  : "changes the fields below"}
+              </span>
+            </legend>
             <div
-              id="resource-notes-panel"
-              role="tabpanel"
-              aria-labelledby="resource-notes-tab"
-              hidden={activeTab !== "notes"}
+              className="resource-editor-segments"
+              data-cy="modal-resourceType"
             >
-              <h3 className="resource-editor-section-heading">Notes & history</h3>
-              <p className="resource-editor-note-help">
-                Resource notes can be updated in Details.
-              </p>
-              <p className="resource-editor-note-preview">
-                {watch("notes") || "No notes yet."}
-              </p>
-              {(resource.dateLastModified || resource.dateCreated) && (
-                <LastModifiedInfo resource={resource} />
-              )}
+              {Object.entries(typeLabels).map(([value, label]) => (
+                <label key={value}>
+                  <input
+                    type="radio"
+                    {...register("type", { required: true })}
+                    value={value}
+                    checked={groupType === value}
+                    onChange={() => {
+                      setGroupType(value);
+                      setValue("type", value);
+                    }}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
             </div>
-          )}
+          </fieldset>
+          <div className="resource-editor-grid" key={getResourceType()}>
+            <FormComponent
+              register={register}
+              resource={resource}
+              errors={errors}
+              editable={editable && !pending}
+            />
+          </div>
+          <div className="resource-editor-tags">
+            <p>Tags</p>
+            <ModalTagComplete
+              onChange={(_, value) => setValue("tags", value)}
+              tags={watch("tags") ?? resource.tags ?? []}
+              disabled={!editable || !!pending}
+            />
+            {editable && (
+              <small>
+                Choose existing tags or type a new one and press Enter.
+              </small>
+            )}
+          </div>
         </div>
         {requestError && (
           <p className="modal-request-error" role="alert">
