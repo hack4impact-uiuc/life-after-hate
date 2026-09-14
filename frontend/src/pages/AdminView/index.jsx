@@ -46,9 +46,11 @@ const UserManager = ({ users = [] }) => {
     setError("");
     try {
       await editAndRefreshUser({ role, title: user.title || "" }, user.id);
-    } catch {
+    } catch (error) {
       setError(
-        `Could not update ${user.firstName}'s account. Please try again.`,
+        ["ECONNABORTED", "ETIMEDOUT"].includes(error?.code)
+          ? "The request timed out. Refresh to check the account status before trying again."
+          : `Could not update ${user.firstName}'s account. Please try again.`,
       );
     } finally {
       setBusy((previous) => ({ ...previous, [user.id]: false }));

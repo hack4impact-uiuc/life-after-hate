@@ -274,6 +274,21 @@ test("OAuth state is bound to cookie, expiring, single use", async () => {
     null,
   );
 });
+
+test("declining a pending account persists its role, revokes sessions, and audits the change", { timeout: 2000 }, async () => {
+  const uid = accounts.PENDING.repeat(24);
+  const response = await call("/users/" + uid, {
+    method: "PATCH", body: { role: "REJECTED", title: "" },
+  });
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).success, true);
+  const row = await db.prepare("SELECT role,document FROM users WHERE id=?").bind(uid).first();
+  assert.equal(row.role, "REJECTED");
+  assert.equal(JSON.parse(row.document).role, "REJECTED");
+  assert.equal(await db.prepare("SELECT * FROM sessions WHERE user_id=?").bind(uid).first(), null);
+  assert.ok(await db.prepare("SELECT * FROM audit_events WHERE target_id=? AND action='user.update-role'").bind(uid).first());
+});
+
 test("role revocation invalidates existing sessions immediately", async () => {
   assert.equal(
     (

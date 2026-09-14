@@ -53,3 +53,40 @@ it("attaches CSRF tokens to writes and shares concurrent token acquisition", asy
     "test-token",
   );
 });
+
+it.each(["csrf", "mutation"])(
+  "releases the loader after a %s timeout and allows another attempt",
+  async (stage) => {
+    const error = Object.assign(new Error("timeout"), { code: "ECONNABORTED" });
+    axios.get.mockResolvedValue({ data: { token: "test-token" } });
+    axios.request.mockResolvedValue({ data: {} });
+    if (stage === "csrf") axios.get.mockRejectedValueOnce(error);
+    else axios.request.mockRejectedValueOnce(error);
+    const dispatch = vi.fn();
+    const failure = vi.fn();
+    const success = vi.fn();
+    const run = middleware({ dispatch })(() => {});
+    const action = {
+      type: "API_REQUEST",
+      payload: {
+        url: "/api/users/" + "c".repeat(24),
+        method: "PATCH",
+        data: { role: "REJECTED" },
+        withLoader: true,
+        onFailure: failure,
+        onSuccess: success,
+      },
+    };
+    run(action);
+    await flush();
+    expect(failure).toHaveBeenCalledWith(error);
+    expect(success).not.toHaveBeenCalled();
+    expect(dispatch).toHaveBeenCalledWith({ type: "LOADER_END" });
+    expect(axios.get.mock.calls.at(-1)[1].timeout).toBe(10000);
+    run(action);
+    await flush();
+    expect(success).toHaveBeenCalledTimes(1);
+    expect(axios.request.mock.calls.at(-1)[0].timeout).toBe(35000);
+    if (stage === "csrf") expect(axios.get).toHaveBeenCalledTimes(2);
+  },
+);

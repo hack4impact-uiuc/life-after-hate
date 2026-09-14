@@ -1,3 +1,5 @@
-import { getRequestListener } from '@hono/node-server';
-import { handle } from '../turso/dist/handler.mjs';
-export default getRequestListener(handle, { overrideGlobalObjects:false });
+import { handle } from "../turso/dist/handler.mjs";
+
+// Receive the Web Request directly so Vercel's Node request helpers cannot
+// consume the JSON body before the API reads it.
+export default { fetch: handle };

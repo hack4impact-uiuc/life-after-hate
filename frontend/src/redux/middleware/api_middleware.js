@@ -38,7 +38,7 @@ const apiMiddleware = ({ dispatch }) => {
     csrfUrl.search = "";
     if (!["GET", "HEAD", "OPTIONS"].includes(method) && !csrfRequest) {
       csrfRequest = axios
-        .get(csrfUrl.href, { withCredentials: true })
+        .get(csrfUrl.href, { withCredentials: true, timeout: 10000 })
         .then(({ data }) => data.token)
         .catch((error) => {
           csrfRequest = undefined;
@@ -61,6 +61,7 @@ const apiMiddleware = ({ dispatch }) => {
           },
           [dataOrParams]: data,
           withCredentials: true,
+          timeout: 35000,
         });
       })
       .then(({ data }) => {
@@ -78,7 +79,11 @@ const apiMiddleware = ({ dispatch }) => {
         }
         dispatch(apiError({ status: error.response?.status }));
         onFailure(error.response || error);
-        if (notification?.failureMessage)
+        if (["ECONNABORTED", "ETIMEDOUT"].includes(error.code))
+          toast.error(
+            "The request timed out. Refresh to check whether the change was saved before trying again.",
+          );
+        else if (notification?.failureMessage)
           toast.error(notification.failureMessage);
         if (error.response?.status === 403) csrfRequest = undefined;
         if (!expectUnauthorizedResponse && error.response?.status === 401) {
