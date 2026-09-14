@@ -96,11 +96,11 @@ test("navbar titles, navigation, logo, authenticated login redirect and logout",
     await expect(
       page.getByRole("button", { name: "New resource", exact: true }),
     ).toBeVisible();
-    if (path !== "/directory")
+    if (path === "/")
       await expect(page.locator("#logo")).toHaveCSS("width", "32px");
     await expect(page.locator("#logo")).toHaveCSS(
       "height",
-      path === "/directory" ? "28px" : "32px",
+      path === "/directory" ? "28px" : path === "/users" ? "24px" : "32px",
     );
   }
   await page.getByRole("link", { name: "Directory", exact: true }).click();
@@ -142,9 +142,11 @@ test("required resource fields and resource type-specific inputs", async ({
 }) => {
   await login(page, request);
   await page.locator("#add-button").click();
-  await expect(field(page, "resourceType")).toHaveValue("INDIVIDUAL");
+  await expect(
+    page.getByRole("radio", { name: "Individual", exact: true }),
+  ).toBeChecked();
   await expect(field(page, "skills")).toBeVisible();
-  await field(page, "resourceType").selectOption("GROUP");
+  await page.getByRole("radio", { name: "Group", exact: true }).check();
   await expect(field(page, "skills")).toHaveCount(0);
   await expect(field(page, "description")).toBeVisible();
   await field(page, "companyName").fill("Incomplete");
@@ -163,7 +165,16 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
   }) => {
     await login(page, request);
     await page.locator("#add-button").click();
-    await field(page, "resourceType").selectOption(type);
+    await page
+      .getByRole("radio", {
+        name: {
+          GROUP: "Group",
+          INDIVIDUAL: "Individual",
+          TANGIBLE: "Resource",
+        }[type],
+        exact: true,
+      })
+      .check();
     if (type === "GROUP")
       await field(page, "companyName").fill("Created Group");
     if (type === "TANGIBLE") {
@@ -200,7 +211,7 @@ for (const type of ["GROUP", "INDIVIDUAL", "TANGIBLE"])
     await page.locator(".close-button").click();
     await page.locator(".edit-button").click();
     await page.locator("#delete-form-button").click();
-    await expect(page.locator("#delete-form-button")).toHaveText("Confirm");
+    await expect(page.locator("#delete-form-button")).toHaveText("Confirm delete");
     await page.locator("#delete-form-button").click();
     await closed(page);
     await page.reload();
@@ -284,13 +295,13 @@ for (const surface of [".resource-drawer"])
       "Alpha Support",
     );
     await page.locator(`${surface} [data-cy=card-resource-edit-btn]`).click();
-    await expect(page.locator(".modal-title")).toHaveText("Edit Resource");
+    await expect(page.locator(".modal-title")).toHaveText(/^Edit /);
     await field(page, "companyName").fill("Unsaved change");
     await field(page, "contactName").fill("");
     await page.locator("#submit-form-button").click();
     await expect(field(page, "contactName")).toHaveClass(/invalid/);
     await page.locator("#delete-form-button").click();
-    await expect(page.locator("#delete-form-button")).toHaveText("Confirm");
+    await expect(page.locator("#delete-form-button")).toHaveText("Confirm delete");
     await field(page, "companyName").click();
     await expect(page.locator("#delete-form-button")).toHaveText("Delete");
     await page.locator(".close-button").click();
@@ -350,8 +361,11 @@ test("user panel labels, read-only identity, persistent role edit and filters", 
   request,
 }) => {
   await login(page, request, "ADMIN", "/users");
-  await expect(page.locator(".manager-header")).toContainText("User Directory");
-  await expect(page.locator(".user-labels")).toContainText("Account Type");
+  await expect(page.locator(".people-heading")).toContainText("People");
+  await expect(page.locator(".user-labels")).toContainText("Role");
+  await expect(page.locator(".card-wrapper")).toHaveCount(3);
+  await page.getByRole("button", { name: "Approve", exact: true }).click();
+  await expect(page.locator(".review-queue")).toHaveCount(0);
   await expect(page.locator(".card-wrapper")).toHaveCount(4);
   const user = page
     .locator(".card-wrapper")
@@ -371,15 +385,26 @@ test("user panel labels, read-only identity, persistent role edit and filters", 
   await expect(user).toContainText("VOLUNTEER");
   await expect(user).toContainText("Updated title");
   for (const [label, count] of [
-    ["Pending Users", 0],
-    ["Rejected/Deactivated Users", 1],
-    ["Active Users", 3],
-    ["All Users", 4],
+    ["Deactivated", 1],
+    ["Active", 3],
+    ["All", 4],
   ]) {
-    await page.locator("[data-cy=user-filter] .dropdown-toggle").click();
-    await page.getByRole("menuitem", { name: label, exact: true }).click();
+    await page.getByRole("button", { name: label, exact: true }).click();
     await expect(page.locator(".card-wrapper")).toHaveCount(count);
   }
+});
+test("people search and decline persist", async ({ page, request }) => {
+  await login(page, request, "ADMIN", "/users");
+  await page.getByRole("button", { name: "Decline", exact: true }).click();
+  await expect(page.locator(".review-queue")).toHaveCount(0);
+  await page.reload();
+  await page.getByRole("button", { name: "Deactivated", exact: true }).click();
+  await expect(page.locator(".card-wrapper")).toHaveCount(2);
+  await page.getByRole("searchbox", { name: "Find a teammate" }).fill("casey");
+  await expect(page.locator(".card-wrapper")).toHaveCount(1);
+  await expect(page.locator(".card-wrapper")).toContainText("Casey Example");
+  await page.getByRole("searchbox").fill("no such teammate");
+  await expect(page.getByText("No teammates match your search.")).toBeVisible();
 });
 test("expired server session on resource request signs the browser out", async ({
   page,

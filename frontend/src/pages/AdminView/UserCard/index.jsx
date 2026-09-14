@@ -23,7 +23,7 @@ const UserCard = ({ user, openUserModalWithPayload }) => {
 
   return (
     <div
-      className="card-click row card-wrapper"
+      className="card-click card-wrapper"
       role="button"
       tabIndex="0"
       onClick={toggleViewOnlyModal}
@@ -38,16 +38,26 @@ const UserCard = ({ user, openUserModalWithPayload }) => {
       }}
     >
       <div className="col user-name">
+        <span className="person-avatar">
+          {(user.firstName || user.email || "?")[0].toUpperCase()}
+        </span>
         <p>{`${user.firstName} ${user.lastName}`}</p>
       </div>
       <div className="col user-email">
         <p className="text-truncate">{user.email}</p>
       </div>
       <div className="col user-role">
-        <p>{user.role}</p>
+        <span className={`role-badge role-${user.role.toLowerCase()}`}>
+          {user.role === roleEnum.REJECTED ? "DEACTIVATED" : user.role}
+        </span>
       </div>
       <div className="col user-title">
-        <p>{user.title}</p>
+        <p>{user.title || "—"}</p>
+      </div>
+      <div className="col user-last-active">
+        {user.lastActive && !Number.isNaN(new Date(user.lastActive).getTime())
+          ? new Date(user.lastActive).toLocaleDateString()
+          : "—"}
       </div>
       <AdminView>
         <div className="col col-edit">
