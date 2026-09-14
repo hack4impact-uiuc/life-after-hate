@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Button } from "reactstrap";
 import SearchIcon from "../../../assets/images/search.svg";
 import LocationIcon from "../../../assets/images/location-icon.svg";
-import { filterAndRefreshResource, removeFilterTag } from "../../../utils/api";
+import { filterAndRefreshResource } from "../../../utils/api";
 import {
   updateSearchLocation,
   updateSearchQuery,
 } from "../../../redux/actions/map";
-import { tagSelector } from "../../../redux/selectors/tags";
 import {
   searchLocationSelector,
   searchQuerySelector,
@@ -17,13 +15,37 @@ import {
 import "./styles.scss";
 import MapSearchAutocomplete from "./MapSearchAutocomplete";
 
-const SearchBar = ({ query, location, updateSearchLocation, tags }) => {
+const ClearIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+    <path
+      d="m3 3 8 8M11 3l-8 8"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+const SearchBar = ({
+  query,
+  location,
+  updateSearchLocation,
+  updateSearchQuery,
+}) => {
+  const [radius, setRadius] = useState(500);
   const onSubmit = (e) => {
     e.preventDefault();
-    filterAndRefreshResource(query, location);
+    filterAndRefreshResource(query, location, undefined, radius);
   };
 
-  const clearLocation = () => updateSearchLocation("");
+  const clearLocation = () => {
+    updateSearchLocation("");
+    document.getElementById("locationInput")?.focus();
+  };
+  const clearQuery = () => {
+    updateSearchQuery("");
+    document.getElementById("map-keyword-input")?.focus();
+  };
 
   return (
     <div className="map-search">
@@ -41,45 +63,61 @@ const SearchBar = ({ query, location, updateSearchLocation, tags }) => {
               value={location}
               onChange={(e) => updateSearchLocation(e.target.value)}
             />
-            <Button
-              className="closeButtons"
-              type="button"
-              aria-label="Clear location"
-              close
-              onClick={clearLocation}
-              tabIndex="-1"
-              data-cy="clear-location"
-            />
+            {Boolean(location) && (
+              <button
+                className="workspace-clear-button"
+                type="button"
+                aria-label="Clear location"
+                onClick={clearLocation}
+                data-cy="clear-location"
+              >
+                <ClearIcon />
+              </button>
+            )}
           </div>
         </div>
         <div className="searchKeyword">
           <img className="searchIcon" src={SearchIcon} alt="Search" />
-          <MapSearchAutocomplete></MapSearchAutocomplete>
-          <button className="submitSearch" type="submit">
-            Go
-          </button>
+          <MapSearchAutocomplete />
+          {Boolean(query) && (
+            <button
+              className="workspace-clear-button"
+              type="button"
+              aria-label="Clear search"
+              onClick={clearQuery}
+            >
+              <ClearIcon />
+            </button>
+          )}
         </div>
-        {tags.length > 0 && (
-          <div className="card-tags-search">
-            {tags.map((tag) => (
-              <div className="card-tag-search" key={tag}>
-                <span className="search-tag">{tag}</span>
-                <Button
-                  className="close-tag closeButtons"
-                  close
-                  onClick={() => removeFilterTag(tag)}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <label className="workspace-radius">
+          <span>Within</span>
+          <span className="radius-value">
+            <input
+              style={{ width: `${Math.max(2, String(radius).length) + 0.5}ch` }}
+              type="number"
+              min="10"
+              max="1000"
+              step="10"
+              aria-label="Search radius in miles"
+              value={radius}
+              onChange={(e) =>
+                setRadius(e.target.value === "" ? "" : Number(e.target.value))
+              }
+              required
+            />
+            <span>mi</span>
+          </span>
+        </label>
+        <button className="submitSearch" type="submit">
+          Search
+        </button>
       </form>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  tags: tagSelector(state),
   query: searchQuerySelector(state),
   location: searchLocationSelector(state),
 });
@@ -90,7 +128,7 @@ SearchBar.propTypes = {
   query: PropTypes.string,
   location: PropTypes.string,
   updateSearchLocation: PropTypes.func.isRequired,
-  tags: PropTypes.arrayOf(PropTypes.string),
+  updateSearchQuery: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

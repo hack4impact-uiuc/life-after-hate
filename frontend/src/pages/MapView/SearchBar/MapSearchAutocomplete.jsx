@@ -59,7 +59,6 @@ const overrides = {
         display: "none",
       },
     },
-
   },
 };
 const theme = createTheme({
@@ -98,7 +97,8 @@ const MapSearchAutocomplete = ({
         isOptionEqualToValue={() => false}
         freeSolo
         onInputChange={onInputChange}
-        forcePopupIcon={query !== ""}
+        forcePopupIcon={false}
+        disableClearable
         // Only present suggestions when there are resources!
         options={resources.length > 0 ? (globalTagList ?? []) : []}
         renderInput={(params) => (
@@ -107,7 +107,7 @@ const MapSearchAutocomplete = ({
             data-cy="searchInput"
             margin="normal"
             variant="standard"
-            placeholder="Search"
+            placeholder="Search names, skills, notes…"
           />
         )}
         inputValue={query}

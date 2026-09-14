@@ -166,7 +166,9 @@ test("locks the screen after inactivity even if the backend is unreachable", asy
   await expect(page.locator("#page-title")).toHaveCount(0);
 });
 
-test("map search displays a resource and opens its popup", async ({ page }) => {
+test("map search displays a resource and opens its detail drawer", async ({
+  page,
+}) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await mockApi(page, "VOLUNTEER");
@@ -188,12 +190,10 @@ test("map search displays a resource and opens its popup", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".mapboxgl-canvas")).toBeVisible();
   await page.locator('[data-cy="searchInput"] input').fill("Test");
-  await page.getByRole("button", { name: "Go", exact: true }).click();
+  await page.getByRole("button", { name: "Search", exact: true }).click();
   await expect(page.locator(".card-title")).toHaveText("Test Resource");
   await page.locator(".card-top").click();
-  await expect(page.locator('[data-cy="popup-title"]')).toHaveText(
-    "Test Resource",
-  );
+  await expect(page.locator(".resource-drawer h2")).toHaveText("Test Resource");
   expect(errors).toEqual([]);
 });
 

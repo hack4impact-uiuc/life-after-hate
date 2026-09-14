@@ -15,13 +15,21 @@ import {
   Button,
 } from "reactstrap";
 import { connect } from "react-redux";
+import { openResourceModal } from "../../redux/actions/modal";
 import AdminView from "../Auth/AdminView";
 import Logo from "../../assets/images/lah-logo-2.png";
 import { logout } from "../../utils/api";
 import "./styles.scss";
 import { changePage } from "../../redux/actions/nav";
 
-const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
+const LAHNavbar = ({
+  profilePic,
+  firstName,
+  lastName,
+  changePage,
+  location,
+  openResourceModal,
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const [pictureFailed, setPictureFailed] = useState(false);
@@ -99,6 +107,13 @@ const LAHNavbar = ({ profilePic, firstName, lastName, changePage }) => {
                 </NavLink>
               </NavItem>
             </AdminView>
+            {location.pathname === "/" && (
+              <AdminView>
+                <NavItem className="map-create-resource">
+                  <Button onClick={openResourceModal}>New resource</Button>
+                </NavItem>
+              </AdminView>
+            )}
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 {profilePic && !pictureFailed ? (
@@ -142,10 +157,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
+  openResourceModal,
   changePage,
 };
 
 LAHNavbar.propTypes = {
+  location: PropTypes.object,
+  openResourceModal: PropTypes.func,
   profilePic: PropTypes.string.isRequired,
   firstName: PropTypes.string,
   lastName: PropTypes.string,

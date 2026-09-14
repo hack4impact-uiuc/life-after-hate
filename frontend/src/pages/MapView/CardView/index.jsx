@@ -140,8 +140,8 @@ class CardView extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  resources: mappableResourceSelector(state),
+const mapStateToProps = (state, ownProps) => ({
+  resources: ownProps.resources ?? mappableResourceSelector(state),
   selectedResource: mapResourceIdSelector(state),
 });
 

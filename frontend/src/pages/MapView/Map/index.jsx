@@ -15,38 +15,9 @@ import {
   updateSearchQuery,
 } from "../../../redux/actions/map";
 import { clearResources } from "../../../redux/actions/resources";
-import { IconLayer } from "@deck.gl/layers";
-import MarkerImg from "../../../assets/images/marker-atlas.png";
-import Popup from "../Popup";
+import { ScatterplotLayer } from "@deck.gl/layers";
+
 import "mapbox-gl/dist/mapbox-gl.css";
-
-const PIN_SIZE = 45;
-
-// Mapping used for IconAtlas, which is not really being used fully currently,
-// As we're only rendering two types of icons: searched location and regular marker
-const mapping = {
-  marker: {
-    x: 0,
-    y: 0,
-    width: 360,
-    height: 512,
-    anchorY: 512,
-  },
-  markerSelect: {
-    x: 360,
-    y: 0,
-    width: 360,
-    height: 512,
-    anchorY: 512,
-  },
-  currentLocation: {
-    x: 720,
-    y: 0,
-    width: 360,
-    height: 512,
-    anchorY: 512,
-  },
-};
 
 const INITIAL_VIEW_STATE = {
   longitude: -98,
@@ -63,6 +34,7 @@ const TRANSITION_LENGTH = 1500;
 
 const Map = ({
   center,
+  selectedId,
   resources,
   selectMapResource,
   clearMapResource,
@@ -111,22 +83,27 @@ const Map = ({
 
   const getLayers = () => {
     const data = getMarkerPoints();
-    const layerProps = {
+    const layer = new ScatterplotLayer({
+      id: "resources",
       data,
       pickable: true,
       wrapLongitude: true,
       getPosition: (d) => d.location.coordinates,
-      iconAtlas: MarkerImg,
-      iconMapping: mapping,
-    };
-
-    const layer = new IconLayer({
-      ...layerProps,
-      id: "icon",
-      getIcon: (d) =>
-        d.location.type === "Center" ? "currentLocation" : "marker",
-      sizeUnits: "meters",
-      sizeMinPixels: PIN_SIZE,
+      radiusUnits: "pixels",
+      getRadius: (d) => (d._id && d._id === selectedId ? 13 : 7),
+      stroked: true,
+      getLineColor: [255, 255, 255],
+      lineWidthUnits: "pixels",
+      getLineWidth: 2,
+      getFillColor: (d) =>
+        d.location.type === "Center" || d._id === selectedId
+          ? [247, 146, 48]
+          : {
+              GROUP: [86, 113, 170],
+              INDIVIDUAL: [17, 132, 135],
+              TANGIBLE: [73, 132, 87],
+            }[d.type] || [86, 113, 170],
+      updateTriggers: { getRadius: [selectedId], getFillColor: [selectedId] },
     });
 
     return [layer];
@@ -172,13 +149,13 @@ const Map = ({
         reuseMap
         preventStyleDiffing
       ></StaticMap>
-      <Popup></Popup>
     </DeckGL>
   );
 };
 
-const mapStateToProps = (state) => ({
-  resources: mappableResourceSelector(state),
+const mapStateToProps = (state, ownProps) => ({
+  resources: ownProps.resources ?? mappableResourceSelector(state),
+  selectedId: state.map.selectedId,
   center: state.map.center,
 });
 
@@ -190,6 +167,7 @@ const mapDispatchToProps = {
 };
 
 Map.propTypes = {
+  selectedId: PropTypes.string,
   center: PropTypes.arrayOf(PropTypes.number),
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectMapResource: PropTypes.func.isRequired,

@@ -6,17 +6,15 @@ async function login(page, request, role = "ADMIN", path = "/directory") {
   expect(r.ok()).toBeTruthy();
   const { token } = await r.json();
   if (role)
-    await page
-      .context()
-      .addCookies([
-        {
-          name: "lah.sid",
-          value: token,
-          url: "http://127.0.0.1:4174",
-          httpOnly: true,
-          sameSite: "Lax",
-        },
-      ]);
+    await page.context().addCookies([
+      {
+        name: "lah.sid",
+        value: token,
+        url: "http://127.0.0.1:4174",
+        httpOnly: true,
+        sameSite: "Lax",
+      },
+    ]);
   // No external tile network dependency; the real map canvas and markers still render.
   await page.route("https://api.mapbox.com/**", (route) =>
     route.fulfill({ json: { version: 8, sources: {}, layers: [] } }),
@@ -74,7 +72,9 @@ test("volunteer navigation and read-only directory/map modals", async ({
   await mapSearch(page, "Alpha");
   await page.locator(".card-title").first().click();
   await expect(page.locator("[data-cy=card-resource-edit-btn]")).toHaveCount(0);
-  await page.locator(".expanded [data-cy=card-resource-view-btn]").click();
+  await page
+    .locator(".resource-drawer [data-cy=card-resource-view-btn]")
+    .click();
   await expect(field(page, "companyName")).toBeDisabled();
 });
 test("navbar titles, navigation, logo, authenticated login redirect and logout", async ({
@@ -258,11 +258,11 @@ test("map name/location searches, distances and independent location clearing", 
   await expect(page.locator(".card-title")).toHaveCount(2);
   await expect(page.locator(".card-title").first()).toHaveText("Bravo Shelter");
   await page.locator(".card-title").first().click();
-  await expect(page.locator(".popup-distance")).toBeVisible();
+  await expect(page.locator(".resource-drawer header p")).toBeVisible();
   await mapSearch(page);
   await expect(page.locator(".card-title")).toHaveCount(3);
 });
-for (const surface of [".expanded", ".popup"])
+for (const surface of [".resource-drawer"])
   test(`map ${surface} view/edit modal and close synchronization`, async ({
     page,
     request,
@@ -270,7 +270,7 @@ for (const surface of [".expanded", ".popup"])
     await login(page, request, "ADMIN", "/");
     await mapSearch(page, "Alpha");
     await page.locator(".card-title").click();
-    await expect(page.locator("[data-cy=popup-title]")).toHaveText(
+    await expect(page.locator(".resource-drawer h2")).toHaveText(
       "Alpha Support",
     );
     await page.locator(`${surface} [data-cy=card-resource-edit-btn]`).click();
@@ -284,41 +284,42 @@ for (const surface of [".expanded", ".popup"])
     await field(page, "companyName").click();
     await expect(page.locator("#delete-form-button")).toHaveText("Delete");
     await page.locator(".close-button").click();
-    await expect(page.locator("[data-cy=popup-title]")).toBeVisible();
+    await expect(page.locator(".resource-drawer h2")).toBeVisible();
     await page.locator(`${surface} [data-cy=card-resource-view-btn]`).click();
     await expect(field(page, "companyName")).toBeDisabled();
     await expect(page.locator("#submit-form-button")).toHaveCount(0);
     await page.locator(".close-button").click();
-    await page
-      .locator(
-        surface === ".popup"
-          ? ".mapboxgl-popup-close-button"
-          : ".expanded .top-close-icon",
-      )
-      .click();
-    await expect(page.locator("[data-cy=popup-title]")).toHaveCount(0);
+    await page.locator("button[aria-label='Close resource details']").click();
+    await expect(page.locator(".resource-drawer h2")).toHaveCount(0);
     await expect(page.locator(".expanded")).toHaveCount(0);
   });
-test("map maximize opens read-only details and tag selection deduplicates/persists", async ({
+test("map drawer opens read-only details and tag selection deduplicates/persists", async ({
   page,
   request,
 }) => {
   await login(page, request, "ADMIN", "/");
   await mapSearch(page, "Alpha");
-  await page.locator(".maximize-icon").first().click();
+  await page.locator(".card-title").first().click();
+  await page
+    .locator(".resource-drawer [data-cy=card-resource-view-btn]")
+    .click();
   await expect(field(page, "companyName")).toBeDisabled();
   await page.locator(".close-button").click();
   for (let i = 0; i < 2; i++)
     for (const tag of ["Housing", "Meals"])
-      await page.locator(".card-tag").filter({ hasText: tag }).first().click();
-  await expect(page.locator(".card-tag-search")).toHaveCount(2);
+      await page
+        .locator(".card-tags .filter-tag")
+        .filter({ hasText: tag })
+        .first()
+        .click();
+  await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(2);
   await mapSearch(page);
-  await expect(page.locator(".card-tag-search")).toHaveCount(2);
+  await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(2);
   await expect(page.locator(".card-title")).toHaveText("Alpha Support");
-  await page.locator(".card-tag-search button").first().click();
-  await expect(page.locator(".card-tag-search")).toHaveCount(1);
-  await page.locator(".card-tag-search button").first().click();
-  await expect(page.locator(".card-tag-search")).toHaveCount(0);
+  await page.locator(".workspace-filters .filter-tag").first().click();
+  await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(1);
+  await page.locator(".workspace-filters .filter-tag").first().click();
+  await expect(page.locator(".workspace-filters .filter-tag")).toHaveCount(0);
   await expect(page.locator(".card-title")).toHaveCount(3);
 });
 test("user panel labels, read-only identity, persistent role edit and filters", async ({
