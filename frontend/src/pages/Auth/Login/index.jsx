@@ -7,10 +7,7 @@ import { getURLForEndpoint } from "../../../utils/apiHelpers.js";
 import "./styles.scss";
 
 export const SignInScreen = ({ signInUrl, onSignIn }) => (
-  <AuthFrame
-    label="SIGN IN"
-    titleId="sign-in-title"
-  >
+  <AuthFrame titleId="sign-in-title">
     <h1 id="sign-in-title">Sign in</h1>
     <p className="sign-in-instructions">
       Use the Google account tied to your LAH access.

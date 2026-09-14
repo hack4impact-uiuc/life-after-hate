@@ -5,29 +5,13 @@
 .sign-in-page {
   --sign-in-accent-color: #f79331;
   min-height: 100svh;
-  padding: 22px clamp(20px, 5.25vw, 84px) 24px;
-  background: #f0f0f1;
+  background: #fff;
   color: #24211c;
   font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
-  .sign-in-frame {
-    max-width: 1440px;
-    margin: 0 auto;
-  }
-  .sign-in-label {
-    margin: 0 0 18px;
-    color: #776f64;
-    font:
-      12px/1.2 ui-monospace,
-      monospace;
-    letter-spacing: 3px;
-  }
   .sign-in-panels {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: calc(100svh - 80px);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 20px 65px #29201416;
+    min-height: 100svh;
   }
   .sign-in-brand {
     display: flex;
@@ -125,8 +109,6 @@
     flex-shrink: 0;
   }
   @media (max-width: 900px) {
-    padding-left: 28px;
-    padding-right: 28px;
     .sign-in-brand {
       padding: 32px 30px 40px;
     }
@@ -145,15 +127,9 @@
     }
   }
   @media (max-width: 640px) {
-    padding: 18px 16px;
-    .sign-in-label {
-      font-size: 10px;
-      margin-bottom: 12px;
-    }
     .sign-in-panels {
       grid-template-columns: 1fr;
-      min-height: 0;
-      border-radius: 12px;
+      grid-template-rows: auto 1fr;
     }
     .sign-in-brand {
       padding: 20px 26px 28px;

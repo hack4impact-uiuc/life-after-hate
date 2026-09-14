@@ -7,7 +7,7 @@ export function PendingScreen({ email, onSignOut, requestedAt }) {
   const date = requestedAt ? new Date(requestedAt) : null;
   const validDate = date && Number.isFinite(date.getTime());
   return (
-    <AuthFrame label="PENDING APPROVAL" titleId="pending-title">
+    <AuthFrame titleId="pending-title">
       <div data-cy="pending" className="pending-content">
         <div className="pending-check" aria-hidden="true">
           <svg width="28" height="28" viewBox="0 0 28 28">
