@@ -914,3 +914,13 @@
     box-shadow: 0 0 0 3px #8c857a2e;
   }
 }
+
+.map-view .map-search-autocomplete #map-keyword-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  outline: none;
+}

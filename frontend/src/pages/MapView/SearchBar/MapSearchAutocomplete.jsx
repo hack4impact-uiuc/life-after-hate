@@ -1,141 +1,28 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import { globalTagListSelector } from "../../../redux/selectors/tags";
 import { updateSearchQuery } from "../../../redux/actions/map";
-import { addTag } from "../../../redux/actions/tags";
 import { searchQuerySelector } from "../../../redux/selectors/map";
-import { resourceSelector } from "../../../redux/selectors/resource";
 
-import {
-  createTheme,
-  ThemeProvider as MuiThemeProvider,
-} from "@mui/material/styles";
+const MapSearchInput = ({ query, updateSearchQuery }) => (
+  <div className="map-search-autocomplete" data-cy="searchInput">
+    <input
+      id="map-keyword-input"
+      type="text"
+      aria-label="Search resources"
+      placeholder="Search names, skills, notes…"
+      autoComplete="off"
+      value={query}
+      onChange={(event) => updateSearchQuery(event.target.value)}
+    />
+  </div>
+);
 
-const overrides = {
-  MuiInputBase: {
-    root: {
-      "&&&": {
-        paddingTop: 0,
-        paddingBottom: 0,
-        paddingRight: 0,
-        borderRadius: "4px",
-        backgroundColor: "#fff",
-      },
-    },
-  },
-  MuiFormControl: {
-    root: {
-      "&&&": {
-        marginTop: 0,
-        marginBottom: 0,
-        borderRadius: "4px",
-        backgroundColor: "#fff",
-      },
-    },
-  },
-  MuiInput: {
-    underline: {
-      "&&&:before": {
-        borderBottom: "1px solid rgba(0,0,0,0.2)",
-      },
-
-      "&&&:after": {
-        borderBottom: "1px solid #f79230",
-      },
-    },
-  },
-  MuiAutocomplete: {
-    root: {
-      "&&&": {
-        marginRight: "5px",
-        marginLeft: "4px",
-      },
-    },
-    noOptions: {
-      "&&&": {
-        display: "none",
-      },
-    },
-  },
-};
-const theme = createTheme({
-  components: Object.fromEntries(
-    Object.entries(overrides).map(([key, styles]) => [
-      key,
-      { styleOverrides: styles },
-    ]),
-  ),
-});
-
-const MapSearchAutocomplete = ({
-  globalTagList,
-  query,
-  updateSearchQuery,
-  addTag,
-  resources,
-}) => {
-  const onInputChange = (_, value, reason) => {
-    if (reason === "reset") {
-      // Guard against adding the empty string, since that sends a reset event
-      if (value) {
-        addTag(value);
-        updateSearchQuery("");
-      }
-    } else {
-      updateSearchQuery(value);
-    }
-  };
-
-  return (
-    <MuiThemeProvider theme={theme}>
-      <Autocomplete
-        id="map-keyword-input"
-        className="map-search-autocomplete"
-        isOptionEqualToValue={() => false}
-        freeSolo
-        onInputChange={onInputChange}
-        forcePopupIcon={false}
-        disableClearable
-        // Only present suggestions when there are resources!
-        options={resources.length > 0 ? (globalTagList ?? []) : []}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            data-cy="searchInput"
-            margin="normal"
-            variant="standard"
-            placeholder="Search names, skills, notes…"
-          />
-        )}
-        inputValue={query}
-      />
-    </MuiThemeProvider>
-  );
-};
-
-const mapStateToProps = (state) => ({
-  globalTagList: globalTagListSelector(state),
-  resources: resourceSelector(state),
-  query: searchQuerySelector(state),
-});
-
-const mapDispatchToProps = {
-  updateSearchQuery,
-  addTag,
-};
-
-MapSearchAutocomplete.propTypes = {
-  globalTagList: PropTypes.arrayOf(PropTypes.string),
+MapSearchInput.propTypes = {
   query: PropTypes.string,
-  updateSearchQuery: PropTypes.func,
-  addTag: PropTypes.func,
-  resources: PropTypes.arrayOf(PropTypes.object),
+  updateSearchQuery: PropTypes.func.isRequired,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(MapSearchAutocomplete);
+export default connect((state) => ({ query: searchQuerySelector(state) }), {
+  updateSearchQuery,
+})(MapSearchInput);
