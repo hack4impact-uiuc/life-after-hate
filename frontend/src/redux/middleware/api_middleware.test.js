@@ -90,3 +90,85 @@ it.each(["csrf", "mutation"])(
     if (stage === "csrf") expect(axios.get).toHaveBeenCalledTimes(2);
   },
 );
+
+import { toast } from "react-toastify";
+it("forwards non-API actions without requesting data", () => {
+  const next = vi.fn();
+  const action = { type: "OTHER" };
+  middleware({ dispatch: vi.fn() })(next)(action);
+  expect(next).toHaveBeenCalledWith(action);
+  expect(axios.request).not.toHaveBeenCalled();
+});
+it("emits configured success messages and forwards custom headers", async () => {
+  axios.request.mockResolvedValueOnce({ data: { ok: true } });
+  const success = vi.fn();
+  const dispatch = vi.fn();
+  middleware({ dispatch })(() => {})({
+    type: "API_REQUEST",
+    payload: {
+      url: "/api/resources",
+      method: "GET",
+      data: { keyword: "Food" },
+      headers: { "X-Test": "test" },
+      onSuccess: success,
+      onFailure: vi.fn(),
+      notification: { successMessage: "Saved" },
+    },
+  });
+  await flush();
+  expect(toast.success).toHaveBeenCalledWith("Saved");
+  expect(success).toHaveBeenCalledWith({ ok: true });
+  expect(axios.request).toHaveBeenCalledWith(
+    expect.objectContaining({
+      params: { keyword: "Food" },
+      headers: expect.objectContaining({ "X-Test": "test" }),
+    }),
+  );
+});
+it.each([true, false])(
+  "handles unauthorized responses with expected=%s",
+  async (expectUnauthorizedResponse) => {
+    axios.request.mockRejectedValueOnce({ response: { status: 401 } });
+    const dispatch = vi.fn();
+    middleware({ dispatch })(() => {})({
+      type: "API_REQUEST",
+      payload: {
+        url: "/api/users/current",
+        method: "GET",
+        onSuccess: vi.fn(),
+        onFailure: vi.fn(),
+        expectUnauthorizedResponse,
+      },
+    });
+    await flush();
+    expect(
+      dispatch.mock.calls.some(([a]) => a.type === "API_ACCESS_DENIED"),
+    ).toBe(!expectUnauthorizedResponse);
+    expect(toast.info).toHaveBeenCalledTimes(
+      expectUnauthorizedResponse ? 0 : 1,
+    );
+  },
+);
+it("invalidates cached CSRF after forbidden responses and reports failures", async () => {
+  axios.get.mockResolvedValue({ data: { token: "csrf" } });
+  axios.request
+    .mockRejectedValueOnce({ response: { status: 403 } })
+    .mockResolvedValueOnce({ data: {} });
+  const run = middleware({ dispatch: vi.fn() })(() => {});
+  const action = {
+    type: "API_REQUEST",
+    payload: {
+      url: "/api/resources",
+      method: "POST",
+      onSuccess: vi.fn(),
+      onFailure: vi.fn(),
+      notification: { failureMessage: "Denied" },
+    },
+  };
+  run(action);
+  await flush();
+  expect(toast.error).toHaveBeenCalledWith("Denied");
+  run(action);
+  await flush();
+  expect(axios.get).toHaveBeenCalledTimes(2);
+});

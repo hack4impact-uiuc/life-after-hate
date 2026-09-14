@@ -114,3 +114,63 @@ test("shows an error and permits retry", async () => {
   await tick(0);
   expect(status).toHaveBeenLastCalledWith("idle");
 });
+
+import { change, click } from "../../../../test/render";
+test("clears search text and restores input focus", async () => {
+  change(container.querySelector("#map-keyword-input"), "Food");
+  click(container.querySelector('[aria-label="Clear search"]'));
+  expect(store.getState().map.search.query).toBe("");
+  expect(document.activeElement.id).toBe("map-keyword-input");
+  await tick(300);
+  expect(filterAndRefreshResource.mock.calls.at(-1)[0]).toBe("");
+});
+test("clears an applied location immediately and restores focus", async () => {
+  change(container.querySelector("#locationInput"), " Chicago ");
+  submit();
+  await tick(1);
+  expect(filterAndRefreshResource.mock.calls.at(-1)[1]).toBe("Chicago");
+  click(container.querySelector('[aria-label="Clear location"]'));
+  await tick(1);
+  expect(filterAndRefreshResource.mock.calls.at(-1)[1]).toBe("");
+  expect(document.activeElement.id).toBe("locationInput");
+});
+test.each(["", "0", "15", "1010"])(
+  "does not search while radius is invalid: %s",
+  async (value) => {
+    change(
+      container.querySelector('[aria-label="Search radius in miles"]'),
+      value,
+    );
+    await tick(350);
+    expect(filterAndRefreshResource).not.toHaveBeenCalled();
+    expect(status).toHaveBeenLastCalledWith("idle");
+  },
+);
+test("debounces a valid radius change and preserves the applied location", async () => {
+  change(
+    container.querySelector('[aria-label="Search radius in miles"]'),
+    "100",
+  );
+  await tick(300);
+  expect(filterAndRefreshResource.mock.calls.at(-1)[3]).toBe(100);
+});
+test("does not submit or debounce during IME composition", async () => {
+  act(() =>
+    container
+      .querySelector("form")
+      .dispatchEvent(
+        new CompositionEvent("compositionstart", { bubbles: true }),
+      ),
+  );
+  type("検索");
+  submit();
+  await tick(400);
+  expect(filterAndRefreshResource).not.toHaveBeenCalled();
+  act(() =>
+    container
+      .querySelector("form")
+      .dispatchEvent(new CompositionEvent("compositionend", { bubbles: true })),
+  );
+  await tick(300);
+  expect(filterAndRefreshResource.mock.calls.at(-1)[0]).toBe("検索");
+});

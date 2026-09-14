@@ -74,15 +74,18 @@ const TagAutocomplete = ({ onChange, tags, tagOptions, ...props }) => (
       onChange={onChange}
       options={tagOptions}
       renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
-          <Chip
-            data-cy="tag-chip"
-            key={option}
-            variant="outlined"
-            label={option}
-            {...getTagProps({ index })}
-          />
-        ))
+        value.map((option, index) => {
+          const { key, ...tagProps } = getTagProps({ index });
+          return (
+            <Chip
+              data-cy="tag-chip"
+              key={key ?? option}
+              variant="outlined"
+              label={option}
+              {...tagProps}
+            />
+          );
+        })
       }
       {...props}
       value={tags}

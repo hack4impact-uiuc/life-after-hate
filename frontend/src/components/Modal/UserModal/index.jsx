@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -14,13 +14,27 @@ import "./styles.scss";
 const UserModal = ({ closeModal, user, editable }) => {
   const { register, handleSubmit } = useForm();
 
+  const pending = useRef(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const handleEditUser = async (data) => {
+    if (!editable || pending.current) return;
+    pending.current = true;
+    setIsSaving(true);
+    setSaveError("");
     const reqBody = {
       role: data.role,
       title: data.title,
     };
-    await editAndRefreshUser(reqBody, user.id);
-    closeModal();
+    try {
+      await editAndRefreshUser(reqBody, user.id);
+      closeModal();
+    } catch {
+      setSaveError("Could not save changes. Please try again.");
+    } finally {
+      pending.current = false;
+      setIsSaving(false);
+    }
   };
 
   // eslint-disable-next-line react/prop-types
@@ -64,9 +78,7 @@ const UserModal = ({ closeModal, user, editable }) => {
             </div>
           </section>
           <div className="user-editor-section-title">Profile</div>
-          <p className="user-editor-help">
-            Name and email are read-only.
-          </p>
+          <p className="user-editor-help">Name and email are read-only.</p>
           <div className="user-editor-fields">
             {createInput({
               labelText: "Full name",
@@ -100,6 +112,7 @@ const UserModal = ({ closeModal, user, editable }) => {
             shortName: "title",
           })}
         </div>
+        {saveError && <p role="alert">{saveError}</p>}
         {editable && (
           <div className="user-editor-footer">
             <Button
@@ -111,6 +124,7 @@ const UserModal = ({ closeModal, user, editable }) => {
             </Button>
             <Button
               id="submit-form-button"
+              disabled={isSaving}
               type="submit"
               data-cy="modal-submit"
             >

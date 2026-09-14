@@ -41,7 +41,7 @@ ModalInput.propTypes = {
   errors: PropTypes.object,
   required: PropTypes.bool,
   disabled: PropTypes.bool,
-  labelText: PropTypes.string,
+  labelText: PropTypes.node,
   tag: PropTypes.string,
 };
 

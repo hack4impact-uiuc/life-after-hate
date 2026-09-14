@@ -30,6 +30,22 @@ export default defineConfig(({ mode }) => ({
       exclude: ["src/**/*.test.{js,jsx}"],
       reporter: ["text", "html", "json-summary"],
       thresholds: {
+        lines: 88,
+        statements: 88,
+        branches: 82,
+        functions: 80,
+        "src/pages/{AdminView,DirectoryView,MapView}/index.jsx": {
+          lines: 100,
+          statements: 100,
+          functions: 100,
+          branches: 90,
+        },
+        "src/components/Modal/{ResourceModal,UserModal}/index.jsx": {
+          lines: 95,
+          statements: 95,
+          functions: 90,
+          branches: 90,
+        },
         "src/redux/{reducers,selectors}/**/*.js": {
           lines: 100,
           statements: 100,

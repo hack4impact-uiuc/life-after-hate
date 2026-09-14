@@ -40,6 +40,8 @@ const Map = ({
   clearMapResource,
   clearResources,
   clearMapCenter,
+  updateSearchLocation,
+  updateSearchQuery,
 }) => {
   const [viewport, setViewport] = useState(INITIAL_VIEW_STATE);
   const [hovered, setHovered] = useState(false);
@@ -64,7 +66,7 @@ const Map = ({
     updateSearchLocation("");
     updateSearchQuery("");
     setViewport(INITIAL_VIEW_STATE);
-  }, [clearResources, clearMapCenter]);
+  }, [clearResources, clearMapCenter, updateSearchLocation, updateSearchQuery]);
 
   const _onViewportChange = ({ viewState }) => {
     setViewport(viewState);
@@ -164,6 +166,8 @@ const mapDispatchToProps = {
   clearMapResource,
   clearResources,
   clearMapCenter,
+  updateSearchLocation,
+  updateSearchQuery,
 };
 
 Map.propTypes = {
