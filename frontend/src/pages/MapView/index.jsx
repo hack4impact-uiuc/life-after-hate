@@ -18,7 +18,7 @@ import {
   resourceDescription,
 } from "../../redux/selectors/resource";
 import { clearMapResource } from "../../redux/actions/map";
-import { distanceToString } from "../../utils/formatters";
+import { distanceToString, websiteHref } from "../../utils/formatters";
 import "./styles.scss";
 
 export const typeLabels = {
@@ -52,6 +52,7 @@ const MapView = () => {
       : null;
   const [closingResource, setClosingResource] = useState(null);
   const drawerResource = resource || closingResource;
+  const websiteURL = websiteHref(drawerResource?.websiteURL);
   useEffect(() => {
     if (resource) {
       setClosingResource(resource);
@@ -200,6 +201,14 @@ const MapView = () => {
                             <a href={`mailto:${value}`}>{value}</a>
                           ) : label === "Phone" ? (
                             <a href={`tel:${value}`}>{value}</a>
+                          ) : label === "Website" && websiteURL ? (
+                            <a
+                              href={websiteURL}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {value}
+                            </a>
                           ) : (
                             value
                           )}
