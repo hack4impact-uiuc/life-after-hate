@@ -165,7 +165,7 @@ To learn more details about the project, please view the official [case study](h
 
 # Development and verification
 
-The app now uses Node 24 LTS, Express 5, Mongoose 9, Passport 0.7, React 18, Vite, MUI 7, and React Hook Form 7. Read [SECURITY.md](SECURITY.md) before working with real records or deploying.
+The app now uses Node 24 LTS, Express 5, Mongoose 9, Passport 0.7, React 18, Vite, MUI 7, and React Hook Form 7. See the [Vercel + Turso setup](turso/README.md) for the current production configuration.
 
 ## Local setup
 
@@ -202,7 +202,7 @@ Backend tests create a disposable MongoDB instance; the first run downloads its 
 
 ## Deployment and migration
 
-See [SECURITY.md](SECURITY.md) for the production Compose setup, Google callback migration, HTTPS/proxy and database requirements, session changes, and external-provider limitations. Deployment requires explicit configuration; no production services are changed by installing dependencies or running tests.
+See the [deployment guide](turso/README.md) for Google OAuth, database configuration, and deployment requirements. Deployment requires explicit configuration; no production services are changed by installing dependencies or running tests.
 
 For native local development outside Docker, set `DB_URI` to an isolated local MongoDB, run the backend from `backend/` with its environment supplied, and start the frontend from `frontend/`. Vite proxies `/api` to `127.0.0.1:5000` by default. Use `API_PROXY_TARGET` to change that internal development target.
 
