@@ -62,12 +62,12 @@ const ResourceDetails = ({ resource, onClose }) => {
               </button>
             </header>
             <ResourceSharing
-              key={drawerResource._id}
+              key={`sharing-${drawerResource._id}`}
               resource={drawerResource}
               actions={<ActionButtons resource={drawerResource} />}
             />
             <div
-              key={drawerResource._id}
+              key={`body-${drawerResource._id}`}
               className="drawer-body drawer-detail-enter"
             >
               {resourceDescription(drawerResource) && (
