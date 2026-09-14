@@ -212,39 +212,43 @@ export const ResourceModal = ({
         aria-busy={!!pending}
         onSubmit={handleSubmit(onSubmit, () => setActiveTab("details"))}
       >
-        <div
-          className="resource-editor-tabs"
-          data-active={activeTab}
-          role="tablist"
-          aria-label="Resource sections"
-        >
-          <button
-            type="button"
-            role="tab"
-            id="resource-details-tab"
-            aria-controls="resource-details-panel"
-            aria-selected={activeTab === "details"}
-            onClick={() => setActiveTab("details")}
+        {isExistingResource && (
+          <div
+            className="resource-editor-tabs"
+            data-active={activeTab}
+            role="tablist"
+            aria-label="Resource sections"
           >
-            Details
-          </button>
-          <button
-            type="button"
-            role="tab"
-            id="resource-notes-tab"
-            aria-controls="resource-notes-panel"
-            aria-selected={activeTab === "notes"}
-            onClick={() => setActiveTab("notes")}
-          >
-            Notes & history
-          </button>
-        </div>
+            <button
+              type="button"
+              role="tab"
+              id="resource-details-tab"
+              aria-controls="resource-details-panel"
+              aria-selected={activeTab === "details"}
+              onClick={() => setActiveTab("details")}
+            >
+              Details
+            </button>
+            <button
+              type="button"
+              role="tab"
+              id="resource-notes-tab"
+              aria-controls="resource-notes-panel"
+              aria-selected={activeTab === "notes"}
+              onClick={() => setActiveTab("notes")}
+            >
+              Notes & history
+            </button>
+          </div>
+        )}
         <div className="resource-editor-scroll">
           <div
             id="resource-details-panel"
-            role="tabpanel"
-            aria-labelledby="resource-details-tab"
-            hidden={activeTab !== "details"}
+            role={isExistingResource ? "tabpanel" : undefined}
+            aria-labelledby={
+              isExistingResource ? "resource-details-tab" : undefined
+            }
+            hidden={isExistingResource && activeTab !== "details"}
           >
             <fieldset
               className="resource-editor-type"
@@ -302,29 +306,25 @@ export const ResourceModal = ({
               )}
             </div>
           </div>
-          <div
-            id="resource-notes-panel"
-            role="tabpanel"
-            aria-labelledby="resource-notes-tab"
-            hidden={activeTab !== "notes"}
-          >
-            <h3 className="resource-editor-section-heading">Notes & history</h3>
-            <p className="resource-editor-note-help">
-              Resource notes can be updated in Details.
-            </p>
-            <p className="resource-editor-note-preview">
-              {watch("notes") || "No notes yet."}
-            </p>
-            {isExistingResource &&
-              (resource.dateLastModified || resource.dateCreated) && (
+          {isExistingResource && (
+            <div
+              id="resource-notes-panel"
+              role="tabpanel"
+              aria-labelledby="resource-notes-tab"
+              hidden={activeTab !== "notes"}
+            >
+              <h3 className="resource-editor-section-heading">Notes & history</h3>
+              <p className="resource-editor-note-help">
+                Resource notes can be updated in Details.
+              </p>
+              <p className="resource-editor-note-preview">
+                {watch("notes") || "No notes yet."}
+              </p>
+              {(resource.dateLastModified || resource.dateCreated) && (
                 <LastModifiedInfo resource={resource} />
               )}
-            {isAddingResource && (
-              <p className="resource-editor-note-help">
-                History will be available after this resource is saved.
-              </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         {requestError && (
           <p className="modal-request-error" role="alert">
