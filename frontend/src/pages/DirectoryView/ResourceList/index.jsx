@@ -63,6 +63,7 @@ class ResourceList extends React.Component {
               key={resources[index]._id}
               resource={resources[index]}
               measure={measure}
+              onSelectResource={this.props.onSelectResource}
             />
           </div>
         )}
@@ -104,6 +105,7 @@ class ResourceList extends React.Component {
 ResourceList.propTypes = {
   resources: PropTypes.arrayOf(PropTypes.object).isRequired,
   density: PropTypes.string,
+  onSelectResource: PropTypes.func.isRequired,
 };
 
 export default ResourceList;

@@ -13,18 +13,20 @@ import {
 import "../styles.scss";
 import "./styles.scss";
 
-const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
+const ResourceCard = ({
+  resource,
+  openResourceModalWithPayload,
+  style,
+  onSelectResource,
+}) => {
   const toggleModal = (event) => {
     event.stopPropagation();
     openResourceModalWithPayload({ resourceId: resource._id });
   };
 
-  const toggleViewOnlyModal = (event) => {
+  const openDetails = (event) => {
     event.stopPropagation();
-    openResourceModalWithPayload({
-      resourceId: resource._id,
-      editable: false,
-    });
+    onSelectResource(resource._id);
   };
 
   return (
@@ -33,14 +35,14 @@ const ResourceCard = ({ resource, openResourceModalWithPayload, style }) => {
         className="card-click row card-wrapper"
         role="button"
         tabIndex="0"
-        onClick={toggleViewOnlyModal}
+        onClick={openDetails}
         onKeyDown={(event) => {
           if (
             event.target === event.currentTarget &&
             ["Enter", " "].includes(event.key)
           ) {
             event.preventDefault();
-            toggleViewOnlyModal(event);
+            openDetails(event);
           }
         }}
       >
@@ -107,6 +109,7 @@ ResourceCard.propTypes = {
   resource: PropTypes.object.isRequired,
   openResourceModalWithPayload: PropTypes.func.isRequired,
   style: PropTypes.object,
+  onSelectResource: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(ResourceCard);

@@ -10,17 +10,15 @@ for (const width of [390, 1440]) {
       data: { role: "ADMIN" },
     });
     const { token } = await response.json();
-    await page
-      .context()
-      .addCookies([
-        {
-          name: "lah.sid",
-          value: token,
-          url: "http://127.0.0.1:4174",
-          httpOnly: true,
-          sameSite: "Lax",
-        },
-      ]);
+    await page.context().addCookies([
+      {
+        name: "lah.sid",
+        value: token,
+        url: "http://127.0.0.1:4174",
+        httpOnly: true,
+        sameSite: "Lax",
+      },
+    ]);
     await page.goto("/directory");
     await page.locator("#search-button").click();
     await expect(page.locator('[data-cy="card-companyName"]')).toHaveCount(3);
@@ -57,6 +55,23 @@ for (const width of [390, 1440]) {
     const download = page.waitForEvent("download");
     await page.getByRole("button", { name: "Export CSV" }).click();
     expect((await download).suggestedFilename()).toBe("resources.csv");
+    const row = page.locator(".card-wrapper").first();
+    const details = page.getByRole("complementary", {
+      name: "Resource details",
+    });
+    await row.click();
+    await expect(details).toBeVisible();
+    await expect(
+      details.getByRole("heading", { name: "Alpha Support" }),
+    ).toBeVisible();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.getByRole("button", { name: "Close resource details" }).click();
+    await expect(details).toHaveCount(0);
+    await row.focus();
+    await row.press("Enter");
+    await expect(details).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(details).toHaveCount(0);
     await page.locator(".edit-button").first().click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("button", { name: "Close dialog" }).click();

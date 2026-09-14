@@ -416,3 +416,19 @@
     }
   }
 }
+
+.directory-details .resource-detail-view .drawer-shell {
+  position: fixed;
+  top: var(--nav-height, 76px);
+  bottom: 0;
+  right: 0;
+  z-index: 1001;
+  max-width: 100%;
+  animation: none;
+  .resource-drawer {
+    box-shadow: -8px 0 30px #211e1a15;
+  }
+  @media (max-width: 767px) {
+    top: auto;
+  }
+}

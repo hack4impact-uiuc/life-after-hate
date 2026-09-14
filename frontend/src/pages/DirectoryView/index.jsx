@@ -8,10 +8,15 @@ import { CSVExporter } from "../../components/CSVExporter/CSVExporter";
 import { getTags } from "../../utils/api";
 import ResourceLabels from "./ResourceLabels";
 import ResourceList from "./ResourceList";
+import ResourceDetails from "../../components/ResourceDetails";
 import "./styles.scss";
 
 const ResourceManager = ({ resources, allResources, sort }) => {
   const [searchStatus, setSearchStatus] = useState("searching");
+  const [selectedId, setSelectedId] = useState(null);
+  const selectedResource = resources.find(
+    (resource) => resource._id === selectedId,
+  );
   const [density, setDensity] = useState("comfortable");
   useEffect(() => {
     document.title = "Directory View - Life After Hate";
@@ -75,7 +80,11 @@ const ResourceManager = ({ resources, allResources, sort }) => {
         aria-busy={searchStatus === "searching"}
       >
         <ResourceLabels resources={resources} />
-        <ResourceList resources={resources} density={density} />
+        <ResourceList
+          resources={resources}
+          density={density}
+          onSelectResource={setSelectedId}
+        />
         {!resources.length && (
           <div className="directory-empty">
             {searchStatus === "searching"
@@ -85,6 +94,12 @@ const ResourceManager = ({ resources, allResources, sort }) => {
                 : "No resources found. Try a different search or remove a tag."}
           </div>
         )}
+      </div>
+      <div className="directory-details">
+        <ResourceDetails
+          resource={selectedResource}
+          onClose={() => setSelectedId(null)}
+        />
       </div>
     </main>
   );
