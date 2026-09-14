@@ -5,6 +5,7 @@ import StaticMap, {
   _MapContext as MapContext,
 } from "react-map-gl";
 import DeckGL from "@deck.gl/react";
+import ResizeSynchronizedDeck from "./ResizeSynchronizedDeck";
 import { connect } from "react-redux";
 import { mappableResourceSelector } from "../../../redux/selectors/map";
 import {
@@ -153,6 +154,7 @@ const Map = ({
 
   return (
     <DeckGL
+      Deck={ResizeSynchronizedDeck}
       layers={getLayers()}
       initialViewState={INITIAL_VIEW_STATE}
       onViewStateChange={_onViewportChange}
