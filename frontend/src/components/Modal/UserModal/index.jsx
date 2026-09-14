@@ -9,7 +9,7 @@ import { editAndRefreshUser } from "../../../utils/api";
 import { currentUserSelector } from "../../../redux/selectors/modal";
 import ModalInput from "../ModalInput";
 import LAHModal from "../../Modal";
-import "../styles.scss";
+import "./styles.scss";
 
 const UserModal = ({ closeModal, user, editable }) => {
   const { register, handleSubmit } = useForm();
@@ -39,46 +39,82 @@ const UserModal = ({ closeModal, user, editable }) => {
   const makeOption = (option, idx) => <option key={idx}>{option}</option>;
 
   return (
-    <LAHModal>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="add-edit-resource-form"
-      >
-        {createInput({
-          labelText: "User Name",
-          shortName: "name",
-          disabled: true,
-          defaultValue: `${user.firstName} ${user.lastName}`,
-        })}
-        {createInput({
-          labelText: "Email",
-          shortName: "email",
-          disabled: true,
-        })}
-        <label className="modal-lab">
-          <p>Role</p>
-          <select
-            {...register("role")}
-            data-cy="modal-role"
-            defaultValue={user.role}
-            className="modal-select-field"
-            disabled={!editable}
+    <LAHModal
+      modalClassName="user-editor-modal"
+      subtitle={
+        editable
+          ? "Manage profile details and account access."
+          : "Profile details and account access."
+      }
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className="user-editor-form">
+        <div className="user-editor-scroll">
+          <section
+            className="user-editor-profile"
+            aria-label="Account information"
           >
-            {Object.values(roleEnum).map(makeOption) /* Enum to options */}
-          </select>
-        </label>
-        {createInput({
-          labelText: "Title",
-          shortName: "title",
-        })}
+            <div className="user-editor-avatar" aria-hidden="true">
+              {`${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`}
+            </div>
+            <div className="user-editor-identity">
+              <h3>
+                {user.firstName} {user.lastName}
+              </h3>
+              <p>{user.email}</p>
+            </div>
+          </section>
+          <div className="user-editor-section-title">Profile</div>
+          <p className="user-editor-help">
+            Name and email are read-only.
+          </p>
+          <div className="user-editor-fields">
+            {createInput({
+              labelText: "Full name",
+              shortName: "name",
+              disabled: true,
+              defaultValue: `${user.firstName} ${user.lastName}`,
+            })}
+            {createInput({
+              labelText: "Email",
+              shortName: "email",
+              disabled: true,
+            })}
+          </div>
+          <div className="user-editor-section-title user-editor-access-title">
+            Account details
+          </div>
+          <label className="modal-lab">
+            <p>Role</p>
+            <select
+              {...register("role")}
+              data-cy="modal-role"
+              defaultValue={user.role}
+              className="modal-select-field"
+              disabled={!editable}
+            >
+              {Object.values(roleEnum).map(makeOption) /* Enum to options */}
+            </select>
+          </label>
+          {createInput({
+            labelText: "Job title",
+            shortName: "title",
+          })}
+        </div>
         {editable && (
-          <div>
+          <div className="user-editor-footer">
+            <Button
+              type="button"
+              className="user-editor-cancel"
+              onClick={closeModal}
+            >
+              Cancel
+            </Button>
             <Button
               id="submit-form-button"
               type="submit"
               data-cy="modal-submit"
             >
-              Save
+              Save changes
             </Button>
           </div>
         )}

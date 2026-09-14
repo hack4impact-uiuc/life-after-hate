@@ -1,0 +1,213 @@
+.lah-modal.user-editor-modal {
+  max-width: 540px;
+  color: #28251f;
+
+  .modal-content {
+    overflow: hidden;
+    border: 1px solid #e7e1d8;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px #29231b29;
+  }
+  .modal-header {
+    padding: 22px 24px;
+    border-bottom: 1px solid #eee8df;
+  }
+  .modal-title {
+    padding: 0;
+    font-size: 20px;
+    font-weight: 650;
+  }
+  .resource-editor-subtitle {
+    display: block;
+    margin-top: 5px;
+    color: #787166;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .close-button {
+    padding: 10px;
+    border-radius: 8px !important;
+    margin-left: 12px;
+  }
+  #close-image {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+  }
+  .user-editor-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .user-editor-scroll {
+    padding: 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .user-editor-profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    margin-bottom: 24px;
+    background: #faf7f2;
+    border: 1px solid #eee6dc;
+    border-radius: 12px;
+  }
+  .user-editor-avatar {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #fce6cb;
+    color: #934b16;
+    font-size: 16px;
+    font-weight: 650;
+  }
+  .user-editor-identity {
+    min-width: 0;
+  }
+  .user-editor-identity h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .user-editor-identity p {
+    margin: 0;
+    font-size: 13px;
+    color: #787166;
+    overflow-wrap: anywhere;
+  }
+  .user-editor-section-title {
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .user-editor-help {
+    margin: 5px 0 16px;
+    color: #787166;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .user-editor-access-title {
+    margin: 24px 0 14px;
+    padding-top: 22px;
+    border-top: 1px solid #eee8df;
+  }
+  .modal-lab {
+    margin: 0 0 16px;
+  }
+  .modal-lab:last-child {
+    margin-bottom: 0;
+  }
+  .modal-lab p {
+    margin: 0 0 7px;
+    color: #554e44;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: none;
+  }
+  .modal-input-field,
+  .modal-select-field {
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #ded7ce;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #28251f;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+    &:focus {
+      border-color: #bc752e;
+      box-shadow: 0 0 0 3px #f7922f26;
+      outline: none;
+    }
+    &:disabled {
+      background-color: #f7f6f3;
+      color: #726b61;
+      -webkit-text-fill-color: #726b61;
+      border-color: #ece8e1;
+      opacity: 1;
+    }
+  }
+  .modal-select-field {
+    appearance: none;
+    padding-right: 38px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23787166' stroke-width='1.7'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .user-editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+    padding: 16px 24px;
+    border-top: 1px solid #eee8df;
+    background: #faf8f5;
+  }
+  .user-editor-cancel,
+  #submit-form-button {
+    min-height: 44px;
+    width: auto !important;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    box-shadow: none;
+  }
+  .user-editor-cancel {
+    background: #fff;
+    border: 1px solid #ded7ce;
+    color: #554e44;
+    &:hover {
+      background: #f1ede7;
+    }
+  }
+  #submit-form-button {
+    background: #f7922f;
+    color: #35200b;
+    &:hover {
+      background: #ed8421;
+    }
+  }
+  button:focus-visible {
+    outline: 2px solid #9b581b !important;
+    outline-offset: 3px;
+  }
+  @media (max-width: 767px) {
+    max-width: 540px;
+    margin: 8px auto;
+    width: calc(100% - 16px);
+    .modal-header,
+    .user-editor-scroll {
+      padding: 20px;
+    }
+    .user-editor-footer {
+      padding: 16px 20px;
+    }
+    .modal-input-field,
+    .modal-select-field {
+      font-size: 16px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+    }
+  }
+}
