@@ -141,7 +141,7 @@ test("directory headers, empty search and CSV visibility", async ({
   request,
 }) => {
   await login(page, request);
-  await expect(page.locator(".manager-header")).toContainText(
+  await expect(page.locator("#page-title")).toContainText(
     "Resource directory",
   );
   await expect(page.locator("#csv-download-btn")).toBeVisible();
