@@ -7,6 +7,7 @@ Joi.objectId = require("joi-objectid")(Joi);
 const Resource = require("../../models/Resource");
 const errorWrap = require("../../utils/error-wrap");
 const resourceUtils = require("../../utils/resource-utils");
+const { consumeGeocodingQuota } = require("../../utils/geocoding-quota");
 const {
   resourceAddressLens,
   filterResourcesWithinRadius,
@@ -97,6 +98,7 @@ router.get(
 
     let resources = await Resource.find({}).lean();
 
+    if (address) await consumeGeocodingQuota(req.user?._id);
     const { lat, lng } = address
       ? await resourceUtils.geocodeAddress(address)
       : {};
@@ -126,6 +128,7 @@ router.post(
     // Copy the object and add an empty coordinate array
     let data = { ...req.body };
 
+    await consumeGeocodingQuota(req.user?._id);
     const { lat, lng, region, ...address } = await resourceUtils.geocodeAddress(
       data.address,
     );
@@ -188,6 +191,7 @@ router.put(
     if (data.type && data.type !== existing.type)
       throw Boom.badRequest("Resource type cannot change");
     if (data.address !== undefined) {
+      await consumeGeocodingQuota(req.user?._id);
       const { lat, lng, region, ...address } =
         await resourceUtils.geocodeAddress(data.address);
       data = formatIncomingData({ lat, lng, region, address })(data);

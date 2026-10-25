@@ -29,9 +29,16 @@ const run = (args, env) =>
       TRUST_PROXY: "",
     };
     const security = await run(
-      ["--timeout", "10000", "test/security.test.js"],
+      [
+        "--timeout",
+        "10000",
+        "test/security.test.js",
+        "test/geocoding-quota.test.js",
+      ],
       env,
     );
+    // Legacy CRUD tests stub role checks; give their requests a stable synthetic
+    // account too, so per-account quotas exercise the same identity boundary.
     const integration = await run(
       [
         "--timeout",
@@ -43,7 +50,7 @@ const run = (args, env) =>
         "test/user.test.js",
         "test/shortlists.test.js",
       ],
-      env,
+      { ...env, BYPASS_AUTH_ROLE: "ADMIN" },
     );
     process.exitCode = security || integration;
   } finally {
